@@ -1,4 +1,4 @@
 mimosa
 ======
 
-Build and serve browser meta-languages
+Build and serve web development meta-languages
