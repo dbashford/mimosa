@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+
+require('coffee-script');
+var path = require('path'),
+    fs = require('fs');
+
+var lib = path.join(path.dirname(fs.realpathSync(__filename)), '..', 'lib');
+var configPath = path.resolve('config.coffee')
+var config = require(configPath).config;
+console.log(config);
+mimosa =
+
+mimosa = require(lib);
+mimosa.watch(config, path.dirname(configPath));
