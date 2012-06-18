@@ -7,8 +7,8 @@ module.exports = class DustCompiler extends AbstractTemplateCompiler
 
   constructor: (config) ->
     super(config)
-    @extensions =     config?.extensions     || ["dust"]
-    @defineLocation = config?.defineLocation || 'vendor/dust'
+    @extensions =     config?.extensions     or ["dust"]
+    @defineLocation = config?.defineLocation or 'vendor/dust'
 
   compile: (fileNames, callback) ->
     error = null

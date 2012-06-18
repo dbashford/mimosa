@@ -6,7 +6,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   constructor: (config) ->
     super(config)
-    @outputFileName = config?.outputFileName || "javascripts/templates"
+    @outputFileName = config?.outputFileName or "javascripts/templates"
 
   setWatchedDirectories: (@origDir, @destDir) =>
     @fileName = path.join(@destDir, @outputFileName + ".js")

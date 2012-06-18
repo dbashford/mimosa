@@ -1,8 +1,9 @@
-watch = require 'chokidar'
-color = require("ansi-color").set
-path = require 'path'
+watch =  require 'chokidar'
+color =  require("ansi-color").set
+path =   require 'path'
 wrench = require 'wrench'
-fs = require 'fs'
+fs =     require 'fs'
+logger = require '../util/logger'
 
 class Watcher
 
@@ -20,7 +21,7 @@ class Watcher
       @_findCompiler(f, @_created)
       @_startupFinished() if ++addTotal is files.length
 
-    console.log color("Watching #{@origDir}", "green+bold")
+    logger.info "Watching #{@origDir}"
 
   _startupFinished: ->
     compiler.doneStartup() for ext, compiler of @compilers when compiler.doneStartup?
@@ -41,7 +42,7 @@ class Watcher
     if compiler?
       callback(fileName, compiler)
     else
-      console.log color("No compiler has been registered: #{extension}", "yellow+bold")
+      logger.warn "No compiler has been registered: #{extension}"
 
   _created: (f, compiler) => @_executeCompilerMethod(f, compiler.created, "created")
   _updated: (f, compiler) => @_executeCompilerMethod(f, compiler.updated, "updated")
@@ -51,13 +52,13 @@ class Watcher
     if compilerMethod?
       compilerMethod(fileName)
     else
-      console.log color("Compiler method #{name} does not exist, doing nothing for #{fileName}", "yellow+bold")
+      logger.error "Compiler method #{name} does not exist, doing nothing for #{fileName}"
 
 module.exports = (config, baseDirectory) ->
 
-  originationDir = path.join(baseDirectory, config?.originationDir || "assets")
-  destinationDir = path.join(baseDirectory, config?.destinationDir || "public")
-  ignored = config?.ignored || [".sass-cache"]
+  originationDir = path.join(baseDirectory, config?.originationDir or "assets")
+  destinationDir = path.join(baseDirectory, config?.destinationDir or "public")
+  ignored = config?.ignored or [".sass-cache"]
 
   watcher = new Watcher
   watcher.startWatch(originationDir, destinationDir, ignored)

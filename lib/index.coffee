@@ -1,7 +1,8 @@
 require 'sugar'
-color = require("ansi-color").set
+color  = require("ansi-color").set
+logger = require './util/logger'
 
-module.exports = class Mimosa
+class Mimosa
 
   watch: (config, root) ->
     compilers = [new (require("./compilers/copy"))(config.copy)]
@@ -9,9 +10,9 @@ module.exports = class Mimosa
       try
         compiler = require("./compilers/#{category}/#{catConfig.compileWith}")
         compilers.push(new compiler(catConfig))
-        console.log color("Adding compiler: #{category}/#{catConfig.compileWith}", "green+bold")
+        logger.info "Adding compiler: #{category}/#{catConfig.compileWith}"
       catch err
-        console.log color("Unable to find matching compiler for #{category}/#{catConfig.compileWith}", "red+bold")
+        logger.info "Unable to find matching compiler for #{category}/#{catConfig.compileWith}"
 
     watcher = require('./watch/watcher')(config.watch, root)
     watcher.registerCompilers(compilers)

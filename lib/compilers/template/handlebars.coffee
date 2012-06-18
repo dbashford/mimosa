@@ -7,9 +7,9 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 
   constructor: (config) ->
     super(config)
-    @extensions =     config?.extensions     || ["hbs", "handlebars"]
-    @defineLocation = config?.defineLocation || 'vendor/handlebars'
-    @helperFile =     config?.helperFile     || "javascripts/handlebars-helpers"
+    @extensions =     config?.extensions     or ["hbs", "handlebars"]
+    @defineLocation = config?.defineLocation or 'vendor/handlebars'
+    @helperFile =     config?.helperFile     or "javascripts/handlebars-helpers"
 
   compile: (fileNames, callback) ->
     error = null

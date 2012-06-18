@@ -5,7 +5,7 @@ module.exports = class IcedCompiler extends AbstractJavaScriptCompiler
 
   constructor: (config) ->
     super(config)
-    @extensions = config?.extensions || ["coffee"]
+    @extensions = config?.extensions or ["coffee"]
 
   compile: (cs, fileName, destinationFile, callback) ->
     try

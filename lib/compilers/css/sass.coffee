@@ -3,6 +3,7 @@ fs = require 'fs'
 wrench = require 'wrench'
 path = require 'path'
 {spawn, exec} = require 'child_process'
+logger = require '../../util/logger'
 
 module.exports = class SassCompiler extends AbstractCssCompiler
 
@@ -12,8 +13,8 @@ module.exports = class SassCompiler extends AbstractCssCompiler
 
   constructor: (config) ->
     super(config)
-    @extensions = config?.extensions || ['scss', 'sass']
-    @hasCompass = config?.hasCompass || true
+    @extensions = config?.extensions or ['scss', 'sass']
+    @hasCompass = config?.hasCompass or true
 
   created: (fileName) =>
     if @startupFinished
@@ -51,7 +52,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
         @compileAndWrite(base)
         @processWatchedDirectories()
     else
-      console.log "Orphaned partial #{fileName}"
+      logger.warn "Orphaned partial #{fileName}"
 
   processWatchedDirectories: ->
     @partialToBaseHash = {}

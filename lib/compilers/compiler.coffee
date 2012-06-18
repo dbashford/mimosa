@@ -1,13 +1,13 @@
-growl = require 'growl'
 color = require("ansi-color").set
 path = require 'path'
 fs = require 'fs'
 mkdirp = require 'mkdirp'
+logger = require '../util/logger'
 
 module.exports = class AbstractCompiler
 
   constructor: (config) ->
-    @notifyOnSuccess = config?.notifyOnSuccess || true
+    @notifyOnSuccess = config?.notifyOnSuccess or true
 
   # OVERRIDE THESE
   created: -> throw new Error "Method created must be implemented"
@@ -37,11 +37,5 @@ module.exports = class AbstractCompiler
       return @notifyFail("Failed to delete compiled file: #{fileName}") if err
       @notifySuccess "Deleted compiled file #{fileName}"
 
-  notifySuccess: (message) ->
-    growl(message, {title:"Success!!!", image:"#{__dirname}/growl_images/success.png"}) if @notifyOnSuccess
-    console.log color(message, "green")
-
-  notifyFail: (message) ->
-    growl(message, {title:"Hey, your shit broke", image:"#{__dirname}/growl_images/failed.png"})
-    console.log color(message, "red+bold+underline")
-
+  notifySuccess: (message) -> logger.success(message, @notifyOnSuccess)
+  notifyFail: (message) -> logger.error message
