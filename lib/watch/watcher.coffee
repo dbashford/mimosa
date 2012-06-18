@@ -52,12 +52,11 @@ class Watcher
     else
       logger.error "Compiler method #{name} does not exist, doing nothing for #{fileName}"
 
-module.exports = (config, baseDirectory) ->
+module.exports = (config) ->
 
-  originationDir = path.join(baseDirectory, config?.originationDir or "assets")
-  destinationDir = path.join(baseDirectory, config?.destinationDir or "public")
-  ignored = config?.ignored or [".sass-cache"]
+  originationDir = path.join(config.root, config.watch.originationDir)
+  destinationDir = path.join(config.root, config.watch.destinationDir)
 
   watcher = new Watcher
-  watcher.startWatch(originationDir, destinationDir, ignored)
+  watcher.startWatch(originationDir, destinationDir, config.watch.ignored)
   watcher

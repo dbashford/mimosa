@@ -11,8 +11,8 @@ class Mimosa
   constructor: ->
     configPath = path.resolve 'config.coffee'
     {config} = require configPath
-    @root = path.dirname configPath
     @config = defaults(config)
+    @config.root = path.dirname configPath
     @parseCLI()
 
   parseCLI: ->
@@ -21,10 +21,6 @@ class Mimosa
         flag: true
         abbr: 's'
         help: 'run a server that will serve up the destination directory'
-      .option 'port',
-        abbr: 'p'
-        help: 'port you would like to run the server on, defaults to:4321'
-        metavar: 'PORT'
       .callback (opts) =>
         @watch(opts)
       .help "watch the filesystem and compile assets"
@@ -37,7 +33,7 @@ class Mimosa
     args.parse()
 
   watch: (opts) ->
-    @startServer(opts.port) if opts.server
+    @startServer() if opts.server
 
     compilers = [new (require("./compilers/copy"))(@config)]
     for category, catConfig of @config.compilers
@@ -48,10 +44,10 @@ class Mimosa
       catch err
         logger.info "Unable to find matching compiler for #{category}/#{catConfig.compileWith}: #{err}"
 
-    watcher = require('./watch/watcher')(@config.watch, @root)
+    watcher = require('./watch/watcher')(@config)
     watcher.registerCompilers(compilers)
 
-  startServer: (port = 4321) ->
+  startServer: ->
     app = express.createServer()
 
     app.configure =>
@@ -60,14 +56,14 @@ class Mimosa
       app.use (req, res, next) ->
         res.header 'Cache-Control', 'no-cache'
         next()
-      app.use express.static("#{@root}/public/")
+      app.use @config.server.base, express.static("#{@config.root}/public/")
 
     app.get '/', (req, res) ->
-      res.render 'index', { title: 'Mimosa\'s Express!' }
+      res.render 'index', { title: 'Mimosa\'s Express' }
 
-    app.listen parseInt port, 10
+    app.listen @config.server.port
 
-    logger.success "Mimosa started at http://localhost:#{port}/"
+    logger.success "Mimosa started at http://localhost:#{@config.server.port}/"
 
 
 module.exports = new Mimosa

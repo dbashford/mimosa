@@ -14,14 +14,14 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
   removed: (fileName) => @removeTheFile(@findCompiledPath(fileName))
 
   compileAndWrite: (fileName, isUpdate = true) ->
-    destinationFile = @findCompiledPath(fileName)
+    destinationFile = @findCompiledPath(fileName.replace(@root, ''))
     if isUpdate or @_fileNeedsCompiling(fileName, destinationFile)
       fs.readFile fileName, "ascii", (err, text) =>
         @compile(text, fileName, destinationFile, @_writeToDestination)
 
   _writeToDestination: (error, results, destinationFile) =>
     if error
-      @notifyFail("Error compiling: #{fileName}\n#{error}")
+      @notifyFail("Error compiling: #{error}")
     else
       @write(destinationFile, results) if results?
 

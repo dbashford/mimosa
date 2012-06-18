@@ -9,6 +9,7 @@ module.exports = class AbstractCompiler
   constructor: (fullConfig, @config) ->
     @origDir = fullConfig.watch.originationDir
     @destDir = fullConfig.watch.destinationDir
+    @root = fullConfig.root
     @processWatchedDirectories() if @processWatchedDirectories?
 
   # OVERRIDE THESE
@@ -19,6 +20,7 @@ module.exports = class AbstractCompiler
   getExtensions: => @config.extensions
 
   write: (fileName, content) =>
+    fileName = fileName.replace(@root, '')
     dirname = path.dirname(fileName)
     path.exists dirname, (exists) =>
       return @writeTheFile(fileName, content) if exists
