@@ -5,11 +5,8 @@ find = require 'findit'
 module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   constructor: (config) ->
-    super(config)
-    @outputFileName = config?.outputFileName or "javascripts/templates"
-
-  setWatchedDirectories: (@origDir, @destDir) =>
-    @fileName = path.join(@destDir, @outputFileName + ".js")
+    super(config, config.compilers.template)
+    @fileName = path.join(@destDir, @config.outputFileName + ".js")
 
   # OVERRIDE THIS
   compile: (fileNames, callback) -> throw new Error "Method compile must be implemented"
@@ -23,7 +20,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     allFiles = find.sync @origDir
     allFiles.forEach (file) =>
       extension = path.extname(file).substring(1)
-      fileNames.push(file) if @extensions.indexOf(extension) >= 0
+      fileNames.push(file) if @config.extensions.indexOf(extension) >= 0
 
     if fileNames.length is 0
       @removeTheFile(@fileName) if isRemove

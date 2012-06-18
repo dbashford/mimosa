@@ -1,11 +1,9 @@
-AbstractJavaScriptCompiler = require './javascript-compiler'
+AbstractJavascriptCompiler = require './javascript-compiler'
 iced = require 'iced-coffee-script'
 
-module.exports = class IcedCompiler extends AbstractJavaScriptCompiler
+module.exports = class IcedCompiler extends AbstractJavascriptCompiler
 
-  constructor: (config) ->
-    super(config)
-    @extensions = config?.extensions or ["coffee"]
+  constructor: (config) -> super(config)
 
   compile: (cs, fileName, destinationFile, callback) ->
     try

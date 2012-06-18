@@ -3,12 +3,7 @@ path = require 'path'
 
 module.exports = class CopyCompiler extends SingleFileCompiler
 
-  constructor: (config) ->
-    @extensions = config?.extensions or ["js","css","png","jpg","jpeg","gif"]
-    unless config?.notifyOnSuccess?
-      config ?= {}
-      config.notifyOnSuccess = false;
-    super(config)
+  constructor: (config) -> super(config, config.copy)
 
   compile: (text, fileName, destinationFile, callback) ->
     callback(null, text, destinationFile)

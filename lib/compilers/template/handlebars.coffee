@@ -5,19 +5,15 @@ path = require 'path'
 
 module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 
-  constructor: (config) ->
-    super(config)
-    @extensions =     config?.extensions     or ["hbs", "handlebars"]
-    @defineLocation = config?.defineLocation or 'vendor/handlebars'
-    @helperFile =     config?.helperFile     or "javascripts/handlebars-helpers"
+  constructor: (config) -> super(config)
 
   compile: (fileNames, callback) ->
     error = null
 
-    helperPath = path.join(@destDir, @helperFile + ".js")
-    defines = ["'#{@defineLocation}'"]
+    helperPath = path.join(@destDir, @config.helperFile + ".js")
+    defines = ["'#{@config.defineLocation}'"]
     if path.existsSync(helperPath)
-      helperDefine = @helperFile.replace /(^[\\\/]?[A-Za-z]+[\\\/])/, ''
+      helperDefine = @config.helperFile.replace /(^[\\\/]?[A-Za-z]+[\\\/])/, ''
       defines.push "'#{helperDefine}'"
     defineString = defines.join ','
 

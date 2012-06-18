@@ -1,6 +1,6 @@
 AbstractSingleFileCompiler = require '../single-file-compiler'
 
 module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileCompiler
-  outExtension: "js"
+  outExtension: 'js'
 
-  constructor: (config) -> super(config)
+  constructor: (config) -> super(config, config.compilers.javascript)

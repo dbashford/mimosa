@@ -11,10 +11,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
   partialToBaseHash:{}
   startupFinished:false
 
-  constructor: (config) ->
-    super(config)
-    @extensions = config?.extensions or ['scss', 'sass']
-    @hasCompass = config?.hasCompass or true
+  constructor: (config) -> super(config)
 
   created: (fileName) =>
     if @startupFinished
@@ -34,7 +31,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     result = ''
     error = null
     options = ['--stdin', '--load-path', @origDir, '--load-path', path.dirname(fileName), '--scss']
-    options.push('--compass') if @hasCompass
+    options.push('--compass') if @config.hasCompass
     sass = spawn 'sass', options
     sass.stdin.end sassText
     sass.stdout.on 'data', (buffer) -> result += buffer.toString()
@@ -54,11 +51,11 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     else
       logger.warn "Orphaned partial #{fileName}"
 
-  processWatchedDirectories: ->
+  processWatchedDirectories: =>
     @partialToBaseHash = {}
     @sassFiles = wrench.readdirSyncRecursive(@origDir)
       .map( (file) => path.join(@origDir, file))
-      .filter (file) => @extensions.some (ext) -> file.endsWith(ext)
+      .filter (file) => @config.extensions.some (ext) -> file.endsWith(ext)
     @baseSassFiles = @sassFiles.filter (file) =>
       not @_isPartial(file) and not file.has('compass')
 

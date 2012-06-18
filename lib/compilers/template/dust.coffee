@@ -5,15 +5,12 @@ path = require 'path'
 
 module.exports = class DustCompiler extends AbstractTemplateCompiler
 
-  constructor: (config) ->
-    super(config)
-    @extensions =     config?.extensions     or ["dust"]
-    @defineLocation = config?.defineLocation or 'vendor/dust'
+  constructor: (config) -> super(config)
 
   compile: (fileNames, callback) ->
     error = null
 
-    output = "define(['#{@defineLocation}'], function (dust){ "
+    output = "define(['#{@config.defineLocation}'], function (dust){ "
     output += for fileName in fileNames
       out = ''
       content = fs.readFileSync fileName, "ascii"

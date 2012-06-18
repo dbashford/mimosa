@@ -27,9 +27,7 @@ class Watcher
     compiler.doneStartup() for ext, compiler of @compilers when compiler.doneStartup?
 
   registerCompilers: (compilers) ->
-    for compiler in compilers
-      compiler.setWatchedDirectories(@origDir, @destDir)
-      @compilers.push(compiler)
+    @compilers.push(compiler) for compiler in compilers
 
   _findCompiler: (fileName, callback) ->
     return if @ignored.some((str) -> fileName.has(str))

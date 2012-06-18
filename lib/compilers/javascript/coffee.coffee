@@ -1,11 +1,9 @@
-AbstractJavaScriptCompiler = require './javascript-compiler'
+AbstractJavascriptCompiler = require './javascript-compiler'
 coffee = require 'coffee-script'
 
-module.exports = class CoffeeCompiler extends AbstractJavaScriptCompiler
+module.exports = class CoffeeCompiler extends AbstractJavascriptCompiler
 
-  constructor: (config) ->
-    super(config)
-    @extensions = config?.extensions or ["coffee"]
+  constructor: (config) -> super(config)
 
   compile: (cs, fileName, destinationFile, callback) ->
     try

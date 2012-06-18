@@ -6,18 +6,17 @@ logger = require '../util/logger'
 
 module.exports = class AbstractCompiler
 
-  constructor: (config) ->
-    @notifyOnSuccess = config?.notifyOnSuccess or true
+  constructor: (fullConfig, @config) ->
+    @origDir = fullConfig.watch.originationDir
+    @destDir = fullConfig.watch.destinationDir
+    @processWatchedDirectories() if @processWatchedDirectories?
 
   # OVERRIDE THESE
   created: -> throw new Error "Method created must be implemented"
   updated: -> throw new Error "Method updated must be implemented"
   removed: -> throw new Error "Method removed must be implemented"
 
-  getExtensions: -> @extensions
-
-  setWatchedDirectories: (@origDir, @destDir) ->
-    @processWatchedDirectories() if @processWatchedDirectories?
+  getExtensions: => @config.extensions
 
   write: (fileName, content) =>
     dirname = path.dirname(fileName)
@@ -37,5 +36,5 @@ module.exports = class AbstractCompiler
       return @notifyFail("Failed to delete compiled file: #{fileName}") if err
       @notifySuccess "Deleted compiled file #{fileName}"
 
-  notifySuccess: (message) => logger.success(message, @notifyOnSuccess)
+  notifySuccess: (message) => logger.success(message, @config.notifyOnSuccess)
   notifyFail: (message) -> logger.error message

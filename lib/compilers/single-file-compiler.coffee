@@ -4,7 +4,7 @@ fs = require 'fs'
 
 module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
 
-  constructor: (config) -> super(config)
+  constructor: (config, targetConfig) -> super(config, targetConfig)
 
   # OVERRIDE THIS
   compile: (fileAsText, fileName, callback) -> throw new Error "Method compile must be implemented"
