@@ -37,5 +37,5 @@ module.exports = class AbstractCompiler
       return @notifyFail("Failed to delete compiled file: #{fileName}") if err
       @notifySuccess "Deleted compiled file #{fileName}"
 
-  notifySuccess: (message) -> logger.success(message, @notifyOnSuccess)
+  notifySuccess: (message) => logger.success(message, @notifyOnSuccess)
   notifyFail: (message) -> logger.error message

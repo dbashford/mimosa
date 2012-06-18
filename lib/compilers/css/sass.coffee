@@ -28,7 +28,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
 
   doneStartup: =>
     @startupFinished = true
-    @compileAndWrite(base) for base in @baseSassFiles
+    @compileAndWrite(base, false) for base in @baseSassFiles
 
   compile: (sassText, fileName, destinationFile, callback) ->
     result = ''
