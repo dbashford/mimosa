@@ -5,6 +5,7 @@ logger =   require './util/logger'
 args =     require "nomnom"
 express =  require 'express'
 defaults = require './util/defaults'
+version =      require('../package.json').version
 
 class Mimosa
 
@@ -28,7 +29,7 @@ class Mimosa
     args.option 'version',
       flag: true
       help: 'print version and exit'
-      callback: -> "version 1.2.4"
+      callback: -> version
 
     args.parse()
 
@@ -48,6 +49,9 @@ class Mimosa
     watcher.registerCompilers(compilers)
 
   startServer: ->
+    if (@config.server.useDefaultServer) then @startDefaultServer() else @startProvidedServer()
+
+  startDefaultServer: ->
     app = express.createServer()
 
     app.configure =>
@@ -65,5 +69,16 @@ class Mimosa
 
     logger.success "Mimosa started at http://localhost:#{@config.server.port}/"
 
+  startProvidedServer: ->
+    serverPath = path.resolve @config.server.path
+    path.exists serverPath, (exists) =>
+      if exists
+        server = require serverPath
+        if server.startServer
+          server.startServer(@config.watch.destinationDir)
+        else
+          logger.error "Found provided server located at #{@config.server.path} (#{serverPath}) but it does not contain a 'startServer' method."
+      else
+        logger.error "Attempted to start the provided server located at #{@config.server.path} (#{serverPath}), but could not find it."
 
 module.exports = new Mimosa
