@@ -1,6 +1,17 @@
+path = require 'path'
+logger =   require './logger'
+
 class MimosaDefaults
 
-  applyDefaults: (config) ->
+  fatalErrors: 0
+
+  applyAndValidateDefaults: (config, callback) =>
+    config = @_applyDefaults(config)
+    @_validateDefaults(config)
+    err = if @fatalErrors is 0 then null else @fatalErrors
+    callback(err, config)
+
+  _applyDefaults: (config) ->
     newConfig = {}
     newConfig.watch = config.watch ?= {}
     newConfig.watch.originationDir = config.watch.originationDir ?= "assets"
@@ -38,4 +49,15 @@ class MimosaDefaults
 
     newConfig
 
-module.exports = (new MimosaDefaults()).applyDefaults
+  _validateDefaults: (config) ->
+    @_pathExists(config.watch.originationDir, "originationDir")
+    @_pathExists(config.watch.originationDir, "destinationDir")
+
+  _pathExists: (filePath, name) ->
+    rPath = path.resolve filePath
+    rPathExists = path.existsSync rPath
+    unless rPathExists
+      logger.fatal "#{name} cannot be found"
+      @fatalErrors++
+
+module.exports = (new MimosaDefaults()).applyAndValidateDefaults

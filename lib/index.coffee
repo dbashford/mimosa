@@ -5,16 +5,21 @@ logger =   require './util/logger'
 args =     require "nomnom"
 express =  require 'express'
 defaults = require './util/defaults'
-version =      require('../package.json').version
+version =  require('../package.json').version
 
 class Mimosa
 
   constructor: ->
     configPath = path.resolve 'config.coffee'
     {config} = require configPath
-    @config = defaults(config)
-    @config.root = path.dirname configPath
-    @parseCLI()
+    defaults config, (err, newConfig) =>
+      if err
+        logger.fatal "Unable to start Mimosa, #{err} configuration problems listed above."
+        process.exit 1
+      else
+        @config = newConfig
+        @config.root = path.dirname configPath
+        @parseCLI()
 
   parseCLI: ->
     args.command('watch')
@@ -74,6 +79,7 @@ class Mimosa
     path.exists serverPath, (exists) =>
       if exists
         server = require serverPath
+        console.log server
         if server.startServer
           server.startServer(@config.watch.destinationDir)
         else
