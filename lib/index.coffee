@@ -14,7 +14,7 @@ class Mimosa
     {config} = require configPath
     defaults config, (err, newConfig) =>
       if err
-        logger.fatal "Unable to start Mimosa, #{err} configuration problems listed above."
+        logger.fatal "Unable to start Mimosa, #{err} configuration(s) problems listed above."
         process.exit 1
       else
         @config = newConfig
@@ -79,7 +79,6 @@ class Mimosa
     path.exists serverPath, (exists) =>
       if exists
         server = require serverPath
-        console.log server
         if server.startServer
           server.startServer(@config.watch.destinationDir)
         else
