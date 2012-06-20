@@ -9,5 +9,5 @@ module.exports = class IcedCompiler extends AbstractJavascriptCompiler
     try
       output = iced.compile cs
     catch err
-      error = err
+      error = "#{fileName}, #{err}"
     callback(error, output, destinationFile)

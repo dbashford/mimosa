@@ -20,7 +20,7 @@ exports.config = {
       # outputFileName: "javascripts/templates"      # the file all templates are compiled into
       # defineLocation: "vendor/handlebars"          # location inside destinationDir javascripts
                                                      # directory of browser library
-      # helperFile:"javascripts/handlebars-helper"   # relevant to handlebars only, the path from originationDir
+      # helperFile:"javascripts/handlebars-helpers"  # relevant to handlebars only, the path from originationDir
                                                      # to the file containing handlebars helper functions, does
                                                      # not need to exist
       # notifyOnSuccess: true                        # send growl notification on successful compilation?

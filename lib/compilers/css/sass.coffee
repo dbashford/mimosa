@@ -11,7 +11,13 @@ module.exports = class SassCompiler extends AbstractCssCompiler
   partialToBaseHash:{}
   startupFinished:false
 
-  constructor: (config) -> super(config)
+  constructor: (config) ->
+    super(config)
+    exec 'sass --version', (error, stdout, stderr) =>
+      if error
+        logger.error "SASS is configured as the CSS compiler, but you don't seem to have SASS installed"
+        logger.error "SASS is a Ruby gem, information can be found here: http://sass-lang.com/tutorial.html"
+        logger.error "SASS can be installed by executing this command: gem install sass"
 
   created: (fileName) =>
     if @startupFinished

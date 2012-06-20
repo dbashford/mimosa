@@ -9,5 +9,5 @@ module.exports = class CoffeeCompiler extends AbstractJavascriptCompiler
     try
       output = coffee.compile cs
     catch err
-      error = err
+      error = "#{fileName}, #{err}"
     callback(error, output, destinationFile)
