@@ -21,14 +21,6 @@ Not quite ready for prime-time, but feel free to play around.
 
     $ mimosa new -n nameOfApplicationHere
 
- This will:
-
-   * Create a directory for the name you've given the application
-   * Place an application skeleton inside that directory.
-   * run a npm install on that directory
-
  Change into the directory that was created and execute:
 
     $ mimosa watch --server
-
- This will start mimosa watching the assets directory for changes to files, and copying the results over to the public directory.
