@@ -1,35 +1,45 @@
 require 'sugar'
 path =     require 'path'
-color  =   require("ansi-color").set
-logger =   require './util/logger'
-args =     require "nomnom"
+fs =       require 'fs'
+{exec} = require 'child_process'
+
+color  =   require('ansi-color').set
+args =     require 'nomnom'
 express =  require 'express'
+wrench =   require 'wrench'
+glob =     require 'glob'
+
+logger =   require './util/logger'
 defaults = require './util/defaults'
 version =  require('../package.json').version
 
 class Mimosa
 
-  constructor: ->
-    configPath = path.resolve 'config.coffee'
-    {config} = require configPath
-    defaults config, (err, newConfig) =>
-      if err
-        logger.fatal "Unable to start Mimosa, #{err} configuration(s) problems listed above."
-        process.exit 1
-      else
-        @config = newConfig
-        @config.root = path.dirname configPath
-        @parseCLI()
+  constructor: -> @cli()
 
-  parseCLI: ->
+  cli: ->
     args.command('watch')
       .option 'server',
         flag: true
         abbr: 's'
         help: 'run a server that will serve up the destination directory'
+      .help("watch the filesystem and compile assets")
       .callback (opts) =>
-        @watch(opts)
-      .help "watch the filesystem and compile assets"
+        @processConfig =>
+          @watch(opts)
+
+    args.command('new')
+      .option 'name'
+        flag: false
+        abbr: 'n'
+        help: 'name for your project, mimosa will create a directory by this name and place the skeleton inside'
+        required:true
+      .option 'noexpress'
+        flag: true
+        help: 'do not build express into the application setup'
+      .help("build out a skeleton matching Mimosa's defaults, which includes a basic Express setup")
+      .callback (opts) =>
+        @build(opts)
 
     args.option 'version',
       flag: true
@@ -37,6 +47,18 @@ class Mimosa
       callback: -> version
 
     args.parse()
+
+  processConfig: (callback) ->
+    configPath = path.resolve 'config.coffee'
+    {config} = require configPath
+    defaults config, (err, newConfig) =>
+      if err
+        logger.fatal "Unable to start Mimosa, #{err} configuration(s) problems listed above."
+        process.exit 1
+      else
+        newConfig.root = path.dirname configPath
+        @config = newConfig
+        callback()
 
   watch: (opts) ->
     @startServer() if opts.server
@@ -85,5 +107,48 @@ class Mimosa
           logger.error "Found provided server located at #{@config.server.path} (#{serverPath}) but it does not contain a 'startServer' method."
       else
         logger.error "Attempted to start the provided server located at #{@config.server.path} (#{serverPath}), but could not find it."
+
+  build: (opts) ->
+    return logger.error "Must provide a name for the new project" unless opts.name? and opts.name.length > 0
+    skeletonPath = path.join __dirname, 'skeleton'
+    currPath = path.join(path.resolve(''), opts.name)
+
+    logger.info "Copying skeleton project over"
+    wrench.copyDirSyncRecursive(skeletonPath, currPath)
+
+    # for some insane reason I can't quite figure out
+    # won't copy over a public directory, so hack it out here
+    logger.info "Cleaning up..."
+    newPublicPath = path.join(currPath, 'public')
+    oldPublicPath = path.join(currPath, 'publicc')
+    fs.renameSync(oldPublicPath, newPublicPath)
+    glob "#{currPath}/**/.gitkeep", (err, files) ->
+      fs.unlinkSync(file) for file in files
+
+    # remove express files/directories and update config to point to default server
+    if opts.noexpress
+      logger.info "Removing unnecessary express artifacts"
+      fs.unlinkSync(path.join(currPath, "server.coffee"))
+      fs.unlinkSync(path.join(currPath, "package.json"))
+      wrench.rmdirSyncRecursive(path.join(currPath, "views"))
+      wrench.rmdirSyncRecursive(path.join(currPath, "routes"))
+
+      configPath = path.join(currPath, "config.coffee")
+      fs.readFile configPath, "ascii", (err, data) ->
+        data = data.replace "# server:", "server:"
+        data = data.replace "# useDefaultServer: false", "useDefaultServer: true"
+
+        logger.info "Altering configuration to not use express"
+        fs.writeFile(configPath, data)
+        logger.success "New project creation complete!"
+        logger.success "Move into the '#{opts.name}' directory and execute 'mimosa watch --server' to monitor the file system, then start coding!"
+    else
+      logger.info "Installing node modules "
+      currentDir = process.cwd()
+      process.chdir currPath
+      exec "npm install", (err, sout, serr) ->
+        process.chdir currentDir
+        logger.success "New project creation complete!"
+        logger.success "Move into the '#{opts.name}' directory and execute 'mimosa watch --server' to monitor the file system, then start coding!"
 
 module.exports = new Mimosa

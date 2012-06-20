@@ -53,7 +53,7 @@ class MimosaDefaults
   _validateDefaults: (config) ->
     @_testPathExists(config.watch.originationDir, "watch.originationDir")
     @_testPathExists(config.watch.destinationDir, "watch.destinationDir")
-    @_testPathExists(config.server.path,          "server.path ") if config.server.useDefaultServer
+    @_testPathExists(config.server.path,          "server.path ") unless config.server.useDefaultServer
 
     comp = config.compilers
     templatePath = path.join(__dirname, '..', 'compilers/template', "#{comp.template.compileWith}.coffee")
