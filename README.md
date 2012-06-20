@@ -3,14 +3,11 @@ mimosa
 
 Build and serve web development meta-languages.
 
-Mimosa is a f
-
 Not quite ready for prime-time, but feel free to play around.
 
 ## Installation
 
     $ npm install -g mimosa
-
 
 # Quick Start
 
@@ -26,9 +23,9 @@ Not quite ready for prime-time, but feel free to play around.
 
  This will:
 
- * Create a directory for the name you've given the application
- * Place an application skeleton inside that directory.
- * run a npm install on that directory
+   * Create a directory for the name you've given the application
+   * Place an application skeleton inside that directory.
+   * run a npm install on that directory
 
  Change into the directory that was created and execute:
 

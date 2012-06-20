@@ -8,7 +8,7 @@ exports.startServer = (publicPath) ->
   # Configuration
 
   app.configure ->
-    app.set 'views', "#{__dirname}'/views'"
+    app.set 'views', "#{__dirname}/views"
     app.set 'view engine', 'jade'
     app.use express.bodyParser()
     app.use express.methodOverride()
