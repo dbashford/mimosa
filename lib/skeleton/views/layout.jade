@@ -4,6 +4,9 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(src='/javascripts/vendor/require.js', data-main='/javascripts/main.js')
-    script(src='/socket.io/socket.io.js')
-    script(src='/socket-enable.js')
+
+    if reload
+      script(src='/socket.io/socket.io.js')
+      script(src='/socket-enable.js')
+
   body!= body
