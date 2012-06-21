@@ -1,9 +1,10 @@
-watch =  require 'chokidar'
-color =  require("ansi-color").set
-path =   require 'path'
-wrench = require 'wrench'
-fs =     require 'fs'
-logger = require '../util/logger'
+watch =     require 'chokidar'
+color =     require("ansi-color").set
+path =      require 'path'
+wrench =    require 'wrench'
+fs =        require 'fs'
+logger =    require '../util/logger'
+optimizer = require '../util/require-optimize'
 
 class Watcher
 
@@ -12,6 +13,7 @@ class Watcher
   startWatch: (@origDir, @destDir, @ignored) ->
     files = wrench.readdirSyncRecursive(@origDir)
     files = files.filter (file) => fs.statSync(path.join(@origDir, file)).isFile()
+    fileCount = files.length
 
     addTotal = 0
     watcher = watch.watch(@origDir, {persistent:true})
@@ -19,12 +21,13 @@ class Watcher
     watcher.on "unlink", (f) => @_findCompiler(f, @_removed)
     watcher.on "add", (f) =>
       @_findCompiler(f, @_created)
-      @_startupFinished() if ++addTotal is files.length
+      @_startupFinished() if ++addTotal is fileCount
 
     logger.info "Watching #{@origDir}"
 
   _startupFinished: ->
-    compiler.doneStartup() for ext, compiler of @compilers when compiler.doneStartup?
+    compiler.doneStartup() for ext, compiler of @compilers
+    optimizer.optimize(@destDir)
 
   registerCompilers: (compilers) ->
     @compilers.push(compiler) for compiler in compilers

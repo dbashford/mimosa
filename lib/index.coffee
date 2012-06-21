@@ -92,7 +92,7 @@ class Mimosa
       app.use @config.server.base, express.static(@config.watch.destinationDir)
 
     app.get '/', (req, res) =>
-      res.render 'index', { title: 'Mimosa\'s Express', reload:@config.server.useReload, production:process.NODE_ENV is 'production' }
+      res.render 'index', { title: 'Mimosa\'s Express', reload:@config.server.useReload, production:process.env.NODE_ENV is 'production' }
 
     app.listen @config.server.port
 

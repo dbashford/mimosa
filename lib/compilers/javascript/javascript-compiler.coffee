@@ -1,7 +1,6 @@
 AbstractSingleFileCompiler = require '../single-file-compiler'
 coffeelint = require 'coffeelint'
 jslint = require('jshint').JSHINT
-
 logger = require '../../util/logger'
 
 module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileCompiler
@@ -27,7 +26,7 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
         return unless e?
         result =
           message: e.reason
-          line: e.line
+          lineNumber: e.line
         @logLint("JavaScript", result, "Error", logger.warn)
 
   logLint: (language, result, type, loggerMethod) ->
@@ -36,5 +35,7 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
     if result.value then message += ", setting [#{result.value}]"
     if result.lineNumber then message += ", at line number [#{result.lineNumber}]"
     loggerMethod message
+
+  postWrite: (fileName) -> @optimize()
 
 

@@ -32,3 +32,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       @notifyFail(err)
     else
       @write(@fileName, output) if output?
+
+  postWrite: (fileName) -> @optimize()
+
+
