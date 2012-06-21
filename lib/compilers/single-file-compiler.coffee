@@ -23,7 +23,9 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
     if error
       @notifyFail("Error compiling: #{error}")
     else
-      @write(destinationFile, results) if results?
+      if results?
+        @postCompile(results, destinationFile) if @postCompile?
+        @write(destinationFile, results)
 
   findCompiledPath: (fileName) ->
     path.join(@destDir, fileName.substring(0, fileName.lastIndexOf(".")).replace(@origDir, '') + ".#{@outExtension}")

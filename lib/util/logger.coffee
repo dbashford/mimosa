@@ -25,12 +25,12 @@ class Logger
 
   wrap: (message, textColor) -> color("#{new Date().toFormat('HH24:MI:SS')} - #{message}", textColor)
 
-  error:   (message) ->          @log 'error', message, 'red+bold', 'Error'
-  warn:    (message) ->          @log 'warn',  message, 'yellow'
-  info:    (message) ->          @log 'info',  message, 'black'
-  debug:   (message) ->          @log 'debug', message, 'purple' if @isDebug
-  fatal:   (message) ->          @log 'fatal', "FATAL: #{message}", 'red+bold+underline', "Fatal Error"
-  success: (message, growlIt) ->
+  error:   (message) =>          @log 'error', message, 'red+bold', 'Error'
+  warn:    (message) =>          @log 'warn',  message, 'yellow'
+  info:    (message) =>          @log 'info',  message, 'black'
+  debug:   (message) =>          @log 'debug', message, 'purple' if @isDebug
+  fatal:   (message) =>          @log 'fatal', "FATAL: #{message}", 'red+bold+underline', "Fatal Error"
+  success: (message, growlIt) =>
     title = if growlIt? then 'Success' else null
     @log 'success', message, 'green+bold', title
 

@@ -50,7 +50,10 @@
     "date-utils": "~1.2.10",
     "nomnom": "~1.5.1",
     "glob": "~3.1.10",
-    "watch-connect": "git://github.com/dbashford/watch-connect.git#new-file-watcher"
+    "watch-connect": "git://github.com/dbashford/watch-connect.git#new-file-watcher",
+    "requirejs": "~2.0.2",
+    "coffeelint": "~0.4.0",
+    "jshint": "~0.7.1"
   },
   "license": "MIT",
   "engines": {

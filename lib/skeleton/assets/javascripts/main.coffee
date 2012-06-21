@@ -3,4 +3,4 @@ require
     jquery: 'vendor/jquery'
   , ['jquery', 'templates']
   , ($, templates) ->
-    $('body').append(templates['example']({name:'Handlebars'}))
+    $('body').append(templates.example({name:'Handlebars'}))

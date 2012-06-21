@@ -23,6 +23,8 @@ class MimosaDefaults
     js.compileWith =       config.compilers.javascript.compileWith     ?= "coffee"
     js.extensions =        config.compilers.javascript.extensions      ?= ["coffee"]
     js.notifyOnSuccess =   config.compilers.javascript.notifyOnSuccess ?= true
+    js.lint =              config.compilers.javascript.lint            ?= true
+    js.metalint =          config.compilers.javascript.metalint        ?= true
 
     template = comp.template = config.compilers.template                 ?= {}
     template.compileWith =     config.compilers.template.compileWith     ?= "handlebars"
@@ -49,6 +51,8 @@ class MimosaDefaults
     server.base =               config.server.base             ?= '/app'
     server.useReload =          config.server.useReload        ?= true
 
+    newConfig.coffeelint = @coffeelint(config.coffeelint)
+
     newConfig
 
   _validateDefaults: (config) ->
@@ -71,5 +75,38 @@ class MimosaDefaults
     unless rPathExists
       logger.fatal "#{name} (#{rPath}) cannot be found"
       @fatalErrors++
+
+  coffeelint: (overrides) ->
+    coffeelint =
+      no_tabs:
+        level: "error"
+      no_trailing_whitespace:
+        level: "error"
+      max_line_length:
+        value: 80,
+        level: "error"
+      camel_case_classes:
+        level: "error"
+      indentation:
+        value: 2
+        level: "error"
+      no_implicit_braces:
+        level: "ignore"
+      no_trailing_semicolons:
+        level: "error"
+      no_plusplus:
+        level: "ignore"
+      no_throwing_strings:
+        level: "error"
+      cyclomatic_complexity:
+        value: 11
+        level: "ignore"
+      line_endings:
+        value: "unix"
+        level: "ignore"
+      no_implicit_parens:
+        level: "ignore"
+
+    Object.merge(coffeelint, overrides) if overrides
 
 module.exports = (new MimosaDefaults()).applyAndValidateDefaults

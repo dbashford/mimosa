@@ -32,7 +32,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
       templateName = path.basename(fileName, path.extname(fileName))
       try
         templateOutput = handlebars.precompile(content)
-        out = "  templates['#{templateName}'] = template(#{templateOutput});\n"
+        out = "  templates.#{templateName} = template(#{templateOutput});\n"
       catch err
         error += "#{err} \n"
       out
