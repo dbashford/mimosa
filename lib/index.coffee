@@ -87,7 +87,9 @@ class Mimosa
       app.use (req, res, next) ->
         res.header 'Cache-Control', 'no-cache'
         next()
-      app.use @config.server.base, express.static("#{@config.root}/public/")
+      if @config.server.useReload
+        app.use (require 'watch-connect')(@config.watch.destinationDir, app, {verbose: false, skipAdding:true})
+      app.use @config.server.base, express.static(@config.watch.destinationDir)
 
     app.get '/', (req, res) ->
       res.render 'index', { title: 'Mimosa\'s Express' }
@@ -102,7 +104,7 @@ class Mimosa
       if exists
         server = require serverPath
         if server.startServer
-          server.startServer(@config.watch.destinationDir)
+          server.startServer(@config.watch.destinationDir, @config.server.useReload)
         else
           logger.error "Found provided server located at #{@config.server.path} (#{serverPath}) but it does not contain a 'startServer' method."
       else

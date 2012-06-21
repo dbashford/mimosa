@@ -1,7 +1,8 @@
-express = require 'express'
-routes  = require './routes'
+express =        require 'express'
+routes  =        require './routes'
+reloadOnChange = require 'watch-connect'
 
-exports.startServer = (publicPath) ->
+exports.startServer = (publicPath, useReload) ->
 
   app = module.exports = express.createServer()
 
@@ -13,7 +14,8 @@ exports.startServer = (publicPath) ->
     app.use express.bodyParser()
     app.use express.methodOverride()
     app.use app.router
-    app.use express.static(__dirname + '/public')
+    app.use reloadOnChange(publicPath, app, {verbose: false, skipAdding:true}) if useReload
+    app.use express.static(publicPath)
 
   app.configure 'development', ->
     app.use express.errorHandler({ dumpExceptions: true, showStack: true })

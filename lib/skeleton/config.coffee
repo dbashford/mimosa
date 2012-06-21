@@ -39,9 +39,12 @@ exports.config = {
     # notifyOnSuccess:false                              # send growl notification on successful copy?
 
   # server:                               # configuration for server when server option is enabled via CLI
-    # useDefaultServer: false            # whether or not mimosa starts a default server for you,
+    # useDefaultServer: false             # whether or not mimosa starts a default server for you,
                                           # when true, mimosa starts its own on the port below
                                           # when false, mimosa will use server provided by path below
+    # useReload: true                     # valid for both default and custom server, when true, browser will be
+                                          # reloaded when asset is compiled.  This adds a few javascript files to
+                                          # the dev version of the app
     # path: 'server.coffee'               # valid when useDefaultServer: false, path to file for provided server
                                           # which must contain a start() method
     # port: 4321                          # valid when useDefaultServer: true, port the default server will start on
