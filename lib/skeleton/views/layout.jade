@@ -3,7 +3,11 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
-    script(src='/javascripts/vendor/require.js', data-main='/javascripts/main.js')
+
+    if production
+      script(src='/javascripts/main-built.js')
+    else
+      script(src='/javascripts/vendor/require.js', data-main='/javascripts/main.js')
 
     if reload
       script(src='/socket.io/socket.io.js')

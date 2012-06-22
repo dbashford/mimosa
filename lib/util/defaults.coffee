@@ -20,11 +20,12 @@ class MimosaDefaults
 
     comp = newConfig.compilers = config.compilers ?= {}
     js = comp.javascript = config.compilers.javascript ?= {}
-    js.compileWith =       config.compilers.javascript.compileWith     ?= "coffee"
-    js.extensions =        config.compilers.javascript.extensions      ?= ["coffee"]
-    js.notifyOnSuccess =   config.compilers.javascript.notifyOnSuccess ?= true
-    js.lint =              config.compilers.javascript.lint            ?= true
-    js.metalint =          config.compilers.javascript.metalint        ?= true
+    js.directory =         config.compilers.javascript.directory         ?= "javascripts"
+    js.compileWith =       config.compilers.javascript.compileWith       ?= "coffee"
+    js.extensions =        config.compilers.javascript.extensions        ?= ["coffee"]
+    js.notifyOnSuccess =   config.compilers.javascript.notifyOnSuccess   ?= true
+    js.lint =              config.compilers.javascript.lint              ?= true
+    js.metalint =          config.compilers.javascript.metalint          ?= true
 
     template = comp.template = config.compilers.template                 ?= {}
     template.compileWith =     config.compilers.template.compileWith     ?= "handlebars"
@@ -40,9 +41,9 @@ class MimosaDefaults
     css.hasCompass =      config.compilers.css.hasCompass      ?= true
     css.notifyOnSuccess = config.compilers.css.notifyOnSuccess ?= true
 
-    copy = newConfig.copy = config.copy                 ?= {}
-    copy.extensions =       config.copy.extensions      ?= ["js","css","png","jpg","jpeg","gif"]
-    copy.notifyOnSuccess =  config.copy.notifyOnSuccess ?= false
+    copy = newConfig.copy = config.copy                        ?= {}
+    copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif"]
+    copy.notifyOnSuccess =  config.copy.notifyOnSuccess        ?= false
 
     server = newConfig.server = config.server                  ?= {}
     server.useDefaultServer =   config.server.useDefaultServer ?= false
@@ -50,6 +51,12 @@ class MimosaDefaults
     server.port =               config.server.port             ?= 4321
     server.base =               config.server.base             ?= '/app'
     server.useReload =          config.server.useReload        ?= true
+
+    requirejs = newConfig.require = config.require              ?= {}
+    requirejs.name =                config.require.name         ?= "main"
+    requirejs.out  =                config.require.out          ?= "main-built.js"
+    requirejs.paths =               config.require.paths        ?= {}
+    requirejs.paths.jquery =        config.require.paths.jquery ?= "vendor/jquery"
 
     newConfig.coffeelint = @coffeelint(config.coffeelint)
 

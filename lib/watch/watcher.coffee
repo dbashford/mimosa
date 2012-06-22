@@ -10,7 +10,7 @@ class Watcher
 
   compilers:[]
 
-  startWatch: (@srcDir, @compDir, @ignored) ->
+  startWatch: (@srcDir, @compDir, @ignored, @config) ->
     files = wrench.readdirSyncRecursive(@srcDir)
     files = files.filter (file) => fs.statSync(path.join(@srcDir, file)).isFile()
     fileCount = files.length
@@ -27,7 +27,7 @@ class Watcher
 
   _startupFinished: ->
     compiler.doneStartup() for ext, compiler of @compilers
-    optimizer.optimize(@compDir)
+    optimizer.optimize(@config)
 
   registerCompilers: (compilers) ->
     @compilers.push(compiler) for compiler in compilers
@@ -61,5 +61,5 @@ module.exports = (config) ->
   compiledDir = path.join(config.root, config.watch.compiledDir)
 
   watcher = new Watcher
-  watcher.startWatch(sourceDir, compiledDir, config.watch.ignored)
+  watcher.startWatch(sourceDir, compiledDir, config.watch.ignored, config)
   watcher

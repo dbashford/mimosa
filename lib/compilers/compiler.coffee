@@ -7,10 +7,9 @@ optimizer = require '../util/require-optimize'
 
 module.exports = class AbstractCompiler
 
-  constructor: (fullConfig, @config) ->
-    @srcDir = fullConfig.watch.sourceDir
-    @compDir = fullConfig.watch.compiledDir
-    @root = fullConfig.root
+  constructor: (@fullConfig, @config) ->
+    @srcDir = @fullConfig.watch.sourceDir
+    @compDir = @fullConfig.watch.compiledDir
     @processWatchedDirectories() if @processWatchedDirectories?
 
   # OVERRIDE THESE
@@ -23,7 +22,7 @@ module.exports = class AbstractCompiler
   getExtensions: => @config.extensions
 
   write: (fileName, content) =>
-    fileName = fileName.replace(@root, '')
+    fileName = fileName.replace(@fullConfig.root, '')
     dirname = path.dirname(fileName)
     path.exists dirname, (exists) =>
       return @writeTheFile(fileName, content) if exists
@@ -43,7 +42,7 @@ module.exports = class AbstractCompiler
       @notifySuccess "Deleted compiled file #{fileName}"
 
   optimize: ->
-    optimizer.optimize(path.join(@root, @compDir)) if @startupFinished
+    optimizer.optimize(@fullConfig) if @startupFinished
 
   notifySuccess: (message) => logger.success(message, @config.notifyOnSuccess)
   notifyFail: (message) -> logger.error message
