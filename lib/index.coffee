@@ -50,7 +50,12 @@ class Mimosa
 
   processConfig: (callback) ->
     configPath = path.resolve 'config.coffee'
-    {config} = require configPath
+    try
+      {config} = require configPath
+    catch err
+      logger.info "No configuration file found (config.coffee), using all defaults."
+      config = {}
+
     defaults config, (err, newConfig) =>
       if err
         logger.fatal "Unable to start Mimosa, #{err} configuration(s) problems listed above."
@@ -88,8 +93,8 @@ class Mimosa
         res.header 'Cache-Control', 'no-cache'
         next()
       if @config.server.useReload
-        app.use (require 'watch-connect')(@config.watch.destinationDir, app, {verbose: false, skipAdding:true})
-      app.use @config.server.base, express.static(@config.watch.destinationDir)
+        app.use (require 'watch-connect')(@config.watch.compiledDir, app, {verbose: false, skipAdding:true})
+      app.use @config.server.base, express.static(@config.watch.compiledDir)
 
     app.get '/', (req, res) =>
       res.render 'index', { title: 'Mimosa\'s Express', reload:@config.server.useReload, production:process.env.NODE_ENV is 'production' }
@@ -104,7 +109,7 @@ class Mimosa
       if exists
         server = require serverPath
         if server.startServer
-          server.startServer(@config.watch.destinationDir, @config.server.useReload)
+          server.startServer(@config.watch.compiledDir, @config.server.useReload)
         else
           logger.error "Found provided server located at #{@config.server.path} (#{serverPath}) but it does not contain a 'startServer' method."
       else

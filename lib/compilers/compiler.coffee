@@ -8,8 +8,8 @@ optimizer = require '../util/require-optimize'
 module.exports = class AbstractCompiler
 
   constructor: (fullConfig, @config) ->
-    @origDir = fullConfig.watch.originationDir
-    @destDir = fullConfig.watch.destinationDir
+    @srcDir = fullConfig.watch.sourceDir
+    @compDir = fullConfig.watch.compiledDir
     @root = fullConfig.root
     @processWatchedDirectories() if @processWatchedDirectories?
 
@@ -43,7 +43,7 @@ module.exports = class AbstractCompiler
       @notifySuccess "Deleted compiled file #{fileName}"
 
   optimize: ->
-    optimizer.optimize(path.join(@root, @destDir)) if @startupFinished
+    optimizer.optimize(path.join(@root, @compDir)) if @startupFinished
 
   notifySuccess: (message) => logger.success(message, @config.notifyOnSuccess)
   notifyFail: (message) -> logger.error message

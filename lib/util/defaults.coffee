@@ -14,8 +14,8 @@ class MimosaDefaults
   _applyDefaults: (config) ->
     newConfig = {}
     newConfig.watch = config.watch ?= {}
-    newConfig.watch.originationDir = config.watch.originationDir ?= "assets"
-    newConfig.watch.destinationDir = config.watch.destinationDir ?= "public"
+    newConfig.watch.sourceDir = config.watch.sourceDir ?= "assets"
+    newConfig.watch.compiledDir = config.watch.compiledDir ?= "public"
     newConfig.watch.ignored = config.watch.ignored ?= [".sass-cache"]
 
     comp = newConfig.compilers = config.compilers ?= {}
@@ -56,8 +56,8 @@ class MimosaDefaults
     newConfig
 
   _validateDefaults: (config) ->
-    @_testPathExists(config.watch.originationDir, "watch.originationDir")
-    @_testPathExists(config.watch.destinationDir, "watch.destinationDir")
+    @_testPathExists(config.watch.sourceDir, "watch.sourceDir")
+    @_testPathExists(config.watch.compiledDir, "watch.compiledDir")
     @_testPathExists(config.server.path,          "server.path ") unless config.server.useDefaultServer
 
     comp = config.compilers

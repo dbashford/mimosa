@@ -36,7 +36,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
   compile: (sassText, fileName, destinationFile, callback) ->
     result = ''
     error = null
-    options = ['--stdin', '--load-path', @origDir, '--load-path', path.dirname(fileName), '--scss']
+    options = ['--stdin', '--load-path', @srcDir, '--load-path', path.dirname(fileName), '--scss']
     options.push('--compass') if @config.hasCompass
     sass = spawn 'sass', options
     sass.stdin.end sassText
@@ -59,8 +59,8 @@ module.exports = class SassCompiler extends AbstractCssCompiler
 
   processWatchedDirectories: =>
     @partialToBaseHash = {}
-    @sassFiles = wrench.readdirSyncRecursive(@origDir)
-      .map( (file) => path.join(@origDir, file))
+    @sassFiles = wrench.readdirSyncRecursive(@srcDir)
+      .map( (file) => path.join(@srcDir, file))
       .filter (file) => @config.extensions.some (ext) -> file.endsWith(ext)
     @baseSassFiles = @sassFiles.filter (file) =>
       not @_isPartial(file) and not file.has('compass')

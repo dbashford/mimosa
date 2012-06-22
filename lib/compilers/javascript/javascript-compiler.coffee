@@ -12,8 +12,8 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
     lintResults = coffeelint.lint(source, config)
     for result in lintResults
       switch result.level
-        when 'error' then @logLint(language, result, 'Error',   logger.warn)
-        when 'warn'  then @logLint(language, result, 'Warning', logger.info)
+        when 'error' then @logLint(language, result, 'Error',   logger.warn, fileName)
+        when 'warn'  then @logLint(language, result, 'Warning', logger.info, fileName)
 
   postCompile: (source, destFileName) ->
     @lintIt(source, destFileName) if @config.lint
@@ -27,13 +27,14 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
         result =
           message: e.reason
           lineNumber: e.line
-        @logLint("JavaScript", result, "Error", logger.warn)
+        @logLint("JavaScript", result, "Error", logger.warn, destFileName)
 
-  logLint: (language, result, type, loggerMethod) ->
+  logLint: (language, result, type, loggerMethod, fileName) ->
     message = "#{language} Lint #{type}: #{result.message}"
     if result.rule then message += ", lint rule [#{result.rule}]"
-    if result.value then message += ", setting [#{result.value}]"
+    message += ", in file [#{fileName}]"
     if result.lineNumber then message += ", at line number [#{result.lineNumber}]"
+    if result.value then message += ", lint setting [#{result.value}]"
     loggerMethod message
 
   postWrite: (fileName) -> @optimize()

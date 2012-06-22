@@ -10,24 +10,24 @@ class Watcher
 
   compilers:[]
 
-  startWatch: (@origDir, @destDir, @ignored) ->
-    files = wrench.readdirSyncRecursive(@origDir)
-    files = files.filter (file) => fs.statSync(path.join(@origDir, file)).isFile()
+  startWatch: (@srcDir, @compDir, @ignored) ->
+    files = wrench.readdirSyncRecursive(@srcDir)
+    files = files.filter (file) => fs.statSync(path.join(@srcDir, file)).isFile()
     fileCount = files.length
 
     addTotal = 0
-    watcher = watch.watch(@origDir, {persistent:true})
+    watcher = watch.watch(@srcDir, {persistent:true})
     watcher.on "change", (f) => @_findCompiler(f, @_updated)
     watcher.on "unlink", (f) => @_findCompiler(f, @_removed)
     watcher.on "add", (f) =>
       @_findCompiler(f, @_created)
       @_startupFinished() if ++addTotal is fileCount
 
-    logger.info "Watching #{@origDir}"
+    logger.info "Watching #{@srcDir}"
 
   _startupFinished: ->
     compiler.doneStartup() for ext, compiler of @compilers
-    optimizer.optimize(@destDir)
+    optimizer.optimize(@compDir)
 
   registerCompilers: (compilers) ->
     @compilers.push(compiler) for compiler in compilers
@@ -57,9 +57,9 @@ class Watcher
 
 module.exports = (config) ->
 
-  originationDir = path.join(config.root, config.watch.originationDir)
-  destinationDir = path.join(config.root, config.watch.destinationDir)
+  sourceDir = path.join(config.root, config.watch.sourceDir)
+  compiledDir = path.join(config.root, config.watch.compiledDir)
 
   watcher = new Watcher
-  watcher.startWatch(originationDir, destinationDir, config.watch.ignored)
+  watcher.startWatch(sourceDir, compiledDir, config.watch.ignored)
   watcher

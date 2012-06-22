@@ -6,7 +6,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   constructor: (config) ->
     super(config, config.compilers.template)
-    @fileName = path.join(@destDir, @config.outputFileName + ".js")
+    @fileName = path.join(@compDir, @config.outputFileName + ".js")
 
   # OVERRIDE THIS
   compile: (fileNames, callback) -> throw new Error "Method compile must be implemented"
@@ -17,7 +17,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   _compileAndWrite: (isRemove = false) ->
     fileNames = []
-    allFiles = find.sync @origDir
+    allFiles = find.sync @srcDir
     allFiles.forEach (file) =>
       extension = path.extname(file).substring(1)
       fileNames.push(file) if @config.extensions.indexOf(extension) >= 0

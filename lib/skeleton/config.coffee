@@ -10,8 +10,8 @@
 
 exports.config = {
   # watch:
-    # originationDir: "assets"                       # directory location of web assets
-    # destinationDir: "public"                       # directory location of compiled web assets
+    # sourceDir: "assets"                       # directory location of web assets
+    # compiledDir: "public"                       # directory location of compiled web assets
     # ignored: [".sass-cache"]                       # file extensions to not watch on file system
 
   # compilers:
@@ -31,9 +31,9 @@ exports.config = {
       # compileWith:"handlebars"                     # Other options: "dust"
       # extensions: ["hbs", "handlebars"]            # list of extensions to compile
       # outputFileName: "javascripts/templates"      # the file all templates are compiled into
-      # defineLocation: "vendor/handlebars"          # location inside destinationDir javascripts
+      # defineLocation: "vendor/handlebars"          # location inside compiledDir javascripts
                                                      # directory of browser library
-      # helperFile:"javascripts/handlebars-helpers"  # relevant to handlebars only, the path from originationDir
+      # helperFile:"javascripts/handlebars-helpers"  # relevant to handlebars only, the path from sourceDir
                                                      # to the file containing handlebars helper functions, does
                                                      # not need to exist
       # notifyOnSuccess: true                        # send growl notification on successful compilation?
@@ -47,8 +47,8 @@ exports.config = {
                                                      # will always send on failure
 
   # copy:
-    # extensions: ["js","css","png","jpg","jpeg","gif"]  # the extensions of files to simply copy from originationDir
-                                                         # to destinationDir.  vendor js/css, images, etc.
+    # extensions: ["js","css","png","jpg","jpeg","gif"]  # the extensions of files to simply copy from sourceDir
+                                                         # to compiledDir.  vendor js/css, images, etc.
     # notifyOnSuccess:false                              # send growl notification on successful copy?
 
   # server:                               # configuration for server when server option is enabled via CLI

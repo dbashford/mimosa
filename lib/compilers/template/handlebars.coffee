@@ -10,7 +10,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
   compile: (fileNames, callback) ->
     error = null
 
-    helperPath = path.join(@origDir, @config.helperFile + ".coffee")
+    helperPath = path.join(@srcDir, @config.helperFile + ".coffee")
     defines = ["'#{@config.defineLocation}'"]
     if path.existsSync(helperPath)
       helperDefine = @config.helperFile.replace /(^[\\\/]?[A-Za-z]+[\\\/])/, ''

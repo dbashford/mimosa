@@ -6,13 +6,10 @@ config =
   name: 'main'
   out: '../build/main-built.js'
 
-optimize = (destDir) ->
-
-  console.log destDir
-
+optimize = (compDir) ->
+  #console.log compDir
 
   if process.env.NODE_ENV is 'production'
     logger.info "Starting requirejs optimization"
-
 
 exports.optimize = optimize

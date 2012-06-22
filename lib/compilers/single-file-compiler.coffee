@@ -28,7 +28,7 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
         @write(destinationFile, results)
 
   findCompiledPath: (fileName) ->
-    path.join(@destDir, fileName.substring(0, fileName.lastIndexOf(".")).replace(@origDir, '') + ".#{@outExtension}")
+    path.join(@compDir, fileName.substring(0, fileName.lastIndexOf(".")).replace(@srcDir, '') + ".#{@outExtension}")
 
   _fileNeedsCompiling: (fileName, destinationFile) ->
     return true unless path.existsSync(destinationFile)
