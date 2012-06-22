@@ -1,9 +1,9 @@
-mimosa - modern browser development toolkit
+mimosa - a modern browser development toolkit
 ======
 
 Mimosa is a browser development toolkit, targeted at folks using meta-languages like CoffeeScript or SASS, or micro-templating libraries like Dust and Handlebars.  The toolkit is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management, and comes bundled with useful tools like coffee/jshint to improve code quality and livereload to speed up development.
 
-Mimosa is not quite ready for prime-time (as of late June), still shaking things out, but feel free to play around.
+Mimosa is not quite ready for prime-time (as of late June), still shaking things out, but feel free to play around and file issues should you find them.
 
 ## Features
 
@@ -16,7 +16,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
  * Growl notifications along with basic console logging.  If a compile fails, you'll know right away.
  * Automatic CoffeeLinting
  * Automatic JSHinting of compiled code
- * Basic Express skeleton building to put you on the ground running with a new ap
+ * Basic Express skeleton to put you on the ground running with a new app
  * Bundled Express for serving up assets to an existing app
  * Run in development with unminified/non-compressed javascript, turn on prod mode and run with a single javascript file using Require's optimizer
  * Live Reload built in, without the need for a plugin
@@ -65,6 +65,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
 ## Roadmap
 
+ * No write mode.  Just compilation with notifications, coffee/jshinting.
  * Stylus, LESS compilers
  * Example templates beyond the one provided
  * Proper life cycle for compilation which should allow for easier plugging in of new steps/compilers, etc

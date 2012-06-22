@@ -8,7 +8,7 @@ class Optimizer
     if process.env.NODE_ENV is 'production'
       logger.info "Beginning requirejs optimization"
       requirejs.optimize config, (buildResponse) ->
-        logger.success "Requirejs optimization complete.  The compiled file is ready for use."
+        logger.success "Requirejs optimization complete.  The compiled file is ready for use.", true
 
   optimize: (config) =>
     rConfig = config.require
