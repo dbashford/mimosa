@@ -1,7 +1,7 @@
 require 'sugar'
 path =     require 'path'
 fs =       require 'fs'
-{exec} = require 'child_process'
+{exec} =   require 'child_process'
 
 color  =   require('ansi-color').set
 args =     require 'nomnom'

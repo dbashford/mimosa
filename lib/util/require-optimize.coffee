@@ -14,8 +14,8 @@ class Optimizer
     rConfig = config.require
     rConfig.baseUrl = path.join(config.root, config.watch.compiledDir, config.compilers.javascript.directory)
     rConfig.out = path.join(rConfig.baseUrl, config.require.out)
-    rConfig.include = config.require.name
-    rConfig.insertRequire = config.require.name
+    rConfig.include = [config.require.name]
+    rConfig.insertRequire = [config.require.name]
     rConfig.wrap = true
     rConfig.name = 'vendor/almond'
 
