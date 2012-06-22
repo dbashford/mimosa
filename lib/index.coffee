@@ -41,6 +41,10 @@ class Mimosa
       .callback (opts) =>
         @build(opts)
 
+    args.command('config')
+      .help("copy the default mimosa config into the current folder")
+      .callback => @copyConfig()
+
     args.option 'version',
       flag: true
       help: 'print version and exit'
@@ -64,6 +68,13 @@ class Mimosa
         newConfig.root = path.dirname configPath
         @config = newConfig
         callback()
+
+  copyConfig: ->
+    configPath = path.join __dirname, 'skeleton', "config.coffee"
+    configFileContents = fs.readFileSync(configPath)
+    currPath = path.join path.resolve(''), "config.coffee"
+    fs.writeFile currPath, configFileContents, 'ascii'
+    logger.success "Copied default config file into current directory."
 
   watch: (opts) ->
     @startServer() if opts.server
