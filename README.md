@@ -31,13 +31,15 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
 ## Installation
 
-    $ npm install -g mimosa
+ When I feel its a bit closer to ready, I'll get this into NPM.  To get it before then...
+
+    $ git clone ...
+    $ cd mimosa
+    $ npm install -g
 
 ## Quick Start
 
- The easiest way to get started with mimosa is to use the command line to
- create a new application skeleton. By default, mimosa will create a basic
- express app configured to match all of mimosa's defaults.
+ The easiest way to get started with mimosa is to create a new application skeleton. By default, mimosa will create a basic express app configured to match all of mimosa's defaults.
 
  First navigate to a directory within which you want to place your application.
 
