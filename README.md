@@ -13,21 +13,21 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
  * Compiling of SASS (soon, LESS, Stylus)
  * Compiling of Handlebars and Dust templates into single template files
  * Compile assets when they are saved, not when they are requested
+ * Run in development with unminified/non-compressed javascript, turn on prod mode and run with a single javascript file using Require's optimizer
  * Growl notifications along with basic console logging.  If a compile fails, you'll know right away.
  * Automatic CoffeeLinting
  * Automatic JSHinting of compiled code
  * Basic Express skeleton to put you on the ground running with a new app
  * Bundled Express for serving up assets to an existing app
- * Run in development with unminified/non-compressed javascript, turn on prod mode and run with a single javascript file using Require's optimizer
  * Live Reload built in, without the need for a plugin
 
 #### Which meta-languages?
 
  Future additions are planned, but for now...
 
- * CSS: sass (default)
- * Micro-templating: handlebars (default), dust
- * JavaScript: coffeescript (default), iced coffeescript
+ * CSS: SASS (default)
+ * Micro-templating: Handlebars (default), Dust
+ * JavaScript: CoffeeScript (default), Iced CoffeeScript
 
 ## Installation
 

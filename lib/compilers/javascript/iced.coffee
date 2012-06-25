@@ -1,14 +1,13 @@
-AbstractJavascriptCompiler = require './javascript-compiler'
+AbstractCoffeeScriptCompiler = require './coffeescript-compiler'
 iced = require 'iced-coffee-script'
 
-module.exports = class IcedCompiler extends AbstractJavascriptCompiler
+module.exports = class IcedCompiler extends AbstractCoffeeScriptCompiler
 
-  constructor: (config) ->
-    super(config)
-    @lintOptions = config.coffeelint
+  coffeeDialect: "Iced CoffeeScript"
+
+  constructor: (config) -> super(config)
 
   compile: (cs, fileName, destinationFile, callback) ->
-    @metaLintIt(cs, @lintOptions, fileName, "Iced CoffeeScript") if @config.metalint
     try
       output = iced.compile cs
     catch err

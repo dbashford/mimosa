@@ -22,6 +22,8 @@ module.exports = class SassCompiler extends AbstractCssCompiler
   created: (fileName) =>
     if @startupFinished
       if @_isPartial(fileName) then @_compileBasesForPartial(fileName) else super(fileName)
+    else
+      @done()
 
   updated: (fileName) =>
     if @_isPartial(fileName) then @_compileBasesForPartial(fileName) else super(fileName)
@@ -56,6 +58,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
         @processWatchedDirectories()
     else
       logger.warn "Orphaned partial #{fileName}"
+      @done()
 
   processWatchedDirectories: =>
     @partialToBaseHash = {}

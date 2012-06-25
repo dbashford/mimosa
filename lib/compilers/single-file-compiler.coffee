@@ -17,15 +17,18 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
     destinationFile = @findCompiledPath(fileName.replace(@fullConfig.root, ''))
     if isUpdate or @_fileNeedsCompiling(fileName, destinationFile)
       fs.readFile fileName, "ascii", (err, text) =>
-        @compile(text, fileName, destinationFile, @_writeToDestination)
-
-  _writeToDestination: (error, results, destinationFile) =>
-    if error
-      @notifyFail("Error compiling: #{error}")
+        return @failed(err) if err
+        @beforeCompile(text, fileName) if @beforeCompile?
+        @compile(text, fileName, destinationFile, @_compileComplete)
     else
-      if results?
-        @postCompile(results, destinationFile) if @postCompile?
-        @write(destinationFile, results)
+      @done()
+
+  _compileComplete: (error, results, destinationFile) =>
+    if error
+      @failed("Error compiling: #{error}")
+    else
+      @afterCompile(results, destinationFile) if @afterCompile?
+      @write(destinationFile, results)
 
   findCompiledPath: (fileName) ->
     path.join(@compDir, fileName.substring(0, fileName.lastIndexOf(".")).replace(@srcDir, '') + ".#{@outExtension}")

@@ -1,5 +1,4 @@
 AbstractSingleFileCompiler = require '../single-file-compiler'
-coffeelint = require 'coffeelint'
 jslint = require('jshint').JSHINT
 logger = require '../../util/logger'
 
@@ -8,14 +7,7 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
 
   constructor: (config) -> super(config, config.compilers.javascript)
 
-  metaLintIt: (source, config, fileName, language) ->
-    lintResults = coffeelint.lint(source, config)
-    for result in lintResults
-      switch result.level
-        when 'error' then @logLint(language, result, 'Error',   logger.warn, fileName)
-        when 'warn'  then @logLint(language, result, 'Warning', logger.info, fileName)
-
-  postCompile: (source, destFileName) ->
+  afterCompile: (source, destFileName) ->
     @lintIt(source, destFileName) if @config.lint
 
   lintIt: (source, destFileName) ->

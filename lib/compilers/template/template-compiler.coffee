@@ -11,11 +11,11 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
   # OVERRIDE THIS
   compile: (fileNames, callback) -> throw new Error "Method compile must be implemented"
 
-  created: => @_compileAndWrite()
-  updated: => @_compileAndWrite()
-  removed: => @_compileAndWrite(true)
+  created: => @_gatherFiles()
+  updated: => @_gatherFiles()
+  removed: => @_gatherFiles(true)
 
-  _compileAndWrite: (isRemove = false) ->
+  _gatherFiles: (isRemove = false) ->
     fileNames = []
     allFiles = find.sync @srcDir
     allFiles.forEach (file) =>
@@ -25,11 +25,11 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     if fileNames.length is 0
       @removeTheFile(@fileName) if isRemove
     else
-      output = @compile(fileNames, @_write)
+      @compile(fileNames, @_write)
 
   _write: (error, output) =>
     if error
-      @notifyFail(err)
+      @failed(err)
     else
       @write(@fileName, output) if output?
 

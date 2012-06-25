@@ -17,7 +17,11 @@ module.exports = class AbstractCompiler
   updated: -> throw new Error "Method updated must be implemented"
   removed: -> throw new Error "Method removed must be implemented"
 
-  doneStartup: -> @startupFinished = true
+  setDoneCallback: (@compileDoneCallback) ->
+
+  doneStartup: ->
+    @startupFinished = true
+    @compileDoneCallback = null
 
   getExtensions: => @config.extensions
 
@@ -25,24 +29,27 @@ module.exports = class AbstractCompiler
     fileName = fileName.replace(@fullConfig.root, '')
     dirname = path.dirname(fileName)
     path.exists dirname, (exists) =>
-      return @writeTheFile(fileName, content) if exists
-      mkdirp dirname, (err) =>
-        return @notifyFail "Failed to create directory: #{dirname}" if err
-        @writeTheFile(fileName, content)
-
-  writeTheFile: (fileName, content) ->
-    fs.writeFile fileName, content, "ascii", (err) =>
-      return @notifyFail "Failed to write new file: #{fileName}" if err
-      @notifySuccess "Compiled/copied #{fileName}"
-      @postWrite(fileName) if @postWrite
+      mkdirp.sync dirname unless exists
+      fs.writeFile fileName, content, "ascii", (err) =>
+        return @failed "Failed to write new file: #{fileName}" if err
+        @success "Compiled/copied #{fileName}"
+        @postWrite(fileName) if @postWrite?
 
   removeTheFile: (fileName) =>
     fs.unlink fileName, (err) =>
-      return @notifyFail("Failed to delete compiled file: #{fileName}") if err
-      @notifySuccess "Deleted compiled file #{fileName}"
+      return @failed("Failed to delete compiled file: #{fileName}") if err
+      @success "Deleted compiled file #{fileName}"
 
   optimize: ->
     optimizer.optimize(@fullConfig) if @startupFinished
 
-  notifySuccess: (message) => logger.success(message, @config.notifyOnSuccess)
-  notifyFail: (message) -> logger.error message
+  failed: (message) ->
+    logger.error message
+    @done()
+
+  success: (message) =>
+    logger.success(message, @config.notifyOnSuccess)
+    @done()
+
+  done: ->
+    @compileDoneCallback() if @compileDoneCallback

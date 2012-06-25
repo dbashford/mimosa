@@ -13,24 +13,32 @@ class Watcher
   startWatch: (@srcDir, @compDir, @ignored, @config) ->
     files = wrench.readdirSyncRecursive(@srcDir)
     files = files.filter (file) => fs.statSync(path.join(@srcDir, file)).isFile()
-    fileCount = files.length
+    @fileCount = files.length
+    @compiledTotal = 0
 
-    addTotal = 0
     watcher = watch.watch(@srcDir, {persistent:true})
     watcher.on "change", (f) => @_findCompiler(f, @_updated)
     watcher.on "unlink", (f) => @_findCompiler(f, @_removed)
-    watcher.on "add", (f) =>
-      @_findCompiler(f, @_created)
-      @_startupFinished() if ++addTotal is fileCount
+    watcher.on "add", (f) => @_findCompiler(f, @_created)
 
     logger.info "Watching #{@srcDir}"
 
-  _startupFinished: ->
-    compiler.doneStartup() for ext, compiler of @compilers
-    optimizer.optimize(@config)
+  # When all compilers done, let them know, and trigger optimize
+  compilerDone: =>
+    if ++@compiledTotal is @fileCount
+      compiler.doneStartup() for ext, compiler of @compilers
+      optimizer.optimize(@config)
+
+    console.log @compiledTotal
+    console.log @fileCount
+    console.log "********************"
 
   registerCompilers: (compilers) ->
-    @compilers.push(compiler) for compiler in compilers
+    @registerCompiler(compiler) for compiler in compilers
+
+  registerCompiler: (compiler) ->
+    compiler.setDoneCallback(@compilerDone)
+    @compilers.push(compiler)
 
   _findCompiler: (fileName, callback) ->
     return if @ignored.some((str) -> fileName.has(str))
