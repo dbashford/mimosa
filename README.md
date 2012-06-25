@@ -33,7 +33,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  When I feel Mimosa is a bit closer to being ready to go, I'll get it into NPM.  To get it before then...
 
-    $ git clone ...
+    $ git clone https://github.com/dbashford/mimosa.git
     $ cd mimosa
     $ npm install -g
 
