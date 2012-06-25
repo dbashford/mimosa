@@ -57,23 +57,23 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  I built the configuration to be self-documenting.  The config file that comes bundled with the application contains all of the configurable options within the application and a brief explanation.  The default config is entirely commented out as the defaults are built into Mimosa.
 
- To change something, for instance, to make it so you don't get notified via growl when your CSS meta-language (like SASS) compiles successfully, uncomment the object structure that leads to the setting.  In this case you'd uncomment compilers, css, and notifyOnSuccess, and change the setting to false.
+ To change something -- for instance to make it so you don't get notified via growl when your CSS meta-language (like SASS) compiles successfully -- uncomment the object structure that leads to the setting.  In this case you'd uncomment compilers, css, and notifyOnSuccess, and change the setting to false.
 
  You can find the configuration [inside the skeleton directory](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/config.coffee).
 
 ## Immediate Feedback
 
- Compilation of your assets is kicked off as soon as a file is saved.  Mimosa will write to the console the outcome of every compilation event.  Should compilation fail, the reason will be included in the console.
+ Compilation of your assets is kicked off as soon as a file is saved.  Mimosa will write to the console the outcome of every compilation event.  Should compilation fail, the reason will be included in the log message.
 
- If you have [Growl](http://growl.info/) installed and turned on, for each failure or successful compile of your meta-CSS/JS/Templates, you'll get a notification.  In the event Growl gets too spammy for you, you can turn off Growl notifications for successful compiles.  Each compiler, CSS, JS, and Template, has a setting, `notifyOnSuccess`, that when enabled and set to false will stop Growl notifications for successful compilations.  You cannot turn off Growl notifications for compilation failures.
+ If you have [Growl](http://growl.info/) installed and turned on, for each failure or successful compile of your meta-CSS/JS/Templates, you'll get a Growl notification.  In the event Growl gets too spammy for you, you can turn off Growl notifications for successful compiles.  Each compiler, CSS, JS, and Template, has a setting, `notifyOnSuccess`, that when enabled and set to false will stop Growl notifications for successful compilations.  You cannot turn off Growl notifications for compilation failures.
 
 ## CoffeeLint
 
- Mimosa will [CoffeeLint](http://www.coffeelint.org/) your CoffeeScript and CoffeeScript-based dialects.  Any CoffeeLint warnings will be printed to the console.  The default CoffeeLint configuration is included in the Mimosa configuration (commented out of course).  Turn rules on/off or change values to suit your needs.  You can also turn off CoffeeHinting altogether by enabling the compilers.javascript.metalint option, and switching it to false.
+ Mimosa will [CoffeeLint](http://www.coffeelint.org/) your CoffeeScript and CoffeeScript-based dialects.  Any CoffeeLint warnings will be printed to the console.  The default CoffeeLint configuration is included in the Mimosa configuration (commented out of course).  Turn rules on/off or change values to suit your needs.  You can also turn off CoffeeHint-ing altogether by enabling the `compilers.javascript.metalint` option, and switching it to false.
 
 ## JSHint
 
- Mimosa will [JSHint](http://www.jshint.com/) your compiled JavaScript.  Any JSHint warnings will be printed to the console.  JSHint has [many rules](http://www.jshint.com/options/), and for now overrides are not available via Mimosa.  But it wouldn't be hard to add if there is interest.  You can turn off JSHint altogether by enabling the compilers.javascript.lint option and switching it to false.
+ Mimosa will [JSHint](http://www.jshint.com/) your compiled JavaScript.  Any JSHint warnings will be printed to the console.  JSHint has [many rules](http://www.jshint.com/options/), and for now overrides are not available via Mimosa.  But it wouldn't be hard to add if there is interest.  You can turn off JSHint altogether by enabling the `compilers.javascript.lint` option and switching it to false.
 
 ## RequireJS Optimization
 
@@ -81,8 +81,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  To start up with production turned on, execute the following:
 
-   $ NODE_ENV=production mimosa watch --server
-
+    $ NODE_ENV=production mimosa watch --server
 
 ## Roadmap
 
