@@ -29,10 +29,6 @@ class Watcher
       compiler.doneStartup() for ext, compiler of @compilers
       optimizer.optimize(@config)
 
-    console.log @compiledTotal
-    console.log @fileCount
-    console.log "********************"
-
   registerCompilers: (compilers) ->
     @registerCompiler(compiler) for compiler in compilers
 
