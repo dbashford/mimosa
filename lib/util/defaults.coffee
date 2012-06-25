@@ -48,7 +48,7 @@ class MimosaDefaults
     server = newConfig.server = config.server                  ?= {}
     server.useDefaultServer =   config.server.useDefaultServer ?= false
     server.path =               config.server.path             ?= 'server.coffee'
-    server.port =               config.server.port             ?= 4321
+    server.port =               config.server.port             ?= 3000
     server.base =               config.server.base             ?= '/app'
     server.useReload =          config.server.useReload        ?= true
 

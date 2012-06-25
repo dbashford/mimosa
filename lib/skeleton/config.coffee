@@ -66,7 +66,7 @@ exports.config = {
                                           # the layout of the dev version of the app
     # path: 'server.coffee'               # valid when useDefaultServer: false, path to file for provided server
                                           # which must contain a start() method
-    # port: 4321                          # valid when useDefaultServer: true, port the default server will start on
+    # port: 3000                          # valid when useDefaultServer: true, port the default server will start on
     # base: '/app'                        # valid when useDefaultServer: true, base of the app in default mode
 
   # require:                              # configuration for requirejs optimizer. You can uncomment and change the

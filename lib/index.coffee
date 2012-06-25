@@ -95,6 +95,8 @@ class Mimosa
     if (@config.server.useDefaultServer) then @startDefaultServer() else @startProvidedServer()
 
   startDefaultServer: ->
+    production = process.env.NODE_ENV is 'production'
+
     app = express.createServer()
 
     app.configure =>
@@ -108,7 +110,7 @@ class Mimosa
       app.use @config.server.base, express.static(@config.watch.compiledDir)
 
     app.get '/', (req, res) =>
-      res.render 'index', { title: 'Mimosa\'s Express', reload:@config.server.useReload, production:process.env.NODE_ENV is 'production' }
+      res.render 'index', { title: 'Mimosa\'s Express', reload:@config.server.useReload and not production, production:production}
 
     app.listen @config.server.port
 
