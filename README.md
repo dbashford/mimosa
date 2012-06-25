@@ -13,7 +13,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
  * Compiling of SASS (soon, LESS, Stylus)
  * Compiling of Handlebars and Dust templates into single template files
  * Compile assets when they are saved, not when they are requested
- * Run in development with unminified/non-compressed javascript, turn on prod mode and run with a single javascript file using Require's optimizer
+ * Run in development with unminified/non-compressed javascript, turn on prod mode and run with a single javascript file using Require's optimizer and [Almond](https://github.com/jrburke/almond)
  * Growl notifications along with basic console logging.  If a compile fails, you'll know right away.
  * Automatic CoffeeLinting
  * Automatic JSHinting of compiled code
@@ -31,7 +31,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
 ## Installation
 
- When I feel its a bit closer to ready, I'll get this into NPM.  To get it before then...
+ When I feel Mimosa is a bit closer to being ready to go, I'll get it into NPM.  To get it before then...
 
     $ git clone ...
     $ cd mimosa
@@ -61,15 +61,33 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  You can find the configuration [inside the skeleton directory](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/config.coffee).
 
-## Significant Known Issues
+## Immediate Feedback
 
- * NODE_ENV=production can't be used straight away in a brand new project with uncompiled assets.  The require.js optimizer will choke.  Run it in dev mode first to get things compiled, then switch to production.  Fixing this will require a deeply necessary but chunky refactor.
+ Compilation of your assets is kicked off as soon as a file is saved.  Mimosa will write to the console the outcome of every compilation event.  Should compilation fail, the reason will be included in the console.
+
+ If you have [Growl](http://growl.info/) installed and turned on, for each failure or successful compile of your meta-CSS/JS/Templates, you'll get a notification.  In the event Growl gets too spammy for you, you can turn off Growl notifications for successful compiles.  Each compiler, CSS, JS, and Template, has a setting, `notifyOnSuccess`, that when enabled and set to false will stop Growl notifications for successful compilations.  You cannot turn off Growl notifications for compilation failures.
+
+## CoffeeLint
+
+ Mimosa will [CoffeeLint](http://www.coffeelint.org/) your CoffeeScript and CoffeeScript-based dialects.  Any CoffeeLint warnings will be printed to the console.  The default CoffeeLint configuration is included in the Mimosa configuration (commented out of course).  Turn rules on/off or change values to suit your needs.  You can also turn off CoffeeHinting altogether by enabling the compilers.javascript.metalint option, and switching it to false.
+
+## JSHint
+
+ Mimosa will [JSHint](http://www.jshint.com/) your compiled JavaScript.  Any JSHint warnings will be printed to the console.  JSHint has [many rules](http://www.jshint.com/options/), and for now overrides are not available via Mimosa.  But it wouldn't be hard to add if there is interest.  You can turn off JSHint altogether by enabling the compilers.javascript.lint option and switching it to false.
+
+## RequireJS Optimization
+
+ Start mimosa watching with the NODE_ENV production flag turned on and Mimosa will run RequireJS's optimizer on start-up and with every javascript file change.  The default Jade templates are built to switch on the environment.  So when you point at either the Express or default server's base URL with production switched on, you will be served the result of RequireJS's optimization, packaged with Almond.
+
+ To start up with production turned on, execute the following:
+
+   $ NODE_ENV=production mimosa watch --server
+
 
 ## Roadmap
 
  * No write mode.  Just compilation with notifications, coffee/jshinting.
  * Stylus, LESS compilers
  * Example templates beyond the one provided
- * Proper life cycle for compilation which should allow for easier plugging in of new steps/compilers, etc
  * Tests for the Mimosa codebase
  * Integrated testing framework for your codebase

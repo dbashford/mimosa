@@ -4,21 +4,22 @@ path = require 'path'
 
 class Optimizer
 
-  _performOptimization: (config) ->
+  _performOptimization: ->
     if process.env.NODE_ENV is 'production'
       logger.info "Beginning requirejs optimization"
-      requirejs.optimize config, (buildResponse) ->
+      requirejs.optimize @config, (buildResponse) ->
         logger.success "Requirejs optimization complete.  The compiled file is ready for use.", true
 
   optimize: (config) =>
-    rConfig = config.require
-    rConfig.baseUrl = path.join(config.root, config.watch.compiledDir, config.compilers.javascript.directory)
-    rConfig.out = path.join(rConfig.baseUrl, config.require.out)
-    rConfig.include = [config.require.name]
-    rConfig.insertRequire = [config.require.name]
-    rConfig.wrap = true
-    rConfig.name = 'vendor/almond'
+    unless @config?
+      @config = config.require
+      @config.baseUrl = path.join(config.root, config.watch.compiledDir, config.compilers.javascript.directory)
+      @config.out = path.join(@config.baseUrl, config.require.out)
+      @config.include = [config.require.name]
+      @config.insertRequire = [config.require.name]
+      @config.wrap = true
+      @config.name = 'vendor/almond'
 
-    @_performOptimization(rConfig)
+    @_performOptimization()
 
 exports.optimize = new Optimizer().optimize
