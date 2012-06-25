@@ -69,9 +69,9 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  TODO
 
- $ mimosa new -n nameOfApplicationHere
+    $ mimosa new -n nameOfApplicationHere
 
- $ mimosa new -n nameOfApplicationHere --noexpress
+    $ mimosa new -n nameOfApplicationHere --noexpress
 
 #### Watch and Compile (watch)
 
