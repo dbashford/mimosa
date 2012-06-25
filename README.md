@@ -63,13 +63,17 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
 ## Command Line Utilities
 
- Mimosa has some
+ One interacts with Mimosa via the command-line.
 
-#### New Project
+#### New Project (new)
 
  TODO
 
-#### Watch and Compile
+ $ mimosa new -n nameOfApplicationHere
+
+ $ mimosa new -n nameOfApplicationHere --noexpress
+
+#### Watch and Compile (watch)
 
  Mimosa will watch the configured `sourceDir`, by default the assets directory.  When files are added, updated, or deleted, the configured compilers will perform necessary actions and keep the `compiledDir` updated with compiled/copied assets.
 
@@ -77,7 +81,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
     $ mimosa watch
 
-#### Serve Assets
+#### Serve Assets (watch --server)
 
  If you are not already running a server, and you need to serve your assets up, start mimosa with the server flag.
 
@@ -87,7 +91,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  You can change to using an embedded default (not-extendable) Express server by changing the `server.useDefaultServer` configuration to `true`.  If you created a project using the --noexpress flag, this will have already been done for you.
 
-#### Copy Config
+#### Copy Config (config)
 
     $ mimosa config
 
