@@ -3,7 +3,7 @@ mimosa - a modern browser development toolkit
 
 Mimosa is a browser development toolkit, targeted at folks using meta-languages like CoffeeScript or SASS, or micro-templating libraries like Dust and Handlebars.  The toolkit is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management, and comes bundled with useful tools like coffee/jshint to improve code quality and livereload to speed up development.
 
-Mimosa is not quite ready for prime-time (as of late June), still shaking things out, but feel free to play around and file issues should you find them.
+Mimosa is not quite ready for prime-time (as of late June), still shaking things out, but feel free to play around and [file issues](https://github.com/dbashford/mimosa/issues) should you find them.
 
 ## Features
 
@@ -21,13 +21,13 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
  * Bundled Express for serving up assets to an existing app
  * Live Reload built in, without the need for a plugin
 
-#### Which meta-languages?
+#### Why Mimosa?
 
- Future additions are planned, but for now...
+ Much love to [Brunch](http://brunch.io/) for the inspiration (hence 'Mimosa'), and for being the codebase of record (and outright theft!) when I had a problem to solve.  I suggest you check it out to compare and contrast features to figure out which is best for you.  Brunch is awesome sauce, and its codebase is certainly more mature!
 
- * CSS: SASS (default)
- * Micro-templating: Handlebars (default), Dust
- * JavaScript: CoffeeScript (default), Iced CoffeeScript
+ But I wanted something that required no configuration, and no figuring out file load order.  And I wanted linting built in.  And I wanted to serve individual files during development without a bunch of config.  And I wanted built in RequireJS support.
+
+ And, dammit, I wanted to hack on Node and the above gave me a great reason.
 
 ## Installation
 
@@ -61,6 +61,58 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  You can find the configuration [inside the skeleton directory](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/config.coffee).
 
+## Command Line Utilities
+
+ Mimosa has some
+
+#### New Project
+
+ TODO
+
+#### Watch and Compile
+
+ Mimosa will watch the configured `sourceDir`, by default the assets directory.  When files are added, updated, or deleted, the configured compilers will perform necessary actions and keep the `compiledDir` updated with compiled/copied assets.
+
+ To start watching, execute:
+
+    $ mimosa watch
+
+#### Serve Assets
+
+ If you are not already running a server, and you need to serve your assets up, start mimosa with the server flag.
+
+    $ mimosa watch --server
+
+ By default, this will look for and run an Express app located at `server.path`.  If you used the Mimosa command line to build your new project, and you didn't provide the --noexpress flag, you will have a server.coffee at the root of your file structure.  Mimosa will run the `startServer` method in this file.  You can leave this file as is if you are simply serving up assets, but this gives you the opportunity to build out an actual Express app should that be your desire.
+
+ You can change to using an embedded default (not-extendable) Express server by changing the `server.useDefaultServer` configuration to `true`.  If you created a project using the --noexpress flag, this will have already been done for you.
+
+#### Copy Config
+
+    $ mimosa config
+
+ If you've already got a project and want to use Mimosa with it, this command will copy the default configuration into whatever directory you are in.  You'll likely have some configuration to update to point Mimosa at your source and compiled directories.
+
+## Meta-Language Compilation
+
+ Mimosa will compile your meta-languages for you and toss them in your public directory.
+
+ You can change your meta-languages in the config.  The [default config file](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/config.coffee) contains a list of other options for each `compileWith`.
+
+#### Which meta-languages?
+
+ Future additions are planned, but for now...
+
+ * CSS: SASS (default)
+ * Micro-templating: Handlebars (default), Dust
+ * JavaScript: CoffeeScript (default), Iced CoffeeScript
+
+#### Asset Copying
+
+ In the configuration there is a `copy.extensions` setting which lists the assets that will simply be moved over.  So, for example, your images, plain ol' JavaScript (vendor files, or should you be anti-metaJS), and regular CSS will be copied over.
+
+ If there are extra files you need copied over, uncomment the `copy.extensions` config and add it to the list.  Or, better yet, make a suggestion by [filing an issue](https://github.com/dbashford/mimosa/issues).  No harm in me growing the list of extensions in the default.
+
 ## Immediate Feedback
 
  Compilation of your assets is kicked off as soon as a file is saved.  Mimosa will write to the console the outcome of every compilation event.  Should compilation fail, the reason will be included in the log message.
@@ -84,6 +136,8 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
     $ NODE_ENV=production mimosa watch --server
 
 ## Roadmap
+
+  In no certain order:
 
  * No write mode.  Just compilation with notifications, coffee/jshinting.
  * Stylus, LESS compilers
