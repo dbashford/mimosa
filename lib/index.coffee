@@ -77,7 +77,6 @@ class Mimosa
     logger.success "Copied default config file into current directory."
 
   watch: (opts) ->
-    @startServer() if opts.server
 
     compilers = [new (require("./compilers/copy"))(@config)]
     for category, catConfig of @config.compilers
@@ -90,7 +89,8 @@ class Mimosa
         logger.info "Unable to find matching compiler for #{category}/#{catConfig.compileWith}: #{err}"
 
     watcher = require('./watch/watcher')(@config)
-    watcher.registerCompilers(compilers)
+    watcher.registerCompilers compilers, =>
+      @startServer() if opts.server
 
   startServer: ->
     if (@config.server.useDefaultServer) then @startDefaultServer() else @startProvidedServer()

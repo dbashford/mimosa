@@ -28,8 +28,9 @@ class Watcher
     if ++@compiledTotal is @fileCount
       compiler.doneStartup() for ext, compiler of @compilers
       optimizer.optimize(@config)
+      @initCallback() if @initCallback?
 
-  registerCompilers: (compilers) ->
+  registerCompilers: (compilers, @initCallback) ->
     @registerCompiler(compiler) for compiler in compilers
 
   registerCompiler: (compiler) ->
