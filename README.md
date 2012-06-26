@@ -153,6 +153,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
   In no certain order:
 
+ * build command
  * Push to NPM
  * No write mode.  Just compilation with notifications, coffee/jshinting.
  * Stylus, LESS compilers
