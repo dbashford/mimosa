@@ -1,4 +1,4 @@
-mimosa - a modern browser development toolkit
+Mimosa - a modern browser development toolkit
 ======
 
 Mimosa is a browser development toolkit, targeted at folks using meta-languages like CoffeeScript or SASS, or micro-templating libraries like Dust and Handlebars.  The toolkit is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management, and comes bundled with useful tools like coffee/jshint to improve code quality and livereload to speed up development.
@@ -39,7 +39,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
 ## Quick Start
 
- The easiest way to get started with mimosa is to create a new application skeleton. By default, mimosa will create a basic express app configured to match all of mimosa's defaults.
+ The easiest way to get started with Mimosa is to create a new application skeleton. By default, Mimosa will create a basic express app configured to match all of Mimosa's defaults.
 
  First navigate to a directory within which you want to place your application.
 
@@ -93,7 +93,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
 #### Serve Assets (watch --server)
 
- If you are not already running a server, and you need to serve your assets up, start mimosa with the server flag.
+ If you are not already running a server, and you need to serve your assets up, start Mimosa with the server flag.
 
     $ mimosa watch --server
 
@@ -143,7 +143,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
 ## RequireJS Optimization
 
- Start mimosa watching with the NODE_ENV production flag turned on and Mimosa will run RequireJS's optimizer on start-up and with every javascript file change.  The default Jade templates are built to switch on the environment.  So when you point at either the Express or default server's base URL with production switched on, you will be served the result of RequireJS's optimization, packaged with Almond.
+ Start Mimosa watching with the NODE_ENV production flag turned on and Mimosa will run RequireJS's optimizer on start-up and with every javascript file change.  The default Jade templates are built to switch on the environment.  So when you point at either the Express or default server's base URL with production switched on, you will be served the result of RequireJS's optimization, packaged with Almond.
 
  To start up with production turned on, execute the following:
 
@@ -153,6 +153,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
   In no certain order:
 
+ * Push to NPM
  * No write mode.  Just compilation with notifications, coffee/jshinting.
  * Stylus, LESS compilers
  * Example templates beyond the one provided
