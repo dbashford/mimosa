@@ -77,6 +77,9 @@ exports.config = {
                                           # r.js configuration (http://requirejs.org/docs/optimization.html#options)
                                           # as new paramters inside this require option. for example any shims, additional modules.
                                           # The require 'baseUrl' is set by combining the compiledDir with the compilers.javascript.directory
+    # optimizationEnabled: true           # Turn off production mode optimization.  When set to true, requirejs (r.js) optimizer will be
+                                          # used to shrink all the javascript for the {require.name} modules down to single files per module.
+                                          # When set to false, mimosa will behave identically in production as in dev
     # name: 'main'                        # names of the module, this matches the name of the Mimosa default require.js script tag
                                           # 'data-main' (see views/layout.jade), which then points to the require.js configuration
                                           # javascript file: main.js (see javascripts/main.coffee).

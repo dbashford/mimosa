@@ -2,7 +2,7 @@ express =        require 'express'
 routes  =        require './routes'
 reloadOnChange = require 'watch-connect'
 
-exports.startServer = (publicPath, useReload) ->
+exports.startServer = (publicPath, useReload, optimize) ->
 
   app = module.exports = express.createServer()
 
@@ -25,7 +25,7 @@ exports.startServer = (publicPath, useReload) ->
 
   # Routes
 
-  app.get '/', routes.index(useReload)
+  app.get '/', routes.index(useReload, optimize)
 
   app.listen 3000, ->
     console.log "Express server listening on port %d in %s mode", app.address().port, app.settings.env

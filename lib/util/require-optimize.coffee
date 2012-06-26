@@ -11,6 +11,7 @@ class Optimizer
         logger.success "Requirejs optimization complete.  The compiled file is ready for use.", true
 
   optimize: (config) =>
+    return unless config.require.optimizationEnabled
     unless @config?
       @config = config.require
       @config.baseUrl = path.join(config.root, config.watch.compiledDir, config.compilers.javascript.directory)

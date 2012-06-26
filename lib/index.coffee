@@ -110,12 +110,16 @@ class Mimosa
         app.use (require 'watch-connect')(@config.watch.compiledDir, app, {verbose: false, skipAdding:true})
       app.use @config.server.base, express.static(@config.watch.compiledDir)
 
+    production = process.env.NODE_ENV is 'production'
+    reload = @config.server.useReload and not production
+    useBuilt = production and @config.require.optimizationEnabled
+
     app.get '/', (req, res) =>
-      res.render 'index', { title: 'Mimosa\'s Express', reload:@config.server.useReload and not production, production:production}
+      res.render 'index', { title: 'Mimosa\'s Express', reload:reload, production:production, useBuilt:useBuilt}
 
     app.listen @config.server.port
 
-    logger.success "Mimosa started at http://localhost:#{@config.server.port}/"
+    logger.success "Mimosa's bundled Express started at http://localhost:#{@config.server.port}/"
 
   startProvidedServer: ->
     serverPath = path.resolve @config.server.path
@@ -123,7 +127,8 @@ class Mimosa
       if exists
         server = require serverPath
         if server.startServer
-          server.startServer(@config.watch.compiledDir, @config.server.useReload)
+          logger.info "Mimosa is starting your Express at #{@config.server.path}"
+          server.startServer(@config.watch.compiledDir, @config.server.useReload, @config.require.optimizationEnabled)
         else
           logger.error "Found provided server located at #{@config.server.path} (#{serverPath}) but it does not contain a 'startServer' method."
       else

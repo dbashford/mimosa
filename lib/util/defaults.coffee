@@ -52,11 +52,12 @@ class MimosaDefaults
     server.base =               config.server.base             ?= '/app'
     server.useReload =          config.server.useReload        ?= true
 
-    requirejs = newConfig.require = config.require              ?= {}
-    requirejs.name =                config.require.name         ?= "main"
-    requirejs.out  =                config.require.out          ?= "main-built.js"
-    requirejs.paths =               config.require.paths        ?= {}
-    requirejs.paths.jquery =        config.require.paths.jquery ?= "vendor/jquery"
+    requirejs = newConfig.require = config.require                      ?= {}
+    requirejs.optimizationEnabled = config.require.optimizationEnabled  ?= true
+    requirejs.name =                config.require.name                 ?= "main"
+    requirejs.out  =                config.require.out                  ?= "main-built.js"
+    requirejs.paths =               config.require.paths                ?= {}
+    requirejs.paths.jquery =        config.require.paths.jquery         ?= "vendor/jquery"
 
     newConfig.coffeelint = @coffeelint(config.coffeelint)
 
