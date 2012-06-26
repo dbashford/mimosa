@@ -67,9 +67,19 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
 #### New Project (new)
 
- TODO
+ The best way to get started with Mimosa is to use it to create a new application/project structure for you.  The project Mimosa creates will match all of Mimosa'a defaults, so you'll be able to get started writing code straight away, no configuration necessary.
+
+ Create a new project like so:
 
     $ mimosa new -n nameOfApplicationHere
+
+ This will create a directory at your current location using the name provided as the name of the directory.  Inside it will populate an application skeleton with public and asset directories, as well as the bare essentials for a base [Express](http://expressjs.com/) application.  You'll have Express [Jade template](http://jade-lang.com/) views, a simple Express [router](http://expressjs.com/guide.html#routing) and a server.coffee file that will be used by Mimosa to get Express [started](https://github.com/dbashford/mimosa#serve-assets-watch---server).
+
+ The public directory will be empty; it is the destination for your compiled JavaScript and CSS.  The assets directory has some example code to get you started, and has a group of vendor scripts, like require.js and handlebars.js, that you'll need.
+
+ The created directory will also contain the configuration file for Mimosa.  Everything inside of it is commented out, but all the options and explanations for each option are present.
+
+ Should you not need all of the Express stuff, you can give Mimosa a `--noexpress` flag when you create the project.  This will only give you the configuration file, the empty public directory, and the assets directory and all of its contents.
 
     $ mimosa new -n nameOfApplicationHere --noexpress
 
