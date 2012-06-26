@@ -72,9 +72,9 @@ class MimosaDefaults
     jsPath = path.join(__dirname, '..', 'compilers/javascript', "#{comp.javascript.compileWith}.coffee")
     cssPath = path.join(__dirname, '..', 'compilers/css', "#{comp.css.compileWith}.coffee")
 
-    @_testPathExists(templatePath, "compilers.template.compileWith")
-    @_testPathExists(jsPath,       "compilers.javascript.compileWith")
-    @_testPathExists(cssPath,      "compilers.css.compileWith")
+    @_testPathExists(templatePath, "compilers.template.compileWith") unless comp.template.compileWith is "none"
+    @_testPathExists(jsPath,       "compilers.javascript.compileWith") unless comp.javascript.compileWith is "none"
+    @_testPathExists(cssPath,      "compilers.css.compileWith") unless comp.css.compileWith is "none"
 
   _testPathExists: (filePath, name) ->
     rPath = path.resolve filePath

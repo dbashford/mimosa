@@ -22,7 +22,8 @@ exports.config = {
                                                      # also the location of the compiled javascript.
                                                      # For now this is only used by requirejs optimization, the rest of Mimosa doesn't
                                                      # care where you put your javascript (as long as it is inside the sourceDir)
-      # compileWith:"coffee"                         # Other options: "iced"
+      # compileWith:"coffee"                         # Other options: "iced", "none".  "none" assumes you are coding js by hand and                                                and
+                                                     # the copy config will move that over for you
       # extensions:["coffee"]                        # list of extensions to compile
       # notifyOnSuccess: true                        # send growl notification on successful compilation
                                                      # will always send on failure
@@ -34,7 +35,8 @@ exports.config = {
                                                      # not yet exposing jshint options as Mimosa options.  If anyone wants it...
 
     # template:
-      # compileWith:"handlebars"                     # Other options: "dust"
+      # compileWith:"handlebars"                     # Other options: "dust", "none". "none" assumes you aren't using any micro
+                                                     # templating solution.
       # extensions: ["hbs", "handlebars"]            # list of extensions to compile
       # outputFileName: "javascripts/templates"      # the file all templates are compiled into
       # defineLocation: "vendor/handlebars"          # location inside compiledDir javascripts
@@ -46,7 +48,8 @@ exports.config = {
                                                      # will always send on failure
 
     # css:
-      # compileWith:"sass"                           # Other options: none just yet
+      # compileWith:"sass"                           # Other options: "none".  "none" assumes you are coding pure CSS and
+                                                     # the copy config will move that over for you.  More compilers to come.
       # extensions:["scss", "sass"]                  # list of extensions to compile
       # hasCompass: true                             # relevant to sass only, is compass included?
       # notifyOnSuccess: true                        # send growl notification on successful compilation?

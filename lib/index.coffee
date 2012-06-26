@@ -82,6 +82,7 @@ class Mimosa
     compilers = [new (require("./compilers/copy"))(@config)]
     for category, catConfig of @config.compilers
       try
+        continue if catConfig.compileWith is "none"
         compiler = require("./compilers/#{category}/#{catConfig.compileWith}")
         compilers.push(new compiler(@config))
         logger.info "Adding compiler: #{category}/#{catConfig.compileWith}"
