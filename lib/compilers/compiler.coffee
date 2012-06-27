@@ -37,7 +37,7 @@ module.exports = class AbstractCompiler
 
   removeTheFile: (fileName) =>
     fs.unlink fileName, (err) =>
-      return @failed("Failed to delete compiled file: #{fileName}") if err
+      return @failed("Failed to delete compiled file: #{fileName}, #{err}") if err
       @success "Deleted compiled file #{fileName}"
 
   optimize: ->
