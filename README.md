@@ -101,6 +101,16 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  You can change to using an embedded default (not-extendable) Express server by changing the `server.useDefaultServer` configuration to `true`.  If you created a project using the --noexpress flag, this will have already been done for you.
 
+#### One Time Asset Build (build)
+
+ If you just want to compile a set of assets, and you don't want to start up a watching process to do it, you can use Mimosa's build command.
+
+    $ mimosa build
+
+ This will run through your assets and compile any that need compiling, deliver the results to the public directory, and then exit.  If you want to do this with optimization, provide a --optimize flag.  This will compile all the assets, and then create the requirejs optimized files for use in production.
+
+    $ mimosa build --optimize
+
 #### Copy Config (config)
 
     $ mimosa config
