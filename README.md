@@ -153,7 +153,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
 ## RequireJS Optimization
 
- Start Mimosa watching with the NODE_ENV production flag turned on and Mimosa will run RequireJS's optimizer on start-up and with every javascript file change.  The default Jade templates are built to switch on the environment.  So when you point at either the Express or default server's base URL with production switched on, you will be served the result of RequireJS's optimization, packaged with Almond.
+ Start Mimosa watching with the NODE_ENV production flag turned on and Mimosa will run RequireJS's optimizer on start-up and with every javascript file change.  The default Jade templates are built to switch on the environment.  So when you point at either the Express or default server's base URL with production switched on, you will be served the result of RequireJS's optimization, packaged with [Almond](https://github.com/jrburke/almond).
 
  To start up with production turned on, execute the following:
 
@@ -163,7 +163,6 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
   In no certain order:
 
- * build command
  * Push to NPM
  * No write mode.  Just compilation with notifications, coffee/jshinting.
  * Stylus, LESS compilers
