@@ -12,7 +12,11 @@ module.exports = class AbstractCoffeeScriptCompiler extends AbstractJavascriptCo
     @coffeeLint(source, fileName) if @config.metalint
 
   coffeeLint: (source, fileName) ->
-    lintResults = coffeelint.lint(source, @lintOptions)
+    try
+      lintResults = coffeelint.lint(source, @lintOptions)
+    catch err
+      return # is an error in compilation of coffeescript, compiler will take care of that
+
     for result in lintResults
       switch result.level
         when 'error' then @logLint(@coffeeDialect, result, 'Error',   logger.warn, fileName)

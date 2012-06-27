@@ -12,12 +12,23 @@ glob =     require 'glob'
 logger =   require './util/logger'
 defaults = require './util/defaults'
 version =  require('../package.json').version
+Watcher =  require('./watch/watcher')
 
 class Mimosa
 
   constructor: -> @cli()
 
   cli: ->
+    args.command('build')
+      .option 'optimize',
+        flag: true
+        abbr: 'o'
+        help: 'run require.js optimization after building'
+      .help("make a single pass through assets and compile them")
+      .callback (opts) =>
+        @processConfig =>
+          @build(opts)
+
     args.command('watch')
       .option 'server',
         flag: true
@@ -36,10 +47,10 @@ class Mimosa
         required:true
       .option 'noexpress'
         flag: true
-        help: 'do not build express into the application setup'
-      .help("build out a skeleton matching Mimosa's defaults, which includes a basic Express setup")
+        help: 'do not include express in the application setup'
+      .help("create a skeleton matching Mimosa's defaults, which includes a basic Express setup")
       .callback (opts) =>
-        @build(opts)
+        @create(opts)
 
     args.command('config')
       .help("copy the default mimosa config into the current folder")
@@ -76,8 +87,10 @@ class Mimosa
     fs.writeFile currPath, configFileContents, 'ascii'
     logger.success "Copied default config file into current directory."
 
-  watch: (opts) ->
+  build: (opts) ->
+    if opts.optimize then @config.require.optimizationEnabled = true else @config.require.optimizationEnabled = false
 
+  watch: (opts) ->
     compilers = [new (require("./compilers/copy"))(@config)]
     for category, catConfig of @config.compilers
       try
@@ -88,11 +101,9 @@ class Mimosa
       catch err
         logger.info "Unable to find matching compiler for #{category}/#{catConfig.compileWith}: #{err}"
 
-    watcher = require('./watch/watcher')(@config)
-    watcher.registerCompilers compilers, =>
-      @startServer() if opts.server
+    new Watcher(@config, compilers, @startServer if opts.server)
 
-  startServer: ->
+  startServer: =>
     if (@config.server.useDefaultServer) then @startDefaultServer() else @startProvidedServer()
 
   startDefaultServer: ->
@@ -127,14 +138,14 @@ class Mimosa
       if exists
         server = require serverPath
         if server.startServer
-          logger.info "Mimosa is starting your Express at #{@config.server.path}"
+          logger.info "Mimosa is starting the Express server at #{@config.server.path}"
           server.startServer(@config.watch.compiledDir, @config.server.useReload, @config.require.optimizationEnabled)
         else
           logger.error "Found provided server located at #{@config.server.path} (#{serverPath}) but it does not contain a 'startServer' method."
       else
         logger.error "Attempted to start the provided server located at #{@config.server.path} (#{serverPath}), but could not find it."
 
-  build: (opts) ->
+  create: (opts) ->
     return logger.error "Must provide a name for the new project" unless opts.name? and opts.name.length > 0
     skeletonPath = path.join __dirname, 'skeleton'
     currPath = path.join(path.resolve(''), opts.name)
