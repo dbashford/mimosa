@@ -16,13 +16,13 @@ Watcher =  require('./watch/watcher')
 
 class Mimosa
 
-  constructor: -> @cli()
+  constructor: ->
+    @cli()
 
   cli: ->
     args.command('build')
       .option 'optimize',
         flag: true
-        abbr: 'o'
         help: 'run require.js optimization after building'
       .help("make a single pass through assets and compile them")
       .callback (opts) =>
@@ -32,19 +32,18 @@ class Mimosa
     args.command('watch')
       .option 'server',
         flag: true
-        abbr: 's'
         help: 'run a server that will serve up the destination directory'
       .help("watch the filesystem and compile assets")
       .callback (opts) =>
         @processConfig =>
-          @watch(opts)
+          @watch(true, @startServer if opts?.server)
 
     args.command('new')
       .option 'name'
         flag: false
-        abbr: 'n'
         help: 'name for your project, mimosa will create a directory by this name and place the skeleton inside'
         required:true
+        abbr: 'n'
       .option 'noexpress'
         flag: true
         help: 'do not include express in the application setup'
@@ -88,20 +87,24 @@ class Mimosa
     logger.success "Copied default config file into current directory."
 
   build: (opts) ->
-    if opts.optimize then @config.require.optimizationEnabled = true else @config.require.optimizationEnabled = false
+    logger.info "Beginning build"
+    if opts.optimize then @config.require.forceOptimization = true
+    @watch(false, @buildFinished)
 
-  watch: (opts) ->
+  buildFinished: -> logger.success("Finished build")
+
+  watch: (persist, callback) ->
     compilers = [new (require("./compilers/copy"))(@config)]
     for category, catConfig of @config.compilers
       try
         continue if catConfig.compileWith is "none"
         compiler = require("./compilers/#{category}/#{catConfig.compileWith}")
         compilers.push(new compiler(@config))
-        logger.info "Adding compiler: #{category}/#{catConfig.compileWith}"
+        logger.info "Adding compiler: #{category}/#{catConfig.compileWith}" if persist
       catch err
         logger.info "Unable to find matching compiler for #{category}/#{catConfig.compileWith}: #{err}"
 
-    new Watcher(@config, compilers, @startServer if opts.server)
+    new Watcher(@config, compilers, persist, callback)
 
   startServer: =>
     if (@config.server.useDefaultServer) then @startDefaultServer() else @startProvidedServer()

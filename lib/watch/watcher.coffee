@@ -8,7 +8,7 @@ optimizer = require '../util/require-optimize'
 
 class Watcher
 
-  constructor: (@config, @compilers, @initCallback, persist = true) ->
+  constructor: (@config, @compilers, persist, @initCallback) ->
     compiler.setDoneCallback(@compilerDone) for compiler in @compilers
 
     srcDir = path.join(@config.root, @config.watch.sourceDir)
@@ -18,20 +18,20 @@ class Watcher
     @compiledTotal = 0
 
     watcher = watch.watch(srcDir, {persistent:persist})
-    watcher.on "change", (f) => @_findCompiler(f, @_updated)
-    watcher.on "unlink", (f) => @_findCompiler(f, @_removed)
-    watcher.on "add", (f) => @_findCompiler(f, @_created)
+    watcher.on "change", (f) => @_findCompiler(f)?.updated(f)
+    watcher.on "unlink", (f) => @_findCompiler(f)?.removed(f)
+    watcher.on "add",    (f) => @_findCompiler(f)?.created(f)
 
     logger.info "Watching #{srcDir}" if persist
 
-  # When all compilers done, let them know, and trigger optimize
+  # On startup, when all compilers done, let them know, and trigger optimize
   compilerDone: =>
     if ++@compiledTotal is @fileCount
       compiler.doneStartup() for ext, compiler of @compilers
       optimizer.optimize(@config)
       @initCallback() if @initCallback?
 
-  _findCompiler: (fileName, callback) ->
+  _findCompiler: (fileName) ->
     return if @config.watch.ignored.some((str) -> fileName.has(str))
     extension = path.extname(fileName).substring(1)
     return unless extension?.length > 0
@@ -39,20 +39,8 @@ class Watcher
       for ext in comp.getExtensions()
         return true if extension is ext
       return false
-    if compiler?
-      callback(fileName, compiler)
-    else
-      logger.warn "No compiler has been registered: #{extension}"
-
-  _created: (f, compiler) => @_executeCompilerMethod(f, compiler.created, "created")
-  _updated: (f, compiler) => @_executeCompilerMethod(f, compiler.updated, "updated")
-  _removed: (f, compiler) => @_executeCompilerMethod(f, compiler.removed, "removed")
-
-  _executeCompilerMethod: (fileName, compilerMethod, name) =>
-    if compilerMethod?
-      compilerMethod(fileName)
-    else
-      logger.error "Compiler method #{name} does not exist, doing nothing for #{fileName}"
+    return compiler if compiler
+    logger.warn "No compiler has been registered: #{extension}"
+    null
 
 module.exports = Watcher
-

@@ -59,7 +59,7 @@ class MimosaDefaults
     requirejs.paths =               config.require.paths                ?= {}
     requirejs.paths.jquery =        config.require.paths.jquery         ?= "vendor/jquery"
 
-    newConfig.coffeelint = @coffeelint(config.coffeelint)
+    newConfig.coffeelint = @_coffeelint(config.coffeelint)
 
     newConfig
 
@@ -84,7 +84,7 @@ class MimosaDefaults
       logger.fatal "#{name} (#{rPath}) cannot be found"
       @fatalErrors++
 
-  coffeelint: (overrides) ->
+  _coffeelint: (overrides) ->
     coffeelint =
       no_tabs:
         level: "error"

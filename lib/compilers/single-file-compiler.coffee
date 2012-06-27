@@ -9,19 +9,18 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
   # OVERRIDE THIS
   compile: (fileAsText, fileName, callback) -> throw new Error "Method compile must be implemented"
 
-  created: (fileName) => @compileAndWrite(fileName, false)
-  updated: (fileName) => @compileAndWrite(fileName)
+  created: (fileName) => @readAndCompile(fileName, false)
+  updated: (fileName) => @readAndCompile(fileName)
   removed: (fileName) => @removeTheFile(@findCompiledPath(fileName.replace(@fullConfig.root, '')))
 
-  compileAndWrite: (fileName, isUpdate = true) ->
+  readAndCompile: (fileName, isUpdate = true) ->
     destinationFile = @findCompiledPath(fileName.replace(@fullConfig.root, ''))
-    if isUpdate or @_fileNeedsCompiling(fileName, destinationFile)
-      fs.readFile fileName, "ascii", (err, text) =>
-        return @failed(err) if err
-        @beforeCompile(text, fileName) if @beforeCompile?
-        @compile(text, fileName, destinationFile, @_compileComplete)
-    else
-      @done()
+    return @done() unless isUpdate or @_fileNeedsCompiling(fileName, destinationFile)
+
+    fs.readFile fileName, "ascii", (err, text) =>
+      return @failed(err) if err
+      @beforeCompile(text, fileName) if @beforeCompile?
+      @compile(text, fileName, destinationFile, @_compileComplete)
 
   _compileComplete: (error, results, destinationFile) =>
     if error

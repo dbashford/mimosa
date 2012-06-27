@@ -33,7 +33,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
 
   doneStartup: =>
     @startupFinished = true
-    @compileAndWrite(base, false) for base in @baseSassFiles
+    @readAndCompile(base, false) for base in @baseSassFiles
 
   compile: (sassText, fileName, destinationFile, callback) ->
     result = ''
@@ -54,7 +54,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     bases = @partialToBaseHash[fileName]
     if bases?
       for base in bases
-        @compileAndWrite(base)
+        @readAndCompile(base)
         @processWatchedDirectories()
     else
       logger.warn "Orphaned partial #{fileName}"
