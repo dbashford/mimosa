@@ -23,16 +23,16 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
                  console.log("Handlebars library has not been passed in successfully via require");
                  return;
                }
-               var template = Handlebars.template, templates = {};
+               var template = Handlebars.template, templates = {};\n
              """
 
-    output += for fileName in fileNames
+    for fileName in fileNames
       out = ''
       content = fs.readFileSync fileName, "ascii"
       templateName = path.basename(fileName, path.extname(fileName))
       try
         templateOutput = handlebars.precompile(content)
-        out = "  templates.#{templateName} = template(#{templateOutput});\n"
+        output += "templates['#{templateName}'] = template(#{templateOutput});\n"
       catch err
         error += "#{err} \n"
       out

@@ -5,3 +5,4 @@ require
   , ['jquery', 'templates']
   , ($, templates) ->
     $('body').append(templates.example({name:'Handlebars'}))
+    $('body').append(templates['another-example']())
