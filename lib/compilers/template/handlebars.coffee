@@ -27,7 +27,6 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
              """
 
     for fileName in fileNames
-      out = ''
       content = fs.readFileSync fileName, "ascii"
       templateName = path.basename(fileName, path.extname(fileName))
       try
@@ -35,7 +34,6 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
         output += "templates['#{templateName}'] = template(#{templateOutput});\n"
       catch err
         error += "#{err} \n"
-      out
 
     output += 'return templates; });'
 

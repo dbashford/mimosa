@@ -11,15 +11,13 @@ module.exports = class DustCompiler extends AbstractTemplateCompiler
     error = null
 
     output = "define(['#{@config.defineLocation}'], function (dust){ "
-    output += for fileName in fileNames
-      out = ''
+    for fileName in fileNames
       content = fs.readFileSync fileName, "ascii"
       templateName = path.basename(fileName, path.extname(fileName))
       try
-        out = dust.compile(content, templateName)
+        output += dust.compile(content, templateName)
       catch err
         error += "#{err}\n"
-      out
     output += 'return dust; });'
 
     callback(error, output)
