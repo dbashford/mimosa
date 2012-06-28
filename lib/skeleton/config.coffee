@@ -35,7 +35,7 @@ exports.config = {
                                                      # not yet exposing jshint options as Mimosa options.  If anyone wants it...
 
     # template:
-      # compileWith:"handlebars"                     # Other options: "dust", "none". "none" assumes you aren't using any micro
+      # compileWith:"handlebars"                     # Other options: "dust", "jade", "none". "none" assumes you aren't using any micro
                                                      # templating solution.
       # extensions: ["hbs", "handlebars"]            # list of extensions to compile
       # outputFileName: "javascripts/templates"      # the file all templates are compiled into
