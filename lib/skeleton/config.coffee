@@ -56,9 +56,9 @@ exports.config = {
                                                      # will always send on failure
 
   # copy:
-    # extensions: ["js","css","png","jpg","jpeg","gif"]  # the extensions of files to simply copy from sourceDir
-                                                         # to compiledDir.  vendor js/css, images, etc.
-    # notifyOnSuccess:false                              # send growl notification on successful copy?
+    # extensions: ["js","css","png","jpg","jpeg","gif","html"]  # the extensions of files to simply copy from sourceDir
+                                                                # to compiledDir.  vendor js/css, images, etc.
+    # notifyOnSuccess:false                                     # send growl notification on successful copy?
 
   # server:                               # configuration for server when server option is enabled via CLI
     # useDefaultServer: false             # whether or not mimosa starts a default server for you,

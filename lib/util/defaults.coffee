@@ -42,7 +42,7 @@ class MimosaDefaults
     css.notifyOnSuccess = config.compilers.css.notifyOnSuccess ?= true
 
     copy = newConfig.copy = config.copy                        ?= {}
-    copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif"]
+    copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif","html"]
     copy.notifyOnSuccess =  config.copy.notifyOnSuccess        ?= false
 
     server = newConfig.server = config.server                  ?= {}
