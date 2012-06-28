@@ -41,6 +41,7 @@ class Watcher
       return false
     return compiler if compiler
     logger.warn "No compiler has been registered: #{extension}"
+    @compilerDone()
     null
 
 module.exports = Watcher
