@@ -1,7 +1,7 @@
 Mimosa - a modern browser development toolkit
 ======
 
-Mimosa is a browser development toolkit, targeted at folks using meta-languages like CoffeeScript or SASS, or micro-templating libraries like Dust and Handlebars.  The toolkit is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management, and comes bundled with useful tools like coffee/jshint to improve code quality and livereload to speed up development.
+Mimosa is a browser development toolkit, targeted at folks using meta-languages like CoffeeScript or SASS, or micro-templating libraries like Jade and Handlebars.  The toolkit is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management, and comes bundled with useful tools like coffee/jshint to improve code quality and livereload to speed up development.
 
 Mimosa is not quite ready for prime-time (as of late June), still shaking things out, but feel free to play around and [file issues](https://github.com/dbashford/mimosa/issues) should you find them.  I expect some issues on Windows!
 
@@ -11,7 +11,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
  * Heavily configurable if moving away from defaults
  * Compiling of CoffeeScript + Iced CoffeeScript
  * Compiling of SASS (soon, LESS, Stylus)
- * Compiling of Handlebars and Dust templates into single template files
+ * Compiling of Handlebars, Dust and Jade templates into single template files to be used in the client
  * Compile assets when they are saved, not when they are requested
  * Run in development with unminified/non-compressed javascript, turn on prod mode and run with a single javascript file using Require's optimizer and [Almond](https://github.com/jrburke/almond)
  * Growl notifications along with basic console logging.  If a compile fails, you'll know right away.
@@ -128,7 +128,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
  Future additions are planned, but for now...
 
  * CSS: SASS (default)
- * Micro-templating: Handlebars (default), Dust
+ * Micro-templating: Handlebars (default), Dust, Jade
  * JavaScript: CoffeeScript (default), Iced CoffeeScript
 
 #### Asset Copying
