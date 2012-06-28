@@ -4,7 +4,7 @@ path =      require 'path'
 wrench =    require 'wrench'
 fs =        require 'fs'
 logger =    require '../util/logger'
-optimizer = require '../util/require-optimize'
+optimizer = require '../optimize/require-optimize'
 
 class Watcher
 

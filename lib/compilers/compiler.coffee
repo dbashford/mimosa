@@ -3,7 +3,7 @@ path = require 'path'
 fs = require 'fs'
 mkdirp = require 'mkdirp'
 logger = require '../util/logger'
-optimizer = require '../util/require-optimize'
+optimizer = require '../optimize/require-optimize'
 
 module.exports = class AbstractCompiler
 
