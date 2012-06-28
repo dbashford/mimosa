@@ -5,9 +5,9 @@ class MimosaDefaults
 
   fatalErrors: 0
 
-  applyAndValidateDefaults: (config, callback) =>
+  applyAndValidateDefaults: (config, isServer, callback) =>
     config = @_applyDefaults(config)
-    @_validateDefaults(config)
+    @_validateDefaults(config, isServer)
     err = if @fatalErrors is 0 then null else @fatalErrors
     callback(err, config)
 
@@ -63,10 +63,10 @@ class MimosaDefaults
 
     newConfig
 
-  _validateDefaults: (config) ->
-    @_testPathExists(config.watch.sourceDir, "watch.sourceDir")
+  _validateDefaults: (config, isServer) ->
+    @_testPathExists(config.watch.sourceDir,   "watch.sourceDir")
     @_testPathExists(config.watch.compiledDir, "watch.compiledDir")
-    @_testPathExists(config.server.path,          "server.path ") unless config.server.useDefaultServer
+    @_testPathExists(config.server.path,       "server.path ") if isServer and not config.server.useDefaultServer
 
     comp = config.compilers
     templatePath = path.join(__dirname, '..', 'compilers/template', "#{comp.template.compileWith}.coffee")

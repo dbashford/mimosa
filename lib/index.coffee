@@ -26,7 +26,7 @@ class Mimosa
         help: 'run require.js optimization after building'
       .help("make a single pass through assets and compile them")
       .callback (opts) =>
-        @processConfig =>
+        @processConfig false, =>
           @build(opts)
 
     args.command('watch')
@@ -35,7 +35,7 @@ class Mimosa
         help: 'run a server that will serve up the destination directory'
       .help("watch the filesystem and compile assets")
       .callback (opts) =>
-        @processConfig =>
+        @processConfig opts?.server, =>
           @watch(true, @startServer if opts?.server)
 
     args.command('new')
@@ -62,7 +62,7 @@ class Mimosa
 
     args.parse()
 
-  processConfig: (callback) ->
+  processConfig: (server, callback) ->
     configPath = path.resolve 'config.coffee'
     try
       {config} = require configPath
@@ -70,7 +70,7 @@ class Mimosa
       logger.info "No configuration file found (config.coffee), using all defaults."
       config = {}
 
-    defaults config, (err, newConfig) =>
+    defaults config, server, (err, newConfig) =>
       if err
         logger.fatal "Unable to start Mimosa, #{err} configuration(s) problems listed above."
         process.exit 1
