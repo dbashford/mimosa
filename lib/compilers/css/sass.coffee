@@ -19,17 +19,16 @@ module.exports = class SassCompiler extends AbstractCssCompiler
         logger.error "SASS is a Ruby gem, information can be found here: http://sass-lang.com/tutorial.html"
         logger.error "SASS can be installed by executing this command: gem install sass"
 
-  created: (fileName) =>
-    if @startupFinished
-      if @_isPartial(fileName) then @_compileBasesForPartial(fileName) else super(fileName)
+  created: (fileName) => if @startupFinished then @process(fileName, (f) => super(f)) else @done()
+  updated: (fileName) => @process(fileName, (f) => super(f))
+  removed: (fileName) => @process(fileName, (f) => super(f))
+
+  process: (fileName, sooper) ->
+    if @_isPartial(fileName)
+      @_compileBasesForPartial(fileName)
     else
-      @done()
-
-  updated: (fileName) =>
-    if @_isPartial(fileName) then @_compileBasesForPartial(fileName) else super(fileName)
-
-  removed: (fileName) =>
-    if @_isPartial(fileName) then @_compileBasesForPartial(fileName) else super(fileName)
+      sooper(fileName)
+      @processWatchedDirectories()
 
   doneStartup: =>
     @startupFinished = true
@@ -51,6 +50,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
   _isPartial: (fileName) -> path.basename(fileName).startsWith('_')
 
   _compileBasesForPartial: (fileName) ->
+    fileName = fileName.replace(@fullConfig.root, '').substring(1)
     bases = @partialToBaseHash[fileName]
     if bases?
       for base in bases

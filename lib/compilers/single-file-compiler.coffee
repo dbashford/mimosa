@@ -6,7 +6,6 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
 
   constructor: (config, targetConfig) -> super(config, targetConfig)
 
-  # OVERRIDE THIS
   compile: (fileAsText, fileName, callback) -> throw new Error "Method compile must be implemented"
 
   created: (fileName) => @readAndCompile(fileName, false)
@@ -16,7 +15,6 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
   readAndCompile: (fileName, isUpdate = true) ->
     destinationFile = @findCompiledPath(fileName.replace(@fullConfig.root, ''))
     return @done() unless isUpdate or @_fileNeedsCompiling(fileName, destinationFile)
-
     fs.readFile fileName, "ascii", (err, text) =>
       return @failed(err) if err
       @beforeCompile(text, fileName) if @beforeCompile?
