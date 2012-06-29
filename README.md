@@ -137,6 +137,30 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  If there are extra files you need copied over, uncomment the `copy.extensions` config and add it to the list.  Or, better yet, make a suggestion by [filing an issue](https://github.com/dbashford/mimosa/issues).  No harm in me growing the list of extensions in the default.
 
+## Micro-Templating Libraries
+
+ Mimosa comes bundled with three different micro-templating languages for client rendering.  [Dust](https://github.com/linkedin/dustjs), [Handlebars](http://handlebarsjs.com/), and [Jade](http://jade-lang.com/).  As with the CSS and JavaScript meta-languages, the micro-templating libraries will be compiled when saved.  In all cases, the resulting compiled templates will be merged into a single file for use in the client.
+
+ That single file is configurable (`compilers.template.outputFileName`), but by default it is kept at javascripts/template.  When this file is injected via require, the behavior differs per library.
+
+#### Handlebars
+
+ Handlebars is the default templating langauge.  The injected template javascript file provides a JSON object of templates.  To access, for instance, a template originating from a file named "example.hbs", you'd do this...
+
+ `templates.example({})`
+
+passing in data the template needs to render in JSON format.
+
+ Handlebars also provides the ability to code reusable helper methods in pure JavaScript.  You can code those in the meta-language of your choosing inside the `compilers.template.helperFile` file.  The helpers and the templates are all pulled together via requirejs.
+
+#### Dust
+
+  TDB
+
+#### Jade
+
+  TBD
+
 ## Immediate Feedback
 
  Compilation of your assets is kicked off as soon as a file is saved.  Mimosa will write to the console the outcome of every compilation event.  Should compilation fail, the reason will be included in the log message.
