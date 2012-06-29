@@ -70,11 +70,11 @@ class Mimosa
     args.parse()
 
   processConfig: (server, callback) ->
-    configPath = path.resolve 'config.coffee'
+    configPath = path.resolve 'mimosa-config.coffee'
     try
       {config} = require configPath
     catch err
-      logger.info "No configuration file found (config.coffee), using all defaults."
+      logger.warn "No configuration file found (mimosa-config.coffee), using all defaults."
       config = {}
 
     defaults config, server, (err, newConfig) =>
@@ -125,9 +125,9 @@ class Mimosa
     logger.success "#{path.join(@config.root, @config.watch.compiledDir)} has been cleaned."
 
   copyConfig: ->
-    configPath = path.join __dirname, 'skeleton', "config.coffee"
+    configPath = path.join __dirname, 'skeleton', "mimosa-config.coffee"
     configFileContents = fs.readFileSync(configPath)
-    currPath = path.join path.resolve(''), "config.coffee"
+    currPath = path.join path.resolve(''), "mimosa-config.coffee"
     fs.writeFile currPath, configFileContents, 'ascii'
     logger.success "Copied default config file into current directory."
 
@@ -221,7 +221,7 @@ class Mimosa
       wrench.rmdirSyncRecursive(path.join(currPath, "views"))
       wrench.rmdirSyncRecursive(path.join(currPath, "routes"))
 
-      configPath = path.join(currPath, "config.coffee")
+      configPath = path.join(currPath, "mimosa-config.coffee")
       fs.readFile configPath, "ascii", (err, data) ->
         data = data.replace "# server:", "server:"
         data = data.replace "# useDefaultServer: false", "useDefaultServer: true"

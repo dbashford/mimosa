@@ -59,7 +59,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  To change something -- for instance to make it so you don't get notified via growl when your CSS meta-language (like SASS) compiles successfully -- uncomment the object structure that leads to the setting.  In this case you'd uncomment compilers, css, and notifyOnSuccess, and change the setting to false.
 
- You can find the configuration [inside the skeleton directory](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/config.coffee).
+ You can find the configuration [inside the skeleton directory](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/mimosa-config.coffee).
 
 ## Command Line Utilities
 
@@ -127,7 +127,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  Mimosa will compile your meta-languages for you and toss them in your public directory.
 
- You can change your meta-languages in the config.  The [default config file](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/config.coffee) contains a list of other options for each `compileWith`.
+ You can change your meta-languages in the config.  The [default config file](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/mimosa-config.coffee) contains a list of other options for each `compileWith`.
 
 #### Which meta-languages?
 
