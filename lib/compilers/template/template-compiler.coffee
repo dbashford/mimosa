@@ -18,6 +18,10 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
   updated: => @_gatherFiles()
   removed: => @_gatherFiles(true)
 
+  cleanup: ->
+    @_removeClientLibrary()
+    @removeTheFile(@fileName, false)
+
   _gatherFiles: (isRemove = false) ->
     fileNames = []
     allFiles = find.sync @srcDir

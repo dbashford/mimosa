@@ -20,6 +20,13 @@ class Mimosa
     @cli()
 
   cli: ->
+
+    args.command('clean')
+      .help("clean out all of the compiled assets")
+      .callback =>
+        @processConfig false, =>
+          @clean()
+
     args.command('build')
       .option 'optimize',
         flag: true
@@ -79,6 +86,38 @@ class Mimosa
         @config = newConfig
         callback()
 
+  clean: ->
+    srcDir = @config.watch.sourceDir
+    files = wrench.readdirSyncRecursive(srcDir)
+
+    compilers = @fetchCompilers()
+
+    compiler.cleanup() for compiler in compilers when compiler.cleanup?
+
+    for file in files
+      isDirectory = fs.statSync(path.join(srcDir, file)).isDirectory()
+      continue if isDirectory
+
+      compiledPath = path.join @config.root, @config.watch.compiledDir, file
+
+      extension = path.extname(file)
+      if extension?.length > 0
+        extension = extension.substring(1)
+        compiler = compilers.find (comp) ->
+          for ext in comp.getExtensions()
+            return true if extension is ext
+          return false
+        if compiler? and compiler.getOutExtension()
+          compiledPath = compiledPath.replace(/\.\w+$/, ".#{compiler.getOutExtension()}")
+
+      fs.unlinkSync compiledPath if path.existsSync compiledPath
+
+    directories = files.filter (f) -> fs.statSync(path.join(srcDir, f)).isDirectory()
+    directories = directories.sortBy('length', true)
+    fs.rmdirSync path.join(@config.root, @config.watch.compiledDir, dir) for dir in directories
+
+    logger.success "#{path.join(@config.root, @config.watch.compiledDir)} has been cleaned."
+
   copyConfig: ->
     configPath = path.join __dirname, 'skeleton', "config.coffee"
     configFileContents = fs.readFileSync(configPath)
@@ -93,7 +132,7 @@ class Mimosa
 
   buildFinished: -> logger.success("Finished build")
 
-  watch: (persist, callback) ->
+  fetchCompilers: (persist = false) ->
     compilers = [new (require("./compilers/copy"))(@config)]
     for category, catConfig of @config.compilers
       try
@@ -103,7 +142,10 @@ class Mimosa
         logger.info "Adding compiler: #{category}/#{catConfig.compileWith}" if persist
       catch err
         logger.info "Unable to find matching compiler for #{category}/#{catConfig.compileWith}: #{err}"
+    compilers
 
+  watch: (persist, callback) ->
+    compilers = @fetchCompilers(persist)
     new Watcher(@config, compilers, persist, callback)
 
   startServer: =>

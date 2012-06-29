@@ -111,6 +111,12 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
     $ mimosa build --optimize
 
+#### Clean Compiled Assets (clean)
+
+ A companion to build, this command will wipe out any files it is responsible for placing into the `compiledDir`.  It makes a pass to clean out the files, and once done, it makes a pass to clean out any directories that are now empty.  If for some reason there are files in your `compiledDir` directory structure that Mimosa didn't place there, they'll be left in place.
+
+    $ mimosa clean
+
 #### Copy Config (config)
 
     $ mimosa config
@@ -139,17 +145,17 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
 ## Micro-Templating Libraries
 
- Mimosa comes bundled with three different micro-templating languages for client rendering.  [Dust](https://github.com/linkedin/dustjs), [Handlebars](http://handlebarsjs.com/), and [Jade](http://jade-lang.com/).  As with the CSS and JavaScript meta-languages, the micro-templating libraries will be compiled when saved.  In all cases, the resulting compiled templates will be merged into a single file for use in the client.
+ Mimosa comes bundled with three different micro-templating languages for to pick from for client rendering.  [Dust](https://github.com/linkedin/dustjs), [Handlebars](http://handlebarsjs.com/), and [Jade](http://jade-lang.com/).  As with the CSS and JavaScript meta-languages, the micro-templating libraries will be compiled when saved.  In all cases, the resulting compiled templates will be merged into a single file for use in the client.
 
- That single file is configurable (`compilers.template.outputFileName`), but by default it is kept at javascripts/template.  When this file is injected via require, the behavior differs per library.
+ The name and location of that single file is configurable (`compilers.template.outputFileName`), but by default it is kept at javascripts/template.  When this file is injected via require, the behavior differs per library.
 
 #### Handlebars
 
- Handlebars is the default templating langauge.  The injected template javascript file provides a JSON object of templates.  To access, for instance, a template originating from a file named "example.hbs", you'd do this...
+ Handlebars is the default templating langauge.  The injected template javascript file provides a JSON object of templates.  To access, for instance, a template originating from a file named "example.hbs", you would do this...
 
  `templates.example({})`
 
-passing in data the template needs to render in JSON format.
+passing in JSON data the template needs to render.
 
  Handlebars also provides the ability to code reusable helper methods in pure JavaScript.  You can code those in the meta-language of your choosing inside the `compilers.template.helperFile` file.  The helpers and the templates are all pulled together via requirejs.
 

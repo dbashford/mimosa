@@ -25,6 +25,8 @@ module.exports = class AbstractCompiler
 
   getExtensions: => @config.extensions
 
+  getOutExtension: => @outExtension
+
   write: (fileName, content) =>
     fileName = fileName.replace(@fullConfig.root, '')
     dirname = path.dirname(fileName)
@@ -35,10 +37,10 @@ module.exports = class AbstractCompiler
         @success "Compiled/copied #{fileName}"
         @postWrite(fileName) if @postWrite?
 
-  removeTheFile: (fileName) =>
+  removeTheFile: (fileName, reportSuccess = true) =>
     fs.unlink fileName, (err) =>
       return @failed("Failed to delete compiled file: #{fileName}, #{err}") if err
-      @success "Deleted compiled file #{fileName}"
+      @success "Deleted compiled file #{fileName}" if reportSuccess
 
   optimize: ->
     optimizer.optimize(@fullConfig) if @startupFinished
