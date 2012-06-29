@@ -32,7 +32,17 @@ module.exports = class SassCompiler extends AbstractCssCompiler
 
   doneStartup: =>
     @startupFinished = true
-    @readAndCompile(base, false) for base in @baseSassFiles
+    baseSassFilesToCompileNow = []
+
+    for partial, bases of @partialToBaseHash
+      partialTime = fs.statSync(path.join @fullConfig.root, partial).mtime
+      for base in bases
+        baseTime = fs.statSync(@findCompiledPath(base)).mtime
+        baseSassFilesToCompileNow.push(base) if partialTime > baseTime
+
+    baseSassFilesToCompileNow = baseSassFilesToCompileNow.unique()
+
+    @readAndCompile(base) for base in baseSassFilesToCompileNow
 
   compile: (sassText, fileName, destinationFile, callback) ->
     result = ''
