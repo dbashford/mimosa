@@ -5,12 +5,14 @@ path = require 'path'
 
 module.exports = class JadeCompiler extends AbstractTemplateCompiler
 
+  clientLibrary: "jade-runtime"
+
   constructor: (config) -> super(config)
 
   compile: (fileNames, callback) ->
     error = null
 
-    output = "define(['#{@config.defineLocation}'], function (jade){ var templates = {};\n"
+    output = "define(['#{@clientLibrary}'], function (jade){ var templates = {};\n"
     for fileName in fileNames
       content = fs.readFileSync fileName, "ascii"
       templateName = path.basename(fileName, path.extname(fileName))

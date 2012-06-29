@@ -1,12 +1,15 @@
 AbstractCompiler = require '../compiler'
 path = require 'path'
 find = require 'findit'
+fs = require 'fs'
+logger = require '../../util/logger'
 
 module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   constructor: (config) ->
     super(config, config.compilers.template)
     @fileName = path.join(@compDir, @config.outputFileName + ".js")
+    @baseDir = path.dirname(@fileName)
 
   # OVERRIDE THIS
   compile: (fileNames, callback) -> throw new Error "Method compile must be implemented"
@@ -23,8 +26,11 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       fileNames.push(file) if @config.extensions.indexOf(extension) >= 0
 
     if fileNames.length is 0
-      @removeTheFile(@fileName) if isRemove
+      if isRemove
+        @removeTheFile(@fileName)
+        @_removeClientLibrary()
     else
+      @_writeClientLibrary()
       @compile(fileNames, @_write)
 
   _write: (error, output) =>
@@ -32,6 +38,19 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       @failed(err)
     else
       @write(@fileName, output) if output?
+
+  _removeClientLibrary: ->
+    fs.unlink @_clientPath() if path.existsSync @_clientPath()
+
+  _writeClientLibrary: ->
+    return if path.existsSync @_clientPath()
+    mimosaLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
+    fs.readFile mimosaLibraryPath, "ascii", (err, data) =>
+      return logger.error "Cannot read client library: #{@clientLibrary}" if err?
+      fs.writeFile @_clientPath(), data, 'ascii', (err) =>
+        return logger.error "Cannot write client library: #{@clientLibrary}" if err?
+
+  _clientPath: -> path.join @baseDir, "#{@clientLibrary}.js"
 
   postWrite: (fileName) -> @optimize()
 

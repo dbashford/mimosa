@@ -1,3 +1,3 @@
-define ['vendor/handlebars'], (Handlebars) ->
+define ['handlebars'], (Handlebars) ->
   Handlebars.registerHelper 'example-helper', ->
     new Handlebars.SafeString "This is coming from a Handlebars helper function written in CoffeeScript"

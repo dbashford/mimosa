@@ -39,8 +39,6 @@ exports.config = {
                                                      # templating solution.
       # extensions: ["hbs", "handlebars"]            # list of extensions to compile
       # outputFileName: "javascripts/templates"      # the file all templates are compiled into
-      # defineLocation: "vendor/handlebars"          # location inside compiledDir javascripts
-                                                     # directory of browser library
       # helperFile:"javascripts/handlebars-helpers"  # relevant to handlebars only, the path from sourceDir
                                                      # to the file containing handlebars helper functions, does
                                                      # not need to exist

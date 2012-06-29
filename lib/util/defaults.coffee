@@ -7,7 +7,7 @@ class MimosaDefaults
 
   applyAndValidateDefaults: (config, isServer, callback) =>
     config = @_applyDefaults(config)
-    @_validateDefaults(config, isServer)
+    @_validateSettings(config, isServer)
     err = if @fatalErrors is 0 then null else @fatalErrors
     callback(err, config)
 
@@ -31,7 +31,6 @@ class MimosaDefaults
     template.compileWith =     config.compilers.template.compileWith     ?= "handlebars"
     template.extensions =      config.compilers.template.extensions      ?= ["hbs", "handlebars"]
     template.outputFileName =  config.compilers.template.outputFileName  ?= "javascripts/templates"
-    template.defineLocation =  config.compilers.template.defineLocation  ?= "vendor/handlebars"
     template.helperFile =      config.compilers.template.helperFile      ?= "javascripts/handlebars-helpers"
     template.notifyOnSuccess = config.compilers.template.notifyOnSuccess ?= true
 
@@ -63,7 +62,7 @@ class MimosaDefaults
 
     newConfig
 
-  _validateDefaults: (config, isServer) ->
+  _validateSettings: (config, isServer) ->
     @_testPathExists(config.watch.sourceDir,   "watch.sourceDir")
     @_testPathExists(config.watch.compiledDir, "watch.compiledDir")
     @_testPathExists(config.server.path,       "server.path ") if isServer and not config.server.useDefaultServer
@@ -73,9 +72,13 @@ class MimosaDefaults
     jsPath = path.join(__dirname, '..', 'compilers/javascript', "#{comp.javascript.compileWith}.coffee")
     cssPath = path.join(__dirname, '..', 'compilers/css', "#{comp.css.compileWith}.coffee")
 
-    @_testPathExists(templatePath, "compilers.template.compileWith") unless comp.template.compileWith is "none"
-    @_testPathExists(jsPath,       "compilers.javascript.compileWith") unless comp.javascript.compileWith is "none"
-    @_testPathExists(cssPath,      "compilers.css.compileWith") unless comp.css.compileWith is "none"
+    @_testPathExists(templatePath, "compilers.template.compileWith")   unless comp.template.compileWith is "none"
+    @_testPathExists(cssPath,      "compilers.css.compileWith")        unless comp.css.compileWith is "none"
+    unless comp.javascript.compileWith is "none"
+      @_testPathExists(jsPath, "compilers.javascript.compileWith")
+      @_testPathExists(path.join(config.watch.sourceDir, comp.javascript.directory),
+        "compilers.javascript.directory") unless comp.javascript.compileWith is "none"
+
 
   _testPathExists: (filePath, name) ->
     rPath = path.resolve filePath
