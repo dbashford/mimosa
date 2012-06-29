@@ -114,7 +114,13 @@ class Mimosa
 
     directories = files.filter (f) -> fs.statSync(path.join(srcDir, f)).isDirectory()
     directories = directories.sortBy('length', true)
-    fs.rmdirSync path.join(@config.root, @config.watch.compiledDir, dir) for dir in directories
+    for dir in directories
+      dirPath = path.join(@config.root, @config.watch.compiledDir, dir)
+      if path.existsSync dirPath
+        fs.rmdir dirPath, (err) ->
+          if err?.code is not "ENOTEMPTY"
+            logger.error "Unable to delete directory, #{dirPath}"
+            logger.error err
 
     logger.success "#{path.join(@config.root, @config.watch.compiledDir)} has been cleaned."
 

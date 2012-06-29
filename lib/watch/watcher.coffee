@@ -32,15 +32,17 @@ class Watcher
       @initCallback() if @initCallback?
 
   _findCompiler: (fileName) ->
-    return if @config.watch.ignored.some((str) -> fileName.has(str))
+    return @compilerDone() if @config.watch.ignored.some((str) -> fileName.has(str))
+
     extension = path.extname(fileName).substring(1)
-    return unless extension?.length > 0
+    return @compilerDone() unless extension?.length > 0
+
     compiler = @compilers.find (comp) ->
       for ext in comp.getExtensions()
         return true if extension is ext
       return false
     return compiler if compiler
-    logger.warn "No compiler has been registered: #{extension}"
+    logger.warn "No compiler has been registered: #{extension}, #{fileName}"
     @compilerDone()
     null
 
