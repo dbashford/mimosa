@@ -31,17 +31,21 @@ module.exports = class SassCompiler extends AbstractCssCompiler
       @processWatchedDirectories()
 
   doneStartup: =>
-    @startupFinished = true
     baseSassFilesToCompileNow = []
 
     for partial, bases of @partialToBaseHash
       partialTime = fs.statSync(path.join @fullConfig.root, partial).mtime
       for base in bases
-        baseTime = fs.statSync(@findCompiledPath(base)).mtime
-        baseSassFilesToCompileNow.push(base) if partialTime > baseTime
+        basePath = @findCompiledPath(base)
+        if path.existsSync basePath
+          baseTime = fs.statSync(basePath).mtime
+          baseSassFilesToCompileNow.push(base) if partialTime > baseTime
+        else
+          baseSassFilesToCompileNow.push(base)
 
     baseSassFilesToCompileNow = baseSassFilesToCompileNow.unique()
 
+    @initBaseFilesToCompile = baseSassFilesToCompileNow.length
     @readAndCompile(base) for base in baseSassFilesToCompileNow
 
   compile: (sassText, fileName, destinationFile, callback) ->
@@ -55,7 +59,15 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     sass.stderr.on 'data', (buffer) ->
       error ?= ''
       error += buffer.toString()
-    sass.on 'exit', (code) -> callback(error, result, destinationFile)
+    sass.on 'exit', (code) =>
+      callback(error, result, destinationFile)
+
+      unless @startupFinished
+        if --@initBaseFilesToCompile is 0
+          @startupDoneCallback() if @startupDoneCallback?
+          @startupDoneCallback = null
+          @startupFinished = true
+
 
   _isPartial: (fileName) -> path.basename(fileName).startsWith('_')
 

@@ -1,21 +1,15 @@
 watch =     require 'chokidar'
-color =     require("ansi-color").set
 path =      require 'path'
-wrench =    require 'wrench'
-fs =        require 'fs'
 logger =    require '../util/logger'
 optimizer = require '../optimize/require-optimize'
 
 class Watcher
 
-  constructor: (@config, @compilers, persist, @initCallback) ->
-    compiler.setDoneCallback(@compilerDone) for compiler in @compilers
+  compilersDone:0
 
+  constructor: (@config, @compilers, persist, @initCallback) ->
+    compiler.setStartupDoneCallback(@compilerDone) for compiler in @compilers
     srcDir = path.join(@config.root, @config.watch.sourceDir)
-    files = wrench.readdirSyncRecursive(srcDir)
-    files = files.filter (file) => fs.statSync(path.join(srcDir, file)).isFile()
-    @fileCount = files.length
-    @compiledTotal = 0
 
     watcher = watch.watch(srcDir, {persistent:persist})
     watcher.on "change", (f) => @_findCompiler(f)?.updated(f)
@@ -24,18 +18,16 @@ class Watcher
 
     logger.info "Watching #{srcDir}" if persist
 
-  # On startup, when all compilers done, let them know, and trigger optimize
   compilerDone: =>
-    if ++@compiledTotal is @fileCount
-      compiler.doneStartup() for ext, compiler of @compilers
+    if ++@compilersDone is @compilers.length
       optimizer.optimize(@config)
       @initCallback() if @initCallback?
 
   _findCompiler: (fileName) ->
-    return @compilerDone() if @config.watch.ignored.some((str) -> fileName.has(str))
+    return if @config.watch.ignored.some((str) -> fileName.has(str))
 
     extension = path.extname(fileName).substring(1)
-    return @compilerDone() unless extension?.length > 0
+    return unless extension?.length > 0
 
     compiler = @compilers.find (comp) ->
       for ext in comp.getExtensions()
@@ -43,7 +35,6 @@ class Watcher
       return false
     return compiler if compiler
     logger.warn "No compiler has been registered: #{extension}, #{fileName}"
-    @compilerDone()
     null
 
 module.exports = Watcher

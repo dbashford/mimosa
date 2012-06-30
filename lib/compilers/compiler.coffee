@@ -1,7 +1,8 @@
-color = require("ansi-color").set
 path = require 'path'
 fs = require 'fs'
 mkdirp = require 'mkdirp'
+wrench = require 'wrench'
+
 logger = require '../util/logger'
 optimizer = require '../optimize/require-optimize'
 
@@ -12,19 +13,22 @@ module.exports = class AbstractCompiler
     @compDir = @fullConfig.watch.compiledDir
     @processWatchedDirectories() if @processWatchedDirectories?
 
+    files = wrench.readdirSyncRecursive(path.join @fullConfig.root, @srcDir)
+    files = files.filter (f) =>
+      ext = path.extname(f)
+      return false if ext.length < 2
+      @config.extensions.has(ext.substring(1))
+
+    @initialFileCount = files.length
+    @initialFilesHandled = 0
+
   # OVERRIDE THESE
   created: -> throw new Error "Method created must be implemented"
   updated: -> throw new Error "Method updated must be implemented"
   removed: -> throw new Error "Method removed must be implemented"
 
-  setDoneCallback: (@compileDoneCallback) ->
-
-  doneStartup: ->
-    @startupFinished = true
-    @compileDoneCallback = null
-
+  setStartupDoneCallback: (@startupDoneCallback) ->
   getExtensions: => @config.extensions
-
   getOutExtension: => @outExtension
 
   write: (fileName, content) =>
@@ -54,4 +58,9 @@ module.exports = class AbstractCompiler
     @done()
 
   done: ->
-    @compileDoneCallback() if @compileDoneCallback
+    @doneStartup() if ++@initialFilesHandled is @initialFileCount
+
+  doneStartup: ->
+    @startupDoneCallback() if @startupDoneCallback?
+    @startupDoneCallback = null
+    @startupFinished = true
