@@ -3,6 +3,8 @@ path = require 'path'
 
 module.exports = class CopyCompiler extends SingleFileCompiler
 
+  keepBuffer: true
+
   constructor: (config) ->
     super(config, config.copy)
 

@@ -15,8 +15,9 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
   readAndCompile: (fileName, isUpdate = true) ->
     destinationFile = @findCompiledPath(fileName.replace(@fullConfig.root, ''))
     return @done() unless isUpdate or @_fileNeedsCompiling(fileName, destinationFile)
-    fs.readFile fileName, "ascii", (err, text) =>
+    fs.readFile fileName, (err, text) =>
       return @failed(err) if err
+      text = text.toString() unless @keepBuffer?
       @beforeCompile(text, fileName) if @beforeCompile?
       @compile(text, fileName, destinationFile, @_compileComplete)
 
