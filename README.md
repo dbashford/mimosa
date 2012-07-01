@@ -45,7 +45,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  Create the default app:
 
-    $ mimosa new -n nameOfApplicationHere
+    $ mimosa new nameOfApplicationHere
 
  Change into the directory that was created and execute:
 
@@ -71,7 +71,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  Create a new project like so:
 
-    $ mimosa new -n nameOfApplicationHere
+    $ mimosa new nameOfApplicationHere
 
  This will create a directory at your current location using the name provided as the name of the directory.  Inside it will populate an application skeleton with public and asset directories, as well as the bare essentials for a base [Express](http://expressjs.com/) application.  You'll have Express [Jade template](http://jade-lang.com/) views, a simple Express [router](http://expressjs.com/guide.html#routing) and a server.coffee file that will be used by Mimosa to get Express [started](https://github.com/dbashford/mimosa#serve-assets-watch---server).
 
@@ -81,7 +81,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  Should you not need all of the Express stuff, you can give Mimosa a `--noexpress` flag when you create the project.  This will only give you the configuration file, the empty public directory, and the assets directory and all of its contents.
 
-    $ mimosa new -n nameOfApplicationHere --noexpress
+    $ mimosa new nameOfApplicationHere --noexpress
 
 #### Watch and Compile (watch)
 
