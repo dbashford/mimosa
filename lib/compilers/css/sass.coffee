@@ -33,6 +33,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
   doneStartup: =>
     baseSassFilesToCompileNow = []
 
+    # Determine if any partials necessitate a base file compile
     for partial, bases of @partialToBaseHash
       partialTime = fs.statSync(path.join @fullConfig.root, partial).mtime
       for base in bases
@@ -43,10 +44,22 @@ module.exports = class SassCompiler extends AbstractCssCompiler
         else
           baseSassFilesToCompileNow.push(base)
 
+    # Determine if any bases need to be compiled based on their own merit
+    for base in @baseSassFiles
+      baseCompiledPath = @findCompiledPath(base)
+      if path.existsSync baseCompiledPath
+        baseSrcPath = path.join @fullConfig.root, base
+        baseSassFilesToCompileNow.push(base) if fs.statSync(baseSrcPath).mtime > fs.statSync(baseCompiledPath).mtime
+      else
+        baseSassFilesToCompileNow.push(base)
+
     baseSassFilesToCompileNow = baseSassFilesToCompileNow.unique()
 
     @initBaseFilesToCompile = baseSassFilesToCompileNow.length
-    @readAndCompile(base) for base in baseSassFilesToCompileNow
+    if @initBaseFilesToCompile is 0
+      @_startupFinished()
+    else
+      @readAndCompile(base) for base in baseSassFilesToCompileNow
 
   compile: (sassText, fileName, destinationFile, callback) ->
     result = ''
@@ -63,10 +76,11 @@ module.exports = class SassCompiler extends AbstractCssCompiler
       callback(error, result, destinationFile)
 
       unless @startupFinished
-        if --@initBaseFilesToCompile is 0
-          @startupDoneCallback()
-          @startupFinished = true
+        @_startupFinished() if --@initBaseFilesToCompile is 0
 
+  _startupFinished: =>
+    @startupDoneCallback()
+    @startupFinished = true
 
   _isPartial: (fileName) -> path.basename(fileName).startsWith('_')
 
