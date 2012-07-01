@@ -29,6 +29,6 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
     if result.value then message += ", lint setting [#{result.value}]"
     loggerMethod message
 
-  postWrite: (fileName) -> @optimize()
+  afterWrite: (fileName) -> @optimize()
 
 

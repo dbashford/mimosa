@@ -64,8 +64,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
 
       unless @startupFinished
         if --@initBaseFilesToCompile is 0
-          @startupDoneCallback() if @startupDoneCallback?
-          @startupDoneCallback = null
+          @startupDoneCallback()
           @startupFinished = true
 
 

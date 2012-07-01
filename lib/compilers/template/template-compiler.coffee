@@ -56,6 +56,6 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   _clientPath: -> path.join @baseDir, "#{@clientLibrary}.js"
 
-  postWrite: (fileName) -> @optimize()
+  afterWrite: (fileName) -> @optimize()
 
 

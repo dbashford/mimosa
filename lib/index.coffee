@@ -3,7 +3,7 @@ path =     require 'path'
 fs =       require 'fs'
 {exec} =   require 'child_process'
 
-args =     require 'nomnom'
+program = require 'commander'
 express =  require 'express'
 wrench =   require 'wrench'
 glob =     require 'glob'
@@ -19,54 +19,93 @@ class Mimosa
     @cli()
 
   cli: ->
+    program.version(version)
 
-    args.command('clean')
-      .help("clean out all of the compiled assets")
-      .callback =>
-        @processConfig false, =>
-          @clean()
+    program
+      .command('config')
+      .description("copy the default Mimosa config into the current folder")
+      .action(=> @copyConfig())
+      .on '--help', =>
+        logger.green('  The config command will copy the default Mimosa config to the current directory.')
+        logger.green('  There are no options for the config command.')
+        console.log()
+        logger.blue( '    $ mimosa config')
+        console.log()
 
-    args.command('build')
-      .option 'optimize',
-        flag: true
-        help: 'run require.js optimization after building'
-      .help("make a single pass through assets and compile them")
-      .callback (opts) =>
-        @processConfig false, =>
-          @build(opts)
+    program
+      .command('clean')
+      .description("clean out all of the compiled assets from the compiled directory")
+      .action(=> @processConfig(false, => @clean()))
+      .on '--help', =>
+        logger.green('  The clean command will remove all of the compiled assets from the configured compiledDir and ')
+        logger.green('  any empty directories after the compiled assets are removed. It will also remove any Mimosa')
+        logger.green('  copied assets, like template libraries. It will not remove anything that did not originate')
+        logger.green('  from the source directory.')
+        console.log()
+        logger.blue( '    $ mimosa clean')
+        console.log()
 
-    args.command('watch')
-      .option 'server',
-        flag: true
-        help: 'run a server that will serve up the destination directory'
-      .help("watch the filesystem and compile assets")
-      .callback (opts) =>
-        @processConfig opts?.server, =>
-          @watch(true, @startServer if opts?.server)
+    program
+      .command('build')
+      .description("make a single pass through assets and compile them")
+      .option("-o, --optimize", "run require.js optimization after building")
+      .action( (opts)=> @processConfig(false, => @build(opts)))
+      .on '--help', =>
+        logger.green('  The build command will make a single pass through your assets and bulid any that need building')
+        logger.green('  and then exit.')
+        console.log()
+        logger.blue( '    $ mimosa build')
+        console.log()
+        logger.green('  Pass an optimize flag and Mimosa will use requirejs to optimize your assets and provide you with')
+        logger.green('  single files for the named requirejs modules. ')
+        console.log()
+        logger.blue( '    $ mimosa build --optimize')
+        logger.blue( '    $ mimosa build -o')
+        console.log()
 
-    args.command('new')
-      .option 'name'
-        flag: false
-        help: 'name for your project, mimosa will create a directory by this name and place the skeleton inside'
-        required:true
-        abbr: 'n'
-      .option 'noexpress'
-        flag: true
-        help: 'do not include express in the application setup'
-      .help("create a skeleton matching Mimosa's defaults, which includes a basic Express setup")
-      .callback (opts) =>
-        @create(opts)
+    program
+      .command('watch')
+      .description("watch the filesystem and compile assets")
+      .option("-s, --server", "run a server that will serve up the assets in the compiled directory")
+      .action((opts)=> @processConfig opts?.server, => @watch(true, @startServer if opts?.server))
+      .on '--help', =>
+        logger.green('  The watch command will observe your source directory and compile or copy your assets when they change.')
+        logger.green('  When the watch command starts up, it will make an initial pass through your assets and compile or copy')
+        logger.green('  any assets that are newer then their companion compiled assets in the compiled directory.  The watch command')
+        logger.green('  will remain running when executed, and must be terminated with CNTL-C.')
+        console.log()
+        logger.blue( '    $ mimosa watch')
+        console.log()
+        logger.green('  Pass a server flag and Mimosa will start-up a server that will serve up the assets Mimosa compiles.  You have')
+        logger.green('  the opportunity, via Mimosa\'s config, to provide Mimosa a hook to your own server if you have one.  If you')
+        logger.green('  do not have a server, Mimosa will use an embedded server to serve up the assets.  Server configuration options')
+        logger.green('  and explanations can be found in the \'server\' settings in the mimosa-config.')
+        console.log()
+        logger.blue( '    $ mimosa watch --server')
+        logger.blue( '    $ mimosa watch -s')
+        console.log()
 
-    args.command('config')
-      .help("copy the default mimosa config into the current folder")
-      .callback => @copyConfig()
+    program
+      .command('new [name]')
+      .description("create a skeleton matching Mimosa's defaults, which includes a basic Express setup")
+      .option("-n, --noexpress", "do not include express in the application setup")
+      .action((name, opts)=> @create(name, opts) )
+      .on '--help', =>
+        logger.green('  The new command will create a directory using the name provided, and place a default project skeleton')
+        logger.green('  inside of it.  That project skeleton will by default include an basic Express app, with sample routes')
+        logger.green('  and views.  It will also include some sample assets (CoffeeScript, SASS, Handlebars) to get you started.')
+        console.log()
+        logger.blue( '    $ mimosa new [nameOfProject]')
+        console.log()
+        logger.green('  Pass a \'noexpress flag\' to not include the basic Express app.  With this set up, if you choose to have')
+        logger.green('  Mimosa serve up your assets, it will do so with an embedded Mimosa Express app, and not with one inside')
+        logger.green('  your project')
+        console.log()
+        logger.blue( '    $ mimosa watch --noexpress')
+        logger.blue( '    $ mimosa watch -n')
+        console.log()
 
-    args.option 'version',
-      flag: true
-      help: 'print version and exit'
-      callback: -> version
-
-    args.parse()
+    program.parse process.argv
 
   processConfig: (server, callback) ->
     configPath = path.resolve 'mimosa-config.coffee'
@@ -74,6 +113,7 @@ class Mimosa
       {config} = require configPath
     catch err
       logger.warn "No configuration file found (mimosa-config.coffee), using all defaults."
+      logger.warn "Run 'mimosa config' to copy the default Mimosa configuration to the current directory."
       config = {}
 
     defaults config, server, (err, newConfig) =>
@@ -195,10 +235,10 @@ class Mimosa
       else
         logger.error "Attempted to start the provided server located at #{@config.server.path} (#{serverPath}), but could not find it."
 
-  create: (opts) ->
-    return logger.error "Must provide a name for the new project" unless opts.name? and opts.name.length > 0
+  create: (name, opts) ->
+    return logger.error "Must provide a name for the new project" unless name? and name.length > 0
     skeletonPath = path.join __dirname, 'skeleton'
-    currPath = path.join(path.resolve(''), opts.name)
+    currPath = path.join(path.resolve(''), name)
 
     logger.info "Copying skeleton project over"
     wrench.copyDirSyncRecursive(skeletonPath, currPath)
@@ -228,7 +268,7 @@ class Mimosa
         logger.info "Altering configuration to not use express"
         fs.writeFile(configPath, data)
         logger.success "New project creation complete!"
-        logger.success "Move into the '#{opts.name}' directory and execute 'mimosa watch --server' to monitor the file system, then start coding!"
+        logger.success "Move into the '#{name}' directory and execute 'mimosa watch --server' to monitor the file system, then start coding!"
     else
       logger.info "Installing node modules "
       currentDir = process.cwd()
@@ -236,6 +276,6 @@ class Mimosa
       exec "npm install", (err, sout, serr) ->
         process.chdir currentDir
         logger.success "New project creation complete!"
-        logger.success "Move into the '#{opts.name}' directory and execute 'mimosa watch --server' to monitor the file system, then start coding!"
+        logger.success "Move into the '#{name}' directory and execute 'mimosa watch --server' to monitor the file system, then start coding!"
 
 module.exports = new Mimosa

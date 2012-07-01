@@ -19,8 +19,11 @@ module.exports = class AbstractCompiler
       return false if ext.length < 2
       @config.extensions.has(ext.substring(1))
 
-    @initialFileCount = files.length
-    @initialFilesHandled = 0
+    if files.length is 0
+      @doneStartup()
+    else
+      @initialFileCount = files.length
+      @initialFilesHandled = 0
 
   # OVERRIDE THESE
   created: -> throw new Error "Method created must be implemented"
@@ -30,6 +33,7 @@ module.exports = class AbstractCompiler
   setStartupDoneCallback: (@startupDoneCallback) ->
   getExtensions: => @config.extensions
   getOutExtension: => @outExtension
+  initializationComplete: (@isInitializationComplete = true) ->
 
   write: (fileName, content) =>
     fileName = fileName.replace(@fullConfig.root, '')
@@ -39,7 +43,7 @@ module.exports = class AbstractCompiler
       fs.writeFile fileName, content, "ascii", (err) =>
         return @failed "Failed to write new file: #{fileName}" if err
         @success "Compiled/copied #{fileName}"
-        @postWrite(fileName) if @postWrite?
+        @afterWrite(fileName) if @afterWrite?
 
   removeTheFile: (fileName, reportSuccess = true) =>
     fs.unlink fileName, (err) =>
@@ -47,7 +51,7 @@ module.exports = class AbstractCompiler
       @success "Deleted compiled file #{fileName}" if reportSuccess
 
   optimize: ->
-    optimizer.optimize(@fullConfig) if @startupFinished
+    optimizer.optimize(@fullConfig) if @isInitializationComplete
 
   failed: (message) ->
     logger.error message
@@ -61,6 +65,5 @@ module.exports = class AbstractCompiler
     @doneStartup() if ++@initialFilesHandled is @initialFileCount
 
   doneStartup: ->
-    @startupDoneCallback() if @startupDoneCallback?
-    @startupDoneCallback = null
+    @startupDoneCallback()
     @startupFinished = true

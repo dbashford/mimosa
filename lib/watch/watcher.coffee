@@ -21,6 +21,7 @@ class Watcher
   compilerDone: =>
     if ++@compilersDone is @compilers.length
       optimizer.optimize(@config)
+      compiler.initializationComplete() for compiler in @compilers
       @initCallback() if @initCallback?
 
   _findCompiler: (fileName) ->

@@ -25,6 +25,9 @@ class Logger
 
   wrap: (message, textColor) -> color("#{new Date().toFormat('HH24:MI:SS')} - #{message}", textColor)
 
+  blue:  (message) => console.log color(message, "blue+bold")
+  green: (message) => console.log color(message, "green+bold")
+
   error:   (message) =>          @log 'error', message, 'red+bold', 'Error'
   warn:    (message) =>          @log 'warn',  message, 'yellow'
   info:    (message) =>          @log 'info',  message, 'black'
