@@ -97,12 +97,18 @@ class Mimosa
         console.log()
         logger.blue( '    $ mimosa new [nameOfProject]')
         console.log()
+        logger.green('  If you wish to copy the project skeleton into your current directory, leave off the name.')
+        console.log()
+        logger.blue( '    $ mimosa new')
+        console.log()
         logger.green('  Pass a \'noexpress flag\' to not include the basic Express app.  With this set up, if you choose to have')
         logger.green('  Mimosa serve up your assets, it will do so with an embedded Mimosa Express app, and not with one inside')
-        logger.green('  your project')
+        logger.green('  your project.  This will still copy in sample assets to get you going.')
         console.log()
-        logger.blue( '    $ mimosa watch --noexpress')
-        logger.blue( '    $ mimosa watch -n')
+        logger.blue( '    $ mimosa new [name] --noexpress')
+        logger.blue( '    $ mimosa new --noexpress')
+        logger.blue( '    $ mimosa new [name] -n')
+        logger.blue( '    $ mimosa new -n')
         console.log()
 
     program.parse process.argv
@@ -236,19 +242,39 @@ class Mimosa
         logger.error "Attempted to start the provided server located at #{@config.server.path} (#{serverPath}), but could not find it."
 
   create: (name, opts) ->
-    return logger.error "Must provide a name for the new project" unless name? and name.length > 0
     skeletonPath = path.join __dirname, 'skeleton'
-    currPath = path.join(path.resolve(''), name)
 
-    logger.info "Copying skeleton project over"
-    wrench.copyDirSyncRecursive(skeletonPath, currPath)
+    # if name provided, simply copy directory into directory by that name
+    # if name not provided, copy all skeleton contents into current directory
+    currPath = if name? and name.length > 0
+      currPath = path.join(path.resolve(''), name)
+      logger.info "Copying skeleton project into #{currPath}"
+      wrench.copyDirSyncRecursive(skeletonPath, currPath)
 
-    # for some insane reason I can't quite figure out
+      currPath
+
+    else
+      logger.info "A project name was not provided, copying skeleton into the current directory"
+      currPath = path.join(path.resolve(''), '/')
+      skeletonContents = wrench.readdirSyncRecursive(skeletonPath)
+      for item in skeletonContents
+        fullSourcePath = path.join(skeletonPath, item)
+        fileStats = fs.statSync(fullSourcePath)
+        if fileStats.isDirectory()
+          wrench.mkdirSyncRecursive path.join(currPath, item), 0o0777
+        if fileStats.isFile()
+          fileContents = fs.readFileSync fullSourcePath
+          fs.writeFileSync path.join(currPath, item), fileContents
+
+      currPath
+
+    # for some reason I can't quite figure out
     # won't copy over a public directory, so hack it out here
     logger.info "Cleaning up..."
     newPublicPath = path.join(currPath, 'public')
     oldPublicPath = path.join(currPath, 'publicc')
     fs.renameSync(oldPublicPath, newPublicPath)
+
     glob "#{currPath}/**/.gitkeep", (err, files) ->
       fs.unlinkSync(file) for file in files
 
