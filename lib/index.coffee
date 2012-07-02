@@ -25,7 +25,7 @@ class Mimosa
     program
       .command('clean')
       .description("clean out all of the compiled assets from the compiled directory")
-      .action(=> @processConfig(false, => @clean()))
+      .action(=> @processConfig(false, (config) => @clean(config)))
       .on '--help', =>
         logger.green('  The clean command will remove all of the compiled assets from the configured compiledDir and ')
         logger.green('  any empty directories after the compiled assets are removed. It will also remove any Mimosa')
@@ -39,7 +39,7 @@ class Mimosa
       .command('build')
       .description("make a single pass through assets and compile them")
       .option("-o, --optimize", "run require.js optimization after building")
-      .action( (opts)=> @processConfig(false, => @build(opts)))
+      .action( (opts)=> @processConfig(false, (config) => @build(config, opts)))
       .on '--help', =>
         logger.green('  The build command will make a single pass through your assets and bulid any that need building')
         logger.green('  and then exit.')
@@ -57,7 +57,9 @@ class Mimosa
       .command('watch')
       .description("watch the filesystem and compile assets")
       .option("-s, --server", "run a server that will serve up the assets in the compiled directory")
-      .action((opts)=> @processConfig opts?.server, => @watch(true, @startServer if opts?.server))
+      .action((opts) =>
+        @processConfig opts?.server, (config) =>
+          @watch(config, true, @startServer if opts?.server))
       .on '--help', =>
         logger.green('  The watch command will observe your source directory and compile or copy your assets when they change.')
         logger.green('  When the watch command starts up, it will make an initial pass through your assets and compile or copy')
@@ -77,29 +79,12 @@ class Mimosa
 
     program.parse process.argv
 
-  processConfig: (server, callback) ->
-    configPath = path.resolve 'mimosa-config.coffee'
-    try
-      {config} = require configPath
-    catch err
-      logger.warn "No configuration file found (mimosa-config.coffee), using all defaults."
-      logger.warn "Run 'mimosa config' to copy the default Mimosa configuration to the current directory."
-      config = {}
-
-    defaults config, server, (err, newConfig) =>
-      if err
-        logger.fatal "Unable to start Mimosa, #{err} configuration(s) problems listed above."
-        process.exit 1
-      else
-        newConfig.root = path.dirname configPath
-        @config = newConfig
-        callback()
-
-  clean: ->
-    srcDir = @config.watch.sourceDir
+  ##
+  clean: (config) ->
+    srcDir = config.watch.sourceDir
     files = wrench.readdirSyncRecursive(srcDir)
 
-    compilers = @fetchCompilers()
+    compilers = @fetchCompilers(config)
 
     compiler.cleanup() for compiler in compilers when compiler.cleanup?
 
@@ -107,7 +92,7 @@ class Mimosa
       isDirectory = fs.statSync(path.join(srcDir, file)).isDirectory()
       continue if isDirectory
 
-      compiledPath = path.join @config.root, @config.watch.compiledDir, file
+      compiledPath = path.join config.root, config.watch.compiledDir, file
 
       extension = path.extname(file)
       if extension?.length > 0
@@ -124,42 +109,46 @@ class Mimosa
     directories = files.filter (f) -> fs.statSync(path.join(srcDir, f)).isDirectory()
     directories = directories.sortBy('length', true)
     for dir in directories
-      dirPath = path.join(@config.root, @config.watch.compiledDir, dir)
+      dirPath = path.join(config.root, config.watch.compiledDir, dir)
       if path.existsSync dirPath
         fs.rmdir dirPath, (err) ->
           if err?.code is not "ENOTEMPTY"
             logger.error "Unable to delete directory, #{dirPath}"
             logger.error err
 
-    logger.success "#{path.join(@config.root, @config.watch.compiledDir)} has been cleaned."
+    logger.success "#{path.join(config.root, config.watch.compiledDir)} has been cleaned."
 
-  build: (opts) ->
+  ##
+  build: (config, opts) ->
     logger.info "Beginning build"
-    if opts.optimize then @config.require.forceOptimization = true
-    @watch(false, @buildFinished)
+    if opts.optimize then config.require.forceOptimization = true
+    @watch(config, false, @buildFinished)
 
+  ##
   buildFinished: -> logger.success("Finished build")
 
-  fetchCompilers: (persist = false) ->
-    compilers = [new (require("./compilers/copy"))(@config)]
-    for category, catConfig of @config.compilers
+  ##
+  fetchCompilers: (config, persist = false) ->
+    compilers = [new (require("./compilers/copy"))(config)]
+    for category, catConfig of config.compilers
       try
         continue if catConfig.compileWith is "none"
         compiler = require("./compilers/#{category}/#{catConfig.compileWith}")
-        compilers.push(new compiler(@config))
+        compilers.push(new compiler(config))
         logger.info "Adding compiler: #{category}/#{catConfig.compileWith}" if persist
       catch err
         logger.info "Unable to find matching compiler for #{category}/#{catConfig.compileWith}: #{err}"
     compilers
 
-  watch: (persist, callback) ->
-    compilers = @fetchCompilers(persist)
-    new Watcher(@config, compilers, persist, callback)
+  ##
+  watch: (config, persist, callback) ->
+    compilers = @fetchCompilers(config, persist)
+    new Watcher(config, compilers, persist, callback)
 
-  startServer: =>
-    if (@config.server.useDefaultServer) then @startDefaultServer() else @startProvidedServer()
+  startServer: (config) =>
+    if (config.server.useDefaultServer) then @startDefaultServer(config) else @startProvidedServer(config)
 
-  startDefaultServer: ->
+  startDefaultServer: (config) ->
     production = process.env.NODE_ENV is 'production'
 
     app = express.createServer()
@@ -170,32 +159,51 @@ class Mimosa
       app.use (req, res, next) ->
         res.header 'Cache-Control', 'no-cache'
         next()
-      if @config.server.useReload
-        app.use (require 'watch-connect')(@config.watch.compiledDir, app, {verbose: false, skipAdding:true})
-      app.use @config.server.base, express.static(@config.watch.compiledDir)
+      if config.server.useReload
+        app.use (require 'watch-connect')(config.watch.compiledDir, app, {verbose: false, skipAdding:true})
+      app.use config.server.base, express.static(config.watch.compiledDir)
 
     production = process.env.NODE_ENV is 'production'
-    reload = @config.server.useReload and not production
-    useBuilt = production and @config.require.optimizationEnabled
+    reload = config.server.useReload and not production
+    useBuilt = production and config.require.optimizationEnabled
 
     app.get '/', (req, res) =>
       res.render 'index', { title: 'Mimosa\'s Express', reload:reload, production:production, useBuilt:useBuilt}
 
-    app.listen @config.server.port
+    app.listen config.server.port
 
-    logger.success "Mimosa's bundled Express started at http://localhost:#{@config.server.port}/"
+    logger.success "Mimosa's bundled Express started at http://localhost:#{config.server.port}/"
 
-  startProvidedServer: ->
-    serverPath = path.resolve @config.server.path
+  startProvidedServer: (config) ->
+    serverPath = path.resolve config.server.path
     path.exists serverPath, (exists) =>
       if exists
         server = require serverPath
         if server.startServer
-          logger.info "Mimosa is starting the Express server at #{@config.server.path}"
-          server.startServer(@config.watch.compiledDir, @config.server.useReload, @config.require.optimizationEnabled)
+          logger.info "Mimosa is starting the Express server at #{config.server.path}"
+          server.startServer(config.watch.compiledDir, config.server.useReload, config.require.optimizationEnabled)
         else
-          logger.error "Found provided server located at #{@config.server.path} (#{serverPath}) but it does not contain a 'startServer' method."
+          logger.error "Found provided server located at #{config.server.path} (#{serverPath}) but it does not contain a 'startServer' method."
       else
-        logger.error "Attempted to start the provided server located at #{@config.server.path} (#{serverPath}), but could not find it."
+        logger.error "Attempted to start the provided server located at #{config.server.path} (#{serverPath}), but could not find it."
+
+
+  processConfig: (server, callback) ->
+    configPath = path.resolve 'mimosa-config.coffee'
+    try
+      {config} = require configPath
+    catch err
+      logger.warn "No configuration file found (mimosa-config.coffee), using all defaults."
+      logger.warn "Run 'mimosa config' to copy the default Mimosa configuration to the current directory."
+      config = {}
+
+    defaults config, server, (err, newConfig) =>
+      if err
+        logger.fatal "Unable to start Mimosa, #{err} configuration(s) problems listed above."
+        process.exit 1
+      else
+        newConfig.root = path.dirname configPath
+        callback(newConfig)
+
 
 module.exports = new Mimosa

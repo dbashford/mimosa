@@ -20,7 +20,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   cleanup: ->
     @_removeClientLibrary()
-    @removeTheFile(@fileName, false)
+    @removeTheFile(@fileName, false) if path.existsSync @fileName
 
   _gatherFiles: (isRemove = false) ->
     fileNames = []
