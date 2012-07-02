@@ -70,7 +70,6 @@ create = (name, opts) ->
       logger.success "New project creation complete!"
       logger.success "Move into the '#{name}' directory and execute 'mimosa watch --server' to monitor the file system, then start coding!"
 
-
 register = (program, callback) =>
   program
     .command('new [name]')

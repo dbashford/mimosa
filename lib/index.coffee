@@ -20,17 +20,7 @@ class Mimosa
     program.version(version)
 
     require('./command/new')(program)
-
-    program
-      .command('config')
-      .description("copy the default Mimosa config into the current folder")
-      .action(=> @copyConfig())
-      .on '--help', =>
-        logger.green('  The config command will copy the default Mimosa config to the current directory.')
-        logger.green('  There are no options for the config command.')
-        console.log()
-        logger.blue( '    $ mimosa config')
-        console.log()
+    require('./command/config')(program)
 
     program
       .command('clean')
@@ -142,13 +132,6 @@ class Mimosa
             logger.error err
 
     logger.success "#{path.join(@config.root, @config.watch.compiledDir)} has been cleaned."
-
-  copyConfig: ->
-    configPath = path.join __dirname, 'skeleton', "mimosa-config.coffee"
-    configFileContents = fs.readFileSync(configPath)
-    currPath = path.join path.resolve(''), "mimosa-config.coffee"
-    fs.writeFile currPath, configFileContents, 'ascii'
-    logger.success "Copied default config file into current directory."
 
   build: (opts) ->
     logger.info "Beginning build"
