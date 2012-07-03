@@ -27,6 +27,7 @@ class Logger
 
   blue:  (message) => console.log color(message, "blue+bold")
   green: (message) => console.log color(message, "green+bold")
+  red:   (message) => console.log color(message, "red+bold")
 
   error:   (message) =>          @log 'error', message, 'red+bold', 'Error'
   warn:    (message) =>          @log 'warn',  message, 'yellow'

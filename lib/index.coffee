@@ -1,7 +1,11 @@
 require 'sugar'
 
-program = require 'commander'
+program =  require 'commander'
+
 version =  require('../package.json').version
+logger =   require './util/logger'
+
+{exec} = require 'child_process'
 
 class Mimosa
 
@@ -13,6 +17,13 @@ class Mimosa
     require('./command/build')(program)
     require('./command/clean')(program)
     require('./command/watch')(program)
+
+    program.command('*')
+      .action (arg) ->
+        exec "mimosa --help", (error, stdout, stderr) ->
+          console.log()
+          logger.red "  #{arg} is not a valid command."
+          console.log stdout
 
     program.parse process.argv
 
