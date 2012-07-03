@@ -16,9 +16,7 @@ create = (name, opts) ->
     currPath = path.join path.resolve(''), name
     logger.info "Copying skeleton project into #{currPath}"
     wrench.copyDirSyncRecursive skeletonPath, currPath
-
     currPath
-
   else
     logger.info "A project name was not provided, copying skeleton into the current directory"
     currPath = path.join path.resolve(''), '/'
@@ -31,7 +29,6 @@ create = (name, opts) ->
       if fileStats.isFile()
         fileContents = fs.readFileSync fullSourcePath
         fs.writeFileSync path.join(currPath, item), fileContents
-
     currPath
 
   # for some reason I can't quite figure out

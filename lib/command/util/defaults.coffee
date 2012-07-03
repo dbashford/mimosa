@@ -1,5 +1,5 @@
 path = require 'path'
-logger =   require './logger'
+logger =   require '../../util/logger'
 
 class MimosaDefaults
 
@@ -68,9 +68,9 @@ class MimosaDefaults
     @_testPathExists(config.server.path,       "server.path ") if isServer and not config.server.useDefaultServer
 
     comp = config.compilers
-    templatePath = path.join(__dirname, '..', 'compilers/template', "#{comp.template.compileWith}.coffee")
-    jsPath = path.join(__dirname, '..', 'compilers/javascript', "#{comp.javascript.compileWith}.coffee")
-    cssPath = path.join(__dirname, '..', 'compilers/css', "#{comp.css.compileWith}.coffee")
+    templatePath = path.join(__dirname, '../..', 'compilers/template',  "#{comp.template.compileWith}.coffee")
+    jsPath = path.join(      __dirname, '../..', 'compilers/javascript', "#{comp.javascript.compileWith}.coffee")
+    cssPath = path.join(     __dirname, '../..', 'compilers/css',        "#{comp.css.compileWith}.coffee")
 
     @_testPathExists(templatePath, "compilers.template.compileWith")   unless comp.template.compileWith is "none"
     @_testPathExists(cssPath,      "compilers.css.compileWith")        unless comp.css.compileWith is "none"
