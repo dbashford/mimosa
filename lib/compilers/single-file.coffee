@@ -14,7 +14,7 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
 
   readAndCompile: (fileName, isUpdate = true) ->
     destinationFile = @findCompiledPath(fileName.replace(@fullConfig.root, ''))
-    return @done() unless isUpdate or @_fileNeedsCompiling(fileName, destinationFile)
+    return @done() unless isUpdate or @fileNeedsCompiling(fileName, destinationFile)
     fs.readFile fileName, (err, text) =>
       return @failed(err) if err
       text = text.toString() unless @keepBuffer?
@@ -30,10 +30,3 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
 
   findCompiledPath: (fileName) ->
     path.join(@compDir, fileName.substring(0, fileName.lastIndexOf(".")).replace(@srcDir, '') + ".#{@outExtension}")
-
-  _fileNeedsCompiling: (fileName, destinationFile) ->
-    return true unless path.existsSync(destinationFile)
-    destStats = fs.statSync(destinationFile)
-    origStats = fs.statSync(fileName)
-    return true if origStats.mtime > destStats.mtime
-    false

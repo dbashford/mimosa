@@ -8,19 +8,26 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   constructor: (config) ->
     super(config, config.compilers.template)
-    @fileName = path.join(@compDir, @config.outputFileName + ".js")
-    @baseDir = path.dirname(@fileName)
+    @templateFileName = path.join(@compDir, @config.outputFileName + ".js")
+    @baseDir = path.dirname(@templateFileName)
 
   # OVERRIDE THIS
   compile: (fileNames, callback) -> throw new Error "Method compile must be implemented"
 
-  created: => @_gatherFiles()
-  updated: => @_gatherFiles()
-  removed: => @_gatherFiles(true)
+  created: =>
+    if @startupFinished then @_gatherFiles() else @done()
+
+  updated: =>
+    @_gatherFiles()
+
+  removed: =>
+    @_gatherFiles(true)
 
   cleanup: ->
     @_removeClientLibrary()
-    @removeTheFile(@fileName, false) if path.existsSync @fileName
+    @removeTheFile(@templateFileName, false) if path.existsSync @templateFileName
+
+  doneStartup: -> @_gatherFiles()
 
   _gatherFiles: (isRemove = false) ->
     fileNames = []
@@ -31,17 +38,22 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
     if fileNames.length is 0
       if isRemove
-        @removeTheFile(@fileName)
+        @removeTheFile(@templateFileName)
         @_removeClientLibrary()
     else
       @_writeClientLibrary()
-      @compile(fileNames, @_write)
+      @compile(fileNames, @_write) if @_templateNeedsCompiling(fileNames)
+
+  _templateNeedsCompiling: (fileNames) ->
+    for file in fileNames
+      return true if @fileNeedsCompiling(file, @templateFileName)
+    false
 
   _write: (error, output) =>
     if error
       @failed(err)
     else
-      @write(@fileName, output) if output?
+      @write(@templateFileName, output) if output?
 
   _removeClientLibrary: ->
     fs.unlink @_clientPath() if path.existsSync @_clientPath()

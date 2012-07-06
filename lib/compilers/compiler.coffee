@@ -35,6 +35,13 @@ module.exports = class AbstractCompiler
 
   initializationComplete: (@isInitializationComplete = true) ->
 
+  fileNeedsCompiling: (fileName, destinationFile) ->
+    return true unless path.existsSync(destinationFile)
+    destStats = fs.statSync(destinationFile)
+    origStats = fs.statSync(fileName)
+    return true if origStats.mtime > destStats.mtime
+    false
+
   write: (fileName, content) =>
     fileName = fileName.replace(@fullConfig.root, '')
     dirname = path.dirname(fileName)
