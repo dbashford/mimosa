@@ -3,7 +3,7 @@ iced = require 'iced-coffee-script'
 
 module.exports = class IcedCompiler extends AbstractCoffeeScriptCompiler
 
-  @prettyName        = -> "Iced CoffeeScript"
+  @prettyName        = -> "Iced CoffeeScript - http://maxtaco.github.com/coffee-script/"
   @defaultExtensions = -> ["iced"]
 
   constructor: (config) -> super(config)

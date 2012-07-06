@@ -7,7 +7,7 @@ module.exports = class DustCompiler extends AbstractTemplateCompiler
 
   clientLibrary: "dust"
 
-  @prettyName        = -> "Dust"
+  @prettyName        = -> "Dust - https://github.com/linkedin/dustjs/"
   @defaultExtensions = -> ["dust"]
 
   constructor: (config) -> super(config)
