@@ -11,9 +11,7 @@ register = (program, callback) ->
     .on '--help', =>
       logger.green('  The config command will copy the default Mimosa config to the current directory.')
       logger.green('  There are no options for the config command.')
-      console.log()
-      logger.blue( '    $ mimosa config')
-      console.log()
+      logger.blue( '\n    $ mimosa config\n')
 
 copyConfig = ->
   configPath = path.join __dirname, '..', 'skeleton', "mimosa-config.coffee"

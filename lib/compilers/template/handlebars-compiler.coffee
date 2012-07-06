@@ -1,4 +1,4 @@
-AbstractTemplateCompiler = require './template-compiler'
+AbstractTemplateCompiler = require './template'
 handlebars = require 'handlebars'
 fs = require 'fs'
 path = require 'path'
@@ -6,6 +6,9 @@ path = require 'path'
 module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 
   clientLibrary: "handlebars"
+
+  @prettyName        = -> "Handlebars"
+  @defaultExtensions = -> ["hbs", "handlebars"]
 
   constructor: (config) -> super(config)
 

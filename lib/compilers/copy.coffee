@@ -1,4 +1,4 @@
-SingleFileCompiler = require './single-file-compiler'
+SingleFileCompiler = require './single-file'
 path = require 'path'
 
 module.exports = class CopyCompiler extends SingleFileCompiler

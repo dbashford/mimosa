@@ -11,7 +11,7 @@ clean = ->
     srcDir = config.watch.sourceDir
     files = wrench.readdirSyncRecursive(srcDir)
 
-    compilers = util.fetchCompilers(config)
+    compilers = util.fetchConfiguredCompilers(config)
     compiler.cleanup() for compiler in compilers when compiler.cleanup?
 
     for file in files
@@ -55,9 +55,7 @@ register = (program, callback) =>
       logger.green('  any empty directories after the compiled assets are removed. It will also remove any Mimosa')
       logger.green('  copied assets, like template libraries. It will not remove anything that did not originate')
       logger.green('  from the source directory.')
-      console.log()
-      logger.blue( '    $ mimosa clean')
-      console.log()
+      logger.blue( '\n    $ mimosa clean\n')
 
 module.exports = (program) ->
   register(program, clean)

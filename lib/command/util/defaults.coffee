@@ -4,6 +4,9 @@ logger =   require '../../util/logger'
 class MimosaDefaults
 
   fatalErrors: 0
+  @defaultJavascript: -> "coffee"
+  @defaultCss: ->        "sass"
+  @defaultTemplate: ->   "handlebars"
 
   applyAndValidateDefaults: (config, isServer, callback) =>
     config = @_applyDefaults(config)
@@ -21,23 +24,22 @@ class MimosaDefaults
     comp = newConfig.compilers = config.compilers ?= {}
     js = comp.javascript = config.compilers.javascript ?= {}
     js.directory =         config.compilers.javascript.directory         ?= "javascripts"
-    js.compileWith =       config.compilers.javascript.compileWith       ?= "coffee"
+    js.compileWith =       config.compilers.javascript.compileWith       ?= MimosaDefaults.defaultJavascript()
     js.extensions =        config.compilers.javascript.extensions        ?= ["coffee"]
     js.notifyOnSuccess =   config.compilers.javascript.notifyOnSuccess   ?= true
     js.lint =              config.compilers.javascript.lint              ?= true
     js.metalint =          config.compilers.javascript.metalint          ?= true
 
     template = comp.template = config.compilers.template                 ?= {}
-    template.compileWith =     config.compilers.template.compileWith     ?= "handlebars"
+    template.compileWith =     config.compilers.template.compileWith     ?= MimosaDefaults.defaultTemplate()
     template.extensions =      config.compilers.template.extensions      ?= ["hbs", "handlebars"]
     template.outputFileName =  config.compilers.template.outputFileName  ?= "javascripts/templates"
     template.helperFile =      config.compilers.template.helperFile      ?= "javascripts/handlebars-helpers"
     template.notifyOnSuccess = config.compilers.template.notifyOnSuccess ?= true
 
     css = comp.css =      config.compilers.css                 ?= {}
-    css.compileWith =     config.compilers.css.compileWith     ?= "sass"
+    css.compileWith =     config.compilers.css.compileWith     ?= MimosaDefaults.defaultCss()
     css.extensions =      config.compilers.css.extensions      ?= ["scss", "sass"]
-    css.hasCompass =      config.compilers.css.hasCompass      ?= true
     css.notifyOnSuccess = config.compilers.css.notifyOnSuccess ?= true
 
     copy = newConfig.copy = config.copy                        ?= {}
@@ -68,9 +70,9 @@ class MimosaDefaults
     @_testPathExists(config.server.path,       "server.path ") if isServer and not config.server.useDefaultServer
 
     comp = config.compilers
-    templatePath = path.join(__dirname, '../..', 'compilers/template',  "#{comp.template.compileWith}.coffee")
-    jsPath = path.join(      __dirname, '../..', 'compilers/javascript', "#{comp.javascript.compileWith}.coffee")
-    cssPath = path.join(     __dirname, '../..', 'compilers/css',        "#{comp.css.compileWith}.coffee")
+    templatePath = path.join(__dirname, '..', '..', 'compilers/template',  "#{comp.template.compileWith}-compiler.coffee")
+    jsPath = path.join(      __dirname, '..', '..', 'compilers/javascript', "#{comp.javascript.compileWith}-compiler.coffee")
+    cssPath = path.join(     __dirname, '..', '..', 'compilers/css',        "#{comp.css.compileWith}-compiler.coffee")
 
     @_testPathExists(templatePath, "compilers.template.compileWith")   unless comp.template.compileWith is "none"
     @_testPathExists(cssPath,      "compilers.css.compileWith")        unless comp.css.compileWith is "none"
@@ -120,4 +122,9 @@ class MimosaDefaults
 
     Object.merge(coffeelint, overrides) if overrides
 
-module.exports = (new MimosaDefaults()).applyAndValidateDefaults
+module.exports = {
+  applyAndValidateDefaults: (new MimosaDefaults()).applyAndValidateDefaults
+  defaultJavascript: MimosaDefaults.defaultJavascript()
+  defaultCss:        MimosaDefaults.defaultCss()
+  defaultTemplate:   MimosaDefaults.defaultTemplate()
+}

@@ -7,7 +7,7 @@ build = (opts) =>
 
   util.processConfig false, (config) =>
     if opts.optimize then config.require.forceOptimization = true
-    compilers = util.fetchCompilers config, false
+    compilers = util.fetchConfiguredCompilers config, false
     new Watcher config, compilers, false, buildFinished
 
 buildFinished = -> logger.success("Finished build")
@@ -21,16 +21,11 @@ register = (program, callback) =>
     .on '--help', =>
       logger.green('  The build command will make a single pass through your assets and bulid any that need building')
       logger.green('  and then exit.')
-      console.log()
-      logger.blue( '    $ mimosa build')
-      console.log()
+      logger.blue( '\n    $ mimosa build\n')
       logger.green('  Pass an optimize flag and Mimosa will use requirejs to optimize your assets and provide you with')
       logger.green('  single files for the named requirejs modules. ')
-      console.log()
-      logger.blue( '    $ mimosa build --optimize')
-      logger.blue( '    $ mimosa build -o')
-      console.log()
-
+      logger.blue( '\n    $ mimosa build --optimize')
+      logger.blue( '    $ mimosa build -o\n')
 
 module.exports = (program) ->
   register(program, build)

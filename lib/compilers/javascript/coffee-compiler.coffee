@@ -1,9 +1,10 @@
-AbstractCoffeeScriptCompiler = require './coffeescript-compiler'
+AbstractCoffeeScriptCompiler = require './coffeescript'
 coffee = require 'coffee-script'
 
 module.exports = class CoffeeCompiler extends AbstractCoffeeScriptCompiler
 
-  coffeeDialect: "CoffeeScript"
+  @prettyName        = -> "CoffeeScript"
+  @defaultExtensions = -> ["coffee"]
 
   constructor: (config) -> super(config)
 

@@ -19,20 +19,20 @@ module.exports = class AbstractCompiler
       return false if ext.length < 2
       @config.extensions.has(ext.substring(1))
 
-    if files.length is 0
-      @doneStartup()
-    else
-      @initialFileCount = files.length
-      @initialFilesHandled = 0
+    @initialFileCount = files.length
+    @initialFilesHandled = 0
 
   # OVERRIDE THESE
   created: -> throw new Error "Method created must be implemented"
   updated: -> throw new Error "Method updated must be implemented"
   removed: -> throw new Error "Method removed must be implemented"
 
-  setStartupDoneCallback: (@startupDoneCallback) ->
+  setStartupDoneCallback: (@startupDoneCallback) -> @startupDoneCallback() if @initialFileCount is 0
+
   getExtensions: => @config.extensions
+
   getOutExtension: => @outExtension
+
   initializationComplete: (@isInitializationComplete = true) ->
 
   write: (fileName, content) =>

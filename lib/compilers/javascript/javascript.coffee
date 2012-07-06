@@ -1,4 +1,4 @@
-AbstractSingleFileCompiler = require '../single-file-compiler'
+AbstractSingleFileCompiler = require '../single-file'
 jslint = require('jshint').JSHINT
 logger = require '../../util/logger'
 

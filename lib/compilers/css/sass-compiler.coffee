@@ -1,4 +1,4 @@
-AbstractCssCompiler = require './css-compiler'
+AbstractCssCompiler = require './css'
 fs = require 'fs'
 wrench = require 'wrench'
 path = require 'path'
@@ -8,20 +8,32 @@ logger = require '../../util/logger'
 module.exports = class SassCompiler extends AbstractCssCompiler
 
   importRegex: /@import ['"](.*)['"]/g
-  partialToBaseHash:{}
-  startupFinished:false
+
+  @prettyName        = -> "SASS"
+  @defaultExtensions = -> ["scss", "sass"]
+  @checkIfExists     = (callback) ->
+    exec 'sass --version', (error, stdout, stderr) ->
+      callback(if error then false else true)
 
   constructor: (config) ->
     super(config)
-    exec 'sass --version', (error, stdout, stderr) =>
-      if error
+    SassCompiler.checkIfExists (exists) ->
+      unless exists
         logger.error "SASS is configured as the CSS compiler, but you don't seem to have SASS installed"
         logger.error "SASS is a Ruby gem, information can be found here: http://sass-lang.com/tutorial.html"
         logger.error "SASS can be installed by executing this command: gem install sass"
 
-  created: (fileName) => if @startupFinished then @process(fileName, (f) => super(f)) else @done()
-  updated: (fileName) => @process(fileName, (f) => super(f))
-  removed: (fileName) => @process(fileName, (f) => super(f))
+    exec 'compass --version', (error, stdout, stderr) =>
+      @hasCompass = not error
+
+  created: (fileName) =>
+    if @startupFinished then @process(fileName, (f) => super(f)) else @done()
+
+  updated: (fileName) =>
+    @process(fileName, (f) => super(f))
+
+  removed: (fileName) =>
+    @process(fileName, (f) => super(f))
 
   process: (fileName, sooper) ->
     if @_isPartial(fileName)
@@ -61,11 +73,22 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     else
       @readAndCompile(base) for base in baseSassFilesToCompileNow
 
-  compile: (sassText, fileName, destinationFile, callback) ->
+  compile: (sassText, fileName, destinationFile, callback) =>
+    return @_compile(sassText, fileName, destinationFile, callback) if @hasCompass?
+
+    compileOnDelay = =>
+      if @hasCompass?
+        @_compile(sassText, fileName, destinationFile, callback)
+      else
+        setTimeout compileOnDelay, 100
+    do compileOnDelay
+
+  _compile: (sassText, fileName, destinationFile, callback) =>
     result = ''
     error = null
-    options = ['--stdin', '--load-path', @srcDir, '--load-path', path.dirname(fileName), '--scss']
-    options.push('--compass') if @config.hasCompass
+    options = ['--stdin', '--load-path', @srcDir, '--load-path', path.dirname(fileName), '--no-cache']
+    options.push '--compass' if @hasCompass
+    options.push '--scss' if /\.scss$/.test fileName
     sass = spawn 'sass', options
     sass.stdin.end sassText
     sass.stdout.on 'data', (buffer) -> result += buffer.toString()

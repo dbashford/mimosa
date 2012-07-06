@@ -1,4 +1,4 @@
-AbstractTemplateCompiler = require './template-compiler'
+AbstractTemplateCompiler = require './template'
 dust = require 'dustjs-linkedin'
 fs = require 'fs'
 path = require 'path'
@@ -6,6 +6,9 @@ path = require 'path'
 module.exports = class DustCompiler extends AbstractTemplateCompiler
 
   clientLibrary: "dust"
+
+  @prettyName        = -> "Dust"
+  @defaultExtensions = -> ["dust"]
 
   constructor: (config) -> super(config)
 

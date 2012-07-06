@@ -1,4 +1,4 @@
-SingleFileCompiler = require '../single-file-compiler'
+SingleFileCompiler = require '../single-file'
 
 module.exports = class AbstractCSSCompiler extends SingleFileCompiler
 

@@ -1,4 +1,4 @@
-AbstractJavascriptCompiler = require './javascript-compiler'
+AbstractJavascriptCompiler = require './javascript'
 coffeelint = require 'coffeelint'
 logger = require '../../util/logger'
 
@@ -19,5 +19,5 @@ module.exports = class AbstractCoffeeScriptCompiler extends AbstractJavascriptCo
 
     for result in lintResults
       switch result.level
-        when 'error' then @logLint(@coffeeDialect, result, 'Error',   logger.warn, fileName)
-        when 'warn'  then @logLint(@coffeeDialect, result, 'Warning', logger.info, fileName)
+        when 'error' then @logLint("CoffeeScript", result, 'Error',   logger.warn, fileName)
+        when 'warn'  then @logLint("CoffeeScript", result, 'Warning', logger.info, fileName)

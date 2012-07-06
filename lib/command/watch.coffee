@@ -4,11 +4,11 @@ fs =       require 'fs'
 
 util = require './util'
 logger = require '../util/logger'
-Watcher =  require('../watch/watcher')
+Watcher =  require '../watch/watcher'
 
 watch = (opts) =>
   util.processConfig opts?.server, (config) =>
-    compilers = util.fetchCompilers(config, true)
+    compilers = util.fetchConfiguredCompilers(config, true)
     new Watcher(config, compilers, true, startServer if opts?.server)
 
 startServer = (config) =>
@@ -64,17 +64,13 @@ register = (program, callback) =>
       logger.green('  When the watch command starts up, it will make an initial pass through your assets and compile or copy')
       logger.green('  any assets that are newer then their companion compiled assets in the compiled directory.  The watch command')
       logger.green('  will remain running when executed, and must be terminated with CNTL-C.')
-      console.log()
-      logger.blue( '    $ mimosa watch')
-      console.log()
+      logger.blue( '\n    $ mimosa watch\n')
       logger.green('  Pass a server flag and Mimosa will start-up a server that will serve up the assets Mimosa compiles.  You have')
       logger.green('  the opportunity, via Mimosa\'s config, to provide Mimosa a hook to your own server if you have one.  If you')
       logger.green('  do not have a server, Mimosa will use an embedded server to serve up the assets.  Server configuration options')
       logger.green('  and explanations can be found in the \'server\' settings in the mimosa-config.')
-      console.log()
-      logger.blue( '    $ mimosa watch --server')
-      logger.blue( '    $ mimosa watch -s')
-      console.log()
+      logger.blue( '\n    $ mimosa watch --server')
+      logger.blue( '    $ mimosa watch -s\n')
 
 module.exports = (program) ->
   register(program, watch)

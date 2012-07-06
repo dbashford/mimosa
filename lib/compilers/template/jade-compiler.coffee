@@ -1,4 +1,4 @@
-AbstractTemplateCompiler = require './template-compiler'
+AbstractTemplateCompiler = require './template'
 jade = require 'jade'
 fs = require 'fs'
 path = require 'path'
@@ -6,6 +6,9 @@ path = require 'path'
 module.exports = class JadeCompiler extends AbstractTemplateCompiler
 
   clientLibrary: "jade-runtime"
+
+  @prettyName        = -> "Jade"
+  @defaultExtensions = -> ["jade"]
 
   constructor: (config) -> super(config)
 
