@@ -2,8 +2,10 @@ express =  require 'express'
 path =     require 'path'
 fs =       require 'fs'
 
-util = require './util'
-logger = require '../util/logger'
+gzip =     require 'gzippo'
+
+util =     require './util'
+logger =   require '../util/logger'
 Watcher =  require '../watch/watcher'
 
 watch = (opts) =>
@@ -20,14 +22,15 @@ startDefaultServer = (config) ->
   app = express.createServer()
 
   app.configure =>
-    app.set('views', "#{__dirname}/views")
+    app.set('views', "#{__dirname}/../views")
     app.set('view engine', 'jade')
     app.use (req, res, next) ->
       res.header 'Cache-Control', 'no-cache'
       next()
     if config.server.useReload
       app.use (require 'watch-connect')(config.watch.compiledDir, app, {verbose: false, skipAdding:true})
-    app.use config.server.base, express.static(config.watch.compiledDir)
+    app.use config.server.base, gzip.staticGzip(config.watch.compiledDir)
+    #app.use config.server.base, express.static(config.watch.compiledDir)
 
   production = process.env.NODE_ENV is 'production'
   reload = config.server.useReload and not production
@@ -38,7 +41,7 @@ startDefaultServer = (config) ->
 
   app.listen config.server.port
 
-  logger.success "Mimosa's bundled Express started at http://localhost:#{config.server.port}/"
+  logger.success "Mimosa's bundled Express started at http://localhost:#{config.server.port}/", true
 
 startProvidedServer = (config) ->
   serverPath = path.resolve config.server.path
@@ -46,7 +49,7 @@ startProvidedServer = (config) ->
     if exists
       server = require serverPath
       if server.startServer
-        logger.info "Mimosa is starting the Express server at #{config.server.path}"
+        logger.success "Mimosa is starting your server: #{config.server.path}", true
         server.startServer(config.watch.compiledDir, config.server.useReload, config.require.optimizationEnabled)
       else
         logger.error "Found provided server located at #{config.server.path} (#{serverPath}) but it does not contain a 'startServer' method."

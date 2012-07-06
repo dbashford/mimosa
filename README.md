@@ -20,6 +20,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
  * Basic Express skeleton to put you on the ground running with a new app
  * Bundled Express for serving up assets to an existing app
  * Live Reload built in, without the need for a plugin
+ * Automatic static asset Gzip-ing
 
 #### Why Mimosa?
 

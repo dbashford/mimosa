@@ -1,6 +1,8 @@
 express =        require 'express'
-routes  =        require './routes'
 reloadOnChange = require 'watch-connect'
+gzip =         require 'gzippo'
+
+routes  =        require './routes'
 
 exports.startServer = (publicPath, useReload, optimize) ->
 
@@ -15,13 +17,15 @@ exports.startServer = (publicPath, useReload, optimize) ->
     app.use express.methodOverride()
     app.use app.router
     app.use reloadOnChange(publicPath, app, {verbose: false, skipAdding:true}) if useReload
-    app.use express.static(publicPath)
+    # app.use express.static(publicPath)
+    app.use gzip.staticGzip(publicPath)
 
   app.configure 'development', ->
     app.use express.errorHandler({ dumpExceptions: true, showStack: true })
 
   app.configure 'production', ->
     app.use express.errorHandler()
+    app.use gzip.gzip()
 
   # Routes
 
