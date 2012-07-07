@@ -60,6 +60,8 @@ class MimosaDefaults
     requirejs.paths =               config.require.paths                ?= {}
     requirejs.paths.jquery =        config.require.paths.jquery         ?= "vendor/jquery"
 
+    newConfig.csslint = config.csslint ?= {}
+
     newConfig.coffeelint = @_coffeelint(config.coffeelint)
 
     newConfig

@@ -120,4 +120,13 @@ exports.config = {
   #     level: "ignore"
   #   no_implicit_parens:
   #     level: "ignore"
+
+  # The following is the csslint config. See here for a list of CSSLint rules: https://github.com/stubbornella/csslint/wiki/Rules
+  # and follow the rule name to fine the ruleid.  If you do not want that rule used by mimosa, uncomment 'csslint' and add below it
+  # the name of the rule and 'false'.  An example is provided below for this rule:
+  # https://github.com/stubbornella/csslint/wiki/Disallow-too-many-floats
+
+  # csslint:
+    # floats: false
+
 }

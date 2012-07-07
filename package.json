@@ -55,7 +55,8 @@
     "watch-connect": "~0.2.0",
     "commander": "~0.5.2",
     "connect-gzip": "~0.1.6",
-    "gzippo": "~0.1.7"
+    "gzippo": "~0.1.7",
+    "csslint": "~0.9.8"
   },
   "license": "MIT",
   "engines": {

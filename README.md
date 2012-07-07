@@ -16,7 +16,8 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
  * Run in development with unminified/non-compressed javascript, turn on prod mode and run with a single javascript file using Require's optimizer and [Almond](https://github.com/jrburke/almond)
  * Growl notifications along with basic console logging.  If a compile fails, you'll know right away.
  * Automatic CoffeeLinting
- * Automatic JSHinting of compiled code
+ * Automatic JSHinting of compiled JavaScript
+ * Automatic CSSHinting of compiled CSS
  * Basic Express skeleton to put you on the ground running with a new app
  * Bundled Express for serving up assets to an existing app
  * Live Reload built in, without the need for a plugin
