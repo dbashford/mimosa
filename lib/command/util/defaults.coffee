@@ -41,6 +41,7 @@ class MimosaDefaults
     css.compileWith =     config.compilers.css.compileWith     ?= MimosaDefaults.defaultCss()
     css.extensions =      config.compilers.css.extensions      ?= ["scss", "sass"]
     css.notifyOnSuccess = config.compilers.css.notifyOnSuccess ?= true
+    css.lint =            config.compilers.css.lint            ?= {enabled:true, rules:{}}
 
     copy = newConfig.copy = config.copy                        ?= {}
     copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif","html"]
@@ -59,8 +60,6 @@ class MimosaDefaults
     requirejs.out  =                config.require.out                  ?= "main-built.js"
     requirejs.paths =               config.require.paths                ?= {}
     requirejs.paths.jquery =        config.require.paths.jquery         ?= "vendor/jquery"
-
-    newConfig.csslint = config.csslint ?= {}
 
     newConfig.coffeelint = @_coffeelint(config.coffeelint)
 

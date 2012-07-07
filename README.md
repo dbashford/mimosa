@@ -17,7 +17,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
  * Growl notifications along with basic console logging.  If a compile fails, you'll know right away.
  * Automatic CoffeeLinting
  * Automatic JSHinting of compiled JavaScript
- * Automatic CSSHinting of compiled CSS
+ * Automatic CSSLinting of compiled CSS
  * Basic Express skeleton to put you on the ground running with a new app
  * Bundled Express for serving up assets to an existing app
  * Live Reload built in, without the need for a plugin
@@ -177,11 +177,15 @@ passing in JSON data the template needs to render.
 
 ## CoffeeLint
 
- Mimosa will [CoffeeLint](http://www.coffeelint.org/) your CoffeeScript and CoffeeScript-based dialects.  Any CoffeeLint warnings will be printed to the console.  The default CoffeeLint configuration is included in the Mimosa configuration (commented out of course).  Turn rules on/off or change values to suit your needs.  You can also turn off CoffeeHint-ing altogether by enabling the `compilers.javascript.metalint` option, and switching it to false.
+ Mimosa will automatically [CoffeeLint](http://www.coffeelint.org/) your CoffeeScript and CoffeeScript-based dialects.  Any CoffeeLint warnings will be printed to the console.  The default CoffeeLint configuration is included in the Mimosa configuration (commented out of course).  Turn rules on/off or change values to suit your needs.  You can also turn off CoffeeHint-ing altogether by enabling the `compilers.javascript.metalint` option, and switching it to false.
 
 ## JSHint
 
- Mimosa will [JSHint](http://www.jshint.com/) your compiled JavaScript.  Any JSHint warnings will be printed to the console.  JSHint has [many rules](http://www.jshint.com/options/), and for now overrides are not available via Mimosa.  But it wouldn't be hard to add if there is interest.  You can turn off JSHint altogether by enabling the `compilers.javascript.lint` option and switching it to false.
+ Mimosa will automatically [JSHint](http://www.jshint.com/) your compiled JavaScript.  Any JSHint warnings will be printed to the console.  JSHint has [many rules](http://www.jshint.com/options/), and for now overrides are not available via Mimosa.  But it wouldn't be hard to add if there is interest.  You can turn off JSHint altogether by enabling the `compilers.javascript.lint` option and switching it to false.
+
+## CSSLint
+
+ Mimosa will automatically [CSSLint](http://csslint.net/) your compiled CSS.  All CSSLint violates will be treated as warnings and printed to the console.  You can turn off CSSHint entirely by setting `compilers.css.lint.enabled` to `false`.  You can disable the rules by adding the rules you want to disable to `compilers.css.lint.rules` and setting them to false.  The list of rules can be found here: https://github.com/stubbornella/csslint/wiki/Rules.  If you want to disable a rule, find the rule ID in the CSSLint Wiki, and add it to the rules object.  For example set `ids:false` if you are accustomed to using IDs to style elements, are not interested in changing that practice, and rather not deal with all the warnings.
 
 ## RequireJS Optimization
 

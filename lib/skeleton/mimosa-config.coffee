@@ -12,9 +12,9 @@ exports.config = {
 
   # watch:
 
-    # sourceDir: "assets"                         # directory location of web assets
-    # compiledDir: "public"                       # directory location of compiled web assets
-    # ignored: [".sass-cache"]                    # file extensions to not watch on file system
+    # sourceDir: "assets"                            # directory location of web assets
+    # compiledDir: "public"                          # directory location of compiled web assets
+    # ignored: [".sass-cache"]                       # file extensions to not watch on file system
 
   # compilers:
     # javascript:
@@ -35,7 +35,7 @@ exports.config = {
                                                      # not yet exposing jshint options as Mimosa options.  If anyone wants it...
 
     # template:
-      # compileWith: "handlebars"                     # Other options: "dust", "jade", "none". "none" assumes you aren't using any micro
+      # compileWith: "handlebars"                    # Other options: "dust", "jade", "none". "none" assumes you aren't using any micro
                                                      # templating solution.
       # extensions: ["hbs", "handlebars"]            # list of extensions to compile
       # outputFileName: "javascripts/templates"      # the file all templates are compiled into
@@ -46,11 +46,18 @@ exports.config = {
                                                      # will always send on failure
 
     # css:
-      # compileWith: "sass"                         # Other options: "none".  "none" assumes you are coding pure CSS and
+      # compileWith: "sass"                          # Other options: "none".  "none" assumes you are coding pure CSS and
                                                      # the copy config will move that over for you.  More compilers to come.
-      # extensions: ["scss", "sass"]                # list of extensions to compile
+      # extensions: ["scss", "sass"]                 # list of extensions to compile
       # notifyOnSuccess: true                        # send growl notification on successful compilation?
                                                      # will always send on failure
+      # lint:
+        # enabled: true                              # determines whether or not csslint will fire on compiled css csslint rule config
+        # rules:                                     # List of CSSLint rules: https://github.com/stubbornella/csslint/wiki/Rules
+                                                     # If you do not want that rule enabled by mimosa, uncomment {lint.rules} and add below it
+                                                     # the name of the rule and 'false'.  An example is provided below for this rule:
+                                                     # https://github.com/stubbornella/csslint/wiki/Disallow-too-many-floats
+          # floats: false                            # This is NOT a default, merely an example of how to turn a rule off
 
   # copy:
     # extensions: ["js","css","png","jpg","jpeg","gif","html"]  # the extensions of files to simply copy from sourceDir
@@ -120,13 +127,4 @@ exports.config = {
   #     level: "ignore"
   #   no_implicit_parens:
   #     level: "ignore"
-
-  # The following is the csslint config. See here for a list of CSSLint rules: https://github.com/stubbornella/csslint/wiki/Rules
-  # and follow the rule name to fine the ruleid.  If you do not want that rule used by mimosa, uncomment 'csslint' and add below it
-  # the name of the rule and 'false'.  An example is provided below for this rule:
-  # https://github.com/stubbornella/csslint/wiki/Disallow-too-many-floats
-
-  # csslint:
-    # floats: false
-
 }

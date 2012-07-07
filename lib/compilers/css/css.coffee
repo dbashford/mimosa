@@ -10,11 +10,14 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
   constructor: (config) ->
     super(config, config.compilers.css)
 
+    return if @config.lint.enabled is false
+
     @rules = {}
     for rule in csslint.getRules()
-      @rules[rule.id] = 1 unless config.csslint[rule.id] is false
+      @rules[rule.id] = 1 unless config.compilers.css.lint.rules[rule.id] is false
 
   afterCompile: (source, destFileName) =>
+    return if @config.lint.enabled is false
     result = csslint.verify source, @rules
     @writeMessage(message, destFileName) for message in result.messages
 

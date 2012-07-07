@@ -22,16 +22,21 @@
     "coffeescript",
     "sass",
     "framework",
+    "toolkit",
     "asset",
     "compiler",
     "compiling",
     "dust",
     "handlebars",
+    "jade",
     "amd",
     "require",
     "requirejs",
     "boilerplate",
-    "mimosa"
+    "mimosa",
+    "brunch",
+    "grunt",
+    "yeoman"
   ],
   "dependencies": {
     "express": "2.5.8",
