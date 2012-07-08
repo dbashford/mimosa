@@ -56,7 +56,6 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       @write(@templateFileName, output) if output?
 
     unless @startupFinished
-      console.log "CALLING STARTUP FINISHED?"
       @startupDoneCallback()
       @startupFinished = true
 
