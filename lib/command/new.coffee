@@ -61,7 +61,7 @@ class NewCommand
             @_create(name, opts, chosenCompilers)
 
   _create: (name, opts, chosenCompilers) =>
-    skeletonPath = path.join __dirname, '..', 'skeleton'
+    skeletonPath = path.join __dirname, '..', 'project', 'skeleton'
 
     # if name provided, simply copy directory into directory by that name
     # if name not provided, copy all skeleton contents into current directory

@@ -55,6 +55,11 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     else
       @write(@templateFileName, output) if output?
 
+    unless @startupFinished
+      console.log "CALLING STARTUP FINISHED?"
+      @startupDoneCallback()
+      @startupFinished = true
+
   _removeClientLibrary: ->
     fs.unlink @_clientPath() if path.existsSync @_clientPath()
 
