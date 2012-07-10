@@ -34,7 +34,7 @@ class MimosaDefaults
     template.compileWith =     config.compilers.template.compileWith     ?= MimosaDefaults.defaultTemplate()
     template.extensions =      config.compilers.template.extensions      ?= ["hbs", "handlebars"]
     template.outputFileName =  config.compilers.template.outputFileName  ?= "javascripts/templates"
-    template.helperFile =      config.compilers.template.helperFile      ?= "javascripts/app/handlebars-helpers"
+    template.helperFile =      config.compilers.template.helperFiles     ?= ["javascripts/app/template/handlebars-helpers"]
     template.notifyOnSuccess = config.compilers.template.notifyOnSuccess ?= true
 
     css = comp.css =      config.compilers.css                 ?= {}

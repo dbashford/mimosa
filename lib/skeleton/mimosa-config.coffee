@@ -35,14 +35,15 @@ exports.config = {
                                                      # not yet exposing jshint options as Mimosa options.  If anyone wants it...
 
     # template:
-      # compileWith: "handlebars"                        # Other options: "dust", "jade", "none". "none" assumes you aren't
-                                                         # using any micro-templating solution.
-      # extensions: ["hbs", "handlebars"]                # list of extensions to compile
-      # outputFileName: "javascripts/templates"          # the file all templates are compiled into
-      # helperFile:"javascripts/app/handlebars-helpers"  # relevant to handlebars only, the path from sourceDir to the file
-                                                         # containing handlebars helper functions, does not need to exist
-      # notifyOnSuccess: true                            # send growl notification on successful compilation?
-                                                         # will always send on failure
+      # compileWith: "handlebars"                                    # Other options: "dust", "jade", "none". "none" assumes you aren't
+                                                                     # using any micro-templating solution.
+      # extensions: ["hbs", "handlebars"]                            # list of extensions to compile
+      # outputFileName: "javascripts/templates"                      # the file all templates are compiled into
+      # helperFiles:["javascripts/app/template/handlebars-helpers"]  # relevant to handlebars only, the paths from sourceDir to the files
+                                                                     # containing handlebars helper/partial registrations, does not need
+                                                                     # to exist
+      # notifyOnSuccess: true                                        # send growl notification on successful compilation?
+                                                                     # will always send on failure
 
     # css:
       # compileWith: "sass"                          # Other options: "none".  "none" assumes you are coding pure CSS and

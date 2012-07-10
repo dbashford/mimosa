@@ -18,18 +18,18 @@ class NewCommand
       .command('new [name]')
       .description("create a skeleton matching Mimosa's defaults, which includes a basic Express setup")
       .option("-n, --noexpress", "do not include express in the application setup")
-    #  .option("-d, --defaults",  "bypass prompts and go with Mimosa defaults (CoffeeScript, SASS, Handlebars)")
+      .option("-d, --defaults",  "bypass prompts and go with Mimosa defaults (CoffeeScript, SASS, Handlebars)")
       .action(@controller)
       .on '--help', @printHelp
 
   controller: (name, opts) =>
-    return @_create(name, opts) # if opts.defaults
+    return @_create(name, opts) if opts.defaults
 
     logger.green "\n  This is the Mimosa interactive project creation tool.  You will be prompted to choose the "
-    logger.green "  meta-languages you'd like to use.  Mimosa will your scan project source directory for files matching"
-    logger.green "  your sections and compile then as they change.  If you intend or would like to use a compiler that"
-    logger.green "  is not listed, choose 'None', and then add a github issue (https://github.com/dbashford/mimosa/issues)"
-    logger.green "  and we'll look at adding it. \n"
+    logger.green "  meta-languages you'd like to use.  Mimosa will your scan project source directory for files "
+    logger.green "  matching your sections and compile them as they change.  If you intend to use a meta-language"
+    logger.green "  that is not listed, choose 'None', and then add a github issue"
+    logger.green "  (https://github.com/dbashford/mimosa/issues) and we'll look at adding it. \n"
 
     util.gatherCompilerInfo (compilerInfo) =>
 
@@ -61,7 +61,7 @@ class NewCommand
             @_create(name, opts, chosenCompilers)
 
   _create: (name, opts, chosenCompilers) =>
-    skeletonPath = path.join __dirname, '..', 'project', 'skeleton'
+    skeletonPath = path.join __dirname, '..', 'skeleton'
 
     # if name provided, simply copy directory into directory by that name
     # if name not provided, copy all skeleton contents into current directory
@@ -70,9 +70,9 @@ class NewCommand
     else
       @_copySkeletonToCurrentDirectory(skeletonPath)
 
-    @_postCopyCleanUp()
+    @_makeChosenCompilerChanges(chosenCompilers)
 
-    @_makeChosenCompilerChanges(chosenCompilers) if chosenCompilers?
+    @_postCopyCleanUp()
 
     if opts.noexpress then @_usingDefaultServer() else @_usingExpress()
 
@@ -97,6 +97,22 @@ class NewCommand
     currPath
 
   _makeChosenCompilerChanges: (chosenCompilers) ->
+    # defaults
+    unless chosenCompilers?
+      chosenCompilers =
+        javascript: 'coffee'
+        javascriptExtensions: ['coffee']
+        css: 'sass'
+        cssExtensions: ["scss", "sass"]
+        template: 'handlebars'
+        templateExtensions: ["hbs", "handlebars"]
+
+    @_updateConfigForChosenCompilers(chosenCompilers)
+
+    @_copyCompilerSpecificExampleFiles(chosenCompilers)
+
+  _updateConfigForChosenCompilers: (chosenCompilers) ->
+
     # return if all the defaults were chosen
     return if chosenCompilers.javascript is defaults.defaultJavascript and
       chosenCompilers.css is defaults.defaultCss and
@@ -129,15 +145,49 @@ class NewCommand
     logger.success "Config changed to use selected compilers and to watch default extensions for those compilers."
     logger.success "You may want to check that the extensions Mimosa will watch match those you intend to use."
 
+  _copyCompilerSpecificExampleFiles: (chosenCompilers) ->
+    compExts = if chosenCompilers.javascript is "none" then ["js"]   else chosenCompilers.javascriptExtensions
+    cssExts =  if chosenCompilers.css        is "none" then ["css"]  else chosenCompilers.cssExtensions
+    tempExts = if chosenCompilers.template   is "none" then ["html"] else chosenCompilers.templateExtensions
+    safePaths = [compExts, cssExts, tempExts].flatten().map (path) -> "\\.#{path}$"
+    safePaths.push path.join("javascripts", "vendor")
+
+    assetsPath = path.join @currPath,  'assets'
+    allItems = wrench.readdirSyncRecursive(assetsPath)
+    files = allItems.filter (i) -> fs.statSync(path.join(assetsPath, i)).isFile()
+
+    for file in files
+      filePath = path.join(assetsPath, file)
+      isSafe = safePaths.some (path) -> file.match(path)
+
+      # clear out the bad views
+      if isSafe
+        if filePath.has('example-view-')
+          if tempExts.none((ext) -> filePath.has("-#{ext}."))
+            isSafe = false
+          else
+            templateView = filePath
+
+        isSafe = false if filePath.has('handlebars-helpers') and
+          tempExts.none((ext) -> ext is "hbs")
+
+      fs.unlink filePath unless isSafe
+
+    # alter template view name and insert css framework
+    if templateView?
+      data = fs.readFileSync templateView, "ascii"
+      fs.unlink templateView
+      cssFramework = if chosenCompilers.css is "none" then "pure CSS" else chosenCompilers.css
+      data = data.replace "CSSHERE", cssFramework
+      templateView = templateView.replace /-\w+\./, "."
+      fs.writeFile templateView, data
+
   _postCopyCleanUp: =>
     # for some reason I can't quite figure out
     # won't copy over a public directory, so hack it out here
     newPublicPath = path.join @currPath, 'public'
     oldPublicPath = path.join @currPath, 'publicc'
     fs.renameSync oldPublicPath, newPublicPath
-
-    glob "#{@currPath}/**/.gitkeep", (err, files) ->
-      fs.unlinkSync(file) for file in files
 
   # remove express files/directories and update config to point to default server
   _usingDefaultServer: ->

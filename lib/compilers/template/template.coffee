@@ -42,7 +42,10 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
         @_removeClientLibrary()
     else
       @_writeClientLibrary()
-      @compile(fileNames, @_write) if @_templateNeedsCompiling(fileNames)
+      if @_templateNeedsCompiling(fileNames)
+        @compile(fileNames, @_write)
+      else
+        @_reportStartupDone()
 
   _templateNeedsCompiling: (fileNames) ->
     for file in fileNames
@@ -55,6 +58,9 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     else
       @write(@templateFileName, output) if output?
 
+    @_reportStartupDone()
+
+  _reportStartupDone: =>
     unless @startupFinished
       @startupDoneCallback()
       @startupFinished = true

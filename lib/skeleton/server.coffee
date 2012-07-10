@@ -1,6 +1,6 @@
 express =        require 'express'
 reloadOnChange = require 'watch-connect'
-gzip =         require 'gzippo'
+gzip =           require 'gzippo'
 
 routes  =        require './routes'
 

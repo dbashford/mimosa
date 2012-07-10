@@ -14,7 +14,7 @@ register = (program, callback) ->
       logger.blue( '\n    $ mimosa config\n')
 
 copyConfig = ->
-  configPath = path.join __dirname, '..', 'project', 'skeleton', "mimosa-config.coffee"
+  configPath = path.join __dirname, '..', 'skeleton', "mimosa-config.coffee"
   configFileContents = fs.readFileSync(configPath)
   currPath = path.join path.resolve(''), "mimosa-config.coffee"
   fs.writeFile currPath, configFileContents, 'ascii'

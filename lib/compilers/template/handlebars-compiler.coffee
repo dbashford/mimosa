@@ -15,10 +15,14 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
   compile: (fileNames, callback) ->
     error = null
 
-    helperPath = path.join(@srcDir, @config.helperFile + ".coffee")
+    possibleHelperPaths =
+      for ext in @fullConfig.compilers.javascript.extensions
+        path.join(@srcDir, "#{helperFile}.#{ext}") for helperFile in @config.helperFiles
+    helperPaths = possibleHelperPaths.flatten().filter((p) -> path.existsSync(p))
+
     defines = ["'#{@clientLibrary}'"]
-    if path.existsSync(helperPath)
-      helperDefine = @config.helperFile.replace /(^[\\\/]?[A-Za-z]+[\\\/])/, ''
+    for helperPath in helperPaths
+      helperDefine = helperPath.replace(@srcDir, "").replace(/(^[\\\/]?[A-Za-z]+[\\\/])/, '').replace(/\.\w+$/,"")
       defines.push "'#{helperDefine}'"
     defineString = defines.join ','
 
