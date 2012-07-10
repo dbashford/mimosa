@@ -8,6 +8,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 ## Features
 
  * Sane defaults allow you to get started with 0 configuration.  All you really need is an assets and a public directory.
+ * Command line prompting during project creation to get you the configuration you want without messing with the configuration.  And you'll get a very simple skeleton app build using the meta-languages you choose.
  * Heavily configurable if moving away from defaults
  * Compiling of CoffeeScript + Iced CoffeeScript
  * Compiling of SASS (soon, LESS, Stylus)
@@ -155,19 +156,25 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  Handlebars is the default templating langauge.  The injected template javascript file provides a JSON object of templates.  To access, for instance, a template originating from a file named "example.hbs", you would do this...
 
- `templates.example({})`
+ `var html = templates.example({})`
 
 passing in JSON data the template needs to render.
 
- Handlebars also provides the ability to code reusable helper methods in pure JavaScript.  You can code those in the meta-language of your choosing inside the `compilers.template.helperFile` file.  The helpers and the templates are all pulled together via requirejs.
+ Handlebars also provides the ability to code reusable helper methods in pure JavaScript.  You can code those in the meta-language of your choosing inside the `compilers.template.helperFiles` files.  The helpers and the templates are all pulled together via requirejs.
 
 #### Dust
 
-  TDB
+ Dust is also available as a template language.  The injected template javascript file provides a JSON object of templates.  To access, for instance, a template originating from a file named "example.dust", you would do this...
+
+ ```
+ templates.render('example', {}, (err, html) -> $(element).append(html))
+ ```
 
 #### Jade
 
-  TBD
+ Jade is a third available template language.  The injected template javascript file provides a JSON object of templates.  To access, for instance, a template originating from a file named "example.dust", you would do this...
+
+ `var html = templates.example({})`
 
 ## Immediate Feedback
 
@@ -199,6 +206,10 @@ passing in JSON data the template needs to render.
 
   In no certain order:
 
+ * Underscore templating
+ * js/css linting over pure js css files, not just compiled files
+ * example templates
+ * other servers besides express
  * Push to NPM
  * No write mode.  Just compilation with notifications, coffee/jshinting.
  * Stylus, LESS compilers
