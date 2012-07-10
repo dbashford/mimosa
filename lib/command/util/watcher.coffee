@@ -1,7 +1,7 @@
 watch =     require 'chokidar'
 path =      require 'path'
-logger =    require '../util/logger'
-optimizer = require '../optimize/require-optimize'
+logger =    require '../../util/logger'
+optimizer = require '../../optimize/require-optimize'
 
 class Watcher
 

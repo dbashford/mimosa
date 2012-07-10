@@ -6,7 +6,7 @@ gzip =     require 'gzippo'
 
 util =     require './util'
 logger =   require '../util/logger'
-Watcher =  require '../watch/watcher'
+Watcher =  require './util/watcher'
 
 watch = (opts) =>
   util.processConfig opts?.server, (config) =>
@@ -22,7 +22,7 @@ startDefaultServer = (config) ->
   app = express.createServer()
 
   app.configure =>
-    app.set('views', "#{__dirname}/../views")
+    app.set('views', "#{__dirname}/views")
     app.set('view engine', 'jade')
     app.use (req, res, next) ->
       res.header 'Cache-Control', 'no-cache'
@@ -30,7 +30,6 @@ startDefaultServer = (config) ->
     if config.server.useReload
       app.use (require 'watch-connect')(config.watch.compiledDir, app, {verbose: false, skipAdding:true})
     app.use config.server.base, gzip.staticGzip(config.watch.compiledDir)
-    #app.use config.server.base, express.static(config.watch.compiledDir)
 
   production = process.env.NODE_ENV is 'production'
   reload = config.server.useReload and not production

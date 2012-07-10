@@ -17,7 +17,6 @@ exports.startServer = (publicPath, useReload, optimize) ->
     app.use express.methodOverride()
     app.use app.router
     app.use reloadOnChange(publicPath, app, {verbose: false, skipAdding:true}) if useReload
-    # app.use express.static(publicPath)
     app.use gzip.staticGzip(publicPath)
 
   app.configure 'development', ->

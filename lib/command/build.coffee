@@ -1,6 +1,6 @@
 util = require './util'
 logger = require '../util/logger'
-Watcher =  require '../watch/watcher'
+Watcher =  require './util/watcher'
 
 build = (opts) =>
   logger.info "Beginning build"
