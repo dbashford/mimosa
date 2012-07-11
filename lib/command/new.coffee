@@ -183,6 +183,9 @@ class NewCommand
       fs.writeFile templateView, data
 
   _postCopyCleanUp: =>
+    glob "#{@currPath}/**/.gitkeep", (err, files) ->
+      fs.unlinkSync(file) for file in files
+
     # for some reason I can't quite figure out
     # won't copy over a public directory, so hack it out here
     newPublicPath = path.join @currPath, 'public'

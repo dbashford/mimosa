@@ -12,7 +12,7 @@ Mimosa is not quite ready for prime-time (as of early July), still shaking thing
  * A very simple skeleton app build using the chosen meta-languages
  * Heavily configurable if moving away from defaults
  * Compiling of CoffeeScript + Iced CoffeeScript
- * Compiling of SASS (soon: LESS, Stylus)
+ * Compiling of SASS (w/compass) + LESS (soon: Stylus)
  * Compiling of Handlebars, Dust and Jade templates into single template files to be used in the client (soon: Underscore, Hogan)
  * Compile assets when they are saved, not when they are requested
  * Run in development with unminified/non-compressed javascript, turn on prod mode and run with a single javascript file using RequireJS's optimizer and [Almond](https://github.com/jrburke/almond)
@@ -227,6 +227,6 @@ Mimosa is not quite ready for prime-time (as of early July), still shaking thing
  * other servers besides express
  * Push to NPM
  * No write mode.  Just compilation with notifications, coffee/jshinting.
- * Stylus, LESS compilers
+ * Stylus compilers
  * Tests for the Mimosa codebase
  * Integrated testing framework for your codebase
