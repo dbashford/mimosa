@@ -35,9 +35,9 @@ Mimosa is not quite ready for prime-time (as of early July), still shaking thing
  * More in the code base rather than plugged in.  Might be counter-intuitive, but I feel with the compilers in the Mimosa codebase, you can trust they'll work and not fall out of date.
  * Serve individual files during development.  Merging during dev is more trouble than it is worth.
 
- The biggest loss from Brunch to Mimosa, besides maturity, is a lack of command line scaffolding.  I've never felt I got much out of Rails or Spring Roo style scaffolding when I've used it, and I don't feel it needed to be a part of Mimosa.  I reserve the opportunity to change my mind.
+The biggest loss from Brunch to Mimosa, besides maturity, is a lack of command line scaffolding.  I've never felt I got much out of Rails or Spring Roo style scaffolding when I've used it, and I don't feel it needed to be a part of Mimosa.  I reserve the opportunity to change my mind.
 
- Something missing from Mimosa for the short-term, is a group of pre-built skeletons to get you started with things like Backbone and Bootstrap.  Those'll come and hopefully be contributed.
+Something missing from Mimosa for the short-term, is a group of pre-built skeletons to get you started with things like Backbone and Bootstrap.  Those'll come and hopefully be contributed.
 
 ## Installation
 
