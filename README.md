@@ -1,24 +1,23 @@
 Mimosa - a modern browser development toolkit
 ======
 
-Mimosa is a browser development toolkit, targeted at folks using meta-languages like CoffeeScript or SASS, or micro-templating libraries like Jade and Handlebars.  The toolkit is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management, and comes bundled with useful tools like coffee/jshint to improve code quality and livereload to speed up development.
+Mimosa is a browser development toolkit, targeted at folks using meta-languages like CoffeeScript or SASS, and micro-templating libraries like Jade and Handlebars.  The toolkit is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management, and comes bundled with useful tools like coffee/js/css hint to improve code quality and LiveReload to speed up development.
 
-Mimosa is not quite ready for prime-time (as of late June), still shaking things out, but feel free to play around and [file issues](https://github.com/dbashford/mimosa/issues) should you find them.  I expect some issues on Windows!
+Mimosa is not quite ready for prime-time (as of early July), still shaking things out, but feel free to play around and [file issues](https://github.com/dbashford/mimosa/issues) should you find them.  I haven't quite spent any real time playing with Mimosa on Windows, so I wouldn't be surprised to learn there are issues there.
 
 ## Features
 
- * Sane defaults allow you to get started with 0 configuration.  All you really need is an assets and a public directory.
- * Command line prompting during project creation to get you the configuration you want without messing with the configuration.  And you'll get a very simple skeleton app build using the meta-languages you choose.
+ * Sane defaults allow you to get started without configuring anything
+ * Command line prompting during project creation to get you the configuration you want without having to comb through JSON and learn Mimosa's settings
+ * A very simple skeleton app build using the chosen meta-languages
  * Heavily configurable if moving away from defaults
  * Compiling of CoffeeScript + Iced CoffeeScript
- * Compiling of SASS (soon, LESS, Stylus)
- * Compiling of Handlebars, Dust and Jade templates into single template files to be used in the client
+ * Compiling of SASS (soon: LESS, Stylus)
+ * Compiling of Handlebars, Dust and Jade templates into single template files to be used in the client (soon: Underscore, Hogan)
  * Compile assets when they are saved, not when they are requested
- * Run in development with unminified/non-compressed javascript, turn on prod mode and run with a single javascript file using Require's optimizer and [Almond](https://github.com/jrburke/almond)
- * Growl notifications along with basic console logging.  If a compile fails, you'll know right away.
- * Automatic CoffeeLinting
- * Automatic JSHinting of compiled JavaScript
- * Automatic CSSLinting of compiled CSS
+ * Run in development with unminified/non-compressed javascript, turn on prod mode and run with a single javascript file using RequireJS's optimizer and [Almond](https://github.com/jrburke/almond)
+ * Growl notifications along with basic console logging, so if a compile fails, you'll know right away
+ * Automatic CoffeeLinting, JSHinting, and CSSLinting
  * Basic Express skeleton to put you on the ground running with a new app
  * Bundled Express for serving up assets to an existing app
  * Live Reload built in, without the need for a plugin
@@ -26,11 +25,19 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
 #### Why Mimosa?
 
- Much love to [Brunch](http://brunch.io/) for the inspiration (hence 'Mimosa'), and for being the codebase of record (and outright theft!) when I had a problem to solve.  I suggest you check it out to compare and contrast features to figure out which is best for you.  Brunch is awesome sauce, and its codebase is certainly more mature!
+ Much love to [Brunch](http://brunch.io/) for the inspiration (hence 'Mimosa'), and for being the codebase I checked out when I had a problem to solve.  I suggest you check it out to compare and contrast features to figure out which is best for you.  Brunch is awesome sauce, and its codebase is certainly more mature!
 
- But I wanted something that required no configuration, and no figuring out file load order.  And I wanted linting built in.  And I wanted to serve individual files during development without a bunch of config.  And I wanted built in RequireJS support.
+ But I wanted:
+ * Less time spent fiddling with config
+ * RequireJS/AMD instead of CommonJS
+ * No thinking about file load order...let Require figure it out
+ * Built-in linting
+ * More in the code base rather than plugged in.  Might be counter-intuitive, but I feel with the compilers in the Mimosa codebase, you can trust they'll work and not fall out of date.
+ * Serve individual files during development.  Merging during dev is more trouble than it is worth.
 
- And, dammit, I wanted to hack on Node and the above gave me a great reason.
+ The biggest loss from Brunch to Mimosa, besides maturity, is a lack of command line scaffolding.  I've never felt I got much out of Rails or Spring Roo style scaffolding when I've played with it, and I don't feel it needed to be a part of this.  I reserve the opportunity to change my mind.
+
+ Something missing from Mimosa for the short-term, is a group of pre-built skeletons to get you started with things like Backbone and Bootstrap.  Those'll come and hopefully be contributed.
 
 ## Installation
 
@@ -50,6 +57,8 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
     $ mimosa new nameOfApplicationHere
 
+ Follow the prompts and choose the meta-languages you'd like to use.
+
  Change into the directory that was created and execute:
 
     $ mimosa watch --server
@@ -58,11 +67,11 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
 ## Configuration
 
- I built the configuration to be self-documenting.  The config file that comes bundled with the application contains all of the configurable options within the application and a brief explanation.  The default config is entirely commented out as the defaults are built into Mimosa.
+ Mimosa's documentation is self-explanatory. The config file that comes bundled with the application contains all of the configurable options within the application and a brief explanation.  If you stick with the default options, like using CoffeeScript, Handlebars, and SASS, the configuration will be entirely commented out as the defaults are built into Mimosa.
 
- To change something -- for instance to make it so you don't get notified via growl when your CSS meta-language (like SASS) compiles successfully -- uncomment the object structure that leads to the setting.  In this case you'd uncomment compilers, css, and notifyOnSuccess, and change the setting to false.
+ To change something -- for instance to make it so you don't get notified via growl when your CSS meta-language (like SASS) compiles successfully -- uncomment the object structure that leads to the setting.  In this case you'd uncomment `compilers.css.notifyOnSuccess`, and change the setting to `false`.
 
- You can find the configuration [inside the skeleton directory](https://github.com/dbashford/mimosa/blob/master/lib/project/skeleton/mimosa-config.coffee).
+ You can find the configuration [inside the skeleton directory](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/mimosa-config.coffee).
 
 ## Command Line Utilities
 
@@ -70,21 +79,27 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
 #### New Project (new)
 
- The best way to get started with Mimosa is to use it to create a new application/project structure for you.  The project Mimosa creates will match all of Mimosa'a defaults, so you'll be able to get started writing code straight away, no configuration necessary.
-
- Create a new project like so:
+ The best way to get started with Mimosa is to use it to create a new application/project structure for you.  Create a new project like so:
 
     $ mimosa new nameOfApplicationHere
 
- This will create a directory at your current location using the name provided as the name of the directory.  Inside it will populate an application skeleton with public and asset directories, as well as the bare essentials for a base [Express](http://expressjs.com/) application.  You'll have Express [Jade template](http://jade-lang.com/) views, a simple Express [router](http://expressjs.com/guide.html#routing) and a server.coffee file that will be used by Mimosa to get Express [started](https://github.com/dbashford/mimosa#serve-assets-watch---server).
+ This will kick off a series of prompts that will allow you to pick out the meta-languages and templating library you'd like to use.  When you've finished picking, Mimosa will create a directory at your current location using the name provided as the name of the directory.  Inside that directory Mimosa will populate an application skeleton with public and asset directories, as well as the bare essentials for a base [Express](http://expressjs.com/) application.  You'll have Express [Jade template](http://jade-lang.com/) views, a simple Express [router](http://expressjs.com/guide.html#routing) and a server.coffee file that will be used by Mimosa to get Express [started](https://github.com/dbashford/mimosa#serve-assets-watch---server).
 
- The public directory will be empty; it is the destination for your compiled JavaScript and CSS.  The assets directory has some example code to get you started, and has a group of vendor scripts, like require.js and handlebars.js, that you'll need.
+ The public directory will be empty; it is the destination for your compiled JavaScript and CSS.  The assets directory has some example code -- chosen based on the selections you made via the prompts -- to get you started, and has a group of vendor scripts, like require.js.
 
- The created directory will also contain the configuration file for Mimosa.  Everything inside of it is commented out, but all the options and explanations for each option are present.
+ The created directory will also contain the configuration file for Mimosa.  Almost everything inside of it is commented out, but all the options and explanations for each option are present.  The only things that will not be commented out will the javascript, css, and template compilers if you chose something other than the defaults.
+
+##### No Express
 
  Should you not need all of the Express stuff, you can give Mimosa a `--noexpress` flag when you create the project.  This will only give you the configuration file, the empty public directory, and the assets directory and all of its contents.
 
     $ mimosa new nameOfApplicationHere --noexpress
+
+##### Pick the defaults
+
+ Should you be happy with the defaults (CoffeeScript, Handlebars, and SASS) you can bypass the prompts by providing a --defaults flag.
+
+    $ mimosa new nameOfApplicationHere --defaults
 
 #### Watch and Compile (watch)
 
@@ -130,7 +145,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  Mimosa will compile your meta-languages for you and toss them in your public directory.
 
- You can change your meta-languages in the config.  The [default config file](https://github.com/dbashford/mimosa/blob/master/lib/project/skeleton/mimosa-config.coffee) contains a list of other options for each `compileWith`.
+ You can change your meta-languages in the config.  The [default config file](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/mimosa-config.coffee) contains a list of other options for each `compileWith`.
 
 #### Which meta-languages?
 
@@ -142,7 +157,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
 #### Asset Copying
 
- In the configuration there is a `copy.extensions` setting which lists the assets that will simply be moved over.  So, for example, your images, plain ol' JavaScript (vendor files, or should you be anti-metaJS), and regular CSS will be copied over.
+ In the configuration there is a `copy.extensions` setting which lists the assets that will simply be moved over.  So, for example, your images, plain ol' JavaScript (like vendor files, or should you choose code JavaScript), and regular CSS will be copied over.
 
  If there are extra files you need copied over, uncomment the `copy.extensions` config and add it to the list.  Or, better yet, make a suggestion by [filing an issue](https://github.com/dbashford/mimosa/issues).  No harm in me growing the list of extensions in the default.
 
@@ -158,7 +173,7 @@ Mimosa is not quite ready for prime-time (as of late June), still shaking things
 
  `var html = templates.example({})`
 
-passing in JSON data the template needs to render.
+...passing in JSON data the template needs to render.
 
  Handlebars also provides the ability to code reusable helper methods in pure JavaScript.  You can code those in the meta-language of your choosing inside the `compilers.template.helperFiles` files.  The helpers and the templates are all pulled together via requirejs.
 
@@ -192,7 +207,7 @@ passing in JSON data the template needs to render.
 
 ## CSSLint
 
- Mimosa will automatically [CSSLint](http://csslint.net/) your compiled CSS.  All CSSLint violates will be treated as warnings and printed to the console.  You can turn off CSSHint entirely by setting `compilers.css.lint.enabled` to `false`.  You can disable the rules by adding the rules you want to disable to `compilers.css.lint.rules` and setting them to false.  The list of rules can be found here: https://github.com/stubbornella/csslint/wiki/Rules.  If you want to disable a rule, find the rule ID in the CSSLint Wiki, and add it to the rules object.  For example set `ids:false` if you are accustomed to using IDs to style elements, are not interested in changing that practice, and rather not deal with all the warnings.
+ Mimosa will automatically [CSSLint](http://csslint.net/) your compiled CSS.  All CSSLint violations will be treated as warnings and printed to the console.  You can turn off CSSHint entirely by setting `compilers.css.lint.enabled` to `false`.  You can disable the rules by adding the rules you want to disable to `compilers.css.lint.rules` and setting them to false.  The list of rules can be found here: https://github.com/stubbornella/csslint/wiki/Rules.  If you want to disable a rule, find the rule ID in the CSSLint Wiki, and add it to the rules object.  For example set `ids:false` if you are accustomed to using IDs to style elements, are not interested in changing that practice, and rather not deal with all the warnings.
 
 ## RequireJS Optimization
 
@@ -208,11 +223,10 @@ passing in JSON data the template needs to render.
 
  * Underscore templating
  * js/css linting over pure js css files, not just compiled files
- * example templates
+ * example skeletons with things like Backbone/Chaplin/Angular/Ember, Bootstrap, etc
  * other servers besides express
  * Push to NPM
  * No write mode.  Just compilation with notifications, coffee/jshinting.
  * Stylus, LESS compilers
- * Example templates beyond the one provided
  * Tests for the Mimosa codebase
  * Integrated testing framework for your codebase
