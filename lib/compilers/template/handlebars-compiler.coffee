@@ -18,7 +18,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
     possibleHelperPaths =
       for ext in @fullConfig.compilers.javascript.extensions
         path.join(@srcDir, "#{helperFile}.#{ext}") for helperFile in @config.helperFiles
-    helperPaths = possibleHelperPaths.flatten().filter((p) -> path.existsSync(p))
+    helperPaths = possibleHelperPaths.flatten().filter((p) -> fs.existsSync(p))
 
     defines = ["'#{@clientLibrary}'"]
     for helperPath in helperPaths

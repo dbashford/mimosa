@@ -17,18 +17,23 @@ startServer = (config) =>
   if (config.server.useDefaultServer) then startDefaultServer(config) else startProvidedServer(config)
 
 startDefaultServer = (config) ->
-  production = process.env.NODE_ENV is 'production'
-
-  app = express.createServer()
+  app = express()
+  server = app.listen 3000, ->
+    logger.success "Mimosa's bundled Express started at http://localhost:#{config.server.port}/", true
 
   app.configure =>
-    app.set('views', "#{__dirname}/views")
-    app.set('view engine', 'jade')
+    app.set 'port', config.server.port || 3000
+    app.set 'views', "#{__dirname}/views"
+    app.set 'view engine', 'jade'
+    app.use express.favicon()
+    app.use express.bodyParser()
+    app.use express.methodOverride()
+    app.use app.router
     app.use (req, res, next) ->
       res.header 'Cache-Control', 'no-cache'
       next()
     if config.server.useReload
-      app.use (require 'watch-connect')(config.watch.compiledDir, app, {verbose: false, skipAdding:true})
+      app.use (require 'watch-connect')(config.watch.compiledDir, server, {verbose: false, skipAdding:true})
     app.use config.server.base, gzip.staticGzip(config.watch.compiledDir)
 
   production = process.env.NODE_ENV is 'production'
@@ -38,13 +43,9 @@ startDefaultServer = (config) ->
   app.get '/', (req, res) =>
     res.render 'index', { title: 'Mimosa\'s Express', reload:reload, production:production, useBuilt:useBuilt}
 
-  app.listen config.server.port
-
-  logger.success "Mimosa's bundled Express started at http://localhost:#{config.server.port}/", true
-
 startProvidedServer = (config) ->
   serverPath = path.resolve config.server.path
-  path.exists serverPath, (exists) =>
+  fs.exists serverPath, (exists) =>
     if exists
       server = require serverPath
       if server.startServer

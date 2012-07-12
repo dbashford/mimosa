@@ -1,4 +1,6 @@
 path = require 'path'
+fs = require 'fs'
+
 logger =   require '../../util/logger'
 
 class MimosaDefaults
@@ -85,7 +87,7 @@ class MimosaDefaults
 
   _testPathExists: (filePath, name) ->
     rPath = path.resolve filePath
-    rPathExists = path.existsSync rPath
+    rPathExists = fs.existsSync rPath
     unless rPathExists
       logger.fatal "#{name} (#{rPath}) cannot be found"
       @fatalErrors++

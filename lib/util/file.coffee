@@ -14,8 +14,13 @@ class FileUtils
       if err.code is 'ENOENT'
         made = mkdirRecursive path.dirname(p), made
         mkdirRecursive p, made
-      else
-        throw err
+      else if err.code is 'EEXIST'
+        try
+          stat = fs.statSync(p);
+        catch err2
+          throw err
+        if !stat.isDirectory() then throw err
+      else throw err
     made
 
 module.exports = new FileUtils

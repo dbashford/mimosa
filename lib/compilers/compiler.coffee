@@ -37,7 +37,7 @@ module.exports = class AbstractCompiler
   initializationComplete: (@isInitializationComplete = true) ->
 
   fileNeedsCompiling: (fileName, destinationFile) ->
-    return true unless path.existsSync(destinationFile)
+    return true unless fs.existsSync(destinationFile)
     destStats = fs.statSync(destinationFile)
     origStats = fs.statSync(fileName)
     return true if origStats.mtime > destStats.mtime
@@ -46,7 +46,7 @@ module.exports = class AbstractCompiler
   write: (fileName, content) =>
     fileName = fileName.replace(@fullConfig.root, '')
     dirname = path.dirname(fileName)
-    path.exists dirname, (exists) =>
+    fs.exists dirname, (exists) =>
       fileUtils.mkdirRecursive dirname unless exists
       fs.writeFile fileName, content, "ascii", (err) =>
         return @failed "Failed to write new file: #{fileName}" if err

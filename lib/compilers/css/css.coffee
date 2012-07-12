@@ -55,7 +55,7 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
       includeTime = fs.statSync(path.join @fullConfig.root, include).mtime
       for base in bases
         basePath = @findCompiledPath(base)
-        if path.existsSync basePath
+        if fs.existsSync basePath
           baseTime = fs.statSync(basePath).mtime
           baseFilesToCompileNow.push(base) if includeTime > baseTime
         else
@@ -64,7 +64,7 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
     # Determine if any bases need to be compiled based on their own merit
     for base in @baseFiles
       baseCompiledPath = @findCompiledPath(base)
-      if path.existsSync baseCompiledPath
+      if fs.existsSync baseCompiledPath
         baseSrcPath = path.join @fullConfig.root, base
         baseFilesToCompileNow.push(base) if fs.statSync(baseSrcPath).mtime > fs.statSync(baseCompiledPath).mtime
       else

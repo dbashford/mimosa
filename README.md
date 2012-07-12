@@ -91,9 +91,9 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
 ##### No Express
 
- Should you not need all of the Express stuff, you can give Mimosa a `--noexpress` flag when you create the project.  This will only give you the configuration file, the empty public directory, and the assets directory and all of its contents.
+ Should you not need all of the Express stuff, you can give Mimosa a `--noserver` flag when you create the project.  This will only give you the configuration file, the empty public directory, and the assets directory and all of its contents.
 
-    $ mimosa new nameOfApplicationHere --noexpress
+    $ mimosa new nameOfApplicationHere --noserver
 
 ##### Pick the defaults
 
@@ -115,9 +115,9 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
     $ mimosa watch --server
 
- By default, this will look for and run an Express app located at `server.path`.  If you used the Mimosa command line to build your new project, and you didn't provide the --noexpress flag, you will have a server.coffee at the root of your file structure.  Mimosa will run the `startServer` method in this file.  You can leave this file as is if you are simply serving up assets, but this gives you the opportunity to build out an actual Express app should that be your desire.
+ By default, this will look for and run an Express app located at `server.path`.  If you used the Mimosa command line to build your new project, and you didn't provide the --noserver flag, you will have a server.coffee at the root of your file structure.  Mimosa will run the `startServer` method in this file.  You can leave this file as is if you are simply serving up assets, but this gives you the opportunity to build out an actual Express app should that be your desire.
 
- You can change to using an embedded default (not-extendable) Express server by changing the `server.useDefaultServer` configuration to `true`.  If you created a project using the --noexpress flag, this will have already been done for you.
+ You can change to using an embedded default (not-extendable) Express server by changing the `server.useDefaultServer` configuration to `true`.  If you created a project using the --noserver flag, this will have already been done for you.
 
 #### One Time Asset Build (build)
 

@@ -30,13 +30,13 @@ clean = ->
         if compiler? and compiler.getOutExtension()
           compiledPath = compiledPath.replace(/\.\w+$/, ".#{compiler.getOutExtension()}")
 
-      fs.unlinkSync compiledPath if path.existsSync compiledPath
+      fs.unlinkSync compiledPath if fs.existsSync compiledPath
 
     directories = files.filter (f) -> fs.statSync(path.join(srcDir, f)).isDirectory()
     directories = directories.sortBy('length', true)
     for dir in directories
       dirPath = path.join(config.root, config.watch.compiledDir, dir)
-      if path.existsSync dirPath
+      if fs.existsSync dirPath
         fs.rmdir dirPath, (err) ->
           if err?.code is not "ENOTEMPTY"
             logger.error "Unable to delete directory, #{dirPath}"

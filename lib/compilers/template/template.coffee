@@ -28,7 +28,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   cleanup: ->
     @_removeClientLibrary()
-    @removeTheFile(@templateFileName, false) if path.existsSync @templateFileName
+    @removeTheFile(@templateFileName, false) if fs.existsSync @templateFileName
 
   doneStartup: -> @_gatherFiles()
 
@@ -72,10 +72,10 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       @startupFinished = true
 
   _removeClientLibrary: ->
-    fs.unlink @_clientPath() if path.existsSync @_clientPath()
+    fs.unlink @_clientPath() if fs.existsSync @_clientPath()
 
   _writeClientLibrary: ->
-    return if path.existsSync @_clientPath()
+    return if fs.existsSync @_clientPath()
     mimosaLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
     fs.readFile mimosaLibraryPath, "ascii", (err, data) =>
       return logger.error "Cannot read client library: #{@clientLibrary}" if err?

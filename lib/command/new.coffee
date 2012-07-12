@@ -17,7 +17,7 @@ class NewCommand
     @program
       .command('new [name]')
       .description("create a skeleton matching Mimosa's defaults, which includes a basic Express setup")
-      .option("-n, --noexpress", "do not include express in the application setup")
+      .option("-n, --noserver", "do not include express in the application setup")
       .option("-d, --defaults",  "bypass prompts and go with Mimosa defaults (CoffeeScript, SASS, Handlebars)")
       .action(@controller)
       .on '--help', @printHelp
@@ -74,7 +74,7 @@ class NewCommand
 
     @_postCopyCleanUp()
 
-    if opts.noexpress then @_usingDefaultServer() else @_usingExpress()
+    if opts.noserver then @_usingDefaultServer() else @_usingExpress()
 
   _copySkeletonToProvidedDirectory: (skeletonPath, name) ->
     currPath = path.join path.resolve(''), name
@@ -226,11 +226,11 @@ class NewCommand
     logger.blue( '\n    $ mimosa new [nameOfProject]\n')
     logger.green('  If you wish to copy the project skeleton into your current directory, leave off the name.')
     logger.blue( '\n    $ mimosa new\n')
-    logger.green('  Pass a \'noexpress flag\' to not include the basic Express app.  With this set up, if you choose to have')
+    logger.green('  Pass a \'noserver flag\' to not include the basic Express app.  With this set up, if you choose to have')
     logger.green('  Mimosa serve up your assets, it will do so with an embedded Mimosa Express app, and not with one inside')
     logger.green('  your project')
-    logger.blue( '\n    $ mimosa new [name] --noexpress')
-    logger.blue( '    $ mimosa new --noexpress')
+    logger.blue( '\n    $ mimosa new [name] --noserver')
+    logger.blue( '    $ mimosa new --noserver')
     logger.blue( '    $ mimosa new [name] -n')
     logger.blue( '    $ mimosa new -n\n')
 

@@ -1,9 +1,9 @@
-!!!
+doctype 5
 html
   head
     title= title
 
-    - var url = '/app/stylesheets/style.css'
+    - var url = '/stylesheets/style.css'
     - if (!useBuilt) {url += "?d=" + (new Date().getTime())}
     link(rel='stylesheet', href=url)
 
@@ -16,4 +16,5 @@ html
       script(src='/socket.io/socket.io.js')
       script(src='/socket-enable.js')
 
-  body!= body
+  body
+    block content
