@@ -14,8 +14,8 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
     lintok = jslint(source)
 
     unless lintok
-      jslint.errors.forEach (e) =>
-        return unless e?
+      for e in jslint.errors
+        continue unless e?
         result =
           message: e.reason
           lineNumber: e.line

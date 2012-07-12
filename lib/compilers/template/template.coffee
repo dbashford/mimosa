@@ -1,8 +1,11 @@
-AbstractCompiler = require '../compiler'
 path = require 'path'
-find = require 'findit'
 fs = require 'fs'
+
+wrench = require 'wrench'
+
 logger = require '../../util/logger'
+AbstractCompiler = require '../compiler'
+
 
 module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
@@ -31,10 +34,13 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   _gatherFiles: (isRemove = false) ->
     fileNames = []
-    allFiles = find.sync @srcDir
-    allFiles.forEach (file) =>
+    allFiles = wrench.readdirSyncRecursive(@srcDir)
+
+    for file in allFiles
       extension = path.extname(file).substring(1)
-      fileNames.push(file) if @config.extensions.indexOf(extension) >= 0
+      if @config.extensions.indexOf(extension) >= 0
+        filePath = path.join @srcDir, file
+        fileNames.push(filePath)
 
     if fileNames.length is 0
       if isRemove

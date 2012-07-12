@@ -1,9 +1,10 @@
 path = require 'path'
 fs = require 'fs'
-mkdirp = require 'mkdirp'
+
 wrench = require 'wrench'
 
 logger = require '../util/logger'
+fileUtils = require '../util/file'
 optimizer = require '../optimize/require-optimize'
 
 module.exports = class AbstractCompiler
@@ -46,7 +47,7 @@ module.exports = class AbstractCompiler
     fileName = fileName.replace(@fullConfig.root, '')
     dirname = path.dirname(fileName)
     path.exists dirname, (exists) =>
-      mkdirp.sync dirname unless exists
+      fileUtils.mkdirRecursive dirname unless exists
       fs.writeFile fileName, content, "ascii", (err) =>
         return @failed "Failed to write new file: #{fileName}" if err
         @success "Compiled/copied #{fileName}"
