@@ -27,7 +27,7 @@ class NewCommand
 
     logger.green "\n  This is the Mimosa interactive project creation tool.  You will be prompted to choose the "
     logger.green "  meta-languages you'd like to use.  Mimosa will your scan project source directory for files "
-    logger.green "  matching your sections and compile them as they change.  If you intend to use a meta-language"
+    logger.green "  matching your selections and compile them as they change.  If you intend to use a meta-language"
     logger.green "  that is not listed, choose 'None', and then add a github issue"
     logger.green "  (https://github.com/dbashford/mimosa/issues) and we'll look at adding it. \n"
 
