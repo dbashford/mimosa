@@ -2,7 +2,10 @@
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+
+    - var url = '/app/stylesheets/style.css'
+    - if (!useBuilt) {url += "?d=" + (new Date().getTime())}
+    link(rel='stylesheet', href=url)
 
     if useBuilt
       script(src='/javascripts/main-built.js')
