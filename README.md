@@ -259,3 +259,9 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
  * Push to NPM
  * Tests for the Mimosa codebase
  * Integrated testing framework for your codebase
+
+## Suggestions?  Comments?
+
+ @mimosajs
+
+
