@@ -1,8 +1,9 @@
-fs = require 'fs'
-path = require 'path'
+fs =      require 'fs'
+path =    require 'path'
 
 csslint = require("csslint").CSSLint
-wrench = require 'wrench'
+wrench =  require 'wrench'
+_ =       require 'lodash'
 
 SingleFileCompiler = require '../single-file'
 logger =             require '../../util/logger'
@@ -70,7 +71,7 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
       else
         baseFilesToCompileNow.push(base)
 
-    baseFilesToCompileNow = baseFilesToCompileNow.unique()
+    baseFilesToCompileNow = _.uniq(baseFilesToCompileNow)
 
     @initBaseFilesToCompile = baseFilesToCompileNow.length
     if @initBaseFilesToCompile is 0
@@ -84,7 +85,7 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
 
     oldBaseFiles = @baseFiles ?= []
     @baseFiles = @_determineBaseFiles()
-    allBaseFiles = oldBaseFiles.union(@baseFiles)
+    allBaseFiles = _.union oldBaseFiles, @baseFiles
 
     # Change in base files to be compiled, cleanup and message
     if (allBaseFiles.length isnt oldBaseFiles.length or allBaseFiles.length isnt @baseFiles.length) and oldBaseFiles.length > 0
@@ -107,9 +108,14 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
     logger.warn output
 
   getAllFiles: =>
-    wrench.readdirSyncRecursive(@srcDir)
-      .map( (file) => path.join(@srcDir, file))
-      .filter (file) => @config.extensions.some (ext) -> file.endsWith(ext)
+    allFiles = wrench.readdirSyncRecursive(@srcDir)
+
+    allFiles = allFiles.map (file) =>
+      path.join(@srcDir, file)
+
+    allFiles.filter (file) =>
+      @config.extensions.some (ext) ->
+        file.slice(-ext.length) is ext
 
   # get all imports for a given file, and recurse through
   # those imports until entire tree is built
@@ -121,7 +127,10 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
       @importRegex.lastIndex = 0
       importPath = @importRegex.exec(anImport)[1]
       fullImportFilePath = @_getImportFilePath(baseFile, importPath)
-      includeFiles = @allFiles.filter (f) -> f.has(fullImportFilePath)
+      includeFiles = @allFiles.filter (f) ->
+        f = f.replace(path.extname(f), '')
+        f.slice(-fullImportFilePath.length) is fullImportFilePath
+
       for includeFile in includeFiles
         hash = @includeToBaseHash[includeFile]
         if hash?

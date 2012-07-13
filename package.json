@@ -62,8 +62,8 @@
     "commander": "~1.0.0",
     "watch-connect": "~0.2.2",
     "date-utils": "~1.2.11",
-    "sugar": "~1.2.5",
-    "chokidar": "~0.3.0"
+    "chokidar": "~0.3.0",
+    "lodash": "~0.4.1"
   },
   "license": "MIT",
   "engines": {

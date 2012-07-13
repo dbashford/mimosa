@@ -32,8 +32,10 @@ startDefaultServer = (config) ->
     app.use (req, res, next) ->
       res.header 'Cache-Control', 'no-cache'
       next()
+
     if config.server.useReload
       app.use (require 'watch-connect')(config.watch.compiledDir, server, {verbose: false, skipAdding:true})
+
     app.use config.server.base, gzip.staticGzip(config.watch.compiledDir)
 
   production = process.env.NODE_ENV is 'production'

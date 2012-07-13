@@ -1,7 +1,10 @@
-AbstractCssCompiler = require './css'
 fs = require 'fs'
 path = require 'path'
 {spawn, exec} = require 'child_process'
+
+_ = require 'lodash'
+
+AbstractCssCompiler = require './css'
 logger = require '../../util/logger'
 
 module.exports = class SassCompiler extends AbstractCssCompiler
@@ -53,11 +56,14 @@ module.exports = class SassCompiler extends AbstractCssCompiler
       unless @startupFinished
         @_startupFinished() if --@initBaseFilesToCompile is 0
 
-  _isInclude: (fileName) -> path.basename(fileName).startsWith('_')
+  _isInclude: (fileName) ->
+    path.basename(fileName).substring(0,1) is '_'
 
   _determineBaseFiles: =>
-    @allFiles.filter (file) =>
-      not @_isInclude(file) and not file.has('compass')
+    _.filter @allFiles, (file) =>
+      (not @_isInclude(file)) and file.indexOf('compass') < 0
 
   _getImportFilePath: (baseFile, importPath) ->
-    importPath.replace(/(\w+\.|\w+$)/, '_$1')
+    str = importPath.replace(/(\w+\.|[\w-]+$)/, '_$1')
+    console.log importPath, str
+    str

@@ -1,6 +1,7 @@
 fs = require 'fs'
 path = require 'path'
 
+_ = require 'lodash'
 wrench = require 'wrench'
 
 util = require './util'
@@ -23,7 +24,7 @@ clean = ->
       extension = path.extname(file)
       if extension?.length > 0
         extension = extension.substring(1)
-        compiler = compilers.find (comp) ->
+        compiler = _.find compilers, (comp) ->
           for ext in comp.getExtensions()
             return true if extension is ext
           return false
@@ -33,7 +34,7 @@ clean = ->
       fs.unlinkSync compiledPath if fs.existsSync compiledPath
 
     directories = files.filter (f) -> fs.statSync(path.join(srcDir, f)).isDirectory()
-    directories = directories.sortBy('length', true)
+    directories = _.sortBy(directories, 'length')
     for dir in directories
       dirPath = path.join(config.root, config.watch.compiledDir, dir)
       if fs.existsSync dirPath

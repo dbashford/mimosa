@@ -18,7 +18,7 @@ module.exports = class AbstractCompiler
     files = files.filter (f) =>
       ext = path.extname(f)
       return false if ext.length < 2
-      @config.extensions.has(ext.substring(1))
+      @config.extensions.indexOf(ext.substring(1)) >= 0
 
     @initialFileCount = files.length
     @initialFilesHandled = 0

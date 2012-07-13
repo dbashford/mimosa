@@ -2,6 +2,7 @@ path   = require 'path'
 
 glob =  require 'glob'
 color = require('ansi-color').set
+_     = require 'lodash'
 
 logger = require '../../util/logger'
 defaults = require './defaults'
@@ -22,8 +23,8 @@ gatherCompilerInfo = (callback) ->
     comp = require(file)
     compilerInfo = {prettyName:comp.prettyName(), fileName:path.basename(file, ".coffee").replace("-compiler",""), extensions:comp.defaultExtensions()}
     if comp.checkIfExists?
-      infoClone = Object.clone(compilerInfo)
-      fileClone = Object.clone(file)
+      infoClone = _.clone(compilerInfo)
+      fileClone = _.clone(file)
       comp.checkIfExists (exists) =>
         unless exists
           infoClone.prettyName = infoClone.prettyName + color(" (This is not installed and would need to be before use)", "yellow+bold")
@@ -37,9 +38,13 @@ gatherCompilerInfo = (callback) ->
 _findCompilers = (file, compilers) ->
   # use regex to do this a bit better
   dirname = path.dirname(file)
-  if dirname.endsWith 'css' then compilers.css
-  else if dirname.endsWith 'template' then compilers.template
-  else if dirname.endsWith 'javascript' then compilers.javascript
+
+  endsWith = (str, endsWith) ->
+    str.slice(-endsWith.length) is endsWith
+
+  if endsWith(dirname, 'css') then compilers.css
+  else if endsWith(dirname, 'template') then compilers.template
+  else if endsWith(dirname, 'javascript') then compilers.javascript
   else
     logger.fatal "Bad file in compilers directory: #{file}"
     process.exit(1)

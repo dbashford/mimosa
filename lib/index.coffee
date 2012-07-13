@@ -1,6 +1,5 @@
 {exec} = require 'child_process'
 
-require 'sugar'
 program =  require 'commander'
 
 version =  require('../package.json').version

@@ -2,6 +2,7 @@ fs = require 'fs'
 path = require 'path'
 
 less = require 'less'
+_ = require 'lodash'
 
 AbstractCssCompiler = require './css'
 logger = require '../../util/logger'
@@ -51,7 +52,7 @@ module.exports = class LessCompiler extends AbstractCssCompiler
         fullImportPath = path.join(path.dirname(file), importPath)
         imported.push fullImportPath
 
-    @allFiles.subtract(imported)
+    _.difference(@allFiles, imported)
 
   _getImportFilePath: (baseFile, importPath) ->
     path.join(path.dirname(baseFile), importPath)

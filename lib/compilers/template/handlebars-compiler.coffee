@@ -1,7 +1,10 @@
-AbstractTemplateCompiler = require './template'
+fs =         require 'fs'
+path =       require 'path'
+
 handlebars = require 'handlebars'
-fs = require 'fs'
-path = require 'path'
+_ =          require 'lodash'
+
+AbstractTemplateCompiler = require './template'
 
 module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 
@@ -18,7 +21,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
     possibleHelperPaths =
       for ext in @fullConfig.compilers.javascript.extensions
         path.join(@srcDir, "#{helperFile}.#{ext}") for helperFile in @config.helperFiles
-    helperPaths = possibleHelperPaths.flatten().filter((p) -> fs.existsSync(p))
+    helperPaths = _.flatten(possibleHelperPaths).filter((p) -> fs.existsSync(p))
 
     defines = ["'#{@clientLibrary}'"]
     for helperPath in helperPaths
@@ -37,7 +40,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 
     for fileName in fileNames
       content = fs.readFileSync fileName, "ascii"
-      templateName = path.basename(fileName, path.extname(fileName))
+      templateName = path.basename fileName, path.extname(fileName)
       try
         templateOutput = handlebars.precompile(content)
         output += "templates['#{templateName}'] = template(#{templateOutput});\n"

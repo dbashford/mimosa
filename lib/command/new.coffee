@@ -3,10 +3,11 @@ path =   require 'path'
 fs =     require 'fs'
 
 wrench = require 'wrench'
-glob =  require 'glob'
+glob =   require 'glob'
+_ =      require 'lodash'
 
-logger = require '../util/logger'
-util = require './util'
+logger =   require '../util/logger'
+util =     require './util'
 defaults = require './util/defaults'
 
 class NewCommand
@@ -149,7 +150,7 @@ class NewCommand
     compExts = if chosenCompilers.javascript is "none" then ["js"]   else chosenCompilers.javascriptExtensions
     cssExts =  if chosenCompilers.css        is "none" then ["css"]  else chosenCompilers.cssExtensions
     tempExts = if chosenCompilers.template   is "none" then ["html"] else chosenCompilers.templateExtensions
-    safePaths = [compExts, cssExts, tempExts].flatten().map (path) -> "\\.#{path}$"
+    safePaths = _.flatten([compExts, cssExts, tempExts]).map (path) -> "\\.#{path}$"
     safePaths.push path.join("javascripts", "vendor")
 
     assetsPath = path.join @currPath,  'assets'
@@ -162,14 +163,14 @@ class NewCommand
 
       # clear out the bad views
       if isSafe
-        if filePath.has('example-view-')
-          if tempExts.none((ext) -> filePath.has("-#{ext}."))
+        if filePath.indexOf('example-view-') >= 0
+          unless _.some(tempExts, (ext) -> filePath.indexOf("-#{ext}.") >= 0)
             isSafe = false
           else
             templateView = filePath
 
-        isSafe = false if filePath.has('handlebars-helpers') and
-          tempExts.none((ext) -> ext is "hbs")
+        isSafe = false if filePath.indexOf('handlebars-helpers') >= 0 and
+          not _.some(tempExts, (ext) -> ext is "hbs")
 
       fs.unlink filePath unless isSafe
 

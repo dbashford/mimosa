@@ -1,7 +1,9 @@
-AbstractTemplateCompiler = require './template'
-dust = require 'dustjs-linkedin'
 fs = require 'fs'
 path = require 'path'
+
+dust = require 'dustjs-linkedin'
+
+AbstractTemplateCompiler = require './template'
 
 module.exports = class DustCompiler extends AbstractTemplateCompiler
 
@@ -18,9 +20,9 @@ module.exports = class DustCompiler extends AbstractTemplateCompiler
     output = "define(['#{@clientLibrary}'], function (dust){ "
     for fileName in fileNames
       content = fs.readFileSync fileName, "ascii"
-      templateName = path.basename(fileName, path.extname(fileName))
+      templateName = path.basename fileName, path.extname(fileName)
       try
-        output += dust.compile(content, templateName)
+        output += dust.compile content, templateName
       catch err
         error += "#{err}\n"
     output += 'return dust; });'

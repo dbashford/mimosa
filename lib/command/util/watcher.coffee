@@ -1,5 +1,8 @@
-watch =     require 'chokidar'
 path =      require 'path'
+
+watch =     require 'chokidar'
+_ =         require 'lodash'
+
 logger =    require '../../util/logger'
 optimizer = require '../../optimize/require-optimize'
 
@@ -25,15 +28,16 @@ class Watcher
       @initCallback(@config) if @initCallback?
 
   _findCompiler: (fileName) ->
-    return if @config.watch.ignored.some((str) -> fileName.has(str))
+    return if @config.watch.ignored.some((str) -> fileName.indexOf(str) >= 0 )
 
     extension = path.extname(fileName).substring(1)
     return unless extension?.length > 0
 
-    compiler = @compilers.find (comp) ->
+    compiler = _.find @compilers, (comp) ->
       for ext in comp.getExtensions()
         return true if extension is ext
       return false
+
     return compiler if compiler
     logger.warn "No compiler has been registered: #{extension}, #{fileName}"
     null
