@@ -109,13 +109,11 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
 
   getAllFiles: =>
     allFiles = wrench.readdirSyncRecursive(@srcDir)
-
-    allFiles = allFiles.map (file) =>
-      path.join(@srcDir, file)
-
-    allFiles.filter (file) =>
-      @config.extensions.some (ext) ->
-        file.slice(-ext.length) is ext
+      .map (file) =>
+        path.join(@srcDir, file)
+      .filter (file) =>
+        @config.extensions.some (ext) ->
+          file.slice(-ext.length) is ext
 
   # get all imports for a given file, and recurse through
   # those imports until entire tree is built
