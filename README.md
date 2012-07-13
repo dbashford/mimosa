@@ -12,7 +12,7 @@ Mimosa is not quite ready for prime-time (as of early July), still shaking thing
 - [Configuration](#configuration)
 - [Command Line Utilities](#command-line-utilities)
 	- [New Project (new)](#new-project-new)
-		- [No Express](#no-express)
+		- [No Server](#no-server)
 		- [Pick the defaults](#pick-the-defaults)
 	- [Watch and Compile (watch)](#watch-and-compile-watch)
 	- [Serve Assets (watch --server)](#serve-assets-watch---server)
@@ -66,7 +66,7 @@ Mimosa is not quite ready for prime-time (as of early July), still shaking thing
 
 The biggest loss from Brunch to Mimosa, besides maturity, is a lack of command line scaffolding.  I've never felt I got much out of Rails or Spring Roo style scaffolding when I've used it, and I don't feel it needs to be a part of Mimosa.  I reserve the opportunity to change my mind!
 
-Something missing from Mimosa for the short-term, is a group of pre-built skeletons to get you started with things like Backbone and Bootstrap.  Those'll come and hopefully be contributed.
+Something missing from Mimosa for the short-term, is a group of pre-built skeletons to get you started with things like Backbone and Bootstrap.  Those'll come.
 
 ## Installation
 
@@ -78,7 +78,7 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
 ## Quick Start
 
- The easiest way to get started with Mimosa is to create a new application skeleton. By default, Mimosa will create a basic express app configured to match all of Mimosa's defaults.
+ The easiest way to get started with Mimosa is to create a new application skeleton. By default, Mimosa will create a basic Express app configured to match all of Mimosa's defaults.
 
  First navigate to a directory within which you want to place your application.
 
@@ -112,7 +112,7 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
     $ mimosa new nameOfApplicationHere
 
- This will kick off a series of prompts that will allow you to pick out the meta-languages and templating library you'd like to use.  When you've finished picking, Mimosa will create a directory at your current location using the name provided as the name of the directory.  Inside that directory Mimosa will populate an application skeleton with public and asset directories, as well as the bare essentials for a base [Express](http://expressjs.com/) application.  You'll have Express [Jade template](http://jade-lang.com/) views, a simple Express [router](http://expressjs.com/guide.html#routing) and a server.coffee file that will be used by Mimosa to get Express [started](https://github.com/dbashford/mimosa#serve-assets-watch---server).
+ This will kick off a series of prompts that will allow you to pick out the meta-languages and templating library you'd like to use.  When you've finished picking, Mimosa will create a directory at your current location using the name provided as the name of the directory.  Inside that directory Mimosa will populate an application skeleton with public and asset directories, as well as the bare essentials for a base [Express](http://expressjs.com/) application.  You'll have Express [Jade template](http://jade-lang.com/) views, a simple Express [router](http://expressjs.com/guide.html#routing) and a server.coffee file that will be used by Mimosa to get Express [started](#serve-assets---server).
 
  The public directory will be empty; it is the destination for your compiled JavaScript and CSS.  The assets directory has some example code -- chosen based on the selections you made via the prompts -- to get you started, and has a group of vendor scripts, like require.js.
 
