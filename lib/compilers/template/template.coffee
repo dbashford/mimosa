@@ -35,12 +35,12 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
   _gatherFiles: (isRemove = false) ->
     fileNames = []
     allFiles = wrench.readdirSyncRecursive(@srcDir)
+      .map (file) => path.join(@srcDir, file)
 
     for file in allFiles
       extension = path.extname(file).substring(1)
       if @config.extensions.indexOf(extension) >= 0
-        filePath = path.join @srcDir, file
-        fileNames.push(filePath)
+        fileNames.push(file)
 
     if fileNames.length is 0
       if isRemove

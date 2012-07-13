@@ -38,7 +38,6 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
       @processWatchedDirectories()
 
   _compileBasesForInclude: (fileName) ->
-    fileName = fileName.replace(@fullConfig.root, '').substring(1)
     bases = @includeToBaseHash[fileName]
     if bases?
       for base in bases

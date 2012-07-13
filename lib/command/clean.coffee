@@ -9,17 +9,16 @@ logger = require '../util/logger'
 
 clean = ->
   util.processConfig false, (config) =>
-    srcDir = config.watch.sourceDir
-    files = wrench.readdirSyncRecursive(srcDir)
+    files = wrench.readdirSyncRecursive(config.watch.sourceDir)
 
     compilers = util.fetchConfiguredCompilers(config)
     compiler.cleanup() for compiler in compilers when compiler.cleanup?
 
     for file in files
-      isDirectory = fs.statSync(path.join(srcDir, file)).isDirectory()
+      isDirectory = fs.statSync(path.join(config.watch.sourceDir, file)).isDirectory()
       continue if isDirectory
 
-      compiledPath = path.join config.root, config.watch.compiledDir, file
+      compiledPath = path.join config.watch.compiledDir, file
 
       extension = path.extname(file)
       if extension?.length > 0
@@ -33,17 +32,17 @@ clean = ->
 
       fs.unlinkSync compiledPath if fs.existsSync compiledPath
 
-    directories = files.filter (f) -> fs.statSync(path.join(srcDir, f)).isDirectory()
+    directories = files.filter (f) -> fs.statSync(path.join(config.watch.sourceDir, f)).isDirectory()
     directories = _.sortBy(directories, 'length')
     for dir in directories
-      dirPath = path.join(config.root, config.watch.compiledDir, dir)
+      dirPath = path.join(config.watch.compiledDir, dir)
       if fs.existsSync dirPath
         fs.rmdir dirPath, (err) ->
           if err?.code is not "ENOTEMPTY"
             logger.error "Unable to delete directory, #{dirPath}"
             logger.error err
 
-    logger.success "#{path.join(config.root, config.watch.compiledDir)} has been cleaned."
+    logger.success "#{config.watch.compiledDir} has been cleaned."
 
 
 register = (program, callback) =>

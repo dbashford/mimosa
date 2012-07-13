@@ -10,10 +10,10 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
 
   created: (fileName) => @readAndCompile(fileName, false)
   updated: (fileName) => @readAndCompile(fileName)
-  removed: (fileName) => @removeTheFile(@findCompiledPath(fileName.replace(@fullConfig.root, '')))
+  removed: (fileName) => @removeTheFile(@findCompiledPath(fileName))
 
   readAndCompile: (fileName, isUpdate = true) ->
-    destinationFile = @findCompiledPath(fileName.replace(@fullConfig.root, ''))
+    destinationFile = @findCompiledPath(fileName)
     return @done() unless isUpdate or @fileNeedsCompiling(fileName, destinationFile)
     fs.readFile fileName, (err, text) =>
       return @failed(err) if err

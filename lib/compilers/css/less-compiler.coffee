@@ -36,9 +36,7 @@ module.exports = class LessCompiler extends AbstractCssCompiler
       unless @startupFinished
         @_startupFinished() if --@initBaseFilesToCompile is 0
 
-  _isInclude: (fileName) ->
-    fileName = fileName.substring(fileName.indexOf(@srcDir))
-    @includeToBaseHash[fileName]?
+  _isInclude: (fileName) -> @includeToBaseHash[fileName]?
 
   _determineBaseFiles: =>
     imported = []
@@ -49,10 +47,10 @@ module.exports = class LessCompiler extends AbstractCssCompiler
       for anImport in imports
         @importRegex.lastIndex = 0
         importPath = @importRegex.exec(anImport)[1]
-        fullImportPath = path.join(path.dirname(file), importPath)
+        fullImportPath = path.join path.dirname(file), importPath
         imported.push fullImportPath
 
     _.difference(@allFiles, imported)
 
   _getImportFilePath: (baseFile, importPath) ->
-    path.join(path.dirname(baseFile), importPath)
+    path.join path.dirname(baseFile), importPath

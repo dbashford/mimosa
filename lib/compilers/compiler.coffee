@@ -14,8 +14,7 @@ module.exports = class AbstractCompiler
     @compDir = @fullConfig.watch.compiledDir
     @processWatchedDirectories() if @processWatchedDirectories?
 
-    files = wrench.readdirSyncRecursive(path.join @fullConfig.root, @srcDir)
-    files = files.filter (f) =>
+    files = wrench.readdirSyncRecursive(@srcDir).filter (f) =>
       ext = path.extname(f)
       return false if ext.length < 2
       @config.extensions.indexOf(ext.substring(1)) >= 0
@@ -37,14 +36,13 @@ module.exports = class AbstractCompiler
   initializationComplete: (@isInitializationComplete = true) ->
 
   fileNeedsCompiling: (fileName, destinationFile) ->
-    return true unless fs.existsSync(destinationFile)
-    destStats = fs.statSync(destinationFile)
-    origStats = fs.statSync(fileName)
+    return true unless fs.existsSync destinationFile
+    destStats = fs.statSync destinationFile
+    origStats = fs.statSync fileName
     return true if origStats.mtime > destStats.mtime
     false
 
   write: (fileName, content) =>
-    fileName = fileName.replace(@fullConfig.root, '')
     dirname = path.dirname(fileName)
     fs.exists dirname, (exists) =>
       fileUtils.mkdirRecursive dirname unless exists

@@ -24,10 +24,6 @@ exports.startServer = (publicPath, useReload, optimize) ->
   app.configure 'development', ->
     app.use express.errorHandler()
 
-  app.configure 'production', ->
-    app.use express.errorHandler()
-    app.use gzip.gzip()
-
   app.get '/', routes.index(useReload, optimize)
 
 

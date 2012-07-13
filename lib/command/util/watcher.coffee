@@ -12,14 +12,13 @@ class Watcher
 
   constructor: (@config, @compilers, persist, @initCallback) ->
     compiler.setStartupDoneCallback(@compilerDone) for compiler in @compilers
-    srcDir = path.join(@config.root, @config.watch.sourceDir)
 
-    watcher = watch.watch(srcDir, {persistent:persist})
+    watcher = watch.watch(@config.watch.sourceDir, {persistent:persist})
     watcher.on "change", (f) => @_findCompiler(f)?.updated(f)
     watcher.on "unlink", (f) => @_findCompiler(f)?.removed(f)
     watcher.on "add",    (f) => @_findCompiler(f)?.created(f)
 
-    logger.info "Watching #{srcDir}" if persist
+    logger.info "Watching #{@config.watch.sourceDir}" if persist
 
   compilerDone: =>
     if ++@compilersDone is @compilers.length

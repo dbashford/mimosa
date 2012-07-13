@@ -1,6 +1,7 @@
-path   = require 'path'
+path  = require 'path'
+fs    = require 'fs'
 
-glob =  require 'glob'
+glob  = require 'glob'
 color = require('ansi-color').set
 _     = require 'lodash'
 
@@ -62,21 +63,27 @@ fetchConfiguredCompilers = (config, persist = false) ->
   compilers
 
 processConfig = (server, callback) ->
-  configPath = path.resolve 'mimosa-config.coffee'
-  try
-    {config} = require configPath
-  catch err
-    logger.warn "No configuration file found (mimosa-config.coffee), using all defaults."
+  configPath = _findConfigPath()
+  {config} = require configPath
+  unless config?
+    logger.warn "No configuration file found (mimosa-config.coffee), running from current directory using Mimosa's defaults."
     logger.warn "Run 'mimosa config' to copy the default Mimosa configuration to the current directory."
     config = {}
+    path.dirname path.resolve('right-here.foo')
 
-  defaults.applyAndValidateDefaults config, server, (err, newConfig) =>
+  defaults.applyAndValidateDefaults config, configPath, server, (err, newConfig) =>
     if err
       logger.fatal "Unable to start Mimosa, #{err} configuration(s) problems listed above."
       process.exit 1
     else
-      newConfig.root = path.dirname configPath
       callback(newConfig)
+
+_findConfigPath = (configPath = path.resolve('mimosa-config.coffee')) ->
+  if fs.existsSync configPath
+    configPath
+  else
+    configPath = path.join(path.dirname(configPath), '..', 'mimosa-config.coffee')
+    _findConfigPath(configPath)
 
 module.exports = {
   processConfig: processConfig

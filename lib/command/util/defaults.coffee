@@ -1,5 +1,5 @@
 path = require 'path'
-fs = require 'fs'
+fs =   require 'fs'
 
 logger =   require '../../util/logger'
 
@@ -10,7 +10,8 @@ class MimosaDefaults
   @defaultCss: ->        "sass"
   @defaultTemplate: ->   "handlebars"
 
-  applyAndValidateDefaults: (config, isServer, callback) =>
+  applyAndValidateDefaults: (config, configPath, isServer, callback) =>
+    @root = path.dirname(configPath)
     config = @_applyDefaults(config)
     @_validateSettings(config, isServer)
     err = if @fatalErrors is 0 then null else @fatalErrors
@@ -18,10 +19,10 @@ class MimosaDefaults
 
   _applyDefaults: (config) ->
     newConfig = {}
-    newConfig.watch = config.watch ?= {}
-    newConfig.watch.sourceDir = config.watch.sourceDir ?= "assets"
-    newConfig.watch.compiledDir = config.watch.compiledDir ?= "public"
-    newConfig.watch.ignored = config.watch.ignored ?= [".sass-cache"]
+    newConfig.watch =             config.watch ?= {}
+    newConfig.watch.sourceDir =   path.join(@root, config.watch.sourceDir   ? "assets")
+    newConfig.watch.compiledDir = path.join(@root, config.watch.compiledDir ? "public")
+    newConfig.watch.ignored =     config.watch.ignored ?= [".sass-cache"]
 
     comp = newConfig.compilers = config.compilers ?= {}
     js = comp.javascript = config.compilers.javascript ?= {}
@@ -36,8 +37,12 @@ class MimosaDefaults
     template.compileWith =     config.compilers.template.compileWith     ?= MimosaDefaults.defaultTemplate()
     template.extensions =      config.compilers.template.extensions      ?= ["hbs", "handlebars"]
     template.outputFileName =  config.compilers.template.outputFileName  ?= "javascripts/templates"
-    template.helperFile =      config.compilers.template.helperFiles     ?= ["javascripts/app/template/handlebars-helpers"]
     template.notifyOnSuccess = config.compilers.template.notifyOnSuccess ?= true
+    template.helperFile = []
+    helperFiles = config.compilers.template.helperFiles ?= ["javascripts/app/template/handlebars-helpers"]
+    for helperFile in helperFiles
+      template.helperFile.push path.join(@root, helperFile)
+
 
     css = comp.css =      config.compilers.css                 ?= {}
     css.compileWith =     config.compilers.css.compileWith     ?= MimosaDefaults.defaultCss()
@@ -51,10 +56,13 @@ class MimosaDefaults
 
     server = newConfig.server = config.server                  ?= {}
     server.useDefaultServer =   config.server.useDefaultServer ?= false
-    server.path =               config.server.path             ?= 'server.coffee'
     server.port =               config.server.port             ?= 3000
     server.base =               config.server.base             ?= '/app'
     server.useReload =          config.server.useReload        ?= true
+    server.path =               config.server.path             ?= 'server.coffee'
+
+    server.path = path.join(@root, server.path)
+
 
     requirejs = newConfig.require = config.require                      ?= {}
     requirejs.optimizationEnabled = config.require.optimizationEnabled  ?= true
@@ -86,10 +94,8 @@ class MimosaDefaults
 
 
   _testPathExists: (filePath, name) ->
-    rPath = path.resolve filePath
-    rPathExists = fs.existsSync rPath
-    unless rPathExists
-      logger.fatal "#{name} (#{rPath}) cannot be found"
+    unless fs.existsSync filePath
+      logger.fatal "#{name} (#{filePath}) cannot be found"
       @fatalErrors++
 
   _coffeelint: (overrides) ->

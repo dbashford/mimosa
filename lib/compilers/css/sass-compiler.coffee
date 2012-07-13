@@ -64,6 +64,4 @@ module.exports = class SassCompiler extends AbstractCssCompiler
       (not @_isInclude(file)) and file.indexOf('compass') < 0
 
   _getImportFilePath: (baseFile, importPath) ->
-    str = importPath.replace(/(\w+\.|[\w-]+$)/, '_$1')
-    console.log importPath, str
-    str
+    path.join baseFile, importPath.replace(/(\w+\.|[\w-]+$)/, '_$1')

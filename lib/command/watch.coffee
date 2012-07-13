@@ -46,10 +46,9 @@ startDefaultServer = (config) ->
     res.render 'index', { title: 'Mimosa\'s Express', reload:reload, production:production, useBuilt:useBuilt}
 
 startProvidedServer = (config) ->
-  serverPath = path.resolve config.server.path
-  fs.exists serverPath, (exists) =>
+  fs.exists config.server.path, (exists) =>
     if exists
-      server = require serverPath
+      server = require config.server.path
       if server.startServer
         logger.success "Mimosa is starting your server: #{config.server.path}", true
         server.startServer(config.watch.compiledDir, config.server.useReload, config.require.optimizationEnabled)

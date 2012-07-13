@@ -14,7 +14,7 @@ class Optimizer
 
     unless @config?
       @config = config.require
-      @config.baseUrl = path.join(config.root, config.watch.compiledDir, config.compilers.javascript.directory)
+      @config.baseUrl = path.join(config.watch.compiledDir, config.compilers.javascript.directory)
       @config.out = path.join(@config.baseUrl, config.require.out)
       @config.include = [config.require.name]
       @config.insertRequire = [config.require.name]

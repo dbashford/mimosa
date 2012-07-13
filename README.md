@@ -176,7 +176,7 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
 ## Meta-Language Compilation
 
- Mimosa will compile your meta-languages for you and toss them in your public directory.
+ Mimosa will compile your meta-languages for you and place the output in your public directory.
 
  You can change your meta-languages in the config.  The [default config file](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/mimosa-config.coffee) contains a list of other options for each `compileWith`.
 
@@ -250,17 +250,21 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
     $ NODE_ENV=production mimosa watch --server
 
+## GZip
+
+ All your static assets will be served up GZip-ed.
+
 ## Roadmap
 
   In no certain order:
 
- * More across the board
+ * More compilers across the board
  * example skeletons with things like Backbone/Chaplin/Angular/Ember, Bootstrap, etc
  * Push to NPM
  * Tests for the Mimosa codebase
  * Integrated testing framework for your codebase
 
-## Suggestions?  Comments?
+## Suggestions? Comments?
 
  @mimosajs
 

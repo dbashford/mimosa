@@ -12,8 +12,8 @@ class FileUtils
       made = made || p
     catch err
       if err.code is 'ENOENT'
-        made = mkdirRecursive path.dirname(p), made
-        mkdirRecursive p, made
+        made = @mkdirRecursive path.dirname(p), made
+        @mkdirRecursive p, made
       else if err.code is 'EEXIST'
         try
           stat = fs.statSync(p);
