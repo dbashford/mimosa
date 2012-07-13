@@ -5,6 +5,14 @@ Mimosa is a browser development toolkit, targeted at folks using meta-languages 
 
 Mimosa is not quite ready for prime-time (as of early July), still shaking things out, but feel free to play around and [file issues](https://github.com/dbashford/mimosa/issues) should you find them.  I haven't spent any real time playing with Mimosa on Windows, so I wouldn't be surprised to learn there are issues there.
 
+ * [Features](https://github.com/dbashford/mimosa#features)
+  * [Why Mimosa?](https://github.com/dbashford/mimosa#why-mimosa)
+ * [Installation](https://github.com/dbashford/mimosa#installation)
+ * [Quick Start](https://github.com/dbashford/mimosa#quick-start)
+ * [Configuration](https://github.com/dbashford/mimosa#quick-start)
+ * [Command Line Utilities](https://github.com/dbashford/mimosa#command-line-utilities)
+
+
 ## Features
 
  * Sane defaults allow you to get started without configuring anything
@@ -23,7 +31,7 @@ Mimosa is not quite ready for prime-time (as of early July), still shaking thing
  * Live Reload built in, without the need for a plugin
  * Automatic static asset Gzip-ing
 
-#### Why Mimosa?
+### Why Mimosa?
 
  Much love to [Brunch](http://brunch.io/) for the inspiration (hence 'Mimosa'), and for being the codebase I checked out when I had a problem to solve.  I suggest you check it out to compare and contrast features to figure out which is best for you.  Brunch is awesome sauce, and its codebase is certainly more mature!
 
@@ -77,7 +85,7 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
  One interacts with Mimosa via the command-line.
 
-#### New Project (new)
+### New Project (new)
 
  The best way to get started with Mimosa is to use it to create a new application/project structure for you.  Create a new project like so:
 
@@ -89,19 +97,19 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
  The created directory will also contain the configuration file for Mimosa.  Almost everything inside of it is commented out, but all the options and explanations for each option are present.  The only things that will not be commented out will the javascript, css, and template compilers if you chose something other than the defaults.
 
-##### No Express
+#### No Express
 
  Should you not need all of the Express stuff, you can give Mimosa a `--noserver` flag when you create the project.  This will only give you the configuration file, the empty public directory, and the assets directory and all of its contents.
 
     $ mimosa new nameOfApplicationHere --noserver
 
-##### Pick the defaults
+#### Pick the defaults
 
  Should you be happy with the defaults (CoffeeScript, Handlebars, and SASS) you can bypass the prompts by providing a --defaults flag.
 
     $ mimosa new nameOfApplicationHere --defaults
 
-#### Watch and Compile (watch)
+### Watch and Compile (watch)
 
  Mimosa will watch the configured `sourceDir`, by default the assets directory.  When files are added, updated, or deleted, the configured compilers will perform necessary actions and keep the `compiledDir` updated with compiled/copied assets.
 
@@ -109,7 +117,7 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
     $ mimosa watch
 
-#### Serve Assets (watch --server)
+### Serve Assets (watch --server)
 
  If you are not already running a server, and you need to serve your assets up, start Mimosa with the server flag.
 
@@ -119,7 +127,7 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
  You can change to using an embedded default (not-extendable) Express server by changing the `server.useDefaultServer` configuration to `true`.  If you created a project using the --noserver flag, this will have already been done for you.
 
-#### One Time Asset Build (build)
+### One Time Asset Build (build)
 
  If you just want to compile a set of assets, and you don't want to start up a watching process to do it, you can use Mimosa's build command.
 
@@ -129,13 +137,13 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
     $ mimosa build --optimize
 
-#### Clean Compiled Assets (clean)
+### Clean Compiled Assets (clean)
 
  A companion to build, this command will wipe out any files it is responsible for placing into the `compiledDir`.  It makes a pass to clean out the files, and once done, it makes a pass to clean out any directories that are now empty.  If for some reason there are files in your `compiledDir` directory structure that Mimosa didn't place there, they'll be left in place.
 
     $ mimosa clean
 
-#### Copy Config (config)
+### Copy Config (config)
 
     $ mimosa config
 
@@ -147,15 +155,15 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
  You can change your meta-languages in the config.  The [default config file](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/mimosa-config.coffee) contains a list of other options for each `compileWith`.
 
-#### Which meta-languages?
+### Which meta-languages?
 
  Future additions are planned, but for now...
 
- * CSS: SASS (default)
+ * CSS: SASS (default), LESS
  * Micro-templating: Handlebars (default), Dust, Jade
  * JavaScript: CoffeeScript (default), Iced CoffeeScript
 
-#### Asset Copying
+## Asset Copying
 
  In the configuration there is a `copy.extensions` setting which lists the assets that will simply be moved over.  So, for example, your images, plain ol' JavaScript (like vendor files, or should you choose code JavaScript), and regular CSS will be copied over.
 
@@ -167,7 +175,7 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
  The name and location of that single file is configurable (`compilers.template.outputFileName`), but by default it is kept at javascripts/template.  When this file is injected via require, the behavior differs per library.
 
-#### Handlebars
+### Handlebars
 
  Handlebars is the default templating langauge.  The injected template javascript file provides a JSON object of templates.  To access, for instance, a template originating from a file named "example.hbs", you would do this...
 
@@ -177,7 +185,7 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
  Handlebars also provides the ability to code reusable helper methods in pure JavaScript.  You can code those in the meta-language of your choosing inside the `compilers.template.helperFiles` files.  The helpers and the templates are all pulled together via requirejs.
 
-#### Dust
+### Dust
 
  Dust is also available as a template language.  The injected template javascript file provides a JSON object of templates.  To access, for instance, a template originating from a file named "example.dust", you would do this...
 
@@ -185,7 +193,7 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
  templates.render('example', {}, (err, html) -> $(element).append(html))
  ```
 
-#### Jade
+### Jade
 
  Jade is a third available template language.  The injected template javascript file provides a JSON object of templates.  To access, for instance, a template originating from a file named "example.dust", you would do this...
 
