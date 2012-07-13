@@ -64,12 +64,12 @@ fetchConfiguredCompilers = (config, persist = false) ->
 
 processConfig = (server, callback) ->
   configPath = _findConfigPath()
-  {config} = require configPath
+  {config} = require configPath if configPath?
   unless config?
     logger.warn "No configuration file found (mimosa-config.coffee), running from current directory using Mimosa's defaults."
     logger.warn "Run 'mimosa config' to copy the default Mimosa configuration to the current directory."
     config = {}
-    path.dirname path.resolve('right-here.foo')
+    configPath = path.dirname path.resolve('right-here.foo')
 
   defaults.applyAndValidateDefaults config, configPath, server, (err, newConfig) =>
     if err
@@ -83,6 +83,7 @@ _findConfigPath = (configPath = path.resolve('mimosa-config.coffee')) ->
     configPath
   else
     configPath = path.join(path.dirname(configPath), '..', 'mimosa-config.coffee')
+    return null if configPath.length is 'mimosa-config.coffee'.length + 1
     _findConfigPath(configPath)
 
 module.exports = {
