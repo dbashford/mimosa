@@ -118,13 +118,13 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
  The created directory will also contain the configuration file for Mimosa.  Almost everything inside of it is commented out, but all the options and explanations for each option are present.  The only things that will not be commented out will the javascript, css, and template compilers if you chose something other than the defaults.
 
-#### No Express
+#### No Server (--noserver)
 
  Should you not need all of the Express stuff, you can give Mimosa a `--noserver` flag when you create the project.  This will only give you the configuration file, the empty public directory, and the assets directory and all of its contents.
 
     $ mimosa new nameOfApplicationHere --noserver
 
-#### Pick the defaults
+#### Pick the defaults (--defaults)
 
  Should you be happy with the defaults (CoffeeScript, Handlebars, and SASS) you can bypass the prompts by providing a --defaults flag.
 
@@ -138,7 +138,7 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
     $ mimosa watch
 
-### Serve Assets (watch --server)
+#### Serve Assets (--server)
 
  If you are not already running a server, and you need to serve your assets up, start Mimosa with the server flag.
 
@@ -154,7 +154,11 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
     $ mimosa build
 
- This will run through your assets and compile any that need compiling, deliver the results to the public directory, and then exit.  If you want to do this with optimization, provide a --optimize flag.  This will compile all the assets, and then create the requirejs optimized files for use in production.
+ This will run through your assets and compile any that need compiling, deliver the results to the public directory, and then exit.
+
+#### Optimized Build (--optimize)
+
+ If you want to build with optimization, provide a --optimize flag.  This will compile all the assets, and then create the requirejs optimized files for use in production.
 
     $ mimosa build --optimize
 
@@ -250,12 +254,8 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
   In no certain order:
 
- * Underscore templating
- * js/css linting over pure js css files, not just compiled files
+ * More across the board
  * example skeletons with things like Backbone/Chaplin/Angular/Ember, Bootstrap, etc
- * other servers besides express
  * Push to NPM
- * No write mode.  Just compilation with notifications, coffee/jshinting.
- * Stylus compilers
  * Tests for the Mimosa codebase
  * Integrated testing framework for your codebase
