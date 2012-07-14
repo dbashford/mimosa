@@ -6,7 +6,7 @@ build = (opts) =>
   logger.info "Beginning build"
 
   util.processConfig false, (config) =>
-    if opts.optimize then config.require.forceOptimization = true
+    config.optimize = opts?.optimize
     compilers = util.fetchConfiguredCompilers config, false
     new Watcher config, compilers, false, buildFinished
 
@@ -22,8 +22,8 @@ register = (program, callback) =>
       logger.green('  The build command will make a single pass through your assets and bulid any that need building')
       logger.green('  and then exit.')
       logger.blue( '\n    $ mimosa build\n')
-      logger.green('  Pass an optimize flag and Mimosa will use requirejs to optimize your assets and provide you with')
-      logger.green('  single files for the named requirejs modules. ')
+      logger.green('  Pass an \'optimize\' flag and Mimosa will use requirejs to optimize your assets and provide you')
+      logger.green('  with single files for the named requirejs modules. ')
       logger.blue( '\n    $ mimosa build --optimize')
       logger.blue( '    $ mimosa build -o\n')
 

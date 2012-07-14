@@ -10,6 +10,7 @@ Watcher =  require './util/watcher'
 
 watch = (opts) =>
   util.processConfig opts?.server, (config) =>
+    config.optimize = opts?.optimize
     compilers = util.fetchConfiguredCompilers(config, true)
     new Watcher(config, compilers, true, startServer if opts?.server)
 
@@ -38,12 +39,13 @@ startDefaultServer = (config) ->
 
     app.use config.server.base, gzip.staticGzip(config.watch.compiledDir)
 
-  production = process.env.NODE_ENV is 'production'
-  reload = config.server.useReload and not production
-  useBuilt = production and config.require.optimizationEnabled
+  options =
+    title:    'Mimosa\'s Express'
+    reload:   config.server.useReload
+    optimize: config.optimize ? false
+    env:env:  process.env.NODE_ENV ? "development"
 
-  app.get '/', (req, res) =>
-    res.render 'index', { title: 'Mimosa\'s Express', reload:reload, production:production, useBuilt:useBuilt}
+  app.get '/', (req, res) -> res.render 'index', options
 
 startProvidedServer = (config) ->
   fs.exists config.server.path, (exists) =>
@@ -51,7 +53,7 @@ startProvidedServer = (config) ->
       server = require config.server.path
       if server.startServer
         logger.success "Mimosa is starting your server: #{config.server.path}", true
-        server.startServer(config.watch.compiledDir, config.server.useReload, config.require.optimizationEnabled)
+        server.startServer(config.watch.compiledDir, config.server.useReload, config.optimize)
       else
         logger.error "Found provided server located at #{config.server.path} (#{serverPath}) but it does not contain a 'startServer' method."
     else
@@ -62,19 +64,22 @@ register = (program, callback) =>
     .command('watch')
     .description("watch the filesystem and compile assets")
     .option("-s, --server", "run a server that will serve up the assets in the compiled directory")
+    .option("-o, --optimize", "run require.js optimization after each js file compile")
     .action(callback)
     .on '--help', =>
       logger.green('  The watch command will observe your source directory and compile or copy your assets when they change.')
       logger.green('  When the watch command starts up, it will make an initial pass through your assets and compile or copy')
-      logger.green('  any assets that are newer then their companion compiled assets in the compiled directory.  The watch command')
-      logger.green('  will remain running when executed, and must be terminated with CNTL-C.')
+      logger.green('  any assets that are newer then their companion compiled assets in the compiled directory.  The watch')
+      logger.green('  command will remain running when executed, and must be terminated with CNTL-C.')
       logger.blue( '\n    $ mimosa watch\n')
-      logger.green('  Pass a server flag and Mimosa will start-up a server that will serve up the assets Mimosa compiles.  You have')
-      logger.green('  the opportunity, via Mimosa\'s config, to provide Mimosa a hook to your own server if you have one.  If you')
-      logger.green('  do not have a server, Mimosa will use an embedded server to serve up the assets.  Server configuration options')
-      logger.green('  and explanations can be found in the \'server\' settings in the mimosa-config.')
+      logger.green('  Pass a \'server\' flag and Mimosa will start-up a server that will serve up the assets Mimosa compiles.')
+      logger.green('  You have the opportunity, via Mimosa\'s config, to provide Mimosa a hook to your own server if you have')
+      logger.green('  one.  If you do not have a server, Mimosa will use an embedded server to serve up the assets.  Server')
+      logger.green('  configuration options and explanations can be found in the \'server\' settings in the mimosa-config.')
       logger.blue( '\n    $ mimosa watch --server')
       logger.blue( '    $ mimosa watch -s\n')
+      logger.green('  Pass an \'optimize\' flag and Mimosa will use requirejs to optimize your assets and provide you with')
+      logger.green('  single files for the named requirejs modules.  It will do this any time a JavaScript asset is changed.')
 
 module.exports = (program) ->
   register(program, watch)

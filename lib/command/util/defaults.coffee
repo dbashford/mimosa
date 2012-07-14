@@ -63,9 +63,7 @@ class MimosaDefaults
 
     server.path = path.join(@root, server.path)
 
-
     requirejs = newConfig.require = config.require                      ?= {}
-    requirejs.optimizationEnabled = config.require.optimizationEnabled  ?= true
     requirejs.name =                config.require.name                 ?= "main"
     requirejs.out  =                config.require.out                  ?= "main-built.js"
     requirejs.paths =               config.require.paths                ?= {}

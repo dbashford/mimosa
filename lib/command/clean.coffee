@@ -44,16 +44,15 @@ clean = ->
 
     logger.success "#{config.watch.compiledDir} has been cleaned."
 
-
 register = (program, callback) =>
   program
     .command('clean')
     .description("clean out all of the compiled assets from the compiled directory")
     .action(callback)
     .on '--help', =>
-      logger.green('  The clean command will remove all of the compiled assets from the configured compiledDir and ')
-      logger.green('  any empty directories after the compiled assets are removed. It will also remove any Mimosa')
-      logger.green('  copied assets, like template libraries. It will not remove anything that did not originate')
+      logger.green('  The clean command will remove all of the compiled assets from the configured compiledDir. After')
+      logger.green('  the assets are deleted, any empty directories left over are also removed. Mimosa will also remove any')
+      logger.green('  Mimosa copied assets, like template libraries. It will not remove anything that did not originate')
       logger.green('  from the source directory.')
       logger.blue( '\n    $ mimosa clean\n')
 

@@ -4,5 +4,5 @@ block content
   h1= title
   p Welcome to #{title}
   p Mimosa is now serving up your assets at this URL
-  if production
-    p Production mode
+  if optimize
+    p Optimized mode.  You are getting a single RequireJS optimized JavaScript file which includes all the page dependencies.

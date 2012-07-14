@@ -4,10 +4,10 @@ html
     title= title
 
     - var url = '/app/stylesheets/style.css'
-    - if (!useBuilt) {url += "?d=" + (new Date().getTime())}
+    - if (!(env == 'production')) {url += "?d=" + (new Date().getTime())}
     link(rel='stylesheet', href=url)
 
-    if useBuilt
+    if optimize
       script(src='/app/javascripts/main-built.js')
     else
       script(src='/app/javascripts/vendor/require.js', data-main='/app/javascripts/main.js')

@@ -31,6 +31,8 @@ Mimosa is not quite ready for prime-time (as of early July), still shaking thing
 - [JSHint](#jshint)
 - [CSSLint](#csslint)
 - [RequireJS Optimization](#requirejs-optimization)
+- [GZip](#gzip)
+- [Live Reload](#live-reload)
 - [Roadmap](#roadmap)
 
 
@@ -49,8 +51,8 @@ Mimosa is not quite ready for prime-time (as of early July), still shaking thing
  * Automatic CoffeeLinting, JSHinting, and CSSLinting
  * Basic Express skeleton to put you on the ground running with a new app
  * Bundled Express for serving up assets to an existing app
- * Live Reload built in, without the need for a plugin
  * Automatic static asset Gzip-ing
+ * Live Reload built in, without the need for a plugin
 
 ### Why Mimosa?
 
@@ -106,6 +108,13 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
  One interacts with Mimosa via the command-line.
 
+### Help
+
+ Mimosa includes extensive help documentation on the command line for each of the commands.  Give them a peek if you can't remember an option or can't remember what a command does.  For example:
+
+    $ mimosa --help
+    $ mimosa new --help
+
 ### New Project (new)
 
  The best way to get started with Mimosa is to use it to create a new application/project structure for you.  Create a new project like so:
@@ -147,6 +156,14 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
  By default, this will look for and run an Express app located at `server.path`.  If you used the Mimosa command line to build your new project, and you didn't provide the --noserver flag, you will have a server.coffee at the root of your file structure.  Mimosa will run the `startServer` method in this file.  You can leave this file as is if you are simply serving up assets, but this gives you the opportunity to build out an actual Express app should that be your desire.
 
  You can change to using an embedded default (not-extendable) Express server by changing the `server.useDefaultServer` configuration to `true`.  If you created a project using the --noserver flag, this will have already been done for you.
+
+#### Serve Optimized Assets (--optimize)
+
+ Start Mimosa watching with the --optimize flag turned on and Mimosa will run RequireJS's optimizer on start-up and with every javascript file change.  So when you point at either the Express or default server's base URL with optimize flagged, you will be served the result of RequireJS's optimization, packaged with [Almond](https://github.com/jrburke/almond).
+
+ To start up with optimization turned on, execute the following:
+
+    $ mimosa watch [--server] --optimize
 
 ### One Time Asset Build (build)
 
@@ -244,15 +261,24 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
 ## RequireJS Optimization
 
- Start Mimosa watching with the NODE_ENV production flag turned on and Mimosa will run RequireJS's optimizer on start-up and with every javascript file change.  The default Jade templates are built to switch on the environment.  So when you point at either the Express or default server's base URL with production switched on, you will be served the result of RequireJS's optimization, packaged with [Almond](https://github.com/jrburke/almond).
+ Both of the following mimosa commands will involve [RequireJS optimization](http://requirejs.org/docs/optimization.html):
 
- To start up with production turned on, execute the following:
+    $ mimosa watch [--server] --optimize
+    $ mimosa build --optimize
 
-    $ NODE_ENV=production mimosa watch --server
+ By default, Mimosa will use main.js in the public directory as the sole module to be optimized, but this can be changed in the mimosa-config by tweaking the `require.name` setting.  The output will be placed in the root of the public directory, in main-built.js, and this too can be changed by changing `require.out`  The only other default setting is a path/alias set up pointing at jquery in the vendor directory.  You can add other paths/aliases along side the jquery one, remove the jquery path or point it someplace else.
+
+ The RequireJS optimizer has many [configuration options](http://requirejs.org/docs/optimization.html#options).  Any of these options can be added directly to the `require` setting and Mimosa will include them in the optimization.
 
 ## GZip
 
- All your static assets will be served up GZip-ed.
+ All your static assets will be served up GZip-ed!  'nuff said.
+
+## Live Reload
+
+ The default application you are provided comes built with live reload included.  Live Reload will immediately reload your web page any time an asset is compiled.  So, for instance, if you change some LESS code, the instant it is compiled, and the compiled .css file is written to your `compiledDir`, your browser will update and your CSS updates will be displayed.
+
+ To do this, the default application is built to include two extra libraries, including socket.io, to talk to the server and determine when to reload the page.  If you wish to turn this off, and thereby not include the two extra files, go into the mimosa-config.coffee file and update `server.useReload` to false.  These two extra files do not get wrapped up by RequireJS.
 
 ## Roadmap
 

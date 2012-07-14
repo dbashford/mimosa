@@ -76,14 +76,10 @@ exports.config = {
     # port: 3000                          # valid when useDefaultServer: true, port the default server will start on
     # base: '/app'                        # valid when useDefaultServer: true, base of the app in default mode
 
-  # require:                              # configuration for requirejs optimizer. You can uncomment and change the
-                                          # configuration here, and you can also append any new or different
-                                          # r.js configuration (http://requirejs.org/docs/optimization.html#options)
+  # require:                              # configuration for requirejs optimizer. You can uncomment and change the configuration here
+                                          # and you can also append any new or different r.js configuration (http://requirejs.org/docs/optimization.html#options
                                           # as new paramters inside this require option. for example any shims, additional modules.
                                           # The require 'baseUrl' is set by combining the compiledDir with the compilers.javascript.directory
-    # optimizationEnabled: true           # Turn off production mode optimization.  When set to true, requirejs (r.js) optimizer will be
-                                          # used to shrink all the javascript for the {require.name} modules down to single files per module.
-                                          # When set to false, mimosa will behave identically in production as in dev
     # name: 'main'                        # names of the module, this matches the name of the Mimosa default require.js script tag
                                           # 'data-main' (see views/layout.jade), which then points to the require.js configuration
                                           # javascript file: main.js (see javascripts/main.coffee).

@@ -1,10 +1,11 @@
-index = (useReload, useBuilt) ->
+index = (useReload, optimize) ->
 
-  isProduction = process.env.NODE_ENV is 'production'
-  reload = useReload and not isProduction
-  useBuilt = isProduction and useBuilt
+  options =
+    title:    "Express"
+    reload:   useReload
+    optimize: optimize ? false
+    env:      process.env.NODE_ENV ? "development"
 
-  (req, res) ->
-    res.render 'index', {title: "Express", reload: reload, production: isProduction, useBuilt:useBuilt}
+  (req, res) -> res.render 'index', options
 
 exports.index = index
