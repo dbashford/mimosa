@@ -11,12 +11,15 @@ Mimosa is not quite ready for prime-time (as of early July), still shaking thing
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
 - [Command Line Utilities](#command-line-utilities)
+	- [Help](#help)
 	- [New Project (new)](#new-project-new)
-		- [No Server](#no-server)
-		- [Pick the defaults](#pick-the-defaults)
+		- [No Server (--noserver)](#no-server---noserver)
+		- [Pick the defaults (--defaults)](#pick-the-defaults---defaults)
 	- [Watch and Compile (watch)](#watch-and-compile-watch)
-	- [Serve Assets (watch --server)](#serve-assets-watch---server)
+		- [Serve Assets (--server)](#serve-assets---server)
+		- [Serve Optimized Assets (--optimize)](#serve-optimized-assets---optimize)
 	- [One Time Asset Build (build)](#one-time-asset-build-build)
+		- [Optimized Build (--optimize)](#optimized-build---optimize)
 	- [Clean Compiled Assets (clean)](#clean-compiled-assets-clean)
 	- [Copy Config (config)](#copy-config-config)
 - [Meta-Language Compilation](#meta-language-compilation)
@@ -34,6 +37,7 @@ Mimosa is not quite ready for prime-time (as of early July), still shaking thing
 - [GZip](#gzip)
 - [Live Reload](#live-reload)
 - [Roadmap](#roadmap)
+- [Suggestions? Comments?](#suggestions-comments)
 
 
 ## Features
