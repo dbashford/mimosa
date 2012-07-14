@@ -34,8 +34,9 @@ Mimosa is not quite ready for prime-time (as of early July), still shaking thing
 - [JSHint](#jshint)
 - [CSSLint](#csslint)
 - [RequireJS Optimization](#requirejs-optimization)
-- [GZip](#gzip)
 - [Live Reload](#live-reload)
+- [GZip](#gzip)
+- [Cache Busting](#cache-busting)
 - [Roadmap](#roadmap)
 - [Suggestions? Comments?](#suggestions-comments)
 
@@ -50,12 +51,11 @@ Mimosa is not quite ready for prime-time (as of early July), still shaking thing
  * Compiling of SASS (w/compass) + LESS (soon: Stylus)
  * Compiling of Handlebars, Dust and Jade templates into single template files to be used in the client (soon: Underscore, Hogan)
  * Compile assets when they are saved, not when they are requested
- * Run in development with unminified/non-compressed javascript, turn on prod mode and run with a single javascript file using RequireJS's optimizer and [Almond](https://github.com/jrburke/almond)
  * Growl notifications along with basic console logging, so if a compile fails, you'll know right away
+ * Run in development with unminified/non-compressed javascript, turn on optimization and run with a single javascript file using RequireJS's optimizer and [Almond](https://github.com/jrburke/almond)
  * Automatic CoffeeLinting, JSHinting, and CSSLinting
- * Basic Express skeleton to put you on the ground running with a new app
- * Bundled Express for serving up assets to an existing app
- * Automatic static asset Gzip-ing
+ * Basic Express skeleton to put you on the ground running with a new app, and a bundled Express for serving up assets to an existing app
+ * Automatic static asset Gzip-ing, and cache busting
  * Live Reload built in, without the need for a plugin
 
 ### Why Mimosa?
@@ -274,15 +274,19 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
  The RequireJS optimizer has many [configuration options](http://requirejs.org/docs/optimization.html#options).  Any of these options can be added directly to the `require` setting and Mimosa will include them in the optimization.
 
+## Live Reload
+
+  The default application you are provided comes built with live reload included.  Live Reload will immediately reload your web page any time an asset is compiled.  So, for instance, if you change some LESS code, the instant it is compiled, and the compiled .css file is written to your `compiledDir`, your browser will update and your CSS updates will be displayed.
+
+  To do this, the default application is built to include two extra libraries, including socket.io, to talk to the server and determine when to reload the page.  If you wish to turn this off, and thereby not include the two extra files, go into the mimosa-config.coffee file and update `server.useReload` to false.  These two extra files do not get wrapped up by RequireJS.
+
 ## GZip
 
  All your static assets will be served up GZip-ed!  'nuff said.
 
-## Live Reload
+## Cache Busting
 
- The default application you are provided comes built with live reload included.  Live Reload will immediately reload your web page any time an asset is compiled.  So, for instance, if you change some LESS code, the instant it is compiled, and the compiled .css file is written to your `compiledDir`, your browser will update and your CSS updates will be displayed.
-
- To do this, the default application is built to include two extra libraries, including socket.io, to talk to the server and determine when to reload the page.  If you wish to turn this off, and thereby not include the two extra files, go into the mimosa-config.coffee file and update `server.useReload` to false.  These two extra files do not get wrapped up by RequireJS.
+ No forcing a refresh to bypass caching issues.  All JavaScript and CSS files are cache-busted.
 
 ## Roadmap
 
