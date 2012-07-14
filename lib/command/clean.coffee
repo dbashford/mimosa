@@ -9,6 +9,9 @@ logger = require '../util/logger'
 
 clean = ->
   util.processConfig false, (config) =>
+    optimizedFile = path.join config.watch.compiledDir, config.compilers.javascript.directory, config.require.out
+    fs.unlinkSync optimizedFile if fs.existsSync optimizedFile
+
     files = wrench.readdirSyncRecursive(config.watch.sourceDir)
 
     compilers = util.fetchConfiguredCompilers(config)
