@@ -36,7 +36,8 @@ clean = ->
       fs.unlinkSync compiledPath if fs.existsSync compiledPath
 
     directories = files.filter (f) -> fs.statSync(path.join(config.watch.sourceDir, f)).isDirectory()
-    directories = _.sortBy(directories, 'length')
+    directories = _.sortBy(directories, 'length').reverse()
+
     for dir in directories
       dirPath = path.join(config.watch.compiledDir, dir)
       if fs.existsSync dirPath
