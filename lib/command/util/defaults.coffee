@@ -3,12 +3,13 @@ fs =   require 'fs'
 
 logger =   require '../../util/logger'
 
+defaultJavascript = "coffee"
+defaultCss =        "sass"
+defaultTemplate =   "handlebars"
+
 class MimosaDefaults
 
   fatalErrors: 0
-  @defaultJavascript: -> "coffee"
-  @defaultCss: ->        "sass"
-  @defaultTemplate: ->   "handlebars"
 
   applyAndValidateDefaults: (config, configPath, isServer, callback) =>
     @root = path.dirname(configPath)
@@ -27,14 +28,14 @@ class MimosaDefaults
     comp = newConfig.compilers = config.compilers ?= {}
     js = comp.javascript = config.compilers.javascript ?= {}
     js.directory =         config.compilers.javascript.directory         ?= "javascripts"
-    js.compileWith =       config.compilers.javascript.compileWith       ?= MimosaDefaults.defaultJavascript()
+    js.compileWith =       config.compilers.javascript.compileWith       ?= defaultJavascript
     js.extensions =        config.compilers.javascript.extensions        ?= ["coffee"]
     js.notifyOnSuccess =   config.compilers.javascript.notifyOnSuccess   ?= true
     js.lint =              config.compilers.javascript.lint              ?= true
     js.metalint =          config.compilers.javascript.metalint          ?= true
 
     template = comp.template = config.compilers.template                 ?= {}
-    template.compileWith =     config.compilers.template.compileWith     ?= MimosaDefaults.defaultTemplate()
+    template.compileWith =     config.compilers.template.compileWith     ?= defaultTemplate
     template.extensions =      config.compilers.template.extensions      ?= ["hbs", "handlebars"]
     template.outputFileName =  config.compilers.template.outputFileName  ?= "javascripts/templates"
     template.notifyOnSuccess = config.compilers.template.notifyOnSuccess ?= true
@@ -45,7 +46,7 @@ class MimosaDefaults
 
 
     css = comp.css =      config.compilers.css                 ?= {}
-    css.compileWith =     config.compilers.css.compileWith     ?= MimosaDefaults.defaultCss()
+    css.compileWith =     config.compilers.css.compileWith     ?= defaultCss
     css.extensions =      config.compilers.css.extensions      ?= ["scss", "sass"]
     css.notifyOnSuccess = config.compilers.css.notifyOnSuccess ?= true
     css.lint =            config.compilers.css.lint            ?= {enabled:true, rules:{}}
@@ -131,7 +132,7 @@ class MimosaDefaults
 
 module.exports = {
   applyAndValidateDefaults: (new MimosaDefaults()).applyAndValidateDefaults
-  defaultJavascript: MimosaDefaults.defaultJavascript()
-  defaultCss:        MimosaDefaults.defaultCss()
-  defaultTemplate:   MimosaDefaults.defaultTemplate()
+  defaultJavascript: defaultJavascript
+  defaultCss:        defaultCss
+  defaultTemplate:   defaultTemplate
 }
