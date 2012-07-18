@@ -8,6 +8,10 @@ logger =    require '../util/logger'
 
 class Optimizer
 
+  constructor: ->
+    almondInPath  = path.join __dirname, "almond.js"
+    @almondText = fs.readFileSync almondInPath, "ascii"
+
   optimize: (config) =>
     return unless config.optimize
 
@@ -23,16 +27,13 @@ class Optimizer
       @config.wrap = true
       @config.name = 'almond'
 
-    almondInPath  = path.join __dirname, "almond.js"
     almondOutPath = path.join @config.baseUrl, "almond.js"
-    fs.readFile almondInPath, "ascii", (err, data) =>
-      return logger.error "Cannot read Almond" if err?
-      fs.writeFile almondOutPath, data, 'ascii', (err) =>
-        return logger.error "Cannot write Almond" if err?
-        logger.info "Beginning requirejs optimization"
-        requirejs.optimize @config, (buildResponse) =>
-          logger.success "Requirejs optimization complete.  The compiled file is ready for use.", true
-          fs.unlink almondOutPath
-          @alreadyRunning = false
+    fs.writeFile almondOutPath, @almondText, 'ascii', (err) =>
+      return logger.error "Cannot write Almond, #{err}" if err?
+      logger.info "Beginning requirejs optimization"
+      requirejs.optimize @config, (buildResponse) =>
+        logger.success "Requirejs optimization complete.  The compiled file is ready for use.", true
+        fs.unlink almondOutPath
+        @alreadyRunning = false
 
 exports.optimize = new Optimizer().optimize

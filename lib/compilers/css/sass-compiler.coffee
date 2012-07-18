@@ -51,13 +51,11 @@ module.exports = class SassCompiler extends AbstractCssCompiler
       error ?= ''
       error += buffer.toString()
     sass.on 'exit', (code) =>
+      @initBaseFilesToCompile--
       callback(error, result, destinationFile)
 
-      unless @startupFinished
-        @_startupFinished() if --@initBaseFilesToCompile is 0
-
   _isInclude: (fileName) ->
-    path.basename(fileName).substring(0,1) is '_'
+    path.basename(fileName).charAt(0) is '_'
 
   _determineBaseFiles: =>
     _.filter @allFiles, (file) =>

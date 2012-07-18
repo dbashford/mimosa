@@ -104,7 +104,7 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
  Mimosa's documentation is self-explanatory. The config file that comes bundled with the application contains all of the configurable options within the application and a brief explanation.  If you stick with the default options, like using CoffeeScript, Handlebars, and SASS, the configuration will be entirely commented out as the defaults are built into Mimosa.
 
- To change something -- for instance to make it so you don't get notified via growl when your CSS meta-language (like SASS) compiles successfully -- uncomment the object structure that leads to the setting.  In this case you'd uncomment `compilers.css.notifyOnSuccess`, and change the setting to `false`.
+ To change something -- for instance to make it so you don't get notified via growl when your CSS meta-language (like SASS) compiles successfully -- uncomment the object structure that leads to the setting.  In this case you'd uncomment `growl.onSuccess.css`, and change the setting to `false`.
 
  You can find the configuration [inside the skeleton directory](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/mimosa-config.coffee).
 
@@ -249,19 +249,78 @@ Something missing from Mimosa for the short-term, is a group of pre-built skelet
 
  Compilation of your assets is kicked off as soon as a file is saved.  Mimosa will write to the console the outcome of every compilation event.  Should compilation fail, the reason will be included in the log message.
 
- If you have [Growl](http://growl.info/) installed and turned on, for each failure or successful compile of your meta-CSS/JS/Templates, you'll get a Growl notification.  In the event Growl gets too spammy for you, you can turn off Growl notifications for successful compiles.  Each compiler, CSS, JS, and Template, has a setting, `notifyOnSuccess`, that when enabled and set to false will stop Growl notifications for successful compilations.  You cannot turn off Growl notifications for compilation failures.
+### Growl
 
-## CoffeeLint
+ If you have [Growl](http://growl.info/) installed and turned on, for each failure or successful compile of your meta-CSS/JS/Templates, you'll get a Growl notification.  In the event Growl gets too spammy for you, you can turn off Growl notifications for successful compiles.  Growl has its own setting in Mimosa, the defaults look like this:
 
- Mimosa will automatically [CoffeeLint](http://www.coffeelint.org/) your CoffeeScript and CoffeeScript-based dialects.  Any CoffeeLint warnings will be printed to the console.  The default CoffeeLint configuration is included in the Mimosa configuration (commented out of course).  Turn rules on/off or change values to suit your needs.  You can also turn off CoffeeHint-ing altogether by enabling the `compilers.javascript.metalint` option, and switching it to false.
+```
+# growl:
+  # onStartup: false
+  # onSuccess:
+    # javascript: true
+    # css: true
+    # template: true
+    # copy: true
+```
 
-## JSHint
+If you [clean](#clean-compiled-assets-clean) your project and then start up the [watcher](watch-and-compile-watch), Mimosa will compile every asset you have.  If you have dozens or hundreds of assets, you may not want Growl notifications for each successful compile during this startup.  Startup success notifications are off by default.  You can turn on by uncommenting the config and setting the `growl.onStartup` flag to true.
 
- Mimosa will automatically [JSHint](http://www.jshint.com/) your compiled JavaScript.  Any JSHint warnings will be printed to the console.  JSHint has [many rules](http://www.jshint.com/options/), and for now overrides are not available via Mimosa.  But it wouldn't be hard to add if there is interest.  You can turn off JSHint altogether by enabling the `compilers.javascript.lint` option and switching it to false.
+You can also choose to turn off post-startup success notifications for compiled javascript, css, and templates, as well as for copied assets by altering the `growl.onSuccess` flats.  These notifications are on by default.
 
-## CSSLint
+## Linting Your CoffeeScript, JavaScript and CSS
 
- Mimosa will automatically [CSSLint](http://csslint.net/) your compiled CSS.  All CSSLint violations will be treated as warnings and printed to the console.  You can turn off CSSHint entirely by setting `compilers.css.lint.enabled` to `false`.  You can disable the rules by adding the rules you want to disable to `compilers.css.lint.rules` and setting them to false.  The list of rules can be found here: https://github.com/stubbornella/csslint/wiki/Rules.  If you want to disable a rule, find the rule ID in the CSSLint Wiki, and add it to the rules object.  For example set `ids:false` if you are accustomed to using IDs to style elements, are not interested in changing that practice, and rather not deal with all the warnings.
+Linting is a code checking process that finds common mistakes in your code, or just variances away from the idiom.  Mimosa can automatically lint all of the CSS and JavaScript it moves from your source directories to your compiled directories.  Any errors or warnings that come out of that linting will be printed to the console.  Inside the mimosa-config is this snippet which controls the linting.
+
+```
+# lint:
+  # compiled:
+    # coffee:true
+    # javascript:true
+    # css:true
+  # copied:
+    # javascript: true
+    # css: true
+  # vendor:
+    # javascript: false
+    # css: false
+  # rules:
+    # coffee:
+      # max_line_length:
+      #   value: 80,
+      #   level: "error"
+    # js:
+      # plusplus: true
+    # css:
+      # floats: false
+```
+
+As with all of the default config, this is entirely commented out as the defaults are already enforced.
+
+### Linting Compiled Assets
+
+The `compiled` block controls whether or not linting is enabled for compiled code.  So if you've written SASS, when Mimosa compiles it, Mimosa will send the resulting CSS through a linting process.  For CoffeeScript, Mimosa will both lint your CoffeeScript code before it compiles it to JavaScript, and then lint your resulting JavaScript too.
+
+### Linting Copied Assets
+
+If you've chosen to code js/css by hand, or if you've included a library written in js/css, the `copied` settings determine whether or not to lint those files.
+
+### Linting Vendor Assets
+
+Mimosa also allows you to control the linting of code contained in your `vendor` directory.  Linting is, by default, disabled for vendor assets, that is, those assets living inside a `/vendor/` directory.  Vendor libraries often break from the idiom, or use hacks, to solve complex browser issues for you.  For example, when run through CSSLint Bootstrap causes 400+ warnings.
+
+If you want vendor asset hinting turned on, simply enable the setting and switch the flags to true.
+
+### Lint Rules
+
+The `rules` block is your opportunity to override and change the linting rules for each of the linting tools.  Example overrides are provided in the default configuration.  Those are examples, they are not actually overrides.
+
+### CoffeeLint, JSHint, CSSLint
+
+All of the lint/hinters come with default configurations that Mimosa uses.  Here are links to the tools, as well as to the configuration for those tools.
+
+ * [CoffeeLint](http://www.coffeelint.org/), [CoffeeLint Config](http://www.coffeelint.org/#options)
+ * [JSHint](http://www.jshint.com/), [JSHint Config](http://www.jshint.com/options/)
+ * [CSSLint](http://csslint.net/), [CSSLint Config](https://github.com/stubbornella/csslint/wiki/Rules)
 
 ## RequireJS Optimization
 

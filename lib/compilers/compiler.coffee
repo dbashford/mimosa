@@ -9,15 +9,16 @@ optimizer = require '../optimize/require-optimize'
 
 module.exports = class AbstractCompiler
 
+  isInitializationComplete:false
+
   constructor: (@fullConfig, @config) ->
     @srcDir = @fullConfig.watch.sourceDir
     @compDir = @fullConfig.watch.compiledDir
-    @processWatchedDirectories() if @processWatchedDirectories?
+    @onInitialize() if @onInitialize?
 
     files = wrench.readdirSyncRecursive(@srcDir).filter (f) =>
       ext = path.extname(f)
-      return false if ext.length < 2
-      @config.extensions.indexOf(ext.substring(1)) >= 0
+      ext.length > 1 and @config.extensions.indexOf(ext.substring(1)) >= 0
 
     @initialFileCount = files.length
     @initialFilesHandled = 0
@@ -27,11 +28,14 @@ module.exports = class AbstractCompiler
   updated: -> throw new Error "Method updated must be implemented"
   removed: -> throw new Error "Method removed must be implemented"
 
-  setStartupDoneCallback: (@startupDoneCallback) -> @startupDoneCallback() if @initialFileCount is 0
+  setStartupDoneCallback: (@startupDoneCallback) ->
+    @startupDoneCallback() if @initialFileCount is 0
 
-  getExtensions: => @config.extensions
+  getExtensions: =>
+    @config.extensions
 
-  getOutExtension: => @outExtension
+  getOutExtension: =>
+    @outExtension
 
   initializationComplete: (@isInitializationComplete = true) ->
 
@@ -39,17 +43,17 @@ module.exports = class AbstractCompiler
     return true unless fs.existsSync destinationFile
     destStats = fs.statSync destinationFile
     origStats = fs.statSync fileName
-    return true if origStats.mtime > destStats.mtime
-    false
+    origStats.mtime > destStats.mtime
 
   write: (fileName, content) =>
     dirname = path.dirname(fileName)
-    fs.exists dirname, (exists) =>
-      fileUtils.mkdirRecursive dirname unless exists
-      fs.writeFile fileName, content, "ascii", (err) =>
-        return @failed "Failed to write new file: #{fileName}" if err
-        @success "Compiled/copied #{fileName}"
-        @afterWrite(fileName) if @afterWrite?
+    fileUtils.mkdirRecursive dirname unless fs.existsSync dirname
+    try
+      fs.writeFileSync fileName, content, "ascii"
+      @success "Compiled/copied #{fileName}"
+      @afterWrite(fileName) if @afterWrite?
+    catch err
+      @failed "Failed to write new file: #{fileName}" if err
 
   removeTheFile: (fileName, reportSuccess = true) =>
     fs.unlink fileName, (err) =>
@@ -64,12 +68,18 @@ module.exports = class AbstractCompiler
     @done()
 
   success: (message) =>
-    logger.success(message, @config.notifyOnSuccess)
+    growlIt = @notifyOnSuccess and (@isInitializationComplete or @fullConfig.growl.onStartup)
+    logger.success message, growlIt
     @done()
 
   done: ->
-    @doneStartup() if ++@initialFilesHandled is @initialFileCount
+    if !@startupFinished and ++@initialFilesHandled is @initialFileCount
+      @doneStartup()
 
   doneStartup: ->
+    @_doneStartup()
+
+  _doneStartup: ->
     @startupDoneCallback()
     @startupFinished = true
+

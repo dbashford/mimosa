@@ -10,7 +10,8 @@ module.exports = class JadeCompiler extends AbstractTemplateCompiler
   @prettyName        = -> "Jade - http://jade-lang.com/"
   @defaultExtensions = -> ["jade"]
 
-  constructor: (config) -> super(config)
+  constructor: (config) ->
+    super(config)
 
   compile: (fileNames, callback) ->
     error = null

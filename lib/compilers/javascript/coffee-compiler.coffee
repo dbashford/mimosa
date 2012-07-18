@@ -6,7 +6,8 @@ module.exports = class CoffeeCompiler extends AbstractCoffeeScriptCompiler
   @prettyName        = -> "CoffeeScript - http://coffeescript.org/"
   @defaultExtensions = -> ["coffee"]
 
-  constructor: (config) -> super(config)
+  constructor: (config) ->
+    super(config)
 
   compile: (cs, fileName, destinationFile, callback) ->
     try

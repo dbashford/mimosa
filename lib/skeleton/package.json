@@ -6,6 +6,6 @@
     "express": "~3.0.0beta4",
     "jade": ">= 0.0.1",
     "watch-connect": "~0.2.2",
-    "gzippo": "~0.1.7"
+    "gzippo": "git://github.com/dbashford/gzippo.git"
   }
 }

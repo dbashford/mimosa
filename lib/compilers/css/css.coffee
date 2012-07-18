@@ -1,12 +1,12 @@
 fs =      require 'fs'
 path =    require 'path'
 
-csslint = require("csslint").CSSLint
 wrench =  require 'wrench'
 _ =       require 'lodash'
 
 SingleFileCompiler = require '../single-file'
 logger =             require '../../util/logger'
+Linter =             require '../../util/lint-css'
 
 module.exports = class AbstractCSSCompiler extends SingleFileCompiler
 
@@ -15,11 +15,10 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
   constructor: (config) ->
     super(config, config.compilers.css)
 
-    return if @config.lint.enabled is false
+    @notifyOnSuccess = config.growl.onSuccess.css
 
-    @rules = {}
-    for rule in csslint.getRules()
-      @rules[rule.id] = 1 unless config.compilers.css.lint.rules[rule.id] is false
+    if config.lint.compiled.css
+      @linter = new Linter(config.lint.rules.css)
 
   created: (fileName) =>
     if @startupFinished then @process(fileName, (f) => super(f)) else @done()
@@ -74,9 +73,16 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
 
     @initBaseFilesToCompile = baseFilesToCompileNow.length
     if @initBaseFilesToCompile is 0
-      @_startupFinished()
+      @_doneStartup()
     else
+      AbstractCSSCompiler::done = =>
+        if !@startupFinished and @initBaseFilesToCompile is 0
+          @_doneStartup()
+
       @readAndCompile(base) for base in baseFilesToCompileNow
+
+  onInitialize: =>
+    @processWatchedDirectories()
 
   processWatchedDirectories: =>
     @includeToBaseHash = {}
@@ -94,20 +100,11 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
     @_importsForFile(baseFile, baseFile) for baseFile in @baseFiles
 
   afterCompile: (source, destFileName) =>
-    return if @config.lint.enabled is false
     return unless source?.length > 0
-
-    result = csslint.verify source, @rules
-    @writeMessage(message, destFileName) for message in result.messages
-
-  writeMessage: (message, destFileName) ->
-    output = "CSSLint Warning: #{message.message} In #{destFileName},"
-    output += " on line #{message.line}, column #{message.col}," if message.line?
-    output += " from CSSLint rule ID '#{message.rule.id}'."
-    logger.warn output
+    @linter.lint(source, destFileName) if @linter
 
   getAllFiles: =>
-    allFiles = wrench.readdirSyncRecursive(@srcDir)
+    wrench.readdirSyncRecursive(@srcDir)
       .map (file) =>
         path.join(@srcDir, file)
       .filter (file) =>
@@ -135,7 +132,3 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
         else
           @includeToBaseHash[includeFile] = [baseFile]
         @_importsForFile(baseFile, includeFile)
-
-  _startupFinished: =>
-    @startupDoneCallback()
-    @startupFinished = true

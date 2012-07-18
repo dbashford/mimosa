@@ -10,7 +10,8 @@ build = (opts) =>
     compilers = util.fetchConfiguredCompilers config, false
     new Watcher config, compilers, false, buildFinished
 
-buildFinished = -> logger.success("Finished build")
+buildFinished = ->
+  logger.success("Finished build")
 
 register = (program, callback) =>
   program

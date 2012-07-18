@@ -1,6 +1,6 @@
-AbstractCompiler = require './compiler'
-path = require 'path'
 fs = require 'fs'
+
+AbstractCompiler = require './compiler'
 
 module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
 
@@ -29,4 +29,4 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
       @write(destinationFile, results)
 
   findCompiledPath: (fileName) ->
-    path.join(@compDir, fileName.substring(0, fileName.lastIndexOf(".")).replace(@srcDir, '') + ".#{@outExtension}")
+    fileName.replace(@srcDir, @compDir).substring(0, fileName.lastIndexOf(".")) + ".#{@outExtension}"

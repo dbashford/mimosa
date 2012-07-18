@@ -12,7 +12,9 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
   constructor: (config) ->
     super(config, config.compilers.template)
     @templateFileName = path.join(@compDir, @config.outputFileName + ".js")
-    @baseDir = path.dirname(@templateFileName)
+    @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
+    @clientPath = path.join path.dirname(@templateFileName), "#{@clientLibrary}.js"
+    @notifyOnSuccess = config.growl.onSuccess.template
 
   # OVERRIDE THIS
   compile: (fileNames, callback) -> throw new Error "Method compile must be implemented"
@@ -30,7 +32,8 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     @_removeClientLibrary()
     @removeTheFile(@templateFileName, false) if fs.existsSync @templateFileName
 
-  doneStartup: -> @_gatherFiles()
+  doneStartup: ->
+    @_gatherFiles()
 
   _gatherFiles: (isRemove = false) ->
     fileNames = []
@@ -39,8 +42,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
     for file in allFiles
       extension = path.extname(file).substring(1)
-      if @config.extensions.indexOf(extension) >= 0
-        fileNames.push(file)
+      fileNames.push(file) if @config.extensions.indexOf(extension) >= 0
 
     if fileNames.length is 0
       if isRemove
@@ -72,18 +74,14 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       @startupFinished = true
 
   _removeClientLibrary: ->
-    fs.unlink @_clientPath() if fs.existsSync @_clientPath()
+    fs.unlink @clientPath if fs.existsSync @clientPath
 
   _writeClientLibrary: ->
-    return if fs.existsSync @_clientPath()
-    mimosaLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
-    fs.readFile mimosaLibraryPath, "ascii", (err, data) =>
-      return logger.error "Cannot read client library: #{@clientLibrary}" if err?
-      fs.writeFile @_clientPath(), data, 'ascii', (err) =>
+    return if fs.existsSync @clientPath
+    fs.readFile @mimosaClientLibraryPath, "ascii", (err, data) =>
+      return logger.error "Cannot read client library: #{@mimosaClientLibraryPath}" if err?
+      fs.writeFile @clientPath, data, 'ascii', (err) =>
         return logger.error "Cannot write client library: #{@clientLibrary}" if err?
 
-  _clientPath: -> path.join @baseDir, "#{@clientLibrary}.js"
-
-  afterWrite: (fileName) -> @optimize()
-
-
+  afterWrite: (fileName) ->
+    @optimize()

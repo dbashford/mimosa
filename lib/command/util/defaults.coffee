@@ -30,30 +30,22 @@ class MimosaDefaults
     js.directory =         config.compilers.javascript.directory         ?= "javascripts"
     js.compileWith =       config.compilers.javascript.compileWith       ?= defaultJavascript
     js.extensions =        config.compilers.javascript.extensions        ?= ["coffee"]
-    js.notifyOnSuccess =   config.compilers.javascript.notifyOnSuccess   ?= true
-    js.lint =              config.compilers.javascript.lint              ?= true
-    js.metalint =          config.compilers.javascript.metalint          ?= true
 
     template = comp.template = config.compilers.template                 ?= {}
     template.compileWith =     config.compilers.template.compileWith     ?= defaultTemplate
     template.extensions =      config.compilers.template.extensions      ?= ["hbs", "handlebars"]
     template.outputFileName =  config.compilers.template.outputFileName  ?= "javascripts/templates"
-    template.notifyOnSuccess = config.compilers.template.notifyOnSuccess ?= true
     template.helperFile = []
     helperFiles = config.compilers.template.helperFiles ?= ["javascripts/app/template/handlebars-helpers"]
     for helperFile in helperFiles
       template.helperFile.push path.join(@root, helperFile)
 
-
     css = comp.css =      config.compilers.css                 ?= {}
     css.compileWith =     config.compilers.css.compileWith     ?= defaultCss
     css.extensions =      config.compilers.css.extensions      ?= ["scss", "sass"]
-    css.notifyOnSuccess = config.compilers.css.notifyOnSuccess ?= true
-    css.lint =            config.compilers.css.lint            ?= {enabled:true, rules:{}}
 
     copy = newConfig.copy = config.copy                        ?= {}
-    copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif","html"]
-    copy.notifyOnSuccess =  config.copy.notifyOnSuccess        ?= false
+    copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf"]
 
     server = newConfig.server = config.server                  ?= {}
     server.useDefaultServer =   config.server.useDefaultServer ?= false
@@ -64,13 +56,38 @@ class MimosaDefaults
 
     server.path = path.join(@root, server.path)
 
-    requirejs = newConfig.require = config.require                      ?= {}
-    requirejs.name =                config.require.name                 ?= "main"
-    requirejs.out  =                config.require.out                  ?= "main-built.js"
-    requirejs.paths =               config.require.paths                ?= {}
-    requirejs.paths.jquery =        config.require.paths.jquery         ?= "vendor/jquery"
+    requirejs = newConfig.require = config.require              ?= {}
+    requirejs.name =                config.require.name         ?= "main"
+    requirejs.out  =                config.require.out          ?= "main-built.js"
+    requirejs.paths =               config.require.paths        ?= {}
+    requirejs.paths.jquery =        config.require.paths.jquery ?= "vendor/jquery"
 
-    newConfig.coffeelint = @_coffeelint(config.coffeelint)
+    growl = newConfig.growl =       config.growl                ?= {}
+    growl.onStartup =               config.onStartup            ?= false
+    growl.onSuccess =               config.onSuccess            ?= {}
+    growl.onSuccess.javascript =    config.onSuccess.javascript ?= true
+    growl.onSuccess.css =           config.onSuccess.css        ?= true
+    growl.onSuccess.template =      config.onSuccess.template   ?= true
+    growl.onSuccess.copy =          config.onSuccess.copy       ?= true
+
+    lint = newConfig.lint =    config.lint                     ?= {}
+    lint.compiled =            config.lint.compiled            ?= {}
+    lint.compiled.coffee =     config.lint.compiled.coffee     ?= true
+    lint.compiled.javascript = config.lint.compiled.javascript ?= true
+    lint.compiled.css =        config.lint.compiled.css        ?= true
+
+    lint.copied =              config.lint.copied              ?= {}
+    lint.copied.javascript =   config.lint.copied.javascript   ?= true
+    lint.copied.css =          config.lint.copied.css          ?= true
+
+    lint.vendor =              config.lint.vendor              ?= {}
+    lint.vendor.javascript =   config.lint.vendor.javascript   ?= false
+    lint.vendor.css =          config.lint.vendor.css          ?= false
+
+    lint.rules =               config.lint.rules               ?= {}
+    lint.rules.coffee =        config.lint.rules.coffee        ?= {}
+    lint.rules.javascript =    config.lint.rules.javascript    ?= {}
+    lint.rules.css =           config.lint.rules.css           ?= {}
 
     newConfig
 
@@ -96,39 +113,6 @@ class MimosaDefaults
     unless fs.existsSync filePath
       logger.fatal "#{name} (#{filePath}) cannot be found"
       @fatalErrors++
-
-  _coffeelint: (overrides) ->
-    coffeelint =
-      no_tabs:
-        level: "error"
-      no_trailing_whitespace:
-        level: "error"
-      max_line_length:
-        value: 80,
-        level: "error"
-      camel_case_classes:
-        level: "error"
-      indentation:
-        value: 2
-        level: "error"
-      no_implicit_braces:
-        level: "ignore"
-      no_trailing_semicolons:
-        level: "error"
-      no_plusplus:
-        level: "ignore"
-      no_throwing_strings:
-        level: "error"
-      cyclomatic_complexity:
-        value: 11
-        level: "ignore"
-      line_endings:
-        value: "unix"
-        level: "ignore"
-      no_implicit_parens:
-        level: "ignore"
-
-    Object.merge(coffeelint, overrides) if overrides
 
 module.exports = {
   applyAndValidateDefaults: (new MimosaDefaults()).applyAndValidateDefaults

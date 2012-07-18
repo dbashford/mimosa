@@ -1,8 +1,8 @@
-express =  require 'express'
 path =     require 'path'
 fs =       require 'fs'
 
 gzip =     require 'gzippo'
+express =  require 'express'
 
 util =     require './util'
 logger =   require '../util/logger'

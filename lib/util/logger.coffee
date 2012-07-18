@@ -35,7 +35,7 @@ class Logger
   debug:   (message) =>          @log 'debug', message, 'purple' if @isDebug
   fatal:   (message) =>          @log 'fatal', "FATAL: #{message}", 'red+bold+underline', "Fatal Error"
   success: (message, growlIt) =>
-    title = if growlIt? then 'Success' else null
+    title = if growlIt then 'Success' else null
     @log 'success', message, 'green+bold', title
 
 module.exports = new Logger

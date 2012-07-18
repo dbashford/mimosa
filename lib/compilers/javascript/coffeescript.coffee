@@ -1,23 +1,16 @@
 AbstractJavascriptCompiler = require './javascript'
-coffeelint = require 'coffeelint'
 logger = require '../../util/logger'
+Linter = require '../../util/lint-js'
 
 module.exports = class AbstractCoffeeScriptCompiler extends AbstractJavascriptCompiler
 
   constructor: (config) ->
     super(config)
-    @lintOptions = config.coffeelint
+
+    if config.lint.compiled.coffee
+      @linter = new Linter(config.lint.rules.coffee)
+      @coffeeRules = config.lint.rules.coffee
 
   beforeCompile: (source, fileName) ->
-    @coffeeLint(source, fileName) if @config.metalint
+    @linter.lintCoffee(source, fileName, @coffeeRules) if @linter?
 
-  coffeeLint: (source, fileName) ->
-    try
-      lintResults = coffeelint.lint(source, @lintOptions)
-    catch err
-      return # is an error in compilation of coffeescript, compiler will take care of that
-
-    for result in lintResults
-      switch result.level
-        when 'error' then @logLint("CoffeeScript", result, 'Error',   logger.warn, fileName)
-        when 'warn'  then @logLint("CoffeeScript", result, 'Warning', logger.info, fileName)

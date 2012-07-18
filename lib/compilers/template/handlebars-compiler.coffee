@@ -13,11 +13,11 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
   @prettyName        = -> "Handlebars - http://handlebarsjs.com/"
   @defaultExtensions = -> ["hbs", "handlebars"]
 
-  constructor: (config) -> super(config)
+  constructor: (config) ->
+    super(config)
+    @_buildOutputStart()
 
-  compile: (fileNames, callback) ->
-    error = null
-
+  _buildOutputStart: =>
     possibleHelperPaths =
       for ext in @fullConfig.compilers.javascript.extensions
         path.join(@srcDir, "#{helperFile}.#{ext}") for helperFile in @config.helperFiles
@@ -29,7 +29,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
       defines.push "'#{helperDefine}'"
     defineString = defines.join ','
 
-    output = """
+    @outputStart = """
              define([#{defineString}], function (Handlebars){
                if (!Handlebars) {
                  console.log("Handlebars library has not been passed in successfully via require");
@@ -37,6 +37,11 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
                }
                var template = Handlebars.template, templates = {};\n
              """
+
+  compile: (fileNames, callback) ->
+    error = null
+
+    output = @outputStart
 
     for fileName in fileNames
       content = fs.readFileSync fileName, "ascii"

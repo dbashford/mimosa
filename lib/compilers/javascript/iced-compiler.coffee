@@ -6,7 +6,8 @@ module.exports = class IcedCompiler extends AbstractCoffeeScriptCompiler
   @prettyName        = -> "Iced CoffeeScript - http://maxtaco.github.com/coffee-script/"
   @defaultExtensions = -> ["iced"]
 
-  constructor: (config) -> super(config)
+  constructor: (config) ->
+    super(config)
 
   compile: (cs, fileName, destinationFile, callback) ->
     try

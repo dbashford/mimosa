@@ -23,7 +23,9 @@ module.exports = class LessCompiler extends AbstractCssCompiler
       paths: [@srcDir, path.dirname(fileName)],
       filename: fileName
     parser.parse text, (error, tree) =>
-      return callback(error) if error?
+      @initBaseFilesToCompile--
+
+      return callback("#{fileName}, Error: #{error.message}") if error?
 
       try
         result = tree.toCSS()
@@ -32,9 +34,6 @@ module.exports = class LessCompiler extends AbstractCssCompiler
         err += " in '#{ex.filename}:#{ex.line}:#{ex.column}'" if ex.filename
 
       callback(err, result, destinationFile)
-
-      unless @startupFinished
-        @_startupFinished() if --@initBaseFilesToCompile is 0
 
   _isInclude: (fileName) -> @includeToBaseHash[fileName]?
 
