@@ -3,7 +3,7 @@ Mimosa - a modern browser development toolkit
 
 Mimosa is a browser development toolkit, targeted at folks using meta-languages like (but not limited to) CoffeeScript or SASS, and micro-templating libraries like Jade and Handlebars.  Mimosa is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management, and comes bundled with useful tools like coffee/js/css hint to improve code quality and live reload to speed up development.  Read through the entire [feature set](#features)!
 
-And know there is more to come!  Mimosa is in full dev mode, however, everything listed in this README should work.
+And know there is more to come!  Mimosa is in full dev mode on its way to feature completeness, however, everything listed in this README should work.
 
 [Give it a whirl](#quick-start).  Please do [file issues](https://github.com/dbashford/mimosa/issues) should you find them, and don't hesitate to [request features](https://github.com/dbashford/mimosa/issues).  I haven't spent time testing Mimosa on Windows, so I wouldn't be surprised to learn there problems there.
 
