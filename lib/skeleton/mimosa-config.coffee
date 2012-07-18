@@ -35,7 +35,7 @@ exports.config = {
                                                                      # to exist
 
     # css:
-      # compileWith: "sass"                   # Other options: "none".  "none" assumes you are coding pure CSS and
+      # compileWith: "sass"                   # Other options: "none", "less".  "none" assumes you are coding pure CSS and
                                               # the copy config will move that over for you.  More compilers to come.
       # extensions: ["scss", "sass"]          # list of extensions to compile
 
