@@ -355,10 +355,9 @@ All of the lint/hinters come with default configurations that Mimosa uses.  Here
 
  * More compilers across the board
  * example skeletons with things like Backbone/Chaplin/Angular/Ember, Bootstrap, etc
- * Push to NPM
  * Tests for the Mimosa codebase
  * Integrated testing framework for your codebase
- * Other server options
+ * Quite a few other bits and pieces
 
 ## Suggestions? Comments?
 
