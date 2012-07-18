@@ -1,9 +1,11 @@
 Mimosa - a modern browser development toolkit
 ======
 
-Mimosa is a browser development toolkit, targeted at folks using meta-languages like CoffeeScript or SASS, and micro-templating libraries like Jade and Handlebars.  The toolkit is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management, and comes bundled with useful tools like coffee/js/css hint to improve code quality and LiveReload to speed up development.
+Mimosa is a browser development toolkit, targeted at folks using meta-languages like (but not limited to) CoffeeScript or SASS, and micro-templating libraries like Jade and Handlebars.  Mimosa is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management, and comes bundled with useful tools like coffee/js/css hint to improve code quality and live reload to speed up development.  Read through the entire [feature set](#features)!
 
-Mimosa is not quite ready for prime-time (as of early July), still shaking things out, but feel free to play around and [file issues](https://github.com/dbashford/mimosa/issues) should you find them.  I haven't spent any real time playing with Mimosa on Windows, so I wouldn't be surprised to learn there are issues there.
+And know there is more to come!  Mimosa is in full dev mode, however, everything listed in this README should work.
+
+[Give it a whirl](#quick-start).  Please do [file issues](https://github.com/dbashford/mimosa/issues) should you find them, and don't hesitate to [request features](https://github.com/dbashford/mimosa/issues).  I haven't spent time testing Mimosa on Windows, so I wouldn't be surprised to learn there problems there.
 
 - [Features](#features)
 	- [Why Mimosa?](#why-mimosa)
@@ -49,7 +51,7 @@ Mimosa is not quite ready for prime-time (as of early July), still shaking thing
 
  * Sane defaults allow you to get started without configuring anything
  * Command line prompting during project creation to get you the configuration you want without having to comb through JSON and learn Mimosa's settings
- * A very simple skeleton app build using the chosen meta-languages
+ * A very simple (eventually less simple!) skeleton app build using the chosen meta-languages
  * Heavily configurable if moving away from defaults
  * Compiling of CoffeeScript + Iced CoffeeScript
  * Compiling of SASS (w/compass) + LESS (soon: Stylus)
@@ -64,23 +66,19 @@ Mimosa is not quite ready for prime-time (as of early July), still shaking thing
 
 ### Why Mimosa?
 
- Much love to [Brunch](http://brunch.io/) for the inspiration (hence 'Mimosa'), and for being the codebase I checked out when I had a problem to solve.  I suggest you check it out to compare and contrast features to figure out which is best for you.  Brunch is awesome sauce, and its codebase is certainly more mature!
+What I wanted from Mimosa was a fast nothing-to-coding user-friendly experience.  Little mucking with config to get you started, no installing extra stuff yourself.  I want to deal with individual files during development, and let RequireJS handle optimized builds.  I want linting, gzip, live reload, and cache-busting all just there.
 
- But I wanted:
- * Less time spent fiddling with config
- * RequireJS/AMD instead of CommonJS
- * No thinking about file load order...let Require figure it out
- * Built-in linting
- * More in the code base rather than plugged in.  Might be counter-intuitive, but I feel with the compilers in the Mimosa codebase, you can trust they'll work and not fall out of date.
- * Serve individual files during development.  Merging during dev is more trouble than it is worth.
+Much love and credit to [Brunch](http://brunch.io/) for the inspiration (hence 'Mimosa'), and for being the codebase I referenced when I had a problem to solve.  There's a lot here that Brunch does similarly, but also quite a bit I think Mimosa does differently.  I suggest you check it out (as if you haven't already).  Brunch is awesome sauce.
 
-The biggest loss from Brunch to Mimosa, besides maturity, is a lack of command line scaffolding.  I've never felt I got much out of Rails or Spring Roo style scaffolding when I've used it, and I don't feel it needs to be a part of Mimosa.  I reserve the opportunity to change my mind!
-
-Something missing from Mimosa for the short-term, is a group of pre-built skeletons to get you started with things like Backbone and Bootstrap.  Those'll come.
+Something missing from Mimosa for the short-term, that Brunch has in abundance, is a group of pre-built skeletons to get you started with things like Backbone and Bootstrap.  Those'll come after what I feel is the core feature set is complete and solid.
 
 ## Installation
 
- When I feel Mimosa is a bit closer to being ready to go, I'll get it into NPM.  To get it before then...
+As dev continues, I'll push to NPM whenever it makes sense.
+
+    $ npm install -g mimosa
+
+If you want the latest and greatest:
 
     $ git clone https://github.com/dbashford/mimosa.git
     $ cd mimosa
@@ -360,6 +358,7 @@ All of the lint/hinters come with default configurations that Mimosa uses.  Here
  * Push to NPM
  * Tests for the Mimosa codebase
  * Integrated testing framework for your codebase
+ * Other server options
 
 ## Suggestions? Comments?
 
