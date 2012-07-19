@@ -81,7 +81,7 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
 
       @readAndCompile(base) for base in baseFilesToCompileNow
 
-  onInitialize: =>
+  init: =>
     @processWatchedDirectories()
 
   processWatchedDirectories: =>

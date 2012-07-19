@@ -3,6 +3,7 @@ fs = require 'fs'
 
 wrench = require 'wrench'
 
+fileUtils = require '../../util/file'
 logger = require '../../util/logger'
 AbstractCompiler = require '../compiler'
 
@@ -77,11 +78,12 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     fs.unlink @clientPath if fs.existsSync @clientPath
 
   _writeClientLibrary: ->
-    return if fs.existsSync @clientPath
+    return if @fullConfig.virgin or fs.existsSync @clientPath
+
     fs.readFile @mimosaClientLibraryPath, "ascii", (err, data) =>
-      return logger.error "Cannot read client library: #{@mimosaClientLibraryPath}" if err?
-      fs.writeFile @clientPath, data, 'ascii', (err) =>
-        return logger.error "Cannot write client library: #{@clientLibrary}" if err?
+      return logger.error("Cannot read client library: #{@mimosaClientLibraryPath}") if err?
+      fileUtils.writeFile @clientPath, data, (err) =>
+        @failed("Cannot write client library: #{err}") if err?
 
   afterWrite: (fileName) ->
     @optimize()

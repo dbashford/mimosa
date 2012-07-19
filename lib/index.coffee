@@ -16,6 +16,7 @@ class Mimosa
     require('./command/build')(program)
     require('./command/clean')(program)
     require('./command/watch')(program)
+    require('./command/virgin')(program)
 
     program.command('*')
       .action (arg) ->

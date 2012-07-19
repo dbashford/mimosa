@@ -62,7 +62,7 @@ fetchConfiguredCompilers = (config, persist = false) ->
       logger.info "Unable to find matching compiler for #{category}/#{catConfig.compileWith}: #{err}"
   compilers
 
-processConfig = (server, callback) ->
+processConfig = (server, callback, virgin = false) ->
   configPath = _findConfigPath()
   {config} = require configPath if configPath?
   unless config?
@@ -71,7 +71,10 @@ processConfig = (server, callback) ->
     config = {}
     configPath = path.dirname path.resolve('right-here.foo')
 
-  defaults.applyAndValidateDefaults config, configPath, server, (err, newConfig) =>
+  config.virgin = virgin
+  config.isServer = server
+
+  defaults.applyAndValidateDefaults config, configPath, (err, newConfig) =>
     if err
       logger.fatal "Unable to start Mimosa, #{err} configuration(s) problems listed above."
       process.exit 1

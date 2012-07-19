@@ -63,7 +63,7 @@ register = (program, callback) =>
   program
     .command('watch')
     .description("watch the filesystem and compile assets")
-    .option("-s, --server", "run a server that will serve up the assets in the compiled directory")
+    .option("-s, --server",   "run a server that will serve up the assets in the compiled directory")
     .option("-o, --optimize", "run require.js optimization after each js file compile")
     .action(callback)
     .on '--help', =>
@@ -80,6 +80,8 @@ register = (program, callback) =>
       logger.blue( '    $ mimosa watch -s\n')
       logger.green('  Pass an \'optimize\' flag and Mimosa will use requirejs to optimize your assets and provide you with')
       logger.green('  single files for the named requirejs modules.  It will do this any time a JavaScript asset is changed.')
+      logger.blue( '\n    $ mimosa watch --optimize')
+      logger.blue( '    $ mimosa watch -o\n')
 
 module.exports = (program) ->
   register(program, watch)

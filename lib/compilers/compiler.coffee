@@ -14,7 +14,7 @@ module.exports = class AbstractCompiler
   constructor: (@fullConfig, @config) ->
     @srcDir = @fullConfig.watch.sourceDir
     @compDir = @fullConfig.watch.compiledDir
-    @onInitialize() if @onInitialize?
+    @init() if @init?
 
     files = wrench.readdirSyncRecursive(@srcDir).filter (f) =>
       ext = path.extname(f)
@@ -46,14 +46,13 @@ module.exports = class AbstractCompiler
     origStats.mtime > destStats.mtime
 
   write: (fileName, content) =>
-    dirname = path.dirname(fileName)
-    fileUtils.mkdirRecursive dirname unless fs.existsSync dirname
-    try
-      fs.writeFileSync fileName, content, "ascii"
+    if @fullConfig.virgin
+      return @success "Compiled #{fileName}"
+
+    fileUtils.writeFile fileName, content, (err) =>
+      return @failed "Failed to write new file: #{fileName}" if err
       @success "Compiled/copied #{fileName}"
       @afterWrite(fileName) if @afterWrite?
-    catch err
-      @failed "Failed to write new file: #{fileName}" if err
 
   removeTheFile: (fileName, reportSuccess = true) =>
     fs.unlink fileName, (err) =>
@@ -82,4 +81,3 @@ module.exports = class AbstractCompiler
   _doneStartup: ->
     @startupDoneCallback()
     @startupFinished = true
-

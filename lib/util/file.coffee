@@ -23,4 +23,11 @@ class FileUtils
       else throw err
     made
 
+  writeFile: (fileName, content, callback) =>
+    dirname = path.dirname(fileName)
+    @mkdirRecursive dirname unless fs.existsSync dirname
+    fs.writeFile fileName, content, "ascii", (err) =>
+      error = if err? then "Failed to write file: #{fileName}, #{err}"
+      callback(error)
+
 module.exports = new FileUtils
