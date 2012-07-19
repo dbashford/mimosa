@@ -12,19 +12,19 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
-- [Command Line Utilities](#command-line-utilities)
-	- [Help](#help)
-	- [New Project (new)](#new-project-new)
+- [Command Line](#command-line)
+	- [Help (--help)](#help)
+	- [__new__ - New Project](#new-project-new)
 		- [No Server (--noserver)](#no-server---noserver)
 		- [Pick the defaults (--defaults)](#pick-the-defaults---defaults)
-	- [Watch and Compile (watch)](#watch-and-compile-watch)
+	- [__watch__ - Watch and Compile](#watch-and-compile-watch)
 		- [Serve Assets (--server)](#serve-assets---server)
 		- [Serve Optimized Assets (--optimize)](#serve-optimized-assets---optimize)
-	- [Just Watch, Do Not Write](#just-watch-do-not-write-virgin)
-	- [One Time Asset Build (build)](#one-time-asset-build-build)
+	- [__virgin__ - Just Watch, Do Not Write](#just-watch-do-not-write-virgin)
+	- [__build__ - One Time Asset Build](#one-time-asset-build-build)
 		- [Optimized Build (--optimize)](#optimized-build---optimize)
-	- [Clean Compiled Assets (clean)](#clean-compiled-assets-clean)
-	- [Copy Config (config)](#copy-config-config)
+	- [__clean__ - Clean Compiled Assets](#clean-compiled-assets-clean)
+	- [__config__ - Copy Config](#copy-config-config)
 - [Meta-Language Compilation](#meta-language-compilation)
 	- [Which meta-languages?](#which-meta-languages)
 - [Asset Copying](#asset-copying)
@@ -111,7 +111,7 @@ If you want the latest and greatest:
 
  You can find the configuration [inside the skeleton directory](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/mimosa-config.coffee).
 
-## Command Line Utilities
+## Command Line
 
  One interacts with Mimosa via the command-line.
 
