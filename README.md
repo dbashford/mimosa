@@ -20,6 +20,7 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
 	- [Watch and Compile (watch)](#watch-and-compile-watch)
 		- [Serve Assets (--server)](#serve-assets---server)
 		- [Serve Optimized Assets (--optimize)](#serve-optimized-assets---optimize)
+	- [Just Watch, Do Not Write](#just-watch-do-not-write-virgin)
 	- [One Time Asset Build (build)](#one-time-asset-build-build)
 		- [Optimized Build (--optimize)](#optimized-build---optimize)
 	- [Clean Compiled Assets (clean)](#clean-compiled-assets-clean)
@@ -174,6 +175,14 @@ If you want the latest and greatest:
 
     $ mimosa watch [--server] --optimize
     $ mimosa watch [--server] -o
+
+### Just Watch, Do Not Write (virgin)
+
+A virgin mimosa is just orange juice.
+
+    $ mimosa virgin
+
+This command is just the watching, compiling, linting and notifications.  No server, no optimizations, no writing the output.  Use this if you've already got an application framework, you don't need files served, and you don't need optimizations.  But you do want to know if something doesn't compile before you reload the page, and you do want to introduce linting to your workflow.
 
 ### One Time Asset Build (build)
 
