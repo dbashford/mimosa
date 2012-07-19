@@ -116,10 +116,10 @@ If you want the latest and greatest:
 
 ### Help
 
- Mimosa includes extensive help documentation on the command line for each of the commands.  Give them a peek if you can't remember an option or can't remember what a command does.  For example:
+ Mimosa includes extensive help documentation on the command line for each of the commands.  Give them a peek if you can't remember an option or can't remember what a command does.  Use `--help` or `-h` to bring up help. For example:
 
     $ mimosa --help
-    $ mimosa new --help
+    $ mimosa new -h
 
 ### New Project (new)
 
@@ -133,17 +133,19 @@ If you want the latest and greatest:
 
  The created directory will also contain the configuration file for Mimosa.  Almost everything inside of it is commented out, but all the options and explanations for each option are present.  The only things that will not be commented out will the javascript, css, and template compilers if you chose something other than the defaults.
 
-#### No Server (--noserver)
+#### No Server (--noserver, -n)
 
  Should you not need all of the Express stuff, you can give Mimosa a `--noserver` flag when you create the project.  This will only give you the configuration file, the empty public directory, and the assets directory and all of its contents.
 
     $ mimosa new nameOfApplicationHere --noserver
+    $ mimosa new nameOfApplicationHere -n
 
-#### Pick the defaults (--defaults)
+#### Pick the defaults (--defaults, -d)
 
- Should you be happy with the defaults (CoffeeScript, Handlebars, and SASS) you can bypass the prompts by providing a --defaults flag.
+ Should you be happy with the defaults (CoffeeScript, Handlebars, and SASS) you can bypass the prompts by providing a `--defaults` flag.
 
     $ mimosa new nameOfApplicationHere --defaults
+    $ mimosa new nameOfApplicationHere -d
 
 ### Watch and Compile (watch)
 
@@ -153,23 +155,25 @@ If you want the latest and greatest:
 
     $ mimosa watch
 
-#### Serve Assets (--server)
+#### Serve Assets (--server, -s)
 
  If you are not already running a server, and you need to serve your assets up, start Mimosa with the server flag.
 
     $ mimosa watch --server
+    $ mimosa watch -s
 
- By default, this will look for and run an Express app located at `server.path`.  If you used the Mimosa command line to build your new project, and you didn't provide the --noserver flag, you will have a server.coffee at the root of your file structure.  Mimosa will run the `startServer` method in this file.  You can leave this file as is if you are simply serving up assets, but this gives you the opportunity to build out an actual Express app should that be your desire.
+ By default, this will look for and run an Express app located at `server.path`.  If you used the Mimosa command line to build your new project, and you didn't provide the `--noserver` flag, you will have a server.coffee at the root of your file structure.  Mimosa will run the `startServer` method in this file.  You can leave this file as is if you are simply serving up assets, but this gives you the opportunity to build out an actual Express app should that be your desire.
 
- You can change to using an embedded default (not-extendable) Express server by changing the `server.useDefaultServer` configuration to `true`.  If you created a project using the --noserver flag, this will have already been done for you.
+ You can change to using an embedded default (not-extendable) Express server by changing the `server.useDefaultServer` configuration to `true`.  If you created a project using the `--noserver` flag, this will have already been done for you.
 
-#### Serve Optimized Assets (--optimize)
+#### Serve Optimized Assets (--optimize, -o)
 
- Start Mimosa watching with the --optimize flag turned on and Mimosa will run RequireJS's optimizer on start-up and with every javascript file change.  So when you point at either the Express or default server's base URL with optimize flagged, you will be served the result of RequireJS's optimization, packaged with [Almond](https://github.com/jrburke/almond).
+ Start Mimosa watching with the `--optimize` flag turned on and Mimosa will run RequireJS's optimizer on start-up and with every javascript file change.  So when you point at either the Express or default server's base URL with optimize flagged, you will be served the result of RequireJS's optimization, packaged with [Almond](https://github.com/jrburke/almond).
 
  To start up with optimization turned on, execute the following:
 
     $ mimosa watch [--server] --optimize
+    $ mimosa watch [--server] -o
 
 ### One Time Asset Build (build)
 
@@ -179,11 +183,12 @@ If you want the latest and greatest:
 
  This will run through your assets and compile any that need compiling, deliver the results to the public directory, and then exit.
 
-#### Optimized Build (--optimize)
+#### Optimized Build (--optimize, -o)
 
- If you want to build with optimization, provide a --optimize flag.  This will compile all the assets, and then create the requirejs optimized files for use in production.
+ If you want to build with optimization, provide a `--optimize` flag.  This will compile all the assets, and then create the requirejs optimized files for use in production.
 
     $ mimosa build --optimize
+    $ mimosa build -o
 
 ### Clean Compiled Assets (clean)
 
