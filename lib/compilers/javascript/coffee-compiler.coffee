@@ -3,7 +3,7 @@ coffee = require 'coffee-script'
 
 module.exports = class CoffeeCompiler extends AbstractCoffeeScriptCompiler
 
-  @prettyName        = -> "CoffeeScript - http://coffeescript.org/"
+  @prettyName        = -> "(*) CoffeeScript - http://coffeescript.org/"
   @defaultExtensions = -> ["coffee"]
 
   constructor: (config) ->

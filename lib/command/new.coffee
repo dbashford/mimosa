@@ -20,10 +20,10 @@ class NewCommand
       .description("create a skeleton matching Mimosa's defaults, which includes a basic Express setup")
       .option("-n, --noserver", "do not include express in the application setup")
       .option("-d, --defaults",  "bypass prompts and go with Mimosa defaults (CoffeeScript, SASS, Handlebars)")
-      .action(@controller)
+      .action(@new)
       .on '--help', @printHelp
 
-  controller: (name, opts) =>
+  new: (name, opts) =>
     return @_create(name, opts) if opts.defaults
 
     logger.green "\n  This is the Mimosa interactive project creation tool.  You will be prompted to choose the "
@@ -33,33 +33,36 @@ class NewCommand
     logger.green "  (https://github.com/dbashford/mimosa/issues) and we'll look at adding it. \n"
 
     util.gatherCompilerInfo (compilerInfo) =>
+      @_prompting(compilerInfo, name, opts)
 
-      compilerPrettyNames = {}
-      for type, compilers of compilerInfo
-        compilerPrettyNames[type] = compilers.map (compiler) -> compiler.prettyName
+  _prompting: (compilerInfo, name, opts) =>
+    compilerPrettyNames = {}
+    for type, compilers of compilerInfo
+      compilerPrettyNames[type] = compilers.map (compiler) -> compiler.prettyName
 
-      chosenCompilers = {}
+    chosenCompilers = {}
 
-      logger.green "\n  To start, please choose your JavaScript meta-language: \n"
-      @program.choose compilerPrettyNames.javascript, (i) =>
-        logger.blue "\n  You chose #{compilerPrettyNames.javascript[i]}."
-        logger.green "\n  Now choose your CSS meta-language:\n"
-        comp = (compilerInfo.javascript.filter (item) => item.prettyName is compilerPrettyNames.javascript[i])[0]
-        chosenCompilers.javascript = comp.fileName
-        chosenCompilers.javascriptExtensions = comp.extensions
-        @program.choose compilerPrettyNames.css, (i) =>
-          logger.blue "\n  You chose #{compilerPrettyNames.css[i]}."
-          logger.green "\n  And finally, choose your micro-templating language:\n"
-          comp = (compilerInfo.css.filter (item) => item.prettyName is compilerPrettyNames.css[i])[0]
-          chosenCompilers.css = comp.fileName
-          chosenCompilers.cssExtensions = comp.extensions
-          @program.choose compilerPrettyNames.template,(i) =>
-            logger.blue "\n  You chose #{compilerPrettyNames.template[i]}."
-            logger.green "\n  Creating and setting up your project... \n"
-            comp = (compilerInfo.template.filter (item) => item.prettyName is compilerPrettyNames.template[i])[0]
-            chosenCompilers.template = comp.fileName
-            chosenCompilers.templateExtensions = comp.extensions
-            @_create(name, opts, chosenCompilers)
+    logger.green "  In case you are unsure which options to pick, the ones with asterisks are Mimosa favorites."
+    logger.green "\n  To start, please choose your JavaScript meta-language: \n"
+    @program.choose compilerPrettyNames.javascript, (i) =>
+      logger.blue "\n  You chose #{compilerPrettyNames.javascript[i]}."
+      logger.green "\n  Now choose your CSS meta-language:\n"
+      comp = (compilerInfo.javascript.filter (item) => item.prettyName is compilerPrettyNames.javascript[i])[0]
+      chosenCompilers.javascript = comp.fileName
+      chosenCompilers.javascriptExtensions = comp.extensions
+      @program.choose compilerPrettyNames.css, (i) =>
+        logger.blue "\n  You chose #{compilerPrettyNames.css[i]}."
+        logger.green "\n  And finally, choose your micro-templating language:\n"
+        comp = (compilerInfo.css.filter (item) => item.prettyName is compilerPrettyNames.css[i])[0]
+        chosenCompilers.css = comp.fileName
+        chosenCompilers.cssExtensions = comp.extensions
+        @program.choose compilerPrettyNames.template,(i) =>
+          logger.blue "\n  You chose #{compilerPrettyNames.template[i]}."
+          logger.green "\n  Creating and setting up your project... \n"
+          comp = (compilerInfo.template.filter (item) => item.prettyName is compilerPrettyNames.template[i])[0]
+          chosenCompilers.template = comp.fileName
+          chosenCompilers.templateExtensions = comp.extensions
+          @_create(name, opts, chosenCompilers)
 
   _create: (name, opts, chosenCompilers) =>
     skeletonPath = path.join __dirname, '..', 'skeleton'

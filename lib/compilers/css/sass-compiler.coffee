@@ -11,7 +11,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
 
   importRegex: /@import ['"](.*)['"]/g
 
-  @prettyName        = -> "SASS - http://sass-lang.com/"
+  @prettyName        = -> "(*) SASS - http://sass-lang.com/"
   @defaultExtensions = -> ["scss", "sass"]
   @checkIfExists     = (callback) ->
     exec 'sass --version', (error, stdout, stderr) ->
