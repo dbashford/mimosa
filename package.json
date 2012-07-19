@@ -16,7 +16,7 @@
   "main": "./lib/index",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/dbashford/mimosa"
   },
   "keywords": [
     "framework",
