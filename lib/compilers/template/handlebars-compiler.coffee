@@ -23,7 +23,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
         path.join(@srcDir, "#{helperFile}.#{ext}") for helperFile in @config.helperFiles
     helperPaths = _.flatten(possibleHelperPaths).filter((p) -> fs.existsSync(p))
 
-    defines = ["'#{@clientLibrary}'"]
+    defines = ["'vendor/#{@clientLibrary}'"]
     for helperPath in helperPaths
       helperDefine = helperPath.replace(@srcDir, "").replace(/(^[\\\/]?[A-Za-z]+[\\\/])/, '').replace(/\.\w+$/,"")
       defines.push "'#{helperDefine}'"

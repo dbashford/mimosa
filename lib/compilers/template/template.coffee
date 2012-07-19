@@ -14,7 +14,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     super(config, config.compilers.template)
     @templateFileName = path.join(@compDir, @config.outputFileName + ".js")
     @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
-    @clientPath = path.join path.dirname(@templateFileName), "#{@clientLibrary}.js"
+    @clientPath = path.join path.dirname(@templateFileName), 'vendor', "#{@clientLibrary}.js"
     @notifyOnSuccess = config.growl.onSuccess.template
 
   # OVERRIDE THIS

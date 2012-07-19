@@ -16,7 +16,7 @@ module.exports = class JadeCompiler extends AbstractTemplateCompiler
   compile: (fileNames, callback) ->
     error = null
 
-    output = "define(['#{@clientLibrary}'], function (jade){ var templates = {};\n"
+    output = "define(['vendor/#{@clientLibrary}'], function (jade){ var templates = {};\n"
     for fileName in fileNames
       content = fs.readFileSync fileName, "ascii"
       templateName = path.basename(fileName, path.extname(fileName))
