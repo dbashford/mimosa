@@ -22,7 +22,10 @@ gatherCompilerInfo = (callback) ->
 
   for file in files
     comp = require(file)
-    compilerInfo = {prettyName:comp.prettyName(), fileName:path.basename(file, ".coffee").replace("-compiler",""), extensions:comp.defaultExtensions()}
+    compilerInfo =
+      prettyName:comp.prettyName()
+      fileName:path.basename(file, ".coffee").replace("-compiler","")
+      extensions:comp.defaultExtensions()
     if comp.checkIfExists?
       infoClone = _.clone(compilerInfo)
       fileClone = _.clone(file)

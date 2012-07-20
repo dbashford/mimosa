@@ -1,11 +1,11 @@
 Mimosa - a modern browser development toolkit
 ======
 
-Mimosa is a browser development toolkit, targeted at folks using meta-languages like (but not limited to) CoffeeScript or SASS, and micro-templating libraries like Jade and Handlebars.  Mimosa is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management, and comes bundled with useful tools like coffee/js/css hint to improve code quality and live reload to speed up development.  Read through the entire [feature set](#features)!
+Mimosa is a browser development toolkit, targeted at folks using meta-languages like (but not limited to) CoffeeScript or SASS, and micro-templating libraries like Jade, Handlebars and Underscore.  Mimosa is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management, and comes bundled with useful tools like coffee/js/css hint to improve code quality and live reload to speed up development.  Read through the entire [feature set](#features)!
 
 And know there is more to come!  Mimosa is in full dev mode on its way to feature completeness, however, everything listed in this README should work.
 
-[Give it a whirl](#quick-start).  Please do [file issues](https://github.com/dbashford/mimosa/issues) should you find them, and don't hesitate to [request features](https://github.com/dbashford/mimosa/issues).  I haven't spent time testing Mimosa on Windows, so I wouldn't be surprised to learn there problems there.
+[Give it a whirl](#quick-start).  Please do [file issues](https://github.com/dbashford/mimosa/issues) should you find them, and don't hesitate to [request features](https://github.com/dbashford/mimosa/issues).  I haven't spent time testing Mimosa on Windows, so I wouldn't be surprised to learn it has issues.
 
 - [Features](#features)
 	- [Why Mimosa?](#why-mimosa)
@@ -56,7 +56,7 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
  * Heavily configurable if moving away from defaults
  * Compiling of CoffeeScript + Iced CoffeeScript
  * Compiling of SASS (w/compass) + LESS (soon: Stylus)
- * Compiling of Handlebars, Dust and Jade templates into single template files to be used in the client (soon: Underscore, Hogan)
+ * Compiling of Handlebars, Dust, Jade, Underscore, and LoDash templates into single template files to be used in the client (soon: Hogan)
  * Compile assets when they are saved, not when they are requested
  * Growl notifications along with basic console logging, so if a compile fails, you'll know right away
  * Run in development with unminified/non-compressed javascript, turn on optimization and run with a single javascript file using RequireJS's optimizer and [Almond](https://github.com/jrburke/almond)
@@ -233,13 +233,15 @@ This command is just the watching, compiling, linting and notifications.  No ser
 
 ## Micro-Templating Libraries
 
- Mimosa comes bundled with three different micro-templating languages for to pick from for client rendering.  [Dust](https://github.com/linkedin/dustjs), [Handlebars](http://handlebarsjs.com/), and [Jade](http://jade-lang.com/).  As with the CSS and JavaScript meta-languages, the micro-templating libraries will be compiled when saved.  In all cases, the resulting compiled templates will be merged into a single file for use in the client.
+ Listed below are the five different micro-templating libraries Mimosa has built in.  As with the CSS and JavaScript meta-languages, the micro-templating libraries will be compiled when saved.  In all cases, the resulting compiled templates will be merged into a single file for use in the client.
 
- The name and location of that single file is configurable (`compilers.template.outputFileName`), but by default it is kept at javascripts/template.  When this file is injected via require, the behavior differs per library.
+ The name and location of that single file is configurable (`compilers.template.outputFileName`), but by default it is kept at javascripts/template.  When this file is injected via require, the behavior differs per library, see below.
+
+ For each templating langauge, the injected javascript file provides a JSON object of templates, keyed by the name of the the template originated in.
 
 ### Handlebars
 
- Handlebars is the default templating langauge.  The injected template javascript file provides a JSON object of templates.  To access, for instance, a template originating from a file named "example.hbs", you would do this...
+ [http://handlebarsjs.com/](Handlebars) is the default templating langauge.  To access a Handlebars template originating from a file named "example.hbs", you would do this...
 
  `var html = templates.example({})`
 
@@ -249,7 +251,7 @@ This command is just the watching, compiling, linting and notifications.  No ser
 
 ### Dust
 
- Dust is also available as a template language.  The injected template javascript file provides a JSON object of templates.  To access, for instance, a template originating from a file named "example.dust", you would do this...
+To access a [Dust](https://github.com/linkedin/dustjs/) template originating from a file named "example.dust", you would do this...
 
  ```
  templates.render('example', {}, (err, html) -> $(element).append(html))
@@ -257,9 +259,21 @@ This command is just the watching, compiling, linting and notifications.  No ser
 
 ### Jade
 
- Jade is a third available template language.  The injected template javascript file provides a JSON object of templates.  To access, for instance, a template originating from a file named "example.dust", you would do this...
+To access a [Jade](http://jade-lang.com/) template originating from a file named "example.jade", you would do this...
 
  `var html = templates.example({})`
+
+### Underscore
+
+To access an [Underscore](http://underscorejs.org/) template originating from a file named "example.tpl", you would do this...
+
+`var html = templates.example({})`
+
+### Underscore
+
+To access a [LoDash](http://lodash.com/) template originating from a file named "example.lodash", you would do this...
+
+`var html = templates.example({})`
 
 ## Immediate Feedback
 

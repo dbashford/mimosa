@@ -18,12 +18,11 @@ class Mimosa
     require('./command/watch')(program)
     require('./command/virgin')(program)
 
-    program.command('*')
-      .action (arg) ->
-        exec "mimosa --help", (error, stdout, stderr) ->
-          logger.red "\n  #{arg} is not a valid command. \n"
-          console.log stdout
+    program.command('*').action (arg) ->
+      exec "mimosa --help", (error, stdout, stderr) ->
+        logger.red "\n  #{arg} is not a valid command. \n"
+        console.log stdout
 
     program.parse process.argv
 
-module.exports = new Mimosa
+module.exports = new Mimosa()

@@ -7,14 +7,14 @@ fileUtils = require '../../util/file'
 logger = require '../../util/logger'
 AbstractCompiler = require '../compiler'
 
-
 module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   constructor: (config) ->
     super(config, config.compilers.template)
     @templateFileName = path.join(@compDir, @config.outputFileName + ".js")
-    @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
-    @clientPath = path.join path.dirname(@templateFileName), 'vendor', "#{@clientLibrary}.js"
+    if @clientLibrary?
+      @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
+      @clientPath = path.join path.dirname(@templateFileName), 'vendor', "#{@clientLibrary}.js"
     @notifyOnSuccess = config.growl.onSuccess.template
 
   # OVERRIDE THIS
@@ -75,10 +75,10 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       @startupFinished = true
 
   _removeClientLibrary: ->
-    fs.unlink @clientPath if fs.existsSync @clientPath
+    fs.unlink @clientPath if @clientPath? and fs.existsSync @clientPath
 
   _writeClientLibrary: ->
-    return if @fullConfig.virgin or fs.existsSync @clientPath
+    return if @fullConfig.virgin or !@clientPath? or fs.existsSync @clientPath
 
     fs.readFile @mimosaClientLibraryPath, "ascii", (err, data) =>
       return logger.error("Cannot read client library: #{@mimosaClientLibraryPath}") if err?
