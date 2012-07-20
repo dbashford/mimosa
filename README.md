@@ -233,7 +233,7 @@ This command is just the watching, compiling, linting and notifications.  No ser
 
 ## Micro-Templating Libraries
 
- Listed below are the five different micro-templating libraries Mimosa has built in.  As with the CSS and JavaScript meta-languages, the micro-templating libraries will be compiled when saved.  In all cases, the resulting compiled templates will be merged into a single file for use in the client.
+ Listed below are the five different micro-templating libraries Mimosa has built in.  As with the CSS and JavaScript meta-languages, the micro-templating libraries will be compiled when saved.  In all cases, the resulting compiled templates will be merged into a single file for use in the client.  Within that file will be @sourceUrl like information to allow you to easily track errors back to specific files in your codebase.
 
  The name and location of that single file is configurable (`compilers.template.outputFileName`), but by default it is kept at javascripts/template.  When this file is injected via require, the behavior differs per library, see below.
 
