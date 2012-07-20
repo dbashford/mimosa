@@ -1,7 +1,7 @@
 {
   "name": "mimosa",
   "preferGlobal": "true",
-  "version": "0.0.1dev",
+  "version": "0.0.2",
   "homepage": "https://github.com/dbashford/mimosa",
   "author": "David Bashford",
   "description": "Build and serve browser meta-languages; a modern browser stack boilerplate.",
