@@ -1,7 +1,7 @@
 jslint =     require('jshint').JSHINT
 coffeelint = require 'coffeelint'
 
-logger =  require './logger'
+logger =  require '../logger'
 
 module.exports = class JSLinter
 

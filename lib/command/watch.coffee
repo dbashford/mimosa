@@ -35,7 +35,13 @@ startDefaultServer = (config) ->
       next()
 
     if config.server.useReload
-      app.use (require 'watch-connect')(config.watch.compiledDir, server, {verbose: false, skipAdding:true})
+      options =
+        server:server
+        watchdir:config.watch.compiledDir
+        verbose: false
+        skipAdding:true
+        ignore:["almond.js"]
+      app.use (require 'watch-connect')(options)
 
     app.use config.server.base, gzip.staticGzip(config.watch.compiledDir)
 

@@ -1,6 +1,6 @@
 csslint = require("csslint").CSSLint
 
-logger =  require './logger'
+logger =  require '../logger'
 
 module.exports = class CSSLinter
 

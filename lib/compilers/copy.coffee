@@ -1,8 +1,8 @@
 path = require 'path'
 
 SingleFileCompiler = require './single-file'
-CSSLinter =             require '../util/lint-css'
-JSLinter =             require '../util/lint-js'
+CSSLinter =             require '../util/lint/css'
+JSLinter =             require '../util/lint/js'
 
 module.exports = class CopyCompiler extends SingleFileCompiler
 

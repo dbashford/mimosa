@@ -3,15 +3,13 @@ growl = require 'growl'
 require 'date-utils'
 
 class Logger
-  constructor: ->
-    @isDebug = Boolean process.env.DEBUG
 
   log: (logLevel, message, color, growlTitle = null) ->
     if growlTitle?
       imageUrl = switch logLevel
-        when 'success' then "#{__dirname}/images/success.png"
-        when 'error' then "#{__dirname}/images/failed.png"
-        when 'fatal' then "#{__dirname}/images/failed.png"
+        when 'success' then "#{__dirname}/assets/success.png"
+        when 'error' then "#{__dirname}/assets/failed.png"
+        when 'fatal' then "#{__dirname}/assets/failed.png"
         else ''
 
       growl message, {title: growlTitle, image: imageUrl}
@@ -32,7 +30,6 @@ class Logger
   error:   (message) =>          @log 'error', message, 'red+bold', 'Error'
   warn:    (message) =>          @log 'warn',  message, 'yellow'
   info:    (message) =>          @log 'info',  message, 'black'
-  debug:   (message) =>          @log 'debug', message, 'purple' if @isDebug
   fatal:   (message) =>          @log 'fatal', "FATAL: #{message}", 'red+bold+underline', "Fatal Error"
   success: (message, growlIt) =>
     title = if growlIt then 'Success' else null

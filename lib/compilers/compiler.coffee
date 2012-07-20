@@ -5,7 +5,7 @@ wrench = require 'wrench'
 
 logger = require '../util/logger'
 fileUtils = require '../util/file'
-optimizer = require '../optimize/require-optimize'
+optimizer = require '../util/require-optimize'
 
 module.exports = class AbstractCompiler
 

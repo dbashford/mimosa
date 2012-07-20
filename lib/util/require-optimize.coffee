@@ -3,13 +3,12 @@ fs =   require 'fs'
 
 requirejs = require 'requirejs'
 
-logger =    require '../util/logger'
-
+logger =    require './logger'
 
 class Optimizer
 
   constructor: ->
-    almondInPath  = path.join __dirname, "almond.js"
+    almondInPath  = path.join __dirname, "assets", "almond.js"
     @almondText = fs.readFileSync almondInPath, "ascii"
 
   optimize: (config) =>

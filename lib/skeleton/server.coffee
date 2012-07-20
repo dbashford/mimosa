@@ -17,7 +17,14 @@ exports.startServer = (publicPath, useReload, optimize) ->
     app.use express.favicon()
     app.use express.bodyParser()
     app.use express.methodOverride()
-    app.use reloadOnChange(publicPath, server, {verbose: false, skipAdding:true}) if useReload
+    if useReload
+      options =
+        server:server
+        watchdir:publicPath
+        verbose: false
+        skipAdding:true
+        ignore:["almond.js"]
+      app.use reloadOnChange(options)
     app.use app.router
     app.use gzip.staticGzip(publicPath)
 

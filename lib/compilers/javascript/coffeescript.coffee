@@ -1,6 +1,6 @@
 AbstractJavascriptCompiler = require './javascript'
 logger = require '../../util/logger'
-Linter = require '../../util/lint-js'
+Linter = require '../../util/lint/js'
 
 module.exports = class AbstractCoffeeScriptCompiler extends AbstractJavascriptCompiler
 
