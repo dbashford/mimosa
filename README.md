@@ -13,18 +13,18 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
 - [Command Line](#command-line)
-	- [Help (--help)](#help)
-	- [__new__ - New Project](#new-project-new)
-		- [No Server (--noserver)](#no-server---noserver)
-		- [Pick the defaults (--defaults)](#pick-the-defaults---defaults)
-	- [__watch__ - Watch and Compile](#watch-and-compile-watch)
-		- [Serve Assets (--server)](#serve-assets---server)
-		- [Serve Optimized Assets (--optimize)](#serve-optimized-assets---optimize)
-	- [__virgin__ - Just Watch, Do Not Write](#just-watch-do-not-write-virgin)
-	- [__build__ - One Time Asset Build](#one-time-asset-build-build)
-		- [Optimized Build (--optimize)](#optimized-build---optimize)
-	- [__clean__ - Clean Compiled Assets](#clean-compiled-assets-clean)
-	- [__config__ - Copy Config](#copy-config-config)
+	- [Help](#help)
+	- [New Project (new)](#new-project-new)
+		- [No Server (--noserver, -n)](#no-server---noserver--n)
+		- [Pick the defaults (--defaults, -d)](#pick-the-defaults---defaults--d)
+	- [Watch and Compile (watch)](#watch-and-compile-watch)
+		- [Serve Assets (--server, -s)](#serve-assets---server--s)
+		- [Serve Optimized Assets (--optimize, -o)](#serve-optimized-assets---optimize--o)
+	- [Just Watch, Do Not Write (virgin)](#just-watch-do-not-write-virgin)
+	- [One Time Asset Build (build)](#one-time-asset-build-build)
+		- [Optimized Build (--optimize, -o)](#optimized-build---optimize--o)
+	- [Clean Compiled Assets (clean)](#clean-compiled-assets-clean)
+	- [Copy Config (config)](#copy-config-config)
 - [Meta-Language Compilation](#meta-language-compilation)
 	- [Which meta-languages?](#which-meta-languages)
 - [Asset Copying](#asset-copying)
@@ -32,6 +32,8 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
 	- [Handlebars](#handlebars)
 	- [Dust](#dust)
 	- [Jade](#jade)
+	- [Underscore](#underscore)
+	- [LoDash](#underscore-1)
 - [Immediate Feedback](#immediate-feedback)
 	- [Growl](#growl)
 - [Linting Your CoffeeScript, JavaScript and CSS](#linting-your-coffeescript-javascript-and-css)
@@ -269,7 +271,7 @@ To access an [Underscore](http://underscorejs.org/) template originating from a 
 
 `var html = templates.example({})`
 
-### Underscore
+### LoDash
 
 To access a [LoDash](http://lodash.com/) template originating from a file named "example.lodash", you would do this...
 
