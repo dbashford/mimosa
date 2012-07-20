@@ -50,11 +50,11 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
         @removeTheFile(@templateFileName)
         @_removeClientLibrary()
     else
-      @_writeClientLibrary()
-      if @_templateNeedsCompiling(fileNames)
-        @compile(fileNames, @_write)
-      else
-        @_reportStartupDone()
+      @_writeClientLibrary =>
+        if @_templateNeedsCompiling(fileNames)
+          @compile(fileNames, @_write)
+        else
+          @_reportStartupDone()
 
   _templateNeedsCompiling: (fileNames) ->
     for file in fileNames
@@ -77,13 +77,16 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
   _removeClientLibrary: ->
     fs.unlink @clientPath if @clientPath? and fs.existsSync @clientPath
 
-  _writeClientLibrary: ->
-    return if @fullConfig.virgin or !@clientPath? or fs.existsSync @clientPath
+  _writeClientLibrary: (callback) ->
+    return callback() if @fullConfig.virgin or !@clientPath? or fs.existsSync @clientPath
 
     fs.readFile @mimosaClientLibraryPath, "ascii", (err, data) =>
-      return logger.error("Cannot read client library: #{@mimosaClientLibraryPath}") if err?
+      if err?
+        logger.error("Cannot read client library: #{@mimosaClientLibraryPath}") if err?
+        return callback()
       fileUtils.writeFile @clientPath, data, (err) =>
         @failed("Cannot write client library: #{err}") if err?
+        callback()
 
   templatePreamble: (fileName, templateName) ->
     """
