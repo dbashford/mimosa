@@ -23,6 +23,7 @@ module.exports = class DustCompiler extends AbstractTemplateCompiler
       content = fs.readFileSync fileName, "ascii"
       templateName = path.basename fileName, path.extname(fileName)
       try
+        output += @templatePreamble fileName, templateName
         output += dust.compile content, templateName
       catch err
         error += "#{err}\n"

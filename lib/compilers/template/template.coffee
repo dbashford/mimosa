@@ -85,5 +85,19 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       fileUtils.writeFile @clientPath, data, (err) =>
         @failed("Cannot write client library: #{err}") if err?
 
+  templatePreamble: (fileName, templateName) ->
+    """
+    \n//
+    // Source file: [#{fileName}]
+    // Template name: [#{templateName}]
+    //\n
+    """
+
+  addTemplateToOutput: (fileName, templateName, source) =>
+    """
+    #{@templatePreamble(fileName, templateName)}
+    templates['#{templateName}'] = #{source};\n
+    """
+
   afterWrite: (fileName) ->
     @optimize()

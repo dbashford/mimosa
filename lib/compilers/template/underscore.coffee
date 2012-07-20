@@ -17,7 +17,7 @@ module.exports = class AbstractUnderscoreCompiler extends AbstractTemplateCompil
       templateName = path.basename(fileName, path.extname(fileName))
       try
         compiledOutput = @getLibrary().template(content)
-        output += "templates['#{templateName}'] = #{compiledOutput.source};\n"
+        output += @addTemplateToOutput fileName, templateName, compiledOutput.source
       catch err
         error += "#{err}\n"
     output += 'return templates; });'

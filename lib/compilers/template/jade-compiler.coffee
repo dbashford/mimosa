@@ -27,7 +27,7 @@ module.exports = class JadeCompiler extends AbstractTemplateCompiler
           client: true,
           filename: fileName
 
-        output += "templates['#{templateName}'] = #{compiledOutput};\n"
+        output += @addTemplateToOutput fileName, templateName, compiledOutput
       catch err
         error += "#{err}\n"
     output += 'return templates; });'

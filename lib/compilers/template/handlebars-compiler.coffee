@@ -47,8 +47,8 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
       content = fs.readFileSync fileName, "ascii"
       templateName = path.basename fileName, path.extname(fileName)
       try
-        templateOutput = handlebars.precompile(content)
-        output += "templates['#{templateName}'] = template(#{templateOutput});\n"
+        compiledOutput = handlebars.precompile(content)
+        output += @addTemplateToOutput(fileName, templateName, "template(#{compiledOutput})")
       catch err
         error += "#{err} \n"
 
