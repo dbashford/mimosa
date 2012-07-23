@@ -229,7 +229,7 @@ This command is just the watching, compiling, linting and notifications.  No ser
  Future additions are planned, but for now...
 
  * CSS: SASS (default), LESS
- * Micro-templating: Handlebars (default), Dust, Jade
+ * Micro-templating: Handlebars (default), Dust, Hogan, Jade, Underscore, LoDash
  * JavaScript: CoffeeScript (default), Iced CoffeeScript
 
 ## Asset Copying
