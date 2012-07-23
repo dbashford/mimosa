@@ -26,8 +26,8 @@ exports.config = {
       # extensions: ["coffee"]                # list of extensions to compile
 
     # template:
-      # compileWith: "handlebars"                                    # Other options: "dust", "jade", "none". "none" assumes you aren't
-                                                                     # using any micro-templating solution.
+      # compileWith: "handlebars"                                    # Other ops: "dust", "jade", "hogan", "underscore", "lodash", "none".
+                                                                     # "none" assumes you aren't using any micro-templating solution.
       # extensions: ["hbs", "handlebars"]                            # list of extensions to compile
       # outputFileName: "javascripts/templates"                      # the file all templates are compiled into
       # helperFiles:["javascripts/app/template/handlebars-helpers"]  # relevant to handlebars only, the paths from sourceDir to the files
@@ -35,7 +35,7 @@ exports.config = {
                                                                      # to exist
 
     # css:
-      # compileWith: "sass"                   # Other options: "none", "less".  "none" assumes you are coding pure CSS and
+      # compileWith: "sass"                   # Other options: "none", "less", "stylus".  "none" assumes you are coding pure CSS and
                                               # the copy config will move that over for you.  More compilers to come.
       # extensions: ["scss", "sass"]          # list of extensions to compile
 

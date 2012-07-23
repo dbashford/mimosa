@@ -19,6 +19,7 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
     super(config)
 
   compile: (fileName, text, destinationFile, callback) =>
+
     cb = (err, css) =>
       @initBaseFilesToCompile--
       callback(err, css, destinationFile)
@@ -33,7 +34,8 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
       .import('nib')
       .render(cb)
 
-  _isInclude: (fileName) -> @includeToBaseHash[fileName]?
+  _isInclude: (fileName) ->
+    @includeToBaseHash[fileName]?
 
   _determineBaseFiles: =>
     imported = []
@@ -45,6 +47,10 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
         @importRegex.lastIndex = 0
         importPath = @importRegex.exec(anImport)[1]
         fullImportPath = path.join path.dirname(file), importPath
+        for fullFilePath in @allFiles
+          if fullFilePath.indexOf(fullImportPath) is 0
+            fullImportPath += path.extname(fullFilePath)
+            break
         imported.push fullImportPath
 
     _.difference(@allFiles, imported)
