@@ -298,7 +298,7 @@ To access a [LoDash](http://lodash.com/) template originating from a file named 
 
  In the normal course of development, for debugging purposes, files should be loaded individually, rather than in one merged file, and you don't want your assets minified.  This all makes for easier debugging.
 
- But when you take your application outside of development, you want to include all the performance improvements that come with merging, optimizing, and minifying your assets.  For both the build and the watch commands, Mimosa provides an `--optimize` flag that will turn on this optimization.
+ But when you take your application outside of development, you want to include all the performance improvements that come with merging, optimizing, and minifying your assets.  For both the `build` and `watch` commands, Mimosa provides an `--optimize` flag that will turn on this optimization.
 
  Templates are merged together regardless, but they have source information included to make it easy to track back to the destination file, and templates will (ideally) be logic-less and less prone to problems.
 
@@ -338,7 +338,7 @@ You can also choose to turn off post-startup success notifications for compiled 
 
 ## Linting Your CoffeeScript, JavaScript and CSS
 
-Linting is a code checking process that finds common mistakes in your code, or just variances away from the idiom.  Mimosa can automatically lint all of the CSS and JavaScript it moves from your source directories to your compiled directories.  Any errors or warnings that come out of that linting will be printed to the console.  Inside the mimosa-config is this snippet which controls the linting.
+To 'lint' your code is to check it for common mistakes or variances from the idiom.  Mimosa will automatically lint all of the CSS and JavaScript it moves from your source directories to your compiled directories.  Any errors or warnings that come out of that linting will be printed to the console but will not stop or fail the compilation.  Inside the mimosa-config is this snippet which controls the linting.
 
 ```
 # lint:
