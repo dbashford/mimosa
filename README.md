@@ -60,7 +60,7 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
  * A very simple (eventually less simple!) skeleton app build using the chosen meta-languages
  * Heavily configurable if moving away from defaults
  * Compiling of CoffeeScript + Iced CoffeeScript
- * Compiling of SASS (w/compass) + LESS (soon: Stylus)
+ * Compiling of SASS (w/compass), LESS, and Stylus (w/nib)
  * Compiling of Handlebars, Dust, Hogan, Jade, Underscore, and LoDash templates into single template files to be used in the client
  * Compile assets when they are saved, not when they are requested
  * Growl notifications along with basic console logging, so if a compile fails, you'll know right away
@@ -228,7 +228,7 @@ This command is just the watching, compiling, linting and notifications.  No ser
 
  Future additions are planned, but for now...
 
- * CSS: SASS (default), LESS
+ * CSS: SASS (default), LESS, Stylus
  * Micro-templating: Handlebars (default), Dust, Hogan, Jade, Underscore, LoDash
  * JavaScript: CoffeeScript (default), Iced CoffeeScript
 
@@ -407,16 +407,13 @@ All of the lint/hinters come with default configurations that Mimosa uses.  Here
 
 ## Roadmap
 
-  In no certain order:
+  Many little bits and pieces, but the big ones are, in no certain order:
 
  * More compilers across the board
  * example skeletons with things like Backbone/Chaplin/Angular/Ember, Bootstrap, etc
  * Tests for the Mimosa codebase
  * Integrated testing framework for your codebase
- * Quite a few other bits and pieces
 
 ## Suggestions? Comments?
 
  @mimosajs
-
-
