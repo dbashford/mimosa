@@ -11,7 +11,7 @@ module.exports = class AbstractUnderscoreCompiler extends AbstractTemplateCompil
   compile: (fileNames, callback) ->
     error = null
 
-    output = "define(['vendor/#{@clientLibrary}'], function () { var templates = {};\n"
+    output = "define(['vendor/#{@clientLibrary}'], function (_) { var templates = {};\n"
     for fileName in fileNames
       content = fs.readFileSync fileName, "ascii"
       templateName = path.basename(fileName, path.extname(fileName))
@@ -19,7 +19,8 @@ module.exports = class AbstractUnderscoreCompiler extends AbstractTemplateCompil
         compiledOutput = @getLibrary().template(content)
         output += @addTemplateToOutput fileName, templateName, compiledOutput.source
       catch err
-        error += "#{err}\n"
+        error ?= ''
+        error += "#{fileName}, #{err}\n"
     output += 'return templates; });'
 
     callback(error, output)

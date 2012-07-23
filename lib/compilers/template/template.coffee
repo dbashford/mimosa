@@ -18,7 +18,8 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     @notifyOnSuccess = config.growl.onSuccess.template
 
   # OVERRIDE THIS
-  compile: (fileNames, callback) -> throw new Error "Method compile must be implemented"
+  compile: (fileNames, callback) ->
+    throw new Error "Method compile(fileNames, callback) must be implemented"
 
   created: =>
     if @startupFinished then @_gatherFiles() else @done()
@@ -27,7 +28,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     @_gatherFiles()
 
   removed: =>
-    @_gatherFiles(true)
+    @_gatherFiles true
 
   cleanup: ->
     @_removeClientLibrary()
@@ -47,12 +48,12 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
     if fileNames.length is 0
       if isRemove
-        @removeTheFile(@templateFileName)
+        @removeTheFile @templateFileName
         @_removeClientLibrary()
     else
       @_writeClientLibrary =>
-        if @_templateNeedsCompiling(fileNames)
-          @compile(fileNames, @_write)
+        if @_templateNeedsCompiling fileNames
+          @compile fileNames, @_write
         else
           @_reportStartupDone()
 
@@ -63,7 +64,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   _write: (error, output) =>
     if error
-      @failed(err)
+      @failed error
     else
       @write(@templateFileName, output) if output?
 

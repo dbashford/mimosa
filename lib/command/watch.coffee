@@ -19,28 +19,28 @@ startServer = (config) =>
 
 startDefaultServer = (config) ->
   app = express()
-  server = app.listen 3000, ->
-    logger.success "Mimosa's bundled Express started at http://localhost:#{config.server.port}/", true
+  server = app.listen config.server.port, ->
+    logger.success "Mimosa's bundled Express started at http://localhost:#{config.server.port}/#{config.server.base}", true
 
   app.configure =>
-    app.set 'port', config.server.port || 3000
+    app.set 'port', config.server.port
     app.set 'views', "#{__dirname}/views"
     app.set 'view engine', 'jade'
     app.use express.favicon()
     app.use express.bodyParser()
     app.use express.methodOverride()
-    app.use app.router
+    app.use config.server.base || '', app.router
     app.use (req, res, next) ->
       res.header 'Cache-Control', 'no-cache'
       next()
 
     if config.server.useReload
       options =
-        server:server
-        watchdir:config.watch.compiledDir
+        server: server
+        watchdir: config.watch.compiledDir
         verbose: false
-        skipAdding:true
-        ignore:["almond.js"]
+        skipAdding: true
+        ignore: ["almond.js"]
       app.use (require 'watch-connect')(options)
 
     app.use config.server.base, gzip.staticGzip(config.watch.compiledDir)

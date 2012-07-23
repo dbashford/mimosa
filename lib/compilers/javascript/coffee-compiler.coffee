@@ -9,9 +9,9 @@ module.exports = class CoffeeCompiler extends AbstractCoffeeScriptCompiler
   constructor: (config) ->
     super(config)
 
-  compile: (cs, fileName, destinationFile, callback) ->
+  compile: (fileName, text, destinationFile, callback) ->
     try
-      output = coffee.compile cs
+      output = coffee.compile text
     catch err
       error = "#{fileName}, #{err}"
     callback(error, output, destinationFile)

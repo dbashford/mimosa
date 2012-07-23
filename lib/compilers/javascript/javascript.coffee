@@ -13,8 +13,9 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
     if config.lint.compiled.javascript
       @linter = new Linter(config.lint.rules.javascript)
 
-  afterCompile: (source, destFileName) ->
-    @linter.lintJs(source, destFileName) if @linter?
+  afterCompile: (destFileName, source) ->
+    @linter.lint(destFileName, source) if @linter?
+    source
 
   afterWrite: (fileName) ->
     @optimize()

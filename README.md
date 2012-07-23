@@ -52,13 +52,13 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
 
 ## Features
 
- * Sane defaults allow you to get started without configuring anything
+ * Sane defaults allow you to get started without touching the configuration
  * Command line prompting during project creation to get you the configuration you want without having to comb through JSON and learn Mimosa's settings
  * A very simple (eventually less simple!) skeleton app build using the chosen meta-languages
  * Heavily configurable if moving away from defaults
  * Compiling of CoffeeScript + Iced CoffeeScript
  * Compiling of SASS (w/compass) + LESS (soon: Stylus)
- * Compiling of Handlebars, Dust, Jade, Underscore, and LoDash templates into single template files to be used in the client (soon: Hogan)
+ * Compiling of Handlebars, Dust, Hogan, Jade, Underscore, and LoDash templates into single template files to be used in the client
  * Compile assets when they are saved, not when they are requested
  * Growl notifications along with basic console logging, so if a compile fails, you'll know right away
  * Run in development with unminified/non-compressed javascript, turn on optimization and run with a single javascript file using RequireJS's optimizer and [Almond](https://github.com/jrburke/almond)
@@ -173,6 +173,8 @@ If you want the latest and greatest:
 
  Start Mimosa watching with the `--optimize` flag turned on and Mimosa will run RequireJS's optimizer on start-up and with every javascript file change.  So when you point at either the Express or default server's base URL with optimize flagged, you will be served the result of RequireJS's optimization, packaged with [Almond](https://github.com/jrburke/almond).
 
+ When `optimize` is turned on, Mimosa will also minify your CSS.
+
  To start up with optimization turned on, execute the following:
 
     $ mimosa watch [--server] --optimize
@@ -196,7 +198,7 @@ This command is just the watching, compiling, linting and notifications.  No ser
 
 #### Optimized Build (--optimize, -o)
 
- If you want to build with optimization, provide a `--optimize` flag.  This will compile all the assets, and then create the requirejs optimized files for use in production.
+ If you want to build with optimization, provide a `--optimize` flag.  This will compile all the assets, create the requirejs optimized files, and minify your compiled CSS.
 
     $ mimosa build --optimize
     $ mimosa build -o
@@ -243,7 +245,7 @@ This command is just the watching, compiling, linting and notifications.  No ser
 
 ### Handlebars
 
- [http://handlebarsjs.com/](Handlebars) is the default templating langauge.  To access a Handlebars template originating from a file named "example.hbs", you would do this...
+ [Handlebars](http://handlebarsjs.com/) is the default templating langauge.  To access a Handlebars template originating from a file named "example.hbs", do this...
 
  `var html = templates.example({})`
 
@@ -253,29 +255,61 @@ This command is just the watching, compiling, linting and notifications.  No ser
 
 ### Dust
 
-To access a [Dust](https://github.com/linkedin/dustjs/) template originating from a file named "example.dust", you would do this...
+ To access a [Dust](https://github.com/linkedin/dustjs/) template originating from a file named "example.dust", do this...
 
  ```
  templates.render('example', {}, (err, html) -> $(element).append(html))
  ```
 
+ You can reference dust partials, `{>example_partial/}`, and they will be available because all the templates are merged together.
+
+### Hogan
+
+ To access a [Hogan](http://twitter.github.com/hogan.js/) template originating from a file named "example.hogan", do this...
+
+ ```
+ templates.example.render({name:'Hogan', css:'CSSHERE'}, templates)
+ ```
+
+ Note the passing of the templates object into the render method.  This isn't necessary, but if you use partials, it is all you'll need to do to make partials work since all partials are included in the compiled template file.
+
 ### Jade
 
-To access a [Jade](http://jade-lang.com/) template originating from a file named "example.jade", you would do this...
+To access a [Jade](http://jade-lang.com/) template originating from a file named "example.jade", do this...
 
  `var html = templates.example({})`
 
 ### Underscore
 
-To access an [Underscore](http://underscorejs.org/) template originating from a file named "example.tpl", you would do this...
+To access an [Underscore](http://underscorejs.org/) template originating from a file named "example.tpl", do this...
 
 `var html = templates.example({})`
 
 ### LoDash
 
-To access a [LoDash](http://lodash.com/) template originating from a file named "example.lodash", you would do this...
+To access a [LoDash](http://lodash.com/) template originating from a file named "example.lodash", do this...
 
 `var html = templates.example({})`
+
+## Optimize
+
+ In the normal course of development, for debugging purposes, files should be loaded individually, rather than in one merged file, and you don't want your assets minified.  This all makes for easier debugging.
+
+ But when you take your application outside of development, you want to include all the performance improvements that come with merging, optimizing, and minifying your assets.  For both the build and the watch commands, Mimosa provides an `--optimize` flag that will turn on this optimization.
+
+ Templates are merged together regardless, but they have source information included to make it easy to track back to the destination file, and templates will (ideally) be logic-less and less prone to problems.
+
+### JavaScript Optimization, RequireJS
+
+ Mimosa invokes the [RequireJS optimizer](http://requirejs.org/docs/optimization.html) when the `--optimize` flag is used.
+
+ By default, Mimosa will use main.js in the public directory as the sole module to be optimized, but this can be changed in the mimosa-config by tweaking the `require.name` setting.  The output will be placed in the root of the public directory, in main-built.js, and this too can be changed by changing `require.out`  The only other default setting is a path/alias set up pointing at jquery in the vendor directory.  You can add other paths/aliases along side the jquery one, remove the jquery path or point it someplace else.
+
+ The RequireJS optimizer has many [configuration options](http://requirejs.org/docs/optimization.html#options).  Any of these options can be added directly to the `require` setting and Mimosa will include them in the optimization.
+
+### CSS Minification
+
+ When the `--optimize` flag is used, Mimosa will minify all of your compiled CSS files.
 
 ## Immediate Feedback
 
@@ -353,17 +387,6 @@ All of the lint/hinters come with default configurations that Mimosa uses.  Here
  * [CoffeeLint](http://www.coffeelint.org/), [CoffeeLint Config](http://www.coffeelint.org/#options)
  * [JSHint](http://www.jshint.com/), [JSHint Config](http://www.jshint.com/options/)
  * [CSSLint](http://csslint.net/), [CSSLint Config](https://github.com/stubbornella/csslint/wiki/Rules)
-
-## RequireJS Optimization
-
- Both of the following mimosa commands will involve [RequireJS optimization](http://requirejs.org/docs/optimization.html):
-
-    $ mimosa watch [--server] --optimize
-    $ mimosa build --optimize
-
- By default, Mimosa will use main.js in the public directory as the sole module to be optimized, but this can be changed in the mimosa-config by tweaking the `require.name` setting.  The output will be placed in the root of the public directory, in main-built.js, and this too can be changed by changing `require.out`  The only other default setting is a path/alias set up pointing at jquery in the vendor directory.  You can add other paths/aliases along side the jquery one, remove the jquery path or point it someplace else.
-
- The RequireJS optimizer has many [configuration options](http://requirejs.org/docs/optimization.html#options).  Any of these options can be added directly to the `require` setting and Mimosa will include them in the optimization.
 
 ## Live Reload
 

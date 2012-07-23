@@ -18,7 +18,7 @@ module.exports = class LessCompiler extends AbstractCssCompiler
   constructor: (config) ->
     super(config)
 
-  compile: (text, fileName, destinationFile, callback) =>
+  compile: (fileName, text, destinationFile, callback) =>
     parser = new less.Parser
       paths: [@srcDir, path.dirname(fileName)],
       filename: fileName

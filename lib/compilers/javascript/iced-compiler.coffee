@@ -9,9 +9,9 @@ module.exports = class IcedCompiler extends AbstractCoffeeScriptCompiler
   constructor: (config) ->
     super(config)
 
-  compile: (cs, fileName, destinationFile, callback) ->
+  compile: (fileName, text, destinationFile, callback) ->
     try
-      output = iced.compile cs
+      output = iced.compile text
     catch err
       error = "#{fileName}, #{err}"
     callback(error, output, destinationFile)

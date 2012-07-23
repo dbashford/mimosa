@@ -1,7 +1,9 @@
-AbstractTemplateCompiler = require './template'
-jade = require 'jade'
 fs = require 'fs'
 path = require 'path'
+
+jade = require 'jade'
+
+AbstractTemplateCompiler = require './template'
 
 module.exports = class JadeCompiler extends AbstractTemplateCompiler
 
@@ -29,7 +31,8 @@ module.exports = class JadeCompiler extends AbstractTemplateCompiler
 
         output += @addTemplateToOutput fileName, templateName, compiledOutput
       catch err
-        error += "#{err}\n"
+        error ?= ''
+        error += "#{fileName}, #{err}\n"
     output += 'return templates; });'
 
     callback(error, output)

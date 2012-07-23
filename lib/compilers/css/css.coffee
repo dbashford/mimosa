@@ -1,8 +1,9 @@
-fs =      require 'fs'
-path =    require 'path'
+fs =     require 'fs'
+path =   require 'path'
 
-wrench =  require 'wrench'
-_ =       require 'lodash'
+wrench = require 'wrench'
+_ =      require 'lodash'
+clean  = require 'clean-css'
 
 SingleFileCompiler = require '../single-file'
 logger =             require '../../util/logger'
@@ -99,9 +100,14 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
 
     @_importsForFile(baseFile, baseFile) for baseFile in @baseFiles
 
-  afterCompile: (source, destFileName) =>
+  afterCompile: (destFileName, source) =>
     return unless source?.length > 0
-    @linter.lint(source, destFileName) if @linter
+    @linter.lint(destFileName, source) if @linter
+
+    if @fullConfig.optimize
+      source = clean.process source
+
+    source
 
   getAllFiles: =>
     wrench.readdirSyncRecursive(@srcDir)

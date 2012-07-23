@@ -26,7 +26,10 @@ module.exports = class DustCompiler extends AbstractTemplateCompiler
         output += @templatePreamble fileName, templateName
         output += dust.compile content, templateName
       catch err
-        error += "#{err}\n"
+        error ?= ''
+        error += "#{fileName}, #{err}\n"
     output += 'return dust; });'
+
+
 
     callback(error, output)

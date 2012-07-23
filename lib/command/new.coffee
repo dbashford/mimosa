@@ -78,7 +78,7 @@ class NewCommand
 
     @_postCopyCleanUp()
 
-    if opts.noserver then @_usingDefaultServer() else @_usingExpress()
+    if opts.noserver then @_usingDefaultServer() else @_usingOwnServer(name)
 
   _copySkeletonToProvidedDirectory: (skeletonPath, name) ->
     currPath = path.join path.resolve(''), name
@@ -210,7 +210,15 @@ class NewCommand
       data = data.replace "# useDefaultServer: false", "useDefaultServer: true"
       fs.writeFile configPath, data, @_done
 
-  _usingExpress: ->
+  _usingOwnServer: (name) ->
+    # minor, kinda silly, but change name in package json to match project name
+    if name?.length > 0
+      logger.info "Making package.json edits"
+      packageJSONPath = path.join @currPath, "package.json"
+      data = fs.readFileSync packageJSONPath, "ascii"
+      data = data.replace "APPNAME", name
+      fs.writeFileSync packageJSONPath, data
+
     logger.info "Installing node modules "
     currentDir = process.cwd()
     process.chdir @currPath

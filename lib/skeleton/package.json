@@ -1,11 +1,21 @@
 {
-  "name": "application-name",
+  "name": "APPNAME",
   "version": "0.0.1",
+  "homepage": "",
+  "author": "",
+  "description": "",
+  "contributors": [
+    {
+      "name": "",
+      "email": ""
+    }
+  ],
+  "preferGlobal": "false",
   "private": true,
   "dependencies": {
     "express": "~3.0.0beta4",
     "jade": ">= 0.0.1",
-    "watch-connect": "~0.3.0",
+    "watch-connect": "git://github.com/dbashford/watch-connect.git",
     "gzippo": "git://github.com/dbashford/gzippo.git"
   }
 }

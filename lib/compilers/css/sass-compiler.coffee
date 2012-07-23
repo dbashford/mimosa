@@ -28,17 +28,17 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     exec 'compass --version', (error, stdout, stderr) =>
       @hasCompass = not error
 
-  compile: (text, fileName, destinationFile, callback) =>
-    return @_compile(text, fileName, destinationFile, callback) if @hasCompass?
+  compile: (fileName, text, destinationFile, callback) =>
+    return @_compile(fileName, text, destinationFile, callback) if @hasCompass?
 
     compileOnDelay = =>
       if @hasCompass?
-        @_compile(text, fileName, destinationFile, callback)
+        @_compile(fileName, text, destinationFile, callback)
       else
         setTimeout compileOnDelay, 100
     do compileOnDelay
 
-  _compile: (text, fileName, destinationFile, callback) =>
+  _compile: (fileName, text, destinationFile, callback) =>
     result = ''
     error = null
     options = ['--stdin', '--load-path', @srcDir, '--load-path', path.dirname(fileName), '--no-cache']

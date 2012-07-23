@@ -50,7 +50,8 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
         compiledOutput = handlebars.precompile(content)
         output += @addTemplateToOutput(fileName, templateName, "template(#{compiledOutput})")
       catch err
-        error += "#{err} \n"
+        error ?= ''
+        error += "#{fileName}, #{err} \n"
 
     output += 'return templates; });'
 

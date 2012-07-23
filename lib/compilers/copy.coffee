@@ -17,31 +17,32 @@ module.exports = class CopyCompiler extends SingleFileCompiler
       @cssLinter = new CSSLinter(config.lint.rules.css)
 
     if config.lint.copied.javascript
-      @jsLinter = new JSLinter()
-      @jsRules = config.lint.rules.javascript
+      @jsLinter = new JSLinter(config.lint.rules.javascript)
 
     @lintVendorJS = config.lint.vendor.javascript
     @lintVendorCSS = config.lint.vendor.css
 
-  compile: (text, fileName, destinationFile, callback) ->
+  compile: (fileName, text, destinationFile, callback) ->
     callback(null, text, destinationFile)
 
   findCompiledPath: (fileName) ->
     fileName.replace(@srcDir, @compDir)
 
-  afterCompile: (source, destFileName) =>
+  afterCompile: (destFileName, source) =>
     return unless source?.length > 0
 
     if @_isVendor(destFileName)
       if @cssLinter? and @lintVendorCSS and @_isCSS(destFileName)
-        @cssLinter.lint(source.toString(), destFileName)
+        @cssLinter.lint(destFileName, source.toString())
       if @jsLinter? and @lintVendorJS and @_isJS(destFileName)
-        @jsLinter.lintJs(source.toString(), destFileName, @jsRules)
+        @jsLinter.lint(destFileName, source.toString())
     else
       if @cssLinter? and @_isCSS(destFileName)
-        @cssLinter.lint(source.toString(), destFileName)
+        @cssLinter.lint(destFileName, source.toString())
       if @jsLinter? and @_isJS(destFileName)
-        @jsLinter.lintJs(source.toString(), destFileName, @jsRules)
+        @jsLinter.lint(destFileName, source.toString())
+
+    source
 
   _isCSS: (fileName) ->
     path.extname(fileName) is ".css"

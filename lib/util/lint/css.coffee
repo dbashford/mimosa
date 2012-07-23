@@ -11,12 +11,12 @@ module.exports = class CSSLinter
       unless rules[rule.id] is false
         @rules[rule.id] = 1
 
-  lint: (source, destFileName) ->
+  lint: (fileName, source) ->
     result = csslint.verify source, @rules
-    @writeMessage(message, destFileName) for message in result.messages
+    @writeMessage(fileName, message) for message in result.messages
 
-  writeMessage: (message, destFileName) ->
-    output =  "CSSLint Warning: #{message.message} In #{destFileName},"
+  writeMessage: (fileName, message) ->
+    output =  "CSSLint Warning: #{message.message} In #{fileName},"
     output += " on line #{message.line}, column #{message.col}," if message.line?
     output += " from CSSLint rule ID '#{message.rule.id}'."
     logger.warn output

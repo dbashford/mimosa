@@ -1,6 +1,6 @@
 AbstractJavascriptCompiler = require './javascript'
 logger = require '../../util/logger'
-Linter = require '../../util/lint/js'
+Linter = require '../../util/lint/coffee'
 
 module.exports = class AbstractCoffeeScriptCompiler extends AbstractJavascriptCompiler
 
@@ -8,9 +8,8 @@ module.exports = class AbstractCoffeeScriptCompiler extends AbstractJavascriptCo
     super(config)
 
     if config.lint.compiled.coffee
-      @linter = new Linter(config.lint.rules.coffee)
-      @coffeeRules = config.lint.rules.coffee
+      @coffeeLinter = new Linter(config.lint.rules.coffee)
 
-  beforeCompile: (source, fileName) ->
-    @linter.lintCoffee(source, fileName, @coffeeRules) if @linter?
+  beforeCompile: (fileName, source) ->
+    @coffeeLinter.lint(fileName, source) if @coffeeLinter?
 
