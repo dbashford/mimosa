@@ -53,6 +53,8 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     else
       @_writeClientLibrary =>
         if @_templateNeedsCompiling fileNames
+          AbstractTemplateCompiler::done = =>
+            @_reportStartupDone() if !@startupFinished
           @compile fileNames, @_write
         else
           @_reportStartupDone()
@@ -67,8 +69,6 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       @failed error
     else
       @write(@templateFileName, output) if output?
-
-    @_reportStartupDone()
 
   _reportStartupDone: =>
     unless @startupFinished
