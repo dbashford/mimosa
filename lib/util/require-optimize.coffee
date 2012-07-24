@@ -17,6 +17,22 @@ class Optimizer
     return if @alreadyRunning # hack right now
     @alreadyRunning = true
 
+    @setupConfig(config)
+
+    almondOutPath = path.join @config.baseUrl, "almond.js"
+    fs.writeFile almondOutPath, @almondText, 'ascii', (err) =>
+      return logger.error "Cannot write Almond, #{err}" if err?
+      logger.info "Beginning requirejs optimization"
+      try
+        requirejs.optimize @config, (buildResponse) =>
+          logger.success "Requirejs optimization complete.  The compiled file is ready for use.", true
+          @done(almondOutPath)
+      catch err
+        logger.error err
+        @done(almondOutPath)
+
+
+  setupConfig: (config) =>
     unless @config?
       @config = config.require
       @config.baseUrl = path.join config.watch.compiledDir, config.compilers.javascript.directory
@@ -26,13 +42,8 @@ class Optimizer
       @config.wrap = true
       @config.name = 'almond'
 
-    almondOutPath = path.join @config.baseUrl, "almond.js"
-    fs.writeFile almondOutPath, @almondText, 'ascii', (err) =>
-      return logger.error "Cannot write Almond, #{err}" if err?
-      logger.info "Beginning requirejs optimization"
-      requirejs.optimize @config, (buildResponse) =>
-        logger.success "Requirejs optimization complete.  The compiled file is ready for use.", true
-        fs.unlink almondOutPath
-        @alreadyRunning = false
+  done: (almondOutPath) =>
+    @alreadyRunning = false
+    fs.unlink almondOutPath
 
 exports.optimize = new Optimizer().optimize

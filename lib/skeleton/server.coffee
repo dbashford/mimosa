@@ -23,7 +23,7 @@ exports.startServer = (publicPath, useReload, optimize) ->
         watchdir:publicPath
         verbose: false
         skipAdding:true
-        ignore:["almond.js"]
+        exclude:["almond.js"]
       app.use reloadOnChange(options)
     app.use app.router
     app.use gzip.staticGzip(publicPath)

@@ -15,7 +15,7 @@
   "dependencies": {
     "express": "3.0.0beta4",
     "jade": ">= 0.0.1",
-    "watch-connect": "git://github.com/dbashford/watch-connect.git",
+    "watch-connect": "git://github.com/dbashford/watch-connect.git#add-ignore-option",
     "gzippo": "git://github.com/dbashford/gzippo.git"
   }
 }
