@@ -44,7 +44,7 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
         @readAndCompile(base)
         @processWatchedDirectories()
     else
-      logger.warn "Orphaned include #{fileName}"
+      logger.warn "Orphaned partial #{fileName}"
       @done()
 
   doneStartup: =>

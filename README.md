@@ -220,33 +220,45 @@ This command is just the watching, compiling, linting and notifications.  No ser
 
 ## Meta-Language Compilation
 
- Mimosa will compile your meta-languages for you and place the output in your public directory.
+When Mimosa detects that a file change has occurred, Mimosa will compile your meta-languages and place the output in the public directory.
 
- You can change your meta-languages in the config.  The [default config file](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/mimosa-config.coffee) contains a list of other options for each `compileWith`.
+The meta-languages being used can be changed in the config.  The [default config file](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/mimosa-config.coffee) contains a list of other options for each `compileWith`.
 
-### Which meta-languages?
+### JavaScript Meta-Languages
 
- Future additions are planned, but for now...
+Mimosa will compile all of your CoffeeScript and Iced CoffeeScript files to JavaScript.
 
- * CSS: SASS (default), LESS, Stylus
- * Micro-templating: Handlebars (default), Dust, Hogan, Jade, Underscore, LoDash
- * JavaScript: CoffeeScript (default), Iced CoffeeScript
+### CSS Meta-Languages
 
-## Asset Copying
+ Mimosa comes with three meta-languages that compile down to CSS   In all cases Mimosa keeps track of the 'base' files that require compilation, and will compile these base files when they change, or when one of their dependencies change.
 
- In the configuration there is a `copy.extensions` setting which lists the assets that will simply be moved over.  So, for example, your images, plain ol' JavaScript (like vendor files, or should you choose code JavaScript), and regular CSS will be copied over.
+ A base file is defined as a file that is imported by no other file.  Mimosa works under the assumption that if a file is imported, it does not need to be compiled individually, but the file doing the importing does.  So Mimosa follows your imports and compiles only those files that are at the root of the import tree.
 
- If there are extra files you need copied over, uncomment the `copy.extensions` config and add it to the list.  Or, better yet, make a suggestion by [filing an issue](https://github.com/dbashford/mimosa/issues).  No harm in me growing the list of extensions in the default.
+ When the list of base files changes in some way post-startup, Mimosa lets you know via the console.
 
-## Micro-Templating Libraries
+#### SASS
 
- Listed below are the five different micro-templating libraries Mimosa has built in.  As with the CSS and JavaScript meta-languages, the micro-templating libraries will be compiled when saved.  In all cases, the resulting compiled templates will be merged into a single file for use in the client.  Within that file will be @sourceUrl like information to allow you to easily track errors back to specific files in your codebase.
+Mimosa will compile your [SASS](http://sass-lang.com/).  [Compass](http://compass-style.org/) can also be used with your SASS.
+
+SASS and Compass are external Ruby dependencies that'll need to be installed outside of Mimosa.  See [here](http://sass-lang.com/) and [here](http://compass-style.org/install/) for install instructions.
+
+#### LESS
+
+Mimosa will compile your [LESS](http://lesscss.org/) files.
+
+#### Stylus
+
+Mimosa will compile your [Stylus](http://learnboost.github.com/stylus/) files and will include [nib](http://visionmedia.github.com/nib/) in the compilation, so all of nib's functionality is available to you.
+
+### Micro-Templating Libraries
+
+ Listed below are the six different micro-templating libraries Mimosa has built in.  As with the CSS and JavaScript meta-languages, the micro-templating libraries will be compiled when saved.  In all cases, the resulting compiled templates will be merged into a single file for use in the client.  Within that file will be @sourceUrl like information to allow you to easily track errors back to specific files in your codebase.
 
  The name and location of that single file is configurable (`compilers.template.outputFileName`), but by default it is kept at javascripts/template.  When this file is injected via require, the behavior differs per library, see below.
 
  For each templating langauge, the injected javascript file provides a JSON object of templates, keyed by the name of the the template originated in.
 
-### Handlebars
+#### Handlebars
 
  [Handlebars](http://handlebarsjs.com/) is the default templating langauge.  To access a Handlebars template originating from a file named "example.hbs", do this...
 
@@ -256,7 +268,7 @@ This command is just the watching, compiling, linting and notifications.  No ser
 
  Handlebars also provides the ability to code reusable helper methods in pure JavaScript.  You can code those in the meta-language of your choosing inside the `compilers.template.helperFiles` files.  The helpers and the templates are all pulled together via requirejs.
 
-### Dust
+#### Dust
 
  To access a [Dust](https://github.com/linkedin/dustjs/) template originating from a file named "example.dust", do this...
 
@@ -266,7 +278,7 @@ This command is just the watching, compiling, linting and notifications.  No ser
 
  You can reference dust partials, `{>example_partial/}`, and they will be available because all the templates are merged together.
 
-### Hogan
+#### Hogan
 
  To access a [Hogan](http://twitter.github.com/hogan.js/) template originating from a file named "example.hogan", do this...
 
@@ -276,23 +288,29 @@ This command is just the watching, compiling, linting and notifications.  No ser
 
  Note the passing of the templates object into the render method.  This isn't necessary, but if you use partials, it is all you'll need to do to make partials work since all partials are included in the compiled template file.
 
-### Jade
+#### Jade
 
 To access a [Jade](http://jade-lang.com/) template originating from a file named "example.jade", do this...
 
  `var html = templates.example({})`
 
-### Underscore
+#### Underscore
 
 To access an [Underscore](http://underscorejs.org/) template originating from a file named "example.tpl", do this...
 
 `var html = templates.example({})`
 
-### LoDash
+#### LoDash
 
 To access a [LoDash](http://lodash.com/) template originating from a file named "example.lodash", do this...
 
 `var html = templates.example({})`
+
+## Asset Copying
+
+  In the configuration there is a `copy.extensions` setting which lists the assets that will simply be moved over.  So, for example, images, plain ol' JavaScript (like vendor files, or should you choose code JavaScript), and regular CSS will be copied over.
+
+  If there are extra files you need copied over, uncomment the `copy.extensions` config and add it to the list.  Or, better yet, make a suggestion by [filing an issue](https://github.com/dbashford/mimosa/issues).  No harm in me growing the list of extensions in the default.
 
 ## Optimize
 
