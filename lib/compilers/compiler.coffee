@@ -5,7 +5,7 @@ wrench = require 'wrench'
 
 logger = require '../util/logger'
 fileUtils = require '../util/file'
-optimizer = require '../util/require-optimize'
+optimizer = require '../util/require/optimize'
 
 module.exports = class AbstractCompiler
 
@@ -38,6 +38,7 @@ module.exports = class AbstractCompiler
     @outExtension
 
   initializationComplete: (@isInitializationComplete = true) ->
+    @postInitialization() if @postInitialization?
 
   fileNeedsCompiling: (fileName, destinationFile) ->
     return true unless fs.existsSync destinationFile

@@ -2,6 +2,8 @@ AbstractSingleFileCompiler = require '../single-file'
 logger = require '../../util/logger'
 Linter = require '../../util/lint/js'
 
+RequireVerify = require '../../util/require/verify'
+
 module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileCompiler
   outExtension: 'js'
 
@@ -13,11 +15,25 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
     if config.lint.compiled.javascript
       @linter = new Linter(config.lint.rules.javascript)
 
-  afterCompile: (destFileName, source) ->
+    if config.require.verify.enabled
+      @requireVerifier = new RequireVerify(config)
+
+  removed: (fileName) ->
+    super(fileName)
+    @requireVerifier.remove(fileName)
+
+  afterCompile: (destFileName, source) =>
     @linter.lint(destFileName, source) if @linter?
+
+    @requireVerifier.process(destFileName, source) if @requireVerifier?
+
     source
 
   afterWrite: (fileName) ->
     @optimize()
+
+  postInitialization: ->
+    @requireVerifier.startupDone() if @requireVerifier
+
 
 

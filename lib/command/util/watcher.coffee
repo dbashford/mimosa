@@ -4,7 +4,7 @@ watch =     require 'chokidar'
 _ =         require 'lodash'
 
 logger =    require '../../util/logger'
-optimizer = require '../../util/require-optimize'
+optimizer = require '../../util/require/optimize'
 
 class Watcher
 

@@ -23,7 +23,7 @@ clean = ->
     logger.success "#{config.watch.compiledDir} has been cleaned."
 
 cleanMisc = (config, compilers) ->
-  optimizedFile = path.join config.watch.compiledDir, config.compilers.javascript.directory, config.require.out
+  optimizedFile = path.join config.watch.compiledDir, config.compilers.javascript.directory, config.require.optimize.out
   fs.unlinkSync optimizedFile if fs.existsSync optimizedFile
   compiler.cleanup() for compiler in compilers when compiler.cleanup?
 

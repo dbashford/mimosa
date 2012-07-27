@@ -49,6 +49,8 @@ class MimosaDefaults
     copy = newConfig.copy = config.copy                        ?= {}
     copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf"]
 
+    requirejs = newConfig.require = config.require             ?= {}
+
     unless config.virgin
       server = newConfig.server = config.server                  ?= {}
       server.useDefaultServer =   config.server.useDefaultServer ?= false
@@ -59,11 +61,14 @@ class MimosaDefaults
 
       server.path = path.join(@root, server.path)
 
-      requirejs = newConfig.require = config.require              ?= {}
-      requirejs.name =                config.require.name         ?= "main"
-      requirejs.out  =                config.require.out          ?= "main-built.js"
-      requirejs.paths =               config.require.paths        ?= {}
-      requirejs.paths.jquery =        config.require.paths.jquery ?= "vendor/jquery"
+      requirejs.optimize = newConfig.require.optimize = config.require.optimize     ?= {}
+      requirejs.optimize.name =                config.require.optimize.name         ?= "main"
+      requirejs.optimize.out  =                config.require.optimize.out          ?= "main-built.js"
+      requirejs.optimize.paths =               config.require.optimize.paths        ?= {}
+      requirejs.optimize.paths.jquery =        config.require.optimize.paths.jquery ?= "vendor/jquery"
+
+    requirejs.verify = newConfig.require.verify = config.require.verify ?= {}
+    requirejs.verify.enabled = config.require.verify.enabled            ?= true
 
     growl = newConfig.growl =       config.growl                ?= {}
     growl.onStartup =               config.onStartup            ?= false

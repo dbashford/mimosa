@@ -57,17 +57,20 @@ exports.config = {
     # port: 3000                          # valid when useDefaultServer: true, port the default server will start on
     # base: '/app'                        # valid when useDefaultServer: true, base of the app in default mode
 
-  # require:                              # configuration for requirejs optimizer. You can uncomment and change the configuration here
+  # require:                              # configuration for requirejs options.
+    # verify:                             # settings for requirejs path verification
+      # enabled: true                     # Whether or not to perform verification
+    # optimize :                          # Optimization configuration.  You can uncomment and change the configuration here
                                           # and you can also append any new or different r.js configuration (http://requirejs.org/docs/optimization.html#options
                                           # as new paramters inside this require option. for example any shims, additional modules.
                                           # The require 'baseUrl' is set by combining the compiledDir with the compilers.javascript.directory
-    # name: 'main'                        # names of the module, this matches the name of the Mimosa default require.js script tag
-                                          # 'data-main' (see views/layout.jade), which then points to the require.js configuration
-                                          # javascript file: main.js (see javascripts/main.coffee).
-    # out: 'main-built.js'                # name of the compiled file.  This is placed at the root of the
-                                          # {compiledDir}/{compilers.javascript.directory} directory.
-    # paths:                              # paths to files aliased in your {require.name}.js file.
-      # jquery: 'vendor/jquery'           # path to jquery which by default lives in the vendor folder
+      # name: 'main'                        # names of the module, this matches the name of the Mimosa default require.js script tag
+                                            # 'data-main' (see views/layout.jade), which then points to the require.js configuration
+                                            # javascript file: main.js (see javascripts/main.coffee).
+      # out: 'main-built.js'                # name of the compiled file.  This is placed at the root of the
+                                            # {compiledDir}/{compilers.javascript.directory} directory.
+      # paths:                              # paths to files aliased in your {require.name}.js file.
+        # jquery: 'vendor/jquery'           # path to jquery which by default lives in the vendor folder
 
   # growl:
     # onStartup: false                    # Controls whether or not to Growl when aseets successfully compile/copy on startup,

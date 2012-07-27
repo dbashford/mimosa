@@ -69,6 +69,7 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
  * Compile assets when they are saved, not when they are requested
  * Growl notifications along with basic console logging, so if a compile fails, you'll know right away
  * Run in development with unminified/non-compressed javascript, turn on optimization and run with a single javascript file using RequireJS's optimizer and [Almond](https://github.com/jrburke/almond)
+ * Verify your RequireJS paths in your AMD wrapped files when you save your code
  * Automatic CoffeeLinting, JSHinting, and CSSLinting
  * Basic Express skeleton to put you on the ground running with a new app, and a bundled Express for serving up assets to an existing app
  * Automatic static asset Gzip-ing, and cache busting
@@ -76,7 +77,7 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
 
 ### Why Mimosa?
 
-What I wanted from Mimosa was a fast nothing-to-coding user-friendly experience.  Little mucking with config to get you started, no installing extra stuff yourself.  I want to deal with individual files during development, and let RequireJS handle optimized builds.  I want linting, gzip, live reload, and cache-busting all just there.
+What I wanted from Mimosa was a fast nothing-to-coding user-friendly experience.  Little mucking with config to get you started, no installing extra stuff yourself.  I want to deal with individual files during development, and let RequireJS handle optimized builds.  I want linting, gzip, live reload, and cache-busting all just there.  And I wanted first-class support for RequireJS/AMD.
 
 Much love and credit to [Brunch](http://brunch.io/) for the inspiration (hence 'Mimosa'), and for being the codebase I referenced when I had a problem to solve.  There's a lot here that Brunch does similarly, but also quite a bit I think Mimosa does differently.  I suggest you check it out (as if you haven't already).  Brunch is awesome sauce.
 
@@ -312,23 +313,34 @@ To access a [LoDash](http://lodash.com/) template originating from a file named 
 
 ## Asset Copying
 
-  In the configuration there is a `copy.extensions` setting which lists the assets that will simply be moved over.  So, for example, images, plain ol' JavaScript (like vendor files, or should you choose code JavaScript), and regular CSS will be copied over.
+In the configuration there is a `copy.extensions` setting which lists the assets that will simply be moved over.  So, for example, images, plain ol' JavaScript (like vendor files, or should you choose code JavaScript), and regular CSS will be copied over.
 
-  If there are extra files you need copied over, uncomment the `copy.extensions` config and add it to the list.  Or, better yet, make a suggestion by [filing an issue](https://github.com/dbashford/mimosa/issues).  No harm in me growing the list of extensions in the default.
+If there are extra files you need copied over, uncomment the `copy.extensions` config and add it to the list.  Or, better yet, make a suggestion by [filing an issue](https://github.com/dbashford/mimosa/issues).  No harm in me growing the list of extensions in the default.
+
+## RequireJS support
+
+In addition to having built in command-line and compile time support for [running RequireJS' optimizer](#javascript-optimization), Mimosa will also verify your RequireJS paths when your JavaScript meta-language (or js itself)
+successfully compiles.
+
+Mimosa will follow relative paths for dependencies, and also use your config paths whether they resolve to an actual dependency, ` jquery: 'vendor/jquery'` or they resolve to a module, `moduleX:'a/path/to/module/x'`.
+
+An unresolved path is an crucial as a compiler error; code is broken.  Should a path not be resolved, Mimosa will both write to the console and alert via Growl.
+
+Path verification is enabled by default, but can be disabled by setting `require.verify.enabled` to false.
 
 ## Optimize
 
- In the normal course of development, for debugging purposes, files should be loaded individually, rather than in one merged file, and you don't want your assets minified.  This all makes for easier debugging.
+In the normal course of development, for debugging purposes, files should be loaded individually, rather than in one merged file, and you don't want your assets minified.  This all makes for easier debugging.
 
- But when you take your application outside of development, you want to include all the performance improvements that come with merging, optimizing, and minifying your assets.  For both the `build` and `watch` commands, Mimosa provides an `--optimize` flag that will turn on this optimization.
+But when you take your application outside of development, you want to include all the performance improvements that come with merging, optimizing, and minifying your assets.  For both the `build` and `watch` commands, Mimosa provides an `--optimize` flag that will turn on this optimization.
 
- Templates are merged together regardless, but they have source information included to make it easy to track back to the destination file, and templates will (ideally) be logic-less and less prone to problems.
+Templates are merged together regardless, but they have source information included to make it easy to track back to the destination file, and templates will (ideally) be logic-less and less prone to problems.
 
-### JavaScript Optimization, RequireJS
+### JavaScript Optimization
 
  Mimosa invokes the [RequireJS optimizer](http://requirejs.org/docs/optimization.html) when the `--optimize` flag is used.
 
- By default, Mimosa will use main.js in the public directory as the sole module to be optimized, but this can be changed in the mimosa-config by tweaking the `require.name` setting.  The output will be placed in the root of the public directory, in main-built.js, and this too can be changed by changing `require.out`  The only other default setting is a path/alias set up pointing at jquery in the vendor directory.  You can add other paths/aliases along side the jquery one, remove the jquery path or point it someplace else.
+ By default, Mimosa will use main.js in the public directory as the sole module to be optimized, but this can be changed in the mimosa-config by tweaking the `require.optimize.name` setting.  The output will be placed in the root of the public directory, in main-built.js, and this too can be changed by changing `require.optimize.out`  The only other default setting is a path/alias set up pointing at jquery in the vendor directory.  You can add other paths/aliases along side the jquery one, remove the jquery path or point it someplace else.
 
  The RequireJS optimizer has many [configuration options](http://requirejs.org/docs/optimization.html#options).  Any of these options can be added directly to the `require` setting and Mimosa will include them in the optimization.
 
