@@ -25,6 +25,7 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
 		- [Optimized Build (--optimize, -o)](#optimized-build---optimize--o)
 	- [Clean Compiled Assets (clean)](#clean-compiled-assets-clean)
 	- [Copy Config (config)](#copy-config-config)
+	- [Update Install (update)](#update-install-update)
 - [Meta-Language Compilation](#meta-language-compilation)
 	- [JavaScript Meta-Languages](#javascript-meta-languages)
 	- [CSS Meta-Languages](#css-meta-languages)

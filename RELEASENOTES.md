@@ -1,3 +1,7 @@
+# 0.0.7alpha - July 28, 2012
+### Major Changes
+* Added `update` command to make it easy for people to keep their dependent post-new-command modules up to date with Mimosa's skeleton
+
 # 0.0.6alpha - July 27, 2012
 ### Major Changes
 * Added new RequireJS path verification ([see documentation](https://github.com/dbashford/mimosa#requirejs-support))
