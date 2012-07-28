@@ -62,7 +62,7 @@
     "jshint": "0.7.1",
     "gzippo": "0.1.7",
     "commander": "1.0.0",
-    "watch-connect": "git://github.com/dbashford/watch-connect.git#add-ignore-option",
+    "watch-connect":"git://github.com/Filirom1/watch-connect.git",
     "date-utils": "1.2.11",
     "chokidar": "0.3.0",
     "lodash": "0.4.1",

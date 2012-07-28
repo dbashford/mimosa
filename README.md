@@ -227,11 +227,13 @@ If you've already got a project and want to use Mimosa with it, this command wil
 
 ### Update Install (update)
 
-If you installed an application using the `new` command, you may want to keep your application up to date with the Mimosa skeleton as it evolves and tightens up.
+If you installed an application using the `new` command, you may want to keep your application up to date with the Mimosa skeleton as it evolves and advances.
 
-Use the `install` command to update the node packages that Mimosa installed inside your application when it was created.  This command saves you needing to update and keep current the packages installed at the outset.  `config` will also install any new libraries, not just ones you already have.
+Use the `install` command to update the node packages that Mimosa installed inside your application when it was created and to get any new libraries it has included.  This command saves you needing to update and keep current the packages installed at the outset.
 
-For now Mimosa will not attempt to update any of the other assets it delivers because many of them may have significantly changed from when they were created.
+For now Mimosa will not attempt to update any of the other assets it delivers (routes, example skeleton files, etc) because many of them may have significantly changed from when they were created.
+
+Mimosa will first run `npm uninstall` for each of the skeleton libraries already in place in your project, and then it will follow up with an `npm install` on each removed library and each new library that wasn't there originally.
 
     $ mimosa update
 

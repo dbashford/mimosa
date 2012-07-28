@@ -13,27 +13,47 @@ update = ->
 
   mimosaPackageJsonPath = path.join __dirname, '..', 'skeleton', 'package.json'
 
-  logger.info "Re-writing package.json"
-
   clientPackageText = fs.readFileSync clientPackageJsonPath, 'ascii'
   mimosaPackageText = fs.readFileSync mimosaPackageJsonPath, 'ascii'
 
   clientPackageJson = JSON.parse(clientPackageText)
   mimosaPackageJson = JSON.parse(mimosaPackageText)
 
-  for name, version of mimosaPackageJson.dependencies
-    clientPackageJson.dependencies[name] = version
-
-  clientOut = JSON.stringify(clientPackageJson, null, 2)
-
-  fs.writeFileSync clientPackageJsonPath, clientOut, 'ascii'
-
-  logger.info "Installing node modules"
   currentDir = process.cwd()
   process.chdir path.dirname(clientPackageJsonPath)
-  exec "npm install", (err, sout, serr) ->
+
+  done = ->
     process.chdir currentDir
-    logger.success "Your project is up to date!"
+    logger.success "Finished.  You are all up to date!"
+
+  _uninstallDependencies mimosaPackageJson.dependencies, clientPackageJson.dependencies, ->
+    _installDependencies(mimosaPackageJson.dependencies, done)
+
+_uninstallDependencies = (deps, clientDeps, callback) ->
+  present = []
+  for name, version of deps
+    if clientDeps[name]
+      logger.info "Un-installing node package. #{name}:#{clientDeps[name]}"
+      present.push name
+
+  if present.length > 0
+    exec "npm uninstall #{present.join(' ')} --save", (err, sout, serr) =>
+      if err
+        logger.info(err) if err
+      else
+        logger.success "Uninstalling successful"
+        callback(deps)
+  else
+    callback(deps)
+
+_installDependencies = (deps, done) ->
+  names = for name, version of deps
+    logger.info "Installing node package: #{name}:#{version}"
+    name
+
+  exec "npm install #{names.join(' ')} --save", (err, sout, serr) =>
+    if err then logger.info(err) else logger.success "Installs successful"
+    done()
 
 _findPackageJsonPath = (packagePath = path.resolve('package.json')) ->
   if fs.existsSync packagePath
