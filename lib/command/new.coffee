@@ -219,7 +219,7 @@ class NewCommand
       data = data.replace "APPNAME", name
       fs.writeFileSync packageJSONPath, data
 
-    logger.info "Installing node modules "
+    logger.info "Installing node modules"
     currentDir = process.cwd()
     process.chdir @currPath
     exec "npm install", (err, sout, serr) =>

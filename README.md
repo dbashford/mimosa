@@ -207,14 +207,14 @@ This command is just the watching, compiling, linting and notifications.  No ser
 
 #### Optimized Build (--optimize, -o)
 
- If you want to build with optimization, provide a `--optimize` flag.  This will compile all the assets, create the requirejs optimized files, and minify your compiled CSS.
+If you want to build with optimization, provide a `--optimize` flag.  This will compile all the assets, create the requirejs optimized files, and minify your compiled CSS.
 
     $ mimosa build --optimize
     $ mimosa build -o
 
 ### Clean Compiled Assets (clean)
 
- A companion to build, this command will wipe out any files it is responsible for placing into the `compiledDir`.  It makes a pass to clean out the files, and once done, it makes a pass to clean out any directories that are now empty.  If for some reason there are files in your `compiledDir` directory structure that Mimosa didn't place there, they'll be left in place.
+A companion to build, this command will wipe out any files it is responsible for placing into the `compiledDir`.  It makes a pass to clean out the files, and once done, it makes a pass to clean out any directories that are now empty.  If for some reason there are files in your `compiledDir` directory structure that Mimosa didn't place there, they'll be left in place.
 
     $ mimosa clean
 
@@ -222,7 +222,17 @@ This command is just the watching, compiling, linting and notifications.  No ser
 
     $ mimosa config
 
- If you've already got a project and want to use Mimosa with it, this command will copy the default configuration into whatever directory you are in.  You'll likely have some configuration to update to point Mimosa at your source and compiled directories.
+If you've already got a project and want to use Mimosa with it, this command will copy the default configuration into whatever directory you are in.  You'll likely have some configuration to update to point Mimosa at your source and compiled directories.
+
+### Update Install (update)
+
+If you installed an application using the `new` command, you may want to keep your application up to date with the Mimosa skeleton as it evolves and tightens up.
+
+Use the `install` command to update the node packages that Mimosa installed inside your application when it was created.  This command saves you needing to update and keep current the packages installed at the outset.  `config` will also install any new libraries, not just ones you already have.
+
+For now Mimosa will not attempt to update any of the other assets it delivers because many of them may have significantly changed from when they were created.
+
+    $ mimosa update
 
 ## Meta-Language Compilation
 

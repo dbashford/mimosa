@@ -17,6 +17,7 @@ class Mimosa
     require('./command/clean')(program)
     require('./command/watch')(program)
     require('./command/virgin')(program)
+    require('./command/update')(program)
 
     program.command('*').action (arg) ->
       exec "mimosa --help", (error, stdout, stderr) ->
