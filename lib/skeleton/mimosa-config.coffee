@@ -82,9 +82,8 @@ exports.config = {
       # template: true                    # send growl notification on successful compilation? will always send on failure
       # copy: true                        # send growl notification on successful copy?
 
-  # lint:                                 # settings for coffee, js, css linting/hinting
+  # lint:                                 # settings for js, css linting/hinting
     # compiled:                           # settings for compiled files
-      # coffee:true                       # fire coffeelint before compiling coffeescript files
       # javascript:true                   # fire jshint on successful compile of meta-language to javascript
       # css:true                          # fire csslint on successful compile of meta-language to css
     # copied:                             # settings for copied files, files already in .css and .js files
@@ -96,10 +95,6 @@ exports.config = {
     # rules:                              # All hints/lints come with defaults built in.  Here is where you'd override those defaults.
                                           # Below is listed an example of an overridden default for each lint type, also listed, next
                                           # to the lint types is the url to find the settings for overriding.
-      # coffee:                           # Settings: http://www.coffeelint.org/#options
-        # max_line_length:                # This is an example override, this is not a default
-        #   value: 80,
-        #   level: "error"
       # javascript:                       # Settings: http://www.jshint.com/options/
         # plusplus: true                  # This is an example override, this is not a default
       # css:                              # Settings: https://github.com/stubbornella/csslint/wiki/Rules

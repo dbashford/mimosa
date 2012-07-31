@@ -58,7 +58,6 @@
     "glob": "3.1.10",
     "requirejs": "2.0.4",
     "csslint": "0.9.8",
-    "coffeelint": "0.4.0",
     "jshint": "0.7.1",
     "gzippo": "0.1.7",
     "commander": "1.0.0",

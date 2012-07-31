@@ -1,7 +1,7 @@
 Mimosa - a modern browser development toolkit
 ======
 
-Mimosa is a browser development toolkit, targeted at folks using meta-languages like (but not limited to) CoffeeScript or SASS, and micro-templating libraries like Jade, Handlebars and Underscore.  Mimosa is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management, and comes bundled with useful tools like coffee/js/css hint to improve code quality and live reload to speed up development.  Read through the entire [feature set](#features)!
+Mimosa is a browser development toolkit, targeted at folks using meta-languages like (but not limited to) CoffeeScript or SASS, and micro-templating libraries like Jade, Handlebars and Underscore.  Mimosa is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management, and comes bundled with useful tools like js/css hint to improve code quality and live reload to speed up development.  Read through the entire [feature set](#features)!
 
 And know there is more to come!  Mimosa is in full dev mode on its way to feature completeness, however, everything listed in this README should work.
 
@@ -46,12 +46,12 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
 	- [CSS Minification](#css-minification)
 - [Immediate Feedback](#immediate-feedback)
 	- [Growl](#growl)
-- [Linting Your CoffeeScript, JavaScript and CSS](#linting-your-coffeescript-javascript-and-css)
+- [Linting Your JavaScript and CSS](#linting-your-javascript-and-css)
 	- [Linting Compiled Assets](#linting-compiled-assets)
 	- [Linting Copied Assets](#linting-copied-assets)
 	- [Linting Vendor Assets](#linting-vendor-assets)
 	- [Lint Rules](#lint-rules)
-	- [CoffeeLint, JSHint, CSSLint](#coffeelint-jshint-csslint)
+	- [JSHint, CSSLint](#jshint-csslint)
 - [Live Reload](#live-reload)
 - [GZip](#gzip)
 - [Cache Busting](#cache-busting)
@@ -72,7 +72,7 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
  * Growl notifications along with basic console logging, so if a compile fails, you'll know right away
  * Run in development with unminified/non-compressed javascript, turn on optimization and run with a single javascript file using RequireJS's optimizer and [Almond](https://github.com/jrburke/almond)
  * Verify your RequireJS paths in your AMD wrapped files when you save your code
- * Automatic CoffeeLinting, JSHinting, and CSSLinting
+ * Automatic JSHinting, and CSSLinting
  * Basic Express skeleton to put you on the ground running with a new app, and a bundled Express for serving up assets to an existing app
  * Automatic static asset Gzip-ing, and cache busting
  * Live Reload built in, without the need for a plugin
@@ -384,14 +384,13 @@ If you [clean](#clean-compiled-assets-clean) your project and then start up the 
 
 You can also choose to turn off post-startup success notifications for compiled javascript, css, and templates, as well as for copied assets by altering the `growl.onSuccess` flats.  These notifications are on by default.
 
-## Linting Your CoffeeScript, JavaScript and CSS
+## Linting Your JavaScript and CSS
 
 To 'lint' your code is to check it for common mistakes or variances from the idiom.  Mimosa will automatically lint all of the CSS and JavaScript it moves from your source directories to your compiled directories.  Any errors or warnings that come out of that linting will be printed to the console but will not stop or fail the compilation.  Inside the mimosa-config is this snippet which controls the linting.
 
 ```
 # lint:
   # compiled:
-    # coffee:true
     # javascript:true
     # css:true
   # copied:
@@ -401,10 +400,6 @@ To 'lint' your code is to check it for common mistakes or variances from the idi
     # javascript: false
     # css: false
   # rules:
-    # coffee:
-      # max_line_length:
-      #   value: 80,
-      #   level: "error"
     # js:
       # plusplus: true
     # css:
@@ -415,7 +410,7 @@ As with all of the default config, this is entirely commented out as the default
 
 ### Linting Compiled Assets
 
-The `compiled` block controls whether or not linting is enabled for compiled code.  So if you've written SASS, when Mimosa compiles it, Mimosa will send the resulting CSS through a linting process.  For CoffeeScript, Mimosa will both lint your CoffeeScript code before it compiles it to JavaScript, and then lint your resulting JavaScript too.
+The `compiled` block controls whether or not linting is enabled for compiled code.  So if you've written SASS, LESS or Stylus, when Mimosa compiles it, Mimosa will send the resulting CSS through a linting process.  Similarly for the JavaScript meta-languages, Mimosa will lint the resulting JavaScript.
 
 ### Linting Copied Assets
 
@@ -431,11 +426,10 @@ If you want vendor asset hinting turned on, simply enable the setting and switch
 
 The `rules` block is your opportunity to override and change the linting rules for each of the linting tools.  Example overrides are provided in the default configuration.  Those are examples, they are not actually overrides.
 
-### CoffeeLint, JSHint, CSSLint
+### JSHint, CSSLint
 
 All of the lint/hinters come with default configurations that Mimosa uses.  Here are links to the tools, as well as to the configuration for those tools.
 
- * [CoffeeLint](http://www.coffeelint.org/), [CoffeeLint Config](http://www.coffeelint.org/#options)
  * [JSHint](http://www.jshint.com/), [JSHint Config](http://www.jshint.com/options/)
  * [CSSLint](http://csslint.net/), [CSSLint Config](https://github.com/stubbornella/csslint/wiki/Rules)
 
