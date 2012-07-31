@@ -1,3 +1,12 @@
+# 0.0.8alpha - July 30, 2012
+### Major Changes
+* added `jade` flag to `build` command that when provided will attempt to compile `index.jade`
+* removed coffee-lint
+
+### Minor Changes
+* Upgraded Chokidar
+* watch-connect back to npm
+
 # 0.0.7alpha - July 28, 2012
 ### Major Changes
 * Added `update` command to make it easy for people to keep their dependent post-new-command modules up to date with Mimosa's skeleton
