@@ -1,3 +1,8 @@
+fs = require 'fs'
+path = require 'path'
+
+jade = require 'jade'
+
 util = require './util'
 logger = require '../util/logger'
 Watcher =  require './util/watcher'
@@ -8,16 +13,44 @@ build = (opts) =>
   util.processConfig false, (config) =>
     config.optimize = opts?.optimize
     compilers = util.fetchConfiguredCompilers config, false
-    new Watcher config, compilers, false, buildFinished
+    new Watcher config, compilers, false, _buildFinished
 
-buildFinished = ->
-  logger.success("Finished build")
+    _writeJade(config) if opts.jade
+
+_writeJade = (config) ->
+  logger.info "Attempting to compile index.jade"
+
+  viewsPath = path.resolve config.watch.sourceDir, '..', 'views', 'index.jade'
+
+  if fs.existsSync viewsPath
+    opts =
+      title:    "Mimosa"
+      reload:   false
+      optimize: config.optimize
+      env:      "production"
+    jade.renderFile viewsPath, opts, (err, html) ->
+      if err
+        logger.warn "Error compiling/rendering jade template #{viewsPath}"
+        logger.warn "Error: #{err}"
+      else
+        outPath = path.join config.watch.sourceDir, 'index.html'
+        fs.writeFile outPath, html, (err) ->
+          if err
+            logger.warn "Failed to write compiled jade template: #{err}"
+          else
+            logger.success "Successfully compiled and wrote compiled index.html file."
+  else
+    logger.warn "Cannot find #{viewsPath}, cannot compile the jade template."
+
+_buildFinished = ->
+  logger.success "Finished build"
 
 register = (program, callback) =>
   program
     .command('build')
     .description("make a single pass through assets and compile them")
     .option("-o, --optimize", "run require.js optimization after building")
+    .option("-j, --jade", "compile the provided jade template into an html, for those not deploying to node environment and in need of an html file")
     .action(callback)
     .on '--help', =>
       logger.green('  The build command will make a single pass through your assets and bulid any that need building')
@@ -27,6 +60,15 @@ register = (program, callback) =>
       logger.green('  with single files for the named requirejs modules. ')
       logger.blue( '\n    $ mimosa build --optimize')
       logger.blue( '    $ mimosa build -o\n')
+      logger.green('  Pass an \'jade\' flag and Mimosa will attempt to compile the jade template (index.jade) that comes')
+      logger.green('  bundled with Mimosa\'s starter app created with the `new` command.  It will do so as if you were')
+      logger.green('  deploying the resulting html to a production-like environment.  Live reload will not be included.')
+      logger.green('  CSS will not be cache busted.  Use the \'jade\' command in conjunction with \'optimize\' to have')
+      logger.green('  your resulting html primed to serve the optimized file.  This command will not work if you have')
+      logger.green('  altered your index.jade file to take parameters other than those it originally was delivered to take.')
+      logger.blue( '\n    $ mimosa build --jade')
+      logger.blue( '    $ mimosa build -j\n')
+
 
 module.exports = (program) ->
   register(program, build)

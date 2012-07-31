@@ -25,6 +25,10 @@ clean = ->
 cleanMisc = (config, compilers) ->
   optimizedFile = path.join config.watch.compiledDir, config.compilers.javascript.directory, config.require.optimize.out
   fs.unlinkSync optimizedFile if fs.existsSync optimizedFile
+
+  compiledJadeFile = path.join config.watch.compiledDir, 'index.html'
+  fs.unlinkSync compiledJadeFile if fs.existsSync compiledJadeFile
+
   compiler.cleanup() for compiler in compilers when compiler.cleanup?
 
 cleanFiles = (config, files, compilers) ->

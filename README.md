@@ -213,6 +213,12 @@ If you want to build with optimization, provide a `--optimize` flag.  This will 
     $ mimosa build --optimize
     $ mimosa build -o
 
+#### Compile the Provided Jade Template (--jade, -j)
+
+Should you not be deploying a node/Express app, and you need an .html version of the `index.jade` that Mimosa provides with its `new` command, the `jade` flag will provide that.  The `jade` flag will attempt to compile the `index.jade` file by feeding the template production level settings.  `env` will be set to `production`.  `reload` set to `false`.  `optimize` will be set to `true` if you also provide the `optimize` flag.  `title` will be set to `Mimosa`.  It is suggested you remove the `title` variable and hard code your `title`.
+
+If the `index.jade` file is changed to take different variables, or removed or renamed, the jade compilation will fail with warnings explaining the failures.
+
 ### Clean Compiled Assets (clean)
 
 A companion to build, this command will wipe out any files it is responsible for placing into the `compiledDir`.  It makes a pass to clean out the files, and once done, it makes a pass to clean out any directories that are now empty.  If for some reason there are files in your `compiledDir` directory structure that Mimosa didn't place there, they'll be left in place.
