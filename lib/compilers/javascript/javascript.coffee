@@ -20,20 +20,18 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
 
   removed: (fileName) ->
     super(fileName)
-    @requireVerifier.remove(fileName)
+    @requireVerifier?.remove(fileName)
 
   afterCompile: (destFileName, source) =>
-    @linter.lint(destFileName, source) if @linter?
-
-    @requireVerifier.process(destFileName, source) if @requireVerifier?
-
+    @linter?.lint(destFileName, source)
+    @requireVerifier?.process(destFileName, source)
     source
 
   afterWrite: (fileName) ->
     @optimize()
 
   postInitialization: ->
-    @requireVerifier.startupDone() if @requireVerifier
+    @requireVerifier?.startupDone()
 
 
 

@@ -14,7 +14,10 @@ module.exports = class RequireVerify
   process: (fileName, source) ->
     require = @_require(fileName)
     define = @_define(fileName)
-    eval(source)
+    try
+      eval(source)
+    catch e
+      logger.warn "File named [#{fileName}] is not wrapped in a 'require' or 'define' function call."
 
   remove: (fileName) ->
     delete @depsRegistry[fileName] if @depsRegistry[fileName]?
