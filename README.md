@@ -23,6 +23,7 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
 	- [Just Watch, Do Not Write (virgin)](#just-watch-do-not-write-virgin)
 	- [One Time Asset Build (build)](#one-time-asset-build-build)
 		- [Optimized Build (--optimize, -o)](#optimized-build---optimize--o)
+		- [Compile the Provided Jade Template (--jade, -j)](#compile-the-provided-jade-template---jade--j)
 	- [Clean Compiled Assets (clean)](#clean-compiled-assets-clean)
 	- [Copy Config (config)](#copy-config-config)
 	- [Update Install (update)](#update-install-update)
@@ -218,6 +219,9 @@ If you want to build with optimization, provide a `--optimize` flag.  This will 
 Should you not be deploying a node/Express app, and you need an .html version of the `index.jade` that Mimosa provides with its `new` command, the `jade` flag will provide that.  The `jade` flag will attempt to compile the `index.jade` file by feeding the template production level settings.  `env` will be set to `production`.  `reload` set to `false`.  `optimize` will be set to `true` if you also provide the `optimize` flag.  `title` will be set to `Mimosa`.  It is suggested you remove the `title` variable and hard code your `title`.
 
 If the `index.jade` file is changed to take different variables, or removed or renamed, the jade compilation will fail with warnings explaining the failures.
+
+    $ mimosa build --jade
+    $ mimosa build -j
 
 ### Clean Compiled Assets (clean)
 
