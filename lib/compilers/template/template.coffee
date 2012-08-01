@@ -104,4 +104,4 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     """
 
   afterWrite: (fileName) ->
-    @optimize()
+    @optimize(fileName)

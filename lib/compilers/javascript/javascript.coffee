@@ -2,7 +2,7 @@ AbstractSingleFileCompiler = require '../single-file'
 logger = require '../../util/logger'
 Linter = require '../../util/lint/js'
 
-RequireRegister = require '../../util/require/register'
+requireRegister = require '../../util/require/register'
 
 module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileCompiler
   outExtension: 'js'
@@ -16,7 +16,8 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
       @linter = new Linter(config.lint.rules.javascript)
 
     if config.require.verify.enabled
-      @requireRegister = new RequireRegister(config)
+      @requireRegister = requireRegister
+      @requireRegister.setConfig(config)
 
   removed: (fileName) ->
     super(fileName)
@@ -28,7 +29,7 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
     source
 
   afterWrite: (fileName) ->
-    @optimize()
+    @optimize(fileName)
 
   postInitialization: ->
     @requireRegister?.startupDone()

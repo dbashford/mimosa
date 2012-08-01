@@ -3,7 +3,7 @@ path = require 'path'
 SingleFileCompiler = require './single-file'
 CSSLinter =             require '../util/lint/css'
 JSLinter =             require '../util/lint/js'
-RequireRegister = require '../util/require/register'
+requireRegister = require '../util/require/register'
 
 module.exports = class CopyCompiler extends SingleFileCompiler
 
@@ -24,7 +24,8 @@ module.exports = class CopyCompiler extends SingleFileCompiler
     @lintVendorCSS = config.lint.vendor.css
 
     if config.require.verify.enabled
-      @requireRegister = new RequireRegister(config)
+      @requireRegister = requireRegister
+      @requireRegister.setConfig(config)
 
   removed: (fileName) ->
     super(fileName)

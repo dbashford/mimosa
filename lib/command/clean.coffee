@@ -3,6 +3,7 @@ path =   require 'path'
 
 _ =      require 'lodash'
 wrench = require 'wrench'
+glob =   require 'glob'
 
 util =   require './util'
 logger = require '../util/logger'
@@ -23,8 +24,9 @@ clean = ->
     logger.success "#{config.watch.compiledDir} has been cleaned."
 
 cleanMisc = (config, compilers) ->
-  optimizedFile = path.join config.watch.compiledDir, config.compilers.javascript.directory, config.require.optimize.out
-  fs.unlinkSync optimizedFile if fs.existsSync optimizedFile
+  jsDir = path.join config.watch.compiledDir, config.compilers.javascript.directory
+  glob "#{jsDir}/**/*-built.js", (err, files) ->
+    fs.unlinkSync file for file in files
 
   compiledJadeFile = path.join config.watch.compiledDir, 'index.html'
   fs.unlinkSync compiledJadeFile if fs.existsSync compiledJadeFile

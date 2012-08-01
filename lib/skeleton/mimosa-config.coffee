@@ -60,17 +60,12 @@ exports.config = {
   # require:                              # configuration for requirejs options.
     # verify:                             # settings for requirejs path verification
       # enabled: true                     # Whether or not to perform verification
-    # optimize :                          # Optimization configuration.  You can uncomment and change the configuration here
-                                          # and you can also append any new or different r.js configuration (http://requirejs.org/docs/optimization.html#options
-                                          # as new paramters inside this require option. for example any shims, additional modules.
-                                          # The require 'baseUrl' is set by combining the compiledDir with the compilers.javascript.directory
-      # name: 'main'                        # names of the module, this matches the name of the Mimosa default require.js script tag
-                                            # 'data-main' (see views/layout.jade), which then points to the require.js configuration
-                                            # javascript file: main.js (see javascripts/main.coffee).
-      # out: 'main-built.js'                # name of the compiled file.  This is placed at the root of the
-                                            # {compiledDir}/{compilers.javascript.directory} directory.
-      # paths:                              # paths to files aliased in your {require.name}.js file.
-        # jquery: 'vendor/jquery'           # path to jquery which by default lives in the vendor folder
+    # optimize :                          # Optimization configuration.  Mimosa figures out all you'd need for a simple r.js optimizer run.
+                                          # If you need to make tweaks simply uncomment this line and add the r.js config
+                                          # (http://requirejs.org/docs/optimization.html#options) as new paramters inside this optimize
+                                          # The require 'baseUrl' is set by combining the watch.compiledDir with the compilers.javascript.directory
+                                          # Modules and paths are determined by scanning your source, and the output of each module is
+                                          # the name of the module + -built.js
 
   # growl:
     # onStartup: false                    # Controls whether or not to Growl when aseets successfully compile/copy on startup,

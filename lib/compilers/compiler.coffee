@@ -60,8 +60,8 @@ module.exports = class AbstractCompiler
       return logger.warn("Cannot delete compiled file, #{fileName}. This is ok if it was never successfully compiled.") if err
       @success "Deleted compiled file #{fileName}" if reportSuccess
 
-  optimize: ->
-    optimizer.optimize(@fullConfig) if @isInitializationComplete
+  optimize: (fileName) ->
+    optimizer.optimize(@fullConfig, fileName) if @isInitializationComplete
 
   failed: (message) ->
     logger.error message

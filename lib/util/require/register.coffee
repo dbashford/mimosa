@@ -5,13 +5,15 @@ logger = require '../logger'
 
 module.exports = class RequireRegister
 
-  constructor: (@config) ->
-    @rootJavaScriptDir = path.join @config.watch.compiledDir, @config.compilers.javascript.directory
-    @depsRegistry = {}
-    @aliasFiles = {}
-    @aliasDirectories = {}
-    @requireFiles = []
-    @tree = {}
+  depsRegistry: {}
+  aliasFiles: {}
+  aliasDirectories: {}
+  requireFiles: []
+  tree: {}
+
+  setConfig: (@config) ->
+    unless @rootJavaScriptDir?
+      @rootJavaScriptDir = path.join @config.watch.compiledDir, @config.compilers.javascript.directory
 
   process: (fileName, source) ->
     require = @_require(fileName)
@@ -31,12 +33,24 @@ module.exports = class RequireRegister
   startupDone: (@startupComplete = true) ->
     @_verifyAll()
 
+  treeBases: ->
+    Object.keys(@tree)
+
+  treeBasesForFile: (fileName) ->
+    bases = []
+    for base, deps of @tree
+      bases.push(base) if deps.indexOf(fileName) >= 0
+    bases
+
+  configPaths: (fileName) ->
+    @aliasFiles[fileName]
+
   _require: (fileName) ->
     (deps, callback, errback, optional) =>
       [deps, configPaths] = @_requireOverride(deps, callback, errback, optional)
+      @requireFiles.push fileName
       @_handleConfigPaths(fileName, configPaths) if configPaths?
       @_handleDeps(fileName, deps)
-      @requireFiles.push fileName
 
   _define: (fileName) ->
     (id, deps, funct) =>
@@ -60,9 +74,6 @@ module.exports = class RequireRegister
     for f in @requireFiles
       @tree[f] = []
       @_addDepsToTree(f, f, f)
-
-    console.log "TREE"
-    console.log @tree
 
   _addDepsToTree: (f, dep, origDep) ->
     return unless @depsRegistry[dep]?
@@ -177,3 +188,5 @@ module.exports = class RequireRegister
       else
         deps = []
     [deps, config.paths ? null]
+
+module.exports = new RequireRegister()
