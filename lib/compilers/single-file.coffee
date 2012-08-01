@@ -25,7 +25,6 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
     fs.readFile fileName, (err, text) =>
       return @failed(err) if err
       text = text.toString() unless @keepBuffer?
-      @beforeCompile(fileName, text) if @beforeCompile?
       @compile fileName, text, destinationFile, @_compileComplete
 
   _compileComplete: (error, results, destinationFile) =>

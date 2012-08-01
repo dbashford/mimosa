@@ -3,7 +3,7 @@ path = require 'path'
 SingleFileCompiler = require './single-file'
 CSSLinter =             require '../util/lint/css'
 JSLinter =             require '../util/lint/js'
-RequireVerify = require '../util/require/verify'
+RequireRegister = require '../util/require/register'
 
 module.exports = class CopyCompiler extends SingleFileCompiler
 
@@ -24,12 +24,12 @@ module.exports = class CopyCompiler extends SingleFileCompiler
     @lintVendorCSS = config.lint.vendor.css
 
     if config.require.verify.enabled
-      @requireVerifier = new RequireVerify(config)
+      @requireRegister = new RequireRegister(config)
 
   removed: (fileName) ->
     super(fileName)
-    if @_isJS(fileName) and !@_isVendor(fileName) and @requireVerifier?
-      @requireVerifier.remove(fileName)
+    if @_isJS(fileName) and !@_isVendor(fileName) and @requireRegister?
+      @requireRegister.remove(fileName)
 
   compile: (fileName, text, destinationFile, callback) ->
     callback(null, text, destinationFile)
@@ -42,8 +42,8 @@ module.exports = class CopyCompiler extends SingleFileCompiler
 
     @_lint destFileName, source
 
-    if @_isJS(destFileName) and !@_isVendor(destFileName)
-      @requireVerifier?.process(destFileName, source.toString())
+    if @_isJSNotVendor(destFileName)
+      @requireRegister?.process(destFileName, source.toString())
 
     source
 
@@ -68,5 +68,15 @@ module.exports = class CopyCompiler extends SingleFileCompiler
   _isVendor: (fileName) ->
     fileName.split(path.sep).indexOf('vendor') > -1
 
+  _isJSNotVendor: (fileName) ->
+    @_isJS(fileName) and !@_isVendor(fileName)
+
+  fileNeedsCompiling: (fileName, destinationFile) ->
+    # force compiling on startup to build require depedency tree
+    if @requireRegister? and !@isInitializationComplete and @_isJSNotVendor(fileName)
+      true
+    else
+      super(fileName, destinationFile)
+
   postInitialization: ->
-    @requireVerifier?.startupDone()
+    @requireRegister?.startupDone()
