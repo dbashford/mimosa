@@ -1,3 +1,17 @@
+# 0.0.9alpha - August 1, 2012
+### Major Changes
+* Use calculated require dependency graph as input to optimization, removes need to provide any config whatsoever for vanilla r.js optimizes.
+* Added ability to have multiple base require modules that will be auto-detected and individually optimized based on items their dependency tree being updated
+* included requirejs path verification in straight js copies for files not in vendor
+
+### Minor Changes
+* added use of jade partial to version of initial add delivered when jade is selected
+* write to the console when a non-vendor file is detected not wrapped in either require or define block
+* write a warning to the console when a circular require dependency is detected
+
+### Breaking Changes
+* The entire optimize defaults section of the [mimosa-config](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/mimosa-config.coffee) is now gone as Mimosa will figure it all out for you.  Anything provided inside the optimize setting will overwrite anything Mimosa calculates.
+
 # 0.0.8alpha - July 30, 2012
 ### Major Changes
 * added `jade` flag to `build` command that when provided will attempt to compile `index.jade`

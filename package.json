@@ -1,8 +1,8 @@
 {
   "name": "mimosa",
   "preferGlobal": "true",
-  "version": "0.0.8alpha",
-  "homepage": "https://github.com/dbashford/mimosa",
+  "version": "0.0.9alpha",
+  "homepage": "http://www.mimosajs.com",
   "author": "David Bashford",
   "description": "A modern browser stack boilerplate. Watch, compile, lint, optimize, serve.",
   "contributors": [

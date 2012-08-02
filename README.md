@@ -72,7 +72,8 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
  * Compile assets when they are saved, not when they are requested
  * Growl notifications along with basic console logging, so if a compile fails, you'll know right away
  * Run in development with unminified/non-compressed javascript, turn on optimization and run with a single javascript file using RequireJS's optimizer and [Almond](https://github.com/jrburke/almond)
- * Verify your RequireJS paths in your AMD wrapped files when you save your code
+ * Verify your RequireJS paths, catch circular dependencies and unwrapped modules in your application right away
+ * Upon successful JS compilation, run the [RequireJS Optimizer](http://requirejs.org/docs/optimization.html) over multi-module applications with no config whatsoever
  * Automatic JSHinting, and CSSLinting
  * Basic Express skeleton to put you on the ground running with a new app, and a bundled Express for serving up assets to an existing app
  * Automatic static asset Gzip-ing, and cache busting
@@ -80,7 +81,7 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
 
 ### Why Mimosa?
 
-What I wanted from Mimosa was a fast nothing-to-coding user-friendly experience.  Little mucking with config to get you started, no installing extra stuff yourself.  I want to deal with individual files during development, and let RequireJS handle optimized builds.  I want linting, gzip, live reload, and cache-busting all just there.  And I wanted first-class support for RequireJS/AMD.
+What I wanted from Mimosa was a fast nothing-to-coding user-friendly experience.  Little mucking with config to get you started, no installing extra stuff yourself.  I want to deal with individual files during development, and let RequireJS handle optimized builds.  I want linting, gzip, live reload, and cache-busting all just there.  And I wanted real first-class support for RequireJS/AMD.
 
 Much love and credit to [Brunch](http://brunch.io/) for the inspiration (hence 'Mimosa'), and for being the codebase I referenced when I had a problem to solve.  There's a lot here that Brunch does similarly, but also quite a bit I think Mimosa does differently.  I suggest you check it out (as if you haven't already).  Brunch is awesome sauce.
 
@@ -100,70 +101,74 @@ If you want the latest and greatest:
 
 ## Quick Start
 
- The easiest way to get started with Mimosa is to create a new application skeleton. By default, Mimosa will create a basic Express app configured to match all of Mimosa's defaults.
+The easiest way to get started with Mimosa is to use Mimosa to create a new application skeleton. By default, Mimosa will create a basic Express app configured to match your desired meta-langauges.
 
- First navigate to a directory within which you want to place your application.
-
- Create the default app:
+First navigate to a directory within which you want to place your application. Create the default app:
 
     $ mimosa new nameOfApplicationHere
 
- Follow the prompts and choose the meta-languages you'd like to use.
+Follow the prompts and choose the meta-languages you'd like to use.
 
- Change into the directory that was created and execute:
+Change into the directory that was created and execute:
 
     $ mimosa watch --server
 
- Mimosa will watch your assets directory and compile changes made to your public directory.  It will also give you console and growl notifications for compilation results and code quality as files as saved.
+In your browser navigate to http://localhost:3000 to see the sample app.
+
+Mimosa will watch your `assets` directory and compile changes made to your `public` directory.  It will also give you console and growl notifications for compilation results and code quality as files as saved.
+
+To run the app in optimize mode, with all your JavaScript assets bundled into a single file, execute:
+
+    $ mimosa watch --server --optimize
 
 ## Configuration
 
- Mimosa's documentation is self-explanatory. The config file that comes bundled with the application contains all of the configurable options within the application and a brief explanation.  If you stick with the default options, like using CoffeeScript, Handlebars, and SASS, the configuration will be entirely commented out as the defaults are built into Mimosa.
+Mimosa's documentation is self-explanatory. The config file that comes bundled with the application contains all of the configurable options within the application and a brief explanation.  If you stick with the default options, like using CoffeeScript, Handlebars, and SASS, the configuration will be entirely commented out as the defaults are built into Mimosa.
 
- To change something -- for instance to make it so you don't get notified via growl when your CSS meta-language (like SASS) compiles successfully -- uncomment the object structure that leads to the setting.  In this case you'd uncomment `growl.onSuccess.css`, and change the setting to `false`.
+To change something -- for instance to make it so you don't get notified via growl when your CSS meta-language (like SASS) compiles successfully -- uncomment the object structure that leads to the setting.  In this case you'd uncomment `growl.onSuccess.css`, and change the setting to `false`.
 
- You can find the configuration [inside the skeleton directory](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/mimosa-config.coffee).
+You can find the configuration [inside the skeleton directory](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/mimosa-config.coffee).
 
 ## Command Line
 
- One interacts with Mimosa via the command-line.
+One interacts with Mimosa via the command-line.
 
 ### Help
 
- Mimosa includes extensive help documentation on the command line for each of the commands.  Give them a peek if you can't remember an option or can't remember what a command does.  Use `--help` or `-h` to bring up help. For example:
+Mimosa includes extensive help documentation on the command line for each of the commands.  Give them a peek if you can't remember an option or can't remember what a command does.  Use `--help` or `-h` to bring up help. For example:
 
     $ mimosa --help
     $ mimosa new -h
 
 ### New Project (new)
 
- The best way to get started with Mimosa is to use it to create a new application/project structure for you.  Create a new project like so:
+The best way to get started with Mimosa is to use it to create a new application/project structure for you.  Create a new project like so:
 
     $ mimosa new nameOfApplicationHere
 
- This will kick off a series of prompts that will allow you to pick out the meta-languages and templating library you'd like to use.  When you've finished picking, Mimosa will create a directory at your current location using the name provided as the name of the directory.  Inside that directory Mimosa will populate an application skeleton with public and asset directories, as well as the bare essentials for a base [Express](http://expressjs.com/) application.  You'll have Express [Jade template](http://jade-lang.com/) views, a simple Express [router](http://expressjs.com/guide.html#routing) and a server.coffee file that will be used by Mimosa to get Express [started](#serve-assets---server).
+This will kick off a series of prompts that will allow you to pick out the meta-languages and templating library you'd like to use.  When you've finished picking, Mimosa will create a directory at your current location using the name provided as the name of the directory.  Inside that directory Mimosa will populate an application skeleton with public and asset directories, as well as the bare essentials for a base [Express](http://expressjs.com/) application.  You'll have Express [Jade template](http://jade-lang.com/) views, a simple Express [router](http://expressjs.com/guide.html#routing) and a server.coffee file that will be used by Mimosa to get Express [started](#serve-assets---server).
 
- The public directory will be empty; it is the destination for your compiled JavaScript and CSS.  The assets directory has some example code -- chosen based on the selections you made via the prompts -- to get you started, and has a group of vendor scripts, like require.js.
+The public directory will be empty; it is the destination for your compiled JavaScript and CSS.  The assets directory has some example code -- chosen based on the selections you made via the prompts -- to get you started, and has a group of vendor scripts, like require.js.
 
- The created directory will also contain the configuration file for Mimosa.  Almost everything inside of it is commented out, but all the options and explanations for each option are present.  The only things that will not be commented out will the javascript, css, and template compilers if you chose something other than the defaults.
+The created directory will also contain the configuration file for Mimosa.  Almost everything inside of it is commented out, but all the options and explanations for each option are present.  The only things that will not be commented out will the javascript, css, and template compilers if you chose something other than the defaults.
 
 #### No Server (--noserver, -n)
 
- Should you not need all of the Express stuff, you can give Mimosa a `--noserver` flag when you create the project.  This will only give you the configuration file, the empty public directory, and the assets directory and all of its contents.
+Should you not need all of the Express stuff, you can give Mimosa a `--noserver` flag when you create the project.  This will only give you the configuration file, the empty public directory, and the assets directory and all of its contents.
 
     $ mimosa new nameOfApplicationHere --noserver
     $ mimosa new nameOfApplicationHere -n
 
 #### Pick the defaults (--defaults, -d)
 
- Should you be happy with the defaults (CoffeeScript, Handlebars, and SASS) you can bypass the prompts by providing a `--defaults` flag.
+Should you be happy with the defaults (CoffeeScript, Handlebars, and SASS) you can bypass the prompts by providing a `--defaults` flag.
 
     $ mimosa new nameOfApplicationHere --defaults
     $ mimosa new nameOfApplicationHere -d
 
 ### Watch and Compile (watch)
 
- Mimosa will watch the configured `sourceDir`, by default the assets directory.  When files are added, updated, or deleted, the configured compilers will perform necessary actions and keep the `compiledDir` updated with compiled/copied assets.
+Mimosa will watch the configured `sourceDir`, by default the assets directory.  When files are added, updated, or deleted, the configured compilers will perform necessary actions and keep the `compiledDir` updated with compiled/copied assets.
 
  To start watching, execute:
 
@@ -171,18 +176,18 @@ If you want the latest and greatest:
 
 #### Serve Assets (--server, -s)
 
- If you are not already running a server, and you need to serve your assets up, start Mimosa with the server flag.
+If you are not already running a server, and you need to serve your assets up, start Mimosa with the server flag.
 
     $ mimosa watch --server
     $ mimosa watch -s
 
- By default, this will look for and run an Express app located at `server.path`.  If you used the Mimosa command line to build your new project, and you didn't provide the `--noserver` flag, you will have a server.coffee at the root of your file structure.  Mimosa will run the `startServer` method in this file.  You can leave this file as is if you are simply serving up assets, but this gives you the opportunity to build out an actual Express app should that be your desire.
+By default, this will look for and run an Express app located at `server.path`.  If you used the Mimosa command line to build your new project, and you didn't provide the `--noserver` flag, you will have a server.coffee at the root of your file structure.  Mimosa will run the `startServer` method in this file.  You can leave this file as is if you are simply serving up assets, but this gives you the opportunity to build out an actual Express app should that be your desire.
 
- You can change to using an embedded default (not-extendable) Express server by changing the `server.useDefaultServer` configuration to `true`.  If you created a project using the `--noserver` flag, this will have already been done for you.
+You can change to using an embedded default (not-extendable) Express server by changing the `server.useDefaultServer` configuration to `true`.  If you created a project using the `--noserver` flag, this will have already been done for you.
 
 #### Serve Optimized Assets (--optimize, -o)
 
- Start Mimosa watching with the `--optimize` flag turned on and Mimosa will run RequireJS's optimizer on start-up and with every javascript file change.  So when you point at either the Express or default server's base URL with optimize flagged, you will be served the result of RequireJS's optimization, packaged with [Almond](https://github.com/jrburke/almond).
+Start Mimosa watching with the `--optimize` flag turned on and Mimosa will run RequireJS's optimizer on start-up and with every javascript file change.  So when you point at either the Express or default server's base URL with optimize flagged, you will be served the result of RequireJS's optimization, packaged with [Almond](https://github.com/jrburke/almond).
 
  When `optimize` is turned on, Mimosa will also minify your CSS.
 
@@ -341,17 +346,6 @@ In the configuration there is a `copy.extensions` setting which lists the assets
 
 If there are extra files you need copied over, uncomment the `copy.extensions` config and add it to the list.  Or, better yet, make a suggestion by [filing an issue](https://github.com/dbashford/mimosa/issues).  No harm in me growing the list of extensions in the default.
 
-## RequireJS support
-
-In addition to having built in command-line and compile time support for [running RequireJS' optimizer](#javascript-optimization), Mimosa will also verify your RequireJS paths when your JavaScript meta-language (or js itself)
-successfully compiles.
-
-Mimosa will follow relative paths for dependencies, and also use your config paths whether they resolve to an actual dependency, ` jquery: 'vendor/jquery'` or they resolve to a module, `moduleX:'a/path/to/module/x'`.
-
-An unresolved path is an crucial as a compiler error; code is broken.  Should a path not be resolved, Mimosa will both write to the console and alert via Growl.
-
-Path verification is enabled by default, but can be disabled by setting `require.verify.enabled` to false.
-
 ## Optimize
 
 In the normal course of development, for debugging purposes, files should be loaded individually, rather than in one merged file, and you don't want your assets minified.  This all makes for easier debugging.
@@ -360,13 +354,25 @@ But when you take your application outside of development, you want to include a
 
 Templates are merged together regardless, but they have source information included to make it easy to track back to the destination file, and templates will (ideally) be logic-less and less prone to problems.
 
-### JavaScript Optimization
+### First-Class RequireJS support, JavaScript Optimization
 
- Mimosa invokes the [RequireJS optimizer](http://requirejs.org/docs/optimization.html) when the `--optimize` flag is used.
+Mimosa is loaded with AMD/RequireJS support.  Mimosa will..
 
- By default, Mimosa will use main.js in the public directory as the sole module to be optimized, but this can be changed in the mimosa-config by tweaking the `require.optimize.name` setting.  The output will be placed in the root of the public directory, in main-built.js, and this too can be changed by changing `require.optimize.out`  The only other default setting is a path/alias set up pointing at jquery in the vendor directory.  You can add other paths/aliases along side the jquery one, remove the jquery path or point it someplace else.
+ * Verify your module paths when your JavaScript meta-language (or JS itself) successfully compiles.  Mimosa will follow relative paths for dependencies, and also use your config paths whether they resolve to an actual dependency, ` jquery: 'vendor/jquery'`, or they resolve to a module, `moduleX:'a/path/to/module/x'`.  An unresolved path is as crucial as a compiler error; code is broken.  Should a path not be resolved, Mimosa will both write to the console and alert via Growl.  Path verification is enabled by default, but can be disabled by setting `require.verify.enabled` to false.
+ * Catch when you have a circular dependency in your application and notify you on the console.
+ * Catch when you have failed to wrap a non-vendor piece of compiled JavaScript in `require` or `define` and notify you on the console.
+ * Run RequireJS' optimizer when the `optimize` flag is enabled for `mimosa build`, and on every file change for `mimosa watch`.
+ * Need no config at all for the optimizer, which typically takes some time to configure.  Mimosa will keep track of your dependencies and build a vanilla optimizer configuration for you.
+ * Handle multiple RequireJS modules just fine
+ * Only compile those modules that need compiling based on the code that just changed
+ * Bundle your optimized JavaScript with [Almond](https://github.com/jrburke/almond)
 
- The RequireJS optimizer has many [configuration options](http://requirejs.org/docs/optimization.html#options).  Any of these options can be added directly to the `require` setting and Mimosa will include them in the optimization.
+You can override and include any of the RequireJS optimizer [configuration options](http://requirejs.org/docs/optimization.html#options) in the mimosa-config if the default behavior isn't to your liking.  Simply uncomment the `require.optimize` setting and toss your settings in there.
+
+The default configuration works like this:
+ * The optimizer `baseUrl` is set by combining the `watch.compiledDir` with the `compilers.javascript.directory`.
+ * Modules and paths are determined by analyzing your source
+ * The optimized files are output into the `watch.compiled` + `compilers.javascript.directory` in a file that is the module + `-built.js`
 
 ### CSS Minification
 
