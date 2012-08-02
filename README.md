@@ -1,14 +1,39 @@
 Mimosa - a modern browser development toolkit
 ======
 
-Mimosa is a browser development toolkit, targeted at folks using meta-languages like (but not limited to) CoffeeScript or SASS, and micro-templating libraries like Jade, Handlebars and Underscore.  Mimosa is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management, and comes bundled with useful tools like js/css hint to improve code quality and live reload to speed up development.  Read through the entire [feature set](#features)!
+Mimosa is a browser development toolkit, targeted at folks using meta-languages like (but not limited to) CoffeeScript or SASS, and micro-templating libraries like Jade, Handlebars and Underscore.  Mimosa is opinionated towards the use of [RequireJS](http://requirejs.org/) for dependency management and has a lot of support built around it.  Mimosa comes bundled with useful tools like js/css hint to improve code quality and live reload to speed up development.  Read through the entire [feature set](#features)!
 
-And know there is more to come!  Mimosa is in full dev mode on its way to feature completeness, however, everything listed in this README should work.
+And know there is more to come!  Mimosa is in full dev mode on its way to feature completeness, however, everything listed in this README should (mostly) work.
 
 [Give it a whirl](#quick-start).  Please do [file issues](https://github.com/dbashford/mimosa/issues) should you find them, and don't hesitate to [request features](https://github.com/dbashford/mimosa/issues).  I haven't spent time testing Mimosa on Windows, so I wouldn't be surprised to learn it has issues.
 
-- [Features](#features)
-	- [Why Mimosa?](#why-mimosa)
+## Features
+
+ * Sane defaults allow you to get started without touching the configuration
+ * Command line prompting during project creation to get you the configuration you want without having to comb through JSON and learn Mimosa's settings
+ * A very simple (eventually less simple!) skeleton app build using the chosen meta-languages
+ * Heavily configurable if moving away from defaults
+ * Compiling of CoffeeScript + Iced CoffeeScript
+ * Compiling of SASS (w/compass), LESS, and Stylus (w/nib)
+ * Compiling of Handlebars, Dust, Hogan, Jade, Underscore, LoDash, and HTML templates into single template files to be used in the client
+ * Compile assets when they are saved, not when they are requested
+ * Growl notifications along with basic console logging, so if a compile fails, you'll know right away
+ * Run in development with unminified/non-compressed javascript.  Turn on optimization and run with a single javascript file using RequireJS's optimizer and [Almond](https://github.com/jrburke/almond) with no need to configure the optimizer
+ * Verify your RequireJS paths, catch circular dependencies and unwrapped modules in your application right away
+ * Install dependencies like jquery or backbone into your project from GitHub via the command line
+ * Automatic JSHinting, and CSSLinting
+ * Basic Express skeleton to put you on the ground running with a new app, and a bundled Express for serving up assets to an existing app
+ * Automatic static asset Gzip-ing, and cache busting
+ * Live Reload built in, without the need for a plugin
+
+### Why Mimosa?
+
+What I wanted from Mimosa was a fast nothing-to-coding user-friendly experience.  Little-to-no mucking with config to get you started, no installing extra stuff yourself.  I want to deal with individual files during development, and let RequireJS handle optimized builds.  I want linting, gzip, live reload, and cache-busting all just there.  And I wanted real first-class support for RequireJS/AMD.
+
+Much love and credit to [Brunch](http://brunch.io/) for the inspiration (hence 'Mimosa'), and for being the codebase I referenced when I had a problem to solve.  There's a lot here that Brunch does similarly, but also quite a bit I think Mimosa does differently.  I suggest you check it out (as if you haven't already).  Brunch is awesome sauce.
+
+Something missing from Mimosa for the short-term, that Brunch has in abundance, is a group of pre-built skeletons to get you started with things like Backbone and Bootstrap.  Those'll come after what I feel is the core feature set is complete and solid.
+
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
@@ -60,35 +85,6 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
 - [Cache Busting](#cache-busting)
 - [Roadmap](#roadmap)
 - [Suggestions? Comments?](#suggestions-comments)
-
-
-## Features
-
- * Sane defaults allow you to get started without touching the configuration
- * Command line prompting during project creation to get you the configuration you want without having to comb through JSON and learn Mimosa's settings
- * A very simple (eventually less simple!) skeleton app build using the chosen meta-languages
- * Heavily configurable if moving away from defaults
- * Compiling of CoffeeScript + Iced CoffeeScript
- * Compiling of SASS (w/compass), LESS, and Stylus (w/nib)
- * Compiling of Handlebars, Dust, Hogan, Jade, Underscore, and LoDash templates into single template files to be used in the client
- * Compile assets when they are saved, not when they are requested
- * Growl notifications along with basic console logging, so if a compile fails, you'll know right away
- * Run in development with unminified/non-compressed javascript, turn on optimization and run with a single javascript file using RequireJS's optimizer and [Almond](https://github.com/jrburke/almond)
- * Verify your RequireJS paths, catch circular dependencies and unwrapped modules in your application right away
- * Upon successful JS compilation, run the [RequireJS Optimizer](http://requirejs.org/docs/optimization.html) over multi-module applications with no config whatsoever
- * Install dependencies like jquery or backbone into your project from GitHub via the command line.
- * Automatic JSHinting, and CSSLinting
- * Basic Express skeleton to put you on the ground running with a new app, and a bundled Express for serving up assets to an existing app
- * Automatic static asset Gzip-ing, and cache busting
- * Live Reload built in, without the need for a plugin
-
-### Why Mimosa?
-
-What I wanted from Mimosa was a fast nothing-to-coding user-friendly experience.  Little mucking with config to get you started, no installing extra stuff yourself.  I want to deal with individual files during development, and let RequireJS handle optimized builds.  I want linting, gzip, live reload, and cache-busting all just there.  And I wanted real first-class support for RequireJS/AMD.
-
-Much love and credit to [Brunch](http://brunch.io/) for the inspiration (hence 'Mimosa'), and for being the codebase I referenced when I had a problem to solve.  There's a lot here that Brunch does similarly, but also quite a bit I think Mimosa does differently.  I suggest you check it out (as if you haven't already).  Brunch is awesome sauce.
-
-Something missing from Mimosa for the short-term, that Brunch has in abundance, is a group of pre-built skeletons to get you started with things like Backbone and Bootstrap.  Those'll come after what I feel is the core feature set is complete and solid.
 
 ## Installation
 
