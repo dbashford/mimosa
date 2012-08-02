@@ -26,7 +26,7 @@ exports.config = {
       # extensions: ["coffee"]                # list of extensions to compile
 
     # template:
-      # compileWith: "handlebars"                                    # Other ops: "dust", "jade", "hogan", "underscore", "lodash", "none".
+      # compileWith: "handlebars"                                    # Other ops:"dust","jade","hogan","underscore","lodash","html","none".
                                                                      # "none" assumes you aren't using any micro-templating solution.
       # extensions: ["hbs", "handlebars"]                            # list of extensions to compile
       # outputFileName: "javascripts/templates"                      # the file all templates are compiled into

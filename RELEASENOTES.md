@@ -1,3 +1,7 @@
+# 0.0.11alpha - TBD
+### Major Changes
+* Added plain html templating
+
 # 0.0.10alpha - August 2, 2012
 ### Major Changes
 * Added new command, `install` which will use volo to install dependencies from GitHub.

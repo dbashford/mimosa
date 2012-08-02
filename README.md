@@ -42,6 +42,7 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
 		- [Jade](#jade)
 		- [Underscore](#underscore)
 		- [LoDash](#lodash)
+		- [HTML](#html)
 - [Asset Copying](#asset-copying)
 - [Optimize](#optimize)
 	- [First-Class RequireJS support, JavaScript Optimization](#first-class-requirejs-support-javascript-optimization)
@@ -355,6 +356,16 @@ To access an [Underscore](http://underscorejs.org/) template originating from a 
 To access a [LoDash](http://lodash.com/) template originating from a file named "example.lodash", do this...
 
 `var html = templates.example({})`
+
+#### HTML
+
+If you just want to use plain HTML templates, you can do that too.
+
+To access a plain HTML template originating from a file named "example.template", do this...
+
+`var html = templates.example`
+
+Full disclosure: Mimosa uses Underscore under the hood to handle getting your plain HTML templates to the browser as strings.  In this case, the Underscore compiler has been made so that it'll not understand it's usual delimiters for code or interpolation, and the resulting compiled Underscore templates are delivered as self-executing.  Will work on unhacking that in the future.
 
 ## Asset Copying
 

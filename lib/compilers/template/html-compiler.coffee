@@ -28,7 +28,7 @@ module.exports = class HTMLCompiler extends AbstractTemplateCompiler
       content = fs.readFileSync fileName, "ascii"
       compiledOutput = _.template(content)
       templateName = path.basename(fileName, path.extname(fileName))
-      output += @addTemplateToOutput fileName, templateName, compiledOutput.source
+      output += @addTemplateToOutput fileName, templateName, compiledOutput.source + "()"
     output += 'return templates; });'
 
     callback(error, output)
