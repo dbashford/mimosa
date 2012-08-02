@@ -12,9 +12,9 @@ gatherCompilerInfo = (callback) ->
   compilerPath = path.join __dirname, '..', '..', 'compilers'
   files = glob.sync "#{compilerPath}/**/*-compiler.coffee"
   compilers =
-    css:[{prettyName:"None", fileName:"none"}]
-    javascript:[{prettyName:"None", fileName:"none"}]
-    template:[{prettyName:"None", fileName:"none"}]
+    css:[{prettyName:"None (Raw CSS)", fileName:"none"}]
+    javascript:[{prettyName:"None (Raw JS)", fileName:"none"}]
+    template:[{prettyName:"None (No Templating)", fileName:"none"}]
 
   gatheredCount = 0
   gatheredInfoForCompiler = =>

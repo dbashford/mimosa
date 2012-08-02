@@ -26,11 +26,10 @@ class NewCommand
   new: (name, opts) =>
     return @_create(name, opts) if opts.defaults
 
-    logger.green "\n  This is the Mimosa interactive project creation tool.  You will be prompted to choose the "
-    logger.green "  meta-languages you'd like to use.  Mimosa will your scan project source directory for files "
-    logger.green "  matching your selections and compile them as they change.  If you intend to use a meta-language"
-    logger.green "  that is not listed, you will have to compile it yourself.  You can choose 'None'.  Then add a"
-    logger.green "  github issue (https://github.com/dbashford/mimosa/issues) and we'll look into adding it. \n"
+    logger.green "\n  This is the Mimosa interactive project creation tool.  It will help you configure and set "
+    logger.green "  up your project. You will be prompted to pick the meta-languages you would like to use."
+    logger.green "  Should your favorite not be listed, you can add a github issue and we'll look into adding it."
+    logger.green "  (https://github.com/dbashford/mimosa/issues)\n"
 
     util.gatherCompilerInfo (compilerInfo) =>
       @_prompting(compilerInfo, name, opts)

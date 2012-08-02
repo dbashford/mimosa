@@ -73,6 +73,7 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
  * Run in development with unminified/non-compressed javascript, turn on optimization and run with a single javascript file using RequireJS's optimizer and [Almond](https://github.com/jrburke/almond)
  * Verify your RequireJS paths, catch circular dependencies and unwrapped modules in your application right away
  * Upon successful JS compilation, run the [RequireJS Optimizer](http://requirejs.org/docs/optimization.html) over multi-module applications with no config whatsoever
+ * Install dependencies like jquery or backbone into your project from GitHub via the command line.
  * Automatic JSHinting, and CSSLinting
  * Basic Express skeleton to put you on the ground running with a new app, and a bundled Express for serving up assets to an existing app
  * Automatic static asset Gzip-ing, and cache busting
@@ -100,7 +101,7 @@ If you want the latest and greatest:
 
 ## Quick Start
 
-The easiest way to get started with Mimosa is to use Mimosa to create a new application skeleton. By default, Mimosa will create a basic Express app configured to match your desired meta-langauges.
+The easiest way to get started with Mimosa is to use it to create a new application skeleton. By default, Mimosa will create a basic Express app configured to match your desired meta-langauges.
 
 First navigate to a directory within which you want to place your application. Create the default app:
 
@@ -188,16 +189,30 @@ You can change to using an embedded default (not-extendable) Express server by c
 
 Start Mimosa watching with the `--optimize` flag turned on and Mimosa will run RequireJS's optimizer on start-up and with every javascript file change.  So when you point at either the Express or default server's base URL with optimize flagged, you will be served the result of RequireJS's optimization, packaged with [Almond](https://github.com/jrburke/almond).
 
- When `optimize` is turned on, Mimosa will also minify your CSS.
+When `optimize` is turned on, Mimosa will also minify your CSS.
 
- To start up with optimization turned on, execute the following:
+To start up with optimization turned on, execute the following:
 
     $ mimosa watch [--server] --optimize
     $ mimosa watch [--server] -o
 
+### Install Dependencies (install)
+
+    $ mimosa install [libraryName]
+
+The `install` command will use [Volo](http://volojs.org/) to install dependencies for you.  Mimosa will first ask where you want to place the dependency, then it will use Volo to go fetch it from GitHub.  See the [Volo documentation](https://github.com/volojs/volo) for more details.
+
+    $ mimosa install jquery
+
+#### Non-AMD dependencies (--noamd, -n)
+
+The only Volo option exposed by Mimosa at this time is the ability to turn on and off whether you are looking for an AMD or non-AMD version.  By default Mimosa will set the install to AMD.  But if you wish a non-AMD version of a library, provide a `-n` flag.
+
+    $ mimosa install backbone --noamd
+
 ### Just Watch, Do Not Write (virgin)
 
-A virgin mimosa is just orange juice.
+Because, after all, a virgin mimosa is just orange juice.
 
     $ mimosa virgin
 

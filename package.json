@@ -1,7 +1,7 @@
 {
   "name": "mimosa",
   "preferGlobal": "true",
-  "version": "0.0.9alpha",
+  "version": "0.0.10alpha",
   "homepage": "http://www.mimosajs.com",
   "author": "David Bashford",
   "description": "A modern browser stack boilerplate. Watch, compile, lint, optimize, serve.",
@@ -61,7 +61,7 @@
     "jshint": "0.7.1",
     "gzippo": "0.1.7",
     "commander": "1.0.0",
-    "watch-connect":"0.3.1",
+    "watch-connect": "0.3.1",
     "date-utils": "1.2.11",
     "chokidar": "0.4.0",
     "lodash": "0.4.1",
@@ -69,7 +69,8 @@
     "clean-css": "0.4.2",
     "hogan.js": "2.0.0",
     "nib": "0.7.0",
-    "stylus": "0.28.2"
+    "stylus": "0.28.2",
+    "volo": "~0.2.2"
   },
   "license": "MIT",
   "engines": {

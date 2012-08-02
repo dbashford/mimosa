@@ -5,7 +5,6 @@ program =  require 'commander'
 version =  require('../package.json').version
 logger =   require './util/logger'
 
-
 class Mimosa
 
   constructor: ->
@@ -18,6 +17,7 @@ class Mimosa
     require('./command/watch')(program)
     require('./command/virgin')(program)
     require('./command/update')(program)
+    require('./command/install')(program)
 
     program.command('*').action (arg) ->
       exec "mimosa --help", (error, stdout, stderr) ->
