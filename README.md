@@ -34,6 +34,8 @@ Much love and credit to [Brunch](http://brunch.io/) for the inspiration (hence '
 
 Something missing from Mimosa for the short-term, that Brunch has in abundance, is a group of pre-built skeletons to get you started with things like Backbone and Bootstrap.  Those'll come after what I feel is the core feature set is complete and solid.
 
+## Table Of Contents
+
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
