@@ -1,3 +1,7 @@
+# 0.0.10alpha - August 2, 2012
+### Major Changes
+* Added new command, `install` which will use volo to install dependencies from GitHub.
+
 # 0.0.9alpha - August 1, 2012
 ### Major Changes
 * Use calculated require dependency graph as input to optimization, removes need to provide any config whatsoever for vanilla r.js optimizes.

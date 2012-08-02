@@ -20,6 +20,8 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
 	- [Watch and Compile (watch)](#watch-and-compile-watch)
 		- [Serve Assets (--server, -s)](#serve-assets---server--s)
 		- [Serve Optimized Assets (--optimize, -o)](#serve-optimized-assets---optimize--o)
+	- [Install Dependencies (install)](#install-dependencies-install)
+		- [Non-AMD dependencies (--noamd, -n)](#non-amd-dependencies---noamd--n)
 	- [Just Watch, Do Not Write (virgin)](#just-watch-do-not-write-virgin)
 	- [One Time Asset Build (build)](#one-time-asset-build-build)
 		- [Optimized Build (--optimize, -o)](#optimized-build---optimize--o)
