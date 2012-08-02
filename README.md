@@ -30,7 +30,7 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
 
 What I wanted from Mimosa was a fast nothing-to-coding user-friendly experience.  Little-to-no mucking with config to get you started, no installing extra stuff yourself.  I want to deal with individual files during development, and let RequireJS handle optimized builds.  I want linting, gzip, live reload, and cache-busting all just there.  And I wanted real first-class support for RequireJS/AMD.
 
-Much love and credit to [Brunch](http://brunch.io/) for the inspiration (hence 'Mimosa'), and for being the codebase I referenced when I had a problem to solve.  There's a lot here that Brunch does similarly, but also quite a bit I think Mimosa does differently.  I suggest you check it out (as if you haven't already).  Brunch is awesome sauce.
+Much love and credit to [Brunch](http://brunch.io/) for the inspiration (hence 'Mimosa'), and for being the codebase I referenced when I had a problem to solve.  There's a lot here that Brunch does similarly, but also quite a bit I think Mimosa does differently.  I suggest you check Brunch out; it is awesome sauce.
 
 Something missing from Mimosa for the short-term, that Brunch has in abundance, is a group of pre-built skeletons to get you started with things like Backbone and Bootstrap.  Those'll come after what I feel is the core feature set is complete and solid.
 
