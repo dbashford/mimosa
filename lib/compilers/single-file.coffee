@@ -1,4 +1,5 @@
 fs = require 'fs'
+path = require 'path'
 
 AbstractCompiler = require './compiler'
 
@@ -36,3 +37,15 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
 
   findCompiledPath: (fileName) ->
     fileName.replace(@srcDir, @compDir).substring(0, fileName.lastIndexOf(".")) + ".#{@outExtension}"
+
+  _isCSS: (fileName) ->
+    path.extname(fileName) is ".css"
+
+  _isJS: (fileName) ->
+    path.extname(fileName) is ".js"
+
+  _isVendor: (fileName) ->
+    fileName.split(path.sep).indexOf('vendor') > -1
+
+  _isJSNotVendor: (fileName) ->
+    @_isJS(fileName) and !@_isVendor(fileName)

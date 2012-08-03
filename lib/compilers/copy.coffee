@@ -60,18 +60,6 @@ module.exports = class CopyCompiler extends SingleFileCompiler
       if @jsLinter? and @_isJS(destFileName)
         @jsLinter.lint(destFileName, source.toString())
 
-  _isCSS: (fileName) ->
-    path.extname(fileName) is ".css"
-
-  _isJS: (fileName) ->
-    path.extname(fileName) is ".js"
-
-  _isVendor: (fileName) ->
-    fileName.split(path.sep).indexOf('vendor') > -1
-
-  _isJSNotVendor: (fileName) ->
-    @_isJS(fileName) and !@_isVendor(fileName)
-
   fileNeedsCompiling: (fileName, destinationFile) ->
     # force compiling on startup to build require depedency tree
     if @requireRegister? and !@isInitializationComplete and @_isJSNotVendor(fileName)

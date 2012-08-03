@@ -14,6 +14,7 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
 
     if config.lint.compiled.javascript
       @linter = new Linter(config.lint.rules.javascript)
+      @lintVendorJS = config.lint.vendor.javascript
 
     if config.require.verify.enabled
       @requireRegister = requireRegister
@@ -24,7 +25,9 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
     @requireRegister?.remove(fileName)
 
   afterCompile: (destFileName, source) =>
-    @linter?.lint(destFileName, source)
+    if @linter? and (!@_isVendor(destFileName) or @lintVendorJS)
+      @linter.lint(destFileName, source)
+
     @requireRegister?.process(destFileName, source)
     source
 

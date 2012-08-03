@@ -20,6 +20,8 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
 
     if config.lint.compiled.css
       @linter = new Linter(config.lint.rules.css)
+      @lintVendorCSS = config.lint.vendor.css
+
 
   created: (fileName) =>
     if @startupFinished then @process(fileName, (f) => super(f)) else @done()
@@ -102,7 +104,8 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
 
   afterCompile: (destFileName, source) =>
     return unless source?.length > 0
-    @linter.lint(destFileName, source) if @linter
+    if @linter? and (!@_isVendor(destFileName) or @lintVendorCSS)
+      @linter.lint(destFileName, source)
 
     if @fullConfig.optimize
       source = clean.process source
