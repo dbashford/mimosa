@@ -1,6 +1,11 @@
-# 0.0.11alpha - TBD
+# 0.0.11alpha - August 2, 2012
 ### Major Changes
 * Added plain html templating
+
+### Minor Changes
+* vendor compiled css and js won't be linted by default, like bootstrap's LESS.  Is fix, adhering to existing setting.
+* update watch-connect
+* 'require' is a valid dependency
 
 # 0.0.10alpha - August 2, 2012
 ### Major Changes
