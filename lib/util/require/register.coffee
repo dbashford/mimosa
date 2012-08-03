@@ -136,7 +136,8 @@ module.exports = class RequireRegister
           if pathWithDirReplaced? and fs.existsSync pathWithDirReplaced
             @_registerDependency(fileName, pathWithDirReplaced)
           else
-            logger.error "RequireJS dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
+            unless dep is 'require'
+              logger.error "RequireJS dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
 
   _registerDependency: (fileName, dependency) ->
     @depsRegistry[fileName].push(dependency)
