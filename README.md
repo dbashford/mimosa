@@ -492,6 +492,7 @@ All of the lint/hinters come with default configurations that Mimosa uses.  Here
 
   Many little bits and pieces, but the big ones are, in no certain order:
 
+ * More require support: map path verification and inclusion, shim path verification, handle plugin depedencies, path fallbacks
  * More compilers across the board
  * example skeletons with things like Backbone/Chaplin/Angular/Ember, Bootstrap, etc
  * Tests for the Mimosa codebase
