@@ -29,7 +29,6 @@ class Optimizer
     done = (almondOutPath) =>
       if ++numProcessed >= numFiles
         @alreadyRunning = false
-        logger.info "Cleaning up..."
         fs.unlink almondOutPath
         logger.info "Requirejs optimization complete."
 

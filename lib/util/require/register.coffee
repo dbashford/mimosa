@@ -84,6 +84,15 @@ module.exports = class RequireRegister
   _addDepsToTree: (f, dep, origDep) ->
     return unless @depsRegistry[dep]?
     for aDep in @depsRegistry[dep]
+      exists = fs.existsSync aDep
+
+      unless exists
+        aDep = @_findAlias(aDep, @aliasFiles)
+        return unless aDep?  # is bad file path
+        if aDep.indexOf('MAPPED!') >= 0
+          aDep = @_findMappedDepedency(dep, aDep)
+
+
       @tree[f].push(aDep) unless @tree[f].indexOf(aDep) >= 0
       @_addDepsToTree(f, aDep, dep) unless aDep is origDep # no circular
 
@@ -103,9 +112,12 @@ module.exports = class RequireRegister
       @depsRegistry[fileName] = deps
 
   _verifyConfigForFile: (fileName, maps, paths) ->
+    # if nothing passed in, then is verify all
+    maps = maps ? @mappings[fileName]
+    paths = paths ? @aliasFiles[fileName]
     @aliasFiles[fileName] = {}
-    @_verifyConfigMappings(fileName, maps ? @mappings[fileName])
-    @_verifyConfigPaths(fileName, paths ? @aliasFiles[fileName])
+    @_verifyConfigMappings(fileName, maps)
+    @_verifyConfigPaths(fileName, paths)
 
   _verifyConfigMappings: (fileName, maps) ->
     # rewrite module paths to full paths
@@ -183,14 +195,15 @@ module.exports = class RequireRegister
       else
         alias = @_findAlias(dep, @aliasFiles)
         if alias
-          # file does not exist, but is aliased, register it
-          @_registerDependency(fileName, alias)
+          # file does not exist, but is aliased, register the alias
+          @_registerDependency(fileName, dep)
         else
           pathWithDirReplaced = @_findPathWhenAliasDiectory(dep)
           if pathWithDirReplaced? and fs.existsSync pathWithDirReplaced
             # file does not exist, but can be found by following directory alias
             @_registerDependency(fileName, pathWithDirReplaced)
           else
+            @_registerDependency(fileName, dep)
             # much sadness, cannot find the dependency
             logger.error "RequireJS dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
 
