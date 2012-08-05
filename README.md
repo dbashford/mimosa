@@ -383,7 +383,8 @@ Templates are merged together regardless, but they have source information inclu
 
 Mimosa is loaded with AMD/RequireJS support.  Mimosa will..
 
- * Verify your module paths when your JavaScript meta-language (or JS itself) successfully compiles.  Mimosa will follow relative paths for dependencies, and also use your config paths whether they resolve to an actual dependency, ` jquery: 'vendor/jquery'`, or they resolve to a module, `moduleX:'a/path/to/module/x'`.  An unresolved path is as crucial as a compiler error; code is broken.  Should a path not be resolved, Mimosa will both write to the console and alert via Growl.  Path verification is enabled by default, but can be disabled by setting `require.verify.enabled` to false.
+ * Verify your module paths when your JavaScript meta-language (or JS itself) successfully compiles.  Mimosa will follow relative paths for dependencies, and also use your config paths whether they resolve to an actual dependency, ` jquery: 'vendor/jquery'`, or they resolve to a module, `moduleX:'a/path/to/module/x'`. Mimosa will also keep track of `map` settings and use them for path verification.  Path verification is enabled by default, but can be disabled by setting `require.verify.enabled` to false.
+ * Alert you when paths are broken.  An unresolved path is as crucial as a compiler error; code is broken.  Should a path not be resolved, Mimosa will both write to the console and alert via Growl.
  * Catch when you have a circular dependency in your application and notify you on the console.
  * Catch when you have failed to wrap a non-vendor piece of compiled JavaScript in `require` or `define` and notify you on the console.
  * Run RequireJS' optimizer when the `optimize` flag is enabled for `mimosa build`, and on every file change for `mimosa watch`.
@@ -392,12 +393,16 @@ Mimosa is loaded with AMD/RequireJS support.  Mimosa will..
  * Only compile those modules that need compiling based on the code that just changed
  * Bundle your optimized JavaScript with [Almond](https://github.com/jrburke/almond)
 
-You can override and include any of the RequireJS optimizer [configuration options](http://requirejs.org/docs/optimization.html#options) in the mimosa-config if the default behavior isn't to your liking.  Simply uncomment the `require.optimize` setting and toss your settings in there.
+The default, built-in optmizer configuration works like this:
+ * `baseUrl`: `baseUrl` is set by combining the `watch.compiledDir` with the `compilers.javascript.directory`.
+ * `out`: The optimized files are output into the `watch.compiled` + `compilers.javascript.directory` in a file that is the module + `-built.js`
+ * `mainConfigFile`: set based on the config file being optimized
+ * `findNestedDependencies`: set to `true`
+ * `wrap`: set to `true`
+ * `include`, `insertRequire`: both set to the name of the module being compiled
+ * `name`: set to `almond`
 
-The default configuration works like this:
- * The optimizer `baseUrl` is set by combining the `watch.compiledDir` with the `compilers.javascript.directory`.
- * Modules and paths are determined by analyzing your source
- * The optimized files are output into the `watch.compiled` + `compilers.javascript.directory` in a file that is the module + `-built.js`
+You can override and include any of the RequireJS optimizer [configuration options](http://requirejs.org/docs/optimization.html#options) in the mimosa-config if the default behavior isn't to your liking.  Simply uncomment the `require.optimize` setting and toss your settings in there.  You can both override and remove settings.  If you want a setting removed, set it to `null`.
 
 ### CSS Minification
 
@@ -492,7 +497,7 @@ All of the lint/hinters come with default configurations that Mimosa uses.  Here
 
   Many little bits and pieces, but the big ones are, in no certain order:
 
- * More require support: map path verification and inclusion, shim path verification, handle plugin depedencies, path fallbacks
+ * More require support: shim path verification, handle plugin depedencies, path fallbacks
  * More compilers across the board
  * example skeletons with things like Backbone/Chaplin/Angular/Ember, Bootstrap, etc
  * Tests for the Mimosa codebase

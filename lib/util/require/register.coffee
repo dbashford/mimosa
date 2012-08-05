@@ -116,6 +116,7 @@ module.exports = class RequireRegister
     maps = maps ? @mappings[fileName]
     paths = paths ? @aliasFiles[fileName]
     @aliasFiles[fileName] = {}
+    @aliasDirectories[fileName] = {}
     @_verifyConfigMappings(fileName, maps)
     @_verifyConfigPaths(fileName, paths)
 

@@ -1,3 +1,10 @@
+# 0.0.12alpha - August 5, 2012
+### Major Changes
+* RequireJS handling now manages and can correctly recognize your `map` config
+
+### Minor Changes
+* Many bug fixes in require path management
+
 # 0.0.11alpha - August 2, 2012
 ### Major Changes
 * Added plain html templating
