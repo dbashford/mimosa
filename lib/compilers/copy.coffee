@@ -29,8 +29,9 @@ module.exports = class CopyCompiler extends SingleFileCompiler
 
   removed: (fileName) ->
     super(fileName)
-    if @_isJS(fileName) and !@_isVendor(fileName) and @requireRegister?
+    if @_isJS(fileName) and @requireRegister?
       @requireRegister.remove(fileName)
+      @optimize(fileName)
 
   compile: (fileName, text, destinationFile, callback) ->
     callback(null, text, destinationFile)
@@ -66,6 +67,9 @@ module.exports = class CopyCompiler extends SingleFileCompiler
       true
     else
       super(fileName, destinationFile)
+
+  afterWrite: (fileName) ->
+    @optimize(fileName) if @_isJS(fileName)
 
   postInitialization: ->
     @requireRegister?.startupDone()

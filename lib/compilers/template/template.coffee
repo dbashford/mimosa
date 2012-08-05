@@ -29,6 +29,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   removed: =>
     @_gatherFiles true
+    @optimize(fileName)
 
   cleanup: ->
     @_removeClientLibrary()

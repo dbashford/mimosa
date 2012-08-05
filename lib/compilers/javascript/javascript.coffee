@@ -23,6 +23,7 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
   removed: (fileName) ->
     super(fileName)
     @requireRegister?.remove(fileName)
+    @optimize(fileName)
 
   afterCompile: (destFileName, source) =>
     if @linter? and (!@_isVendor(destFileName) or @lintVendorJS)

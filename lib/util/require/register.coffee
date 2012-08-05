@@ -1,6 +1,8 @@
 path = require 'path'
 fs = require 'fs'
 
+_ = require 'lodash'
+
 logger = require '../logger'
 
 module.exports = class RequireRegister
@@ -10,6 +12,7 @@ module.exports = class RequireRegister
   aliasDirectories: {}
   requireFiles: []
   tree: {}
+  mappings: {}
 
   setConfig: (@config) ->
     unless @rootJavaScriptDir?
@@ -31,25 +34,30 @@ module.exports = class RequireRegister
     @_verifyAll()
 
   startupDone: (@startupComplete = true) ->
+    return if @startupAlreadyDone
+    @startupAlreadyDone = true
     @_verifyAll()
 
   treeBases: ->
     Object.keys(@tree)
 
   treeBasesForFile: (fileName) ->
+    return [fileName] if @requireFiles.indexOf(fileName) >= 0
+
     bases = []
     for base, deps of @tree
       bases.push(base) if deps.indexOf(fileName) >= 0
     bases
 
-  configPaths: (fileName) ->
-    @aliasFiles[fileName]
+  ###
+  Private
+  ###
 
   _require: (fileName) ->
     (deps, callback, errback, optional) =>
-      [deps, configPaths] = @_requireOverride(deps, callback, errback, optional)
+      [deps, maps, paths] = @_requireOverride(deps, callback, errback, optional)
       @requireFiles.push fileName
-      @_handleConfigPaths(fileName, configPaths) if configPaths?
+      @_handleConfigPaths(fileName, maps, paths)
       @_handleDeps(fileName, deps)
 
   _define: (fileName) ->
@@ -59,15 +67,13 @@ module.exports = class RequireRegister
 
   _deleteForFileName: (fileName, aliases) ->
     delete aliases[fileName] if aliases[fileName]
-    for fileName, configPaths of aliases
-      for alias, aliasPath of configPaths
-        delete configPaths[alias] if aliasPath is fileName
+    for fileName, paths of aliases
+      for alias, aliasPath of paths
+        delete paths[alias] if aliasPath is fileName
 
   _verifyAll: ->
-    for fileName, configPaths of @aliasFiles
-      @_verifyConfigPaths(fileName, configPaths)
-    for fileName, deps of @depsRegistry
-      @_verifyDeps(fileName, deps)
+    @_verifyConfigForFile(file)  for file in @requireFiles
+    @_verifyFileDeps(file, deps) for file, deps  of @depsRegistry
     @_buildTree()
 
   _buildTree: ->
@@ -81,15 +87,60 @@ module.exports = class RequireRegister
       @tree[f].push(aDep) unless @tree[f].indexOf(aDep) >= 0
       @_addDepsToTree(f, aDep, dep) unless aDep is origDep # no circular
 
-  _handleConfigPaths: (fileName, configPaths) ->
+  _handleConfigPaths: (fileName, maps, paths) ->
     if @startupComplete
-      @_verifyConfigPaths(fileName, configPaths)
+      @_verifyConfigForFile(fileName, maps, paths)
+      @_verifyFileDeps(file, deps) for file, deps of @depsRegistry
     else
-      @aliasFiles[fileName] = configPaths
+      @aliasFiles[fileName] = paths
+      @mappings[fileName] = maps
 
-  _verifyConfigPaths: (fileName, configPaths) ->
+  _handleDeps: (fileName, deps) ->
+    if @startupComplete
+      @_verifyFileDeps(fileName, deps)
+      @_buildTree()
+    else
+      @depsRegistry[fileName] = deps
+
+  _verifyConfigForFile: (fileName, maps, paths) ->
     @aliasFiles[fileName] = {}
-    for alias, aliasPath of configPaths
+    @_verifyConfigMappings(fileName, maps ? @mappings[fileName])
+    @_verifyConfigPaths(fileName, paths ? @aliasFiles[fileName])
+
+  _verifyConfigMappings: (fileName, maps) ->
+    # rewrite module paths to full paths
+    for module, mappings of maps
+      if module isnt '*'
+        fullDepPath = @_resolvePath(fileName, module, false)
+        exists = fs.existsSync fullDepPath
+        if exists
+          delete maps[module]
+          maps[fullDepPath] = mappings
+        else
+          logger.error "RequireJS mapping inside file [[ #{fileName} ]], refers to module that cannot be found [[ #{module} ]]."
+          continue
+
+    for module, mappings of maps
+      for alias, aliasPath of mappings
+        fullDepPath = @_resolvePath(fileName, aliasPath, false)
+        if fullDepPath.indexOf('http') is 0
+          @aliasFiles[fileName][alias] = "MAPPED!#{alias}"
+          continue
+
+        exists = fs.existsSync fullDepPath
+        if exists
+          @aliasFiles[fileName][alias] = "MAPPED!#{alias}"
+          maps[module][alias] = fullDepPath
+        else
+          # ??? Can paths in mappings utilize paths to paths set up in config.paths?
+          # i.e. could this work => '*': {'v/jquery':'jquery1.4'} if 'v' didn't exist and
+          # was set up like so => 'paths':{"v":"vendor"}
+          # this assumes no
+          logger.error "RequireJS mapping inside file [[ #{fileName} ]], for module [[ #{module} ]] has path that cannot be found [[#{aliasPath}]]."
+
+  _verifyConfigPaths: (fileName, paths) ->
+    for alias, aliasPath of paths
+      continue if aliasPath.indexOf("MAPPED") is 0
       fullDepPath = @_resolvePath(fileName, aliasPath, false)
       if fullDepPath.indexOf('http') is 0
         @aliasFiles[fileName][alias] = fullDepPath
@@ -106,38 +157,53 @@ module.exports = class RequireRegister
         else
           logger.error "RequireJS dependency [[ #{aliasPath} ]], inside file [[ #{fileName} ]], cannot be found."
 
-  _handleDeps: (fileName, deps) ->
-    if @startupComplete
-      @_verifyDeps(fileName, deps)
-      @_buildTree()
-    else
-      @depsRegistry[fileName] = deps
-
-  _verifyDeps: (fileName, deps) ->
+  _verifyFileDeps: (fileName, deps) ->
     @depsRegistry[fileName] = []
     return unless deps?
 
     for dep in deps
-      fullDepPath = @_resolvePath(fileName, dep)
-      if fullDepPath.indexOf('http') is 0
-        @_registerDependency(fileName, fullDepPath)
+      # require is valid dependency all by itself
+      continue if dep is 'require'
+
+      # as are web resources, CDN, etc
+      if dep.indexOf('http') is 0
+        @_registerDependency(fileName, dep)
         continue
+
+      # resolve path, if mapped, find already calculated map path
+      fullDepPath = if dep.indexOf('MAPPED') is 0
+        @_findMappedDepedency(fileName, dep)
+      else
+        @_resolvePath(fileName, dep)
 
       exists = fs.existsSync fullDepPath
       if exists
+        # file exists, register it
         @_registerDependency(fileName, fullDepPath)
       else
         alias = @_findAlias(dep, @aliasFiles)
         if alias
+          # file does not exist, but is aliased, register it
           @_registerDependency(fileName, alias)
         else
-          # test dep to see if built using directory alias
           pathWithDirReplaced = @_findPathWhenAliasDiectory(dep)
           if pathWithDirReplaced? and fs.existsSync pathWithDirReplaced
+            # file does not exist, but can be found by following directory alias
             @_registerDependency(fileName, pathWithDirReplaced)
           else
-            unless dep is 'require'
-              logger.error "RequireJS dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
+            # much sadness, cannot find the dependency
+            logger.error "RequireJS dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
+
+  _findMappedDepedency: (fileName, dep) ->
+    depName = dep.split('!')[1]
+
+    for mainFile, mappings of @mappings
+      return mappings[fileName][depName] if mappings[fileName]?[depName]?
+
+    for mainFile, mappings of @mappings
+      return mappings['*'][depName] if mappings['*']?[depName]?
+
+    logger.error "Mimosa has a bug! Ack! Cannot find mapping and it really should have."
 
   _registerDependency: (fileName, dependency) ->
     @depsRegistry[fileName].push(dependency)
@@ -150,11 +216,11 @@ module.exports = class RequireRegister
     oneHasTwo and twoHasOne
 
   _findAlias: (dep, aliases) ->
-    for fileName, configPaths of aliases
-      return configPaths[dep] if configPaths[dep]?
+    for fileName, paths of aliases
+      return paths[dep] if paths[dep]?
 
   _resolvePath: (fileName, dep, includeDirectories) ->
-    return dep if dep.indexOf('http') is 0 or dep.indexOf(@rootJavaScriptDir) is 0
+    return dep if dep.indexOf(@rootJavaScriptDir) is 0
     fullPath = if dep.charAt(0) is '.'
       path.resolve path.dirname(fileName), dep
     else
@@ -188,6 +254,6 @@ module.exports = class RequireRegister
         deps = callback
       else
         deps = []
-    [deps, config.paths ? null]
+    [deps, config.map ? null, config.paths ? null]
 
 module.exports = new RequireRegister()

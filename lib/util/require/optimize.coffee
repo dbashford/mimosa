@@ -1,12 +1,9 @@
 path = require 'path'
 fs =   require 'fs'
 
-requirejs = require 'requirejs'
-
-logger =    require '../logger'
-
 _ = require 'lodash'
 
+logger =    require '../logger'
 requireRegister = require './register'
 
 class Optimizer
@@ -21,6 +18,12 @@ class Optimizer
     @alreadyRunning = true
 
     files = if fileName then requireRegister.treeBasesForFile(fileName) else requireRegister.treeBases()
+
+    if files.length is 0
+      return @alreadyRunning = false
+
+    requirejs = require 'requirejs'
+
     numFiles = files.length
     numProcessed = 0
     done = (almondOutPath) =>
@@ -30,42 +33,43 @@ class Optimizer
         fs.unlink almondOutPath
         logger.info "Requirejs optimization complete."
 
-    if files?.length > 0
-      baseUrl = path.join config.watch.compiledDir, config.compilers.javascript.directory
-      almondOutPath = path.join baseUrl, "almond.js"
-      fs.writeFile almondOutPath, @almondText, 'ascii', (err) =>
-        return logger.error "Cannot write Almond, #{err}" if err?
-        for file in files
-          runConfig = @setupConfig(config, file, baseUrl)
-          logger.info "Beginning requirejs optimization for module [[#{runConfig.include[0]}]]"
-          try
-            requirejs.optimize runConfig, (buildResponse) =>
-              logger.success "The compiled file [[#{runConfig.out}]] is ready for use.", true
-              done(almondOutPath)
-          catch err
-            logger.error err
+    baseUrl = path.join config.watch.compiledDir, config.compilers.javascript.directory
+    almondOutPath = path.join baseUrl, "almond.js"
+    fs.writeFile almondOutPath, @almondText, 'ascii', (err) =>
+      if err?
+        done()
+        return logger.error "Cannot write Almond, #{err}"
+      for file in files
+        runConfig = @setupConfig(config, file, baseUrl)
+        logger.info "Beginning requirejs optimization for module [[#{runConfig.include[0]}]]"
+        try
+          # have to require each time, https://github.com/jrburke/r.js/issues/244
+          requirejs.optimize runConfig, (buildResponse) =>
+            logger.success "The compiled file [[#{runConfig.out}]] is ready for use.", true
             done(almondOutPath)
+        catch err
+          logger.error err
+          done(almondOutPath)
 
   setupConfig: (config, file, baseUrl) =>
     runConfig = _.extend({}, config.require.optimize)
-    runConfig.baseUrl = baseUrl unless runConfig.baseUrl
+    name = @_makeRelativeModulePath(file, baseUrl)
 
-    name = file.replace(runConfig.baseUrl + path.sep, '').replace('.js', '')
-
-    paths = {}
-    for alias, configPath of requireRegister.configPaths(file)
-      paths[alias] = configPath.replace(runConfig.baseUrl + path.sep, '').replace('.js', '')
-
-    runConfig.paths = paths          unless runConfig.paths
-    runConfig.include = [name]       unless runConfig.include
-    runConfig.insertRequire = [name] unless runConfig.insertRequire
-    runConfig.wrap = true            unless runConfig.wrap
-    runConfig.name = 'almond'        unless runConfig.name
+    runConfig.baseUrl = baseUrl             unless runConfig.baseUrl? or runConfig.baseUrl is null
+    runConfig.mainConfigFile = file         unless runConfig.mainConfigFile? or runConfig.mainConfigFile is null
+    runConfig.findNestedDependencies = true unless runConfig.findNestedDependencies? or runConfig.findNestedDependencies is null
+    runConfig.include = [name]              unless runConfig.include? or runConfig.include is null
+    runConfig.insertRequire = [name]        unless runConfig.insertRequire? or runConfig.insertRequire is null
+    runConfig.wrap = true                   unless runConfig.wrap? or runConfig.wrap is null
+    runConfig.name = 'almond'               unless runConfig.name? or runConfig.name is null
     runConfig.out = if runConfig.out
       path.join runConfig.baseUrl, runConfig.out
     else
       path.join runConfig.baseUrl, name + "-built.js"
 
     runConfig
+
+  _makeRelativeModulePath: (aPath, baseUrl) ->
+    aPath.replace(baseUrl + path.sep, '').replace('.js', '')
 
 exports.optimize = new Optimizer().optimize
