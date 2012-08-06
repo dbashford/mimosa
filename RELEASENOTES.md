@@ -1,3 +1,9 @@
+# 0.0.13alpha - TBD
+### Major Changes
+
+### Minor Changes
+* Fixed #8, recognize plugin path
+
 # 0.0.12alpha - August 5, 2012
 ### Major Changes
 * RequireJS handling now manages and can correctly recognize your `map` config
