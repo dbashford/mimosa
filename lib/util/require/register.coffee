@@ -121,7 +121,7 @@ module.exports = class RequireRegister
     @aliasFiles[fileName] = {}
     @aliasDirectories[fileName] = {}
     @_verifyConfigMappings(fileName, maps)
-    @_verifyConfigPaths(fileName, paths)
+    @_verifyConfigPath(fileName, alias, aliasPath) for alias, aliasPath of paths
 
   _verifyConfigMappings: (fileName, maps) ->
     # rewrite module paths to full paths
@@ -154,24 +154,32 @@ module.exports = class RequireRegister
           # this assumes no
           logger.error "RequireJS mapping inside file [[ #{fileName} ]], for module [[ #{module} ]] has path that cannot be found [[#{aliasPath}]]."
 
-  _verifyConfigPaths: (fileName, paths) ->
-    for alias, aliasPath of paths
-      continue if aliasPath.indexOf("MAPPED") is 0
-      fullDepPath = @_resolvePath(fileName, aliasPath, false)
-      if fullDepPath.indexOf('http') is 0
-        @aliasFiles[fileName][alias] = fullDepPath
-        continue
 
-      exists = fs.existsSync fullDepPath
-      if exists
-        @aliasFiles[fileName][alias] = fullDepPath
+  _verifyConfigPath: (fileName, alias, aliasPath) ->
+    if Array.isArray(aliasPath)
+      for aPath in aliasPath
+        @_verifyConfigPath(fileName, alias, aPath)
+      return
+
+    return if aliasPath.indexOf("MAPPED") is 0
+
+    # as are web resources, CDN, etc
+    if aliasPath.indexOf('http') is 0
+      return @aliasFiles[fileName][alias] = aliasPath
+
+    fullDepPath = @_resolvePath(fileName, aliasPath, false)
+
+    exists = fs.existsSync fullDepPath
+    if exists
+      @aliasFiles[fileName][alias] = fullDepPath
+    else
+      pathAsDirectory = fullDepPath.replace(/.js$/, '')
+      if fs.existsSync pathAsDirectory
+        @aliasDirectories[fileName] ?= {}
+        @aliasDirectories[fileName][alias] = pathAsDirectory
       else
-        pathAsDirectory = fullDepPath.replace(/.js$/, '')
-        if fs.existsSync pathAsDirectory
-          @aliasDirectories[fileName] ?= {}
-          @aliasDirectories[fileName][alias] = pathAsDirectory
-        else
-          logger.error "RequireJS dependency [[ #{aliasPath} ]], inside file [[ #{fileName} ]], cannot be found."
+        logger.error "RequireJS dependency [[ #{aliasPath} ]], inside file [[ #{fileName} ]], cannot be found."
+
 
   _verifyFileDeps: (fileName, deps) ->
     @depsRegistry[fileName] = []

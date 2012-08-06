@@ -1,6 +1,9 @@
-# 0.0.13alpha - August, 6 2012
-### Major Changes
+# 0.0.14alpha - August, 6 2012
+### Minor Changes
+* Fixed rushed version/publish
+* fixed #12, handle path arrays/fallbacks
 
+# 0.0.13alpha - August, 6 2012
 ### Minor Changes
 * Fixed #8, recognize plugin path
 * Fixed #11, validate plugin path itself
