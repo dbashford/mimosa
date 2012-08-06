@@ -1,9 +1,10 @@
-# 0.0.13alpha - TBD
+# 0.0.13alpha - August, 6 2012
 ### Major Changes
 
 ### Minor Changes
 * Fixed #8, recognize plugin path
 * Fixed #11, validate plugin path itself
+* bug on template delete
 
 # 0.0.12alpha - August 5, 2012
 ### Major Changes
