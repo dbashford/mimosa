@@ -27,7 +27,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
   updated: =>
     @_gatherFiles()
 
-  removed: =>
+  removed: (fileName) =>
     @_gatherFiles true
     @optimize(fileName)
 
