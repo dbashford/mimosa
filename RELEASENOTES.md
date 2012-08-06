@@ -3,6 +3,7 @@
 
 ### Minor Changes
 * Fixed #8, recognize plugin path
+* Fixed #11, validate plugin path itself
 
 # 0.0.12alpha - August 5, 2012
 ### Major Changes

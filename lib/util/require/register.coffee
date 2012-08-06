@@ -99,6 +99,9 @@ module.exports = class RequireRegister
   _handleConfigPaths: (fileName, maps, paths) ->
     if @startupComplete
       @_verifyConfigForFile(fileName, maps, paths)
+      # remove the dependencies for the config file as
+      # they'll get checked after the config paths are checked in
+      @depsRegistry[fileName] = []
       @_verifyFileDeps(file, deps) for file, deps of @depsRegistry
     else
       @aliasFiles[fileName] = paths
@@ -173,43 +176,47 @@ module.exports = class RequireRegister
   _verifyFileDeps: (fileName, deps) ->
     @depsRegistry[fileName] = []
     return unless deps?
+    @_verifyDep(fileName, dep) for dep in deps
 
-    for dep in deps
-      # require is valid dependency all by itself
-      continue if dep is 'require' or dep is 'module'
+  _verifyDep: (fileName, dep) ->
+    # require, module = valid dependencies passed by require
+    return if dep is 'require' or dep is 'module'
 
-      if dep.indexOf('!') >= 0 # plugin
-        dep = dep.split('!')[1]
+    # as are web resources, CDN, etc
+    if dep.indexOf('http') is 0
+      return @_registerDependency(fileName, dep)
 
-      # as are web resources, CDN, etc
-      if dep.indexOf('http') is 0
+    # handle plugins
+    if dep.indexOf('!') >= 0
+      [plugin, dep] = dep.split('!')
+      @_verifyDep(fileName, plugin)
+
+    # resolve path, if mapped, find already calculated map path
+    fullDepPath = if dep.indexOf('MAPPED') is 0
+      @_findMappedDepedency(fileName, dep)
+    else
+      @_resolvePath(fileName, dep)
+
+    exists = fs.existsSync fullDepPath
+    if exists
+      # file exists, register it
+      @_registerDependency(fileName, fullDepPath)
+    else
+      alias = @_findAlias(dep, @aliasFiles)
+      if alias
+        # file does not exist, but is aliased, register the alias
         @_registerDependency(fileName, dep)
-        continue
-
-      # resolve path, if mapped, find already calculated map path
-      fullDepPath = if dep.indexOf('MAPPED') is 0
-        @_findMappedDepedency(fileName, dep)
       else
-        @_resolvePath(fileName, dep)
-
-      exists = fs.existsSync fullDepPath
-      if exists
-        # file exists, register it
-        @_registerDependency(fileName, fullDepPath)
-      else
-        alias = @_findAlias(dep, @aliasFiles)
-        if alias
-          # file does not exist, but is aliased, register the alias
-          @_registerDependency(fileName, dep)
+        pathWithDirReplaced = @_findPathWhenAliasDiectory(dep)
+        if pathWithDirReplaced? and fs.existsSync pathWithDirReplaced
+          # file does not exist, but can be found by following directory alias
+          @_registerDependency(fileName, pathWithDirReplaced)
         else
-          pathWithDirReplaced = @_findPathWhenAliasDiectory(dep)
-          if pathWithDirReplaced? and fs.existsSync pathWithDirReplaced
-            # file does not exist, but can be found by following directory alias
-            @_registerDependency(fileName, pathWithDirReplaced)
-          else
-            @_registerDependency(fileName, dep)
-            # much sadness, cannot find the dependency
-            logger.error "RequireJS dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
+          @_registerDependency(fileName, dep)
+          # much sadness, cannot find the dependency
+          logger.error "RequireJS dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
+
+
 
   _findMappedDepedency: (fileName, dep) ->
     depName = dep.split('!')[1]
