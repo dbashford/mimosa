@@ -176,7 +176,10 @@ module.exports = class RequireRegister
 
     for dep in deps
       # require is valid dependency all by itself
-      continue if dep is 'require'
+      continue if dep is 'require' or dep is 'module'
+
+      if dep.indexOf('!') >= 0 # plugin
+        dep = dep.split('!')[1]
 
       # as are web resources, CDN, etc
       if dep.indexOf('http') is 0
