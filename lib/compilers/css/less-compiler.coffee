@@ -11,6 +11,7 @@ logger = require '../../util/logger'
 module.exports = class LessCompiler extends AbstractCssCompiler
 
   importRegex: /@import ['"](.*)['"]/g
+  partialKeepsExtension: true
 
   @prettyName        = -> "LESS - http://lesscss.org/"
   @defaultExtensions = -> ["less"]

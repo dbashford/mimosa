@@ -22,7 +22,6 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
       @linter = new Linter(config.lint.rules.css)
       @lintVendorCSS = config.lint.vendor.css
 
-
   created: (fileName) =>
     if @startupFinished then @process(fileName, (f) => super(f)) else @done()
 
@@ -130,9 +129,11 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
       @importRegex.lastIndex = 0
       importPath = @importRegex.exec(anImport)[1]
       fullImportFilePath = @_getImportFilePath(baseFile, importPath)
-      includeFiles = @allFiles.filter (f) ->
-        f = f.replace(path.extname(f), '')
+
+      includeFiles = @allFiles.filter (f) =>
+        f = f.replace(path.extname(f), '') unless @partialKeepsExtension
         f.slice(-fullImportFilePath.length) is fullImportFilePath
+
 
       for includeFile in includeFiles
         hash = @includeToBaseHash[includeFile]
