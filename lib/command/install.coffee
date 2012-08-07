@@ -26,6 +26,7 @@ class InstallCommand
         fullDesiredDir = path.join config.watch.sourceDir, desiredDir
         process.chdir fullDesiredDir
         done = ->
+          fs.unlinkSync 'package.json' if fs.existsSync 'package.json'
           process.chdir(currentDir)
           process.stdin.destroy()
 
