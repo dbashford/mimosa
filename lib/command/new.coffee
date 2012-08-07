@@ -186,6 +186,9 @@ class NewCommand
       fs.writeFile templateView, data
 
   _postCopyCleanUp: =>
+    data = fs.readFileSync (path.join @currPath, '.npmignore'), 'ascii'
+    fs.writeFileSync path.join(@currPath, '.gitignore'), data, 'ascii'
+
     glob "#{@currPath}/**/.gitkeep", (err, files) ->
       fs.unlinkSync(file) for file in files
 
