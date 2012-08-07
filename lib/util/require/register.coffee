@@ -13,6 +13,7 @@ module.exports = class RequireRegister
   requireFiles: []
   tree: {}
   mappings: {}
+  shims: {}
 
   setConfig: (@config) ->
     unless @rootJavaScriptDir?
@@ -55,10 +56,11 @@ module.exports = class RequireRegister
 
   _require: (fileName) ->
     (deps, callback, errback, optional) =>
-      [deps, maps, paths] = @_requireOverride(deps, callback, errback, optional)
+      [deps, maps, paths, shims] = @_requireOverride(deps, callback, errback, optional)
       @requireFiles.push fileName
       @_handleConfigPaths(fileName, maps, paths)
       @_handleDeps(fileName, deps)
+      @_handleShims(fileName, shims)
 
   _define: (fileName) ->
     (id, deps, funct) =>
@@ -73,8 +75,28 @@ module.exports = class RequireRegister
 
   _verifyAll: ->
     @_verifyConfigForFile(file)  for file in @requireFiles
-    @_verifyFileDeps(file, deps) for file, deps  of @depsRegistry
+    @_verifyFileDeps(file, deps) for file, deps of @depsRegistry
+    @_verifyShims(file, shims) for file, shims of @shims
     @_buildTree()
+
+  _handleShims: (fileName, shims) ->
+    if @startupComplete
+      @_verifyShims(fileName, shims)
+    else
+      @shims[fileName] = shims
+
+  _verifyShims: (fileName, shims) ->
+    return unless shims?
+
+    for name, config of shims
+      unless fs.existsSync @_resolvePath(fileName, name, false)
+        logger.error "RequireJS shim [[ #{name} ]] inside file [[ #{fileName} ]] cannot be found."
+
+      deps = if Array.isArray(config) then config else config.deps
+      if deps?
+        for dep in deps
+          unless fs.existsSync @_resolvePath(fileName, dep, false)
+            logger.error "RequireJS shim [[ #{name} ]] inside file [[ #{fileName} ]] refers to a dependency that cannot be found [[ #{dep} ]]."
 
   _buildTree: ->
     for f in @requireFiles
@@ -91,7 +113,6 @@ module.exports = class RequireRegister
         return unless aDep?  # is bad file path
         if aDep.indexOf('MAPPED!') >= 0
           aDep = @_findMappedDepedency(dep, aDep)
-
 
       @tree[f].push(aDep) unless @tree[f].indexOf(aDep) >= 0
       @_addDepsToTree(f, aDep, dep) unless aDep is origDep # no circular
@@ -224,8 +245,6 @@ module.exports = class RequireRegister
           # much sadness, cannot find the dependency
           logger.error "RequireJS dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
 
-
-
   _findMappedDepedency: (fileName, dep) ->
     depName = dep.split('!')[1]
 
@@ -286,6 +305,7 @@ module.exports = class RequireRegister
         deps = callback
       else
         deps = []
-    [deps, config.map ? null, config.paths ? null]
+
+    [deps, config.map ? null, config.paths ? null, config.shim ? null]
 
 module.exports = new RequireRegister()
