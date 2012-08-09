@@ -1,3 +1,10 @@
+# 0.0.15alpha - August, 9 2012
+### Minor Changes
+* Remove package.json on volo add
+* added default npm/gitignore on project creation
+* fixed problem with LESS base file determination
+* added support for verifying shim paths
+
 # 0.0.14alpha - August, 6 2012
 ### Minor Changes
 * Fixed rushed version/publish
