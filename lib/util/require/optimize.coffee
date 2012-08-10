@@ -2,6 +2,7 @@ path = require 'path'
 fs =   require 'fs'
 
 _ = require 'lodash'
+requirejs = require 'requirejs'
 
 logger =    require '../logger'
 requireRegister = require './register'
@@ -22,7 +23,6 @@ class Optimizer
     if files.length is 0
       return @alreadyRunning = false
 
-    requirejs = require 'requirejs'
 
     numFiles = files.length
     numProcessed = 0
@@ -42,12 +42,13 @@ class Optimizer
         runConfig = @setupConfig(config, file, baseUrl)
         logger.info "Beginning requirejs optimization for module [[#{runConfig.include[0]}]]"
         try
-          # have to require each time, https://github.com/jrburke/r.js/issues/244
           requirejs.optimize runConfig, (buildResponse) =>
             logger.success "The compiled file [[#{runConfig.out}]] is ready for use.", true
             done(almondOutPath)
         catch err
           logger.error err
+          # see https://github.com/jrburke/r.js/issues/244, need to clean out require by hand
+          requirejs._buildReset()
           done(almondOutPath)
 
   setupConfig: (config, file, baseUrl) =>
