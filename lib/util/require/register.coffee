@@ -138,7 +138,14 @@ module.exports = class RequireRegister
   _verifyConfigForFile: (fileName, maps, paths) ->
     # if nothing passed in, then is verify all
     maps = maps ? @mappings[fileName]
-    paths = paths ? @aliasFiles[fileName]
+    paths = if paths
+      paths
+    else
+      paths = {}
+      paths = _.extend(paths, @aliasFiles[fileName])       if @aliasFiles[fileName]?
+      paths = _.extend(paths, @aliasDirectories[fileName]) if @aliasDirectories[fileName]?
+      paths
+
     @aliasFiles[fileName] = {}
     @aliasDirectories[fileName] = {}
     @_verifyConfigMappings(fileName, maps)
@@ -175,7 +182,6 @@ module.exports = class RequireRegister
           # this assumes no
           logger.error "RequireJS mapping inside file [[ #{fileName} ]], for module [[ #{module} ]] has path that cannot be found [[#{aliasPath}]]."
 
-
   _verifyConfigPath: (fileName, alias, aliasPath) ->
     if Array.isArray(aliasPath)
       for aPath in aliasPath
@@ -192,7 +198,10 @@ module.exports = class RequireRegister
 
     exists = fs.existsSync fullDepPath
     if exists
-      @aliasFiles[fileName][alias] = fullDepPath
+      if fs.statSync(fullDepPath).isDirectory()
+        @aliasDirectories[fileName][alias] = fullDepPath
+      else
+        @aliasFiles[fileName][alias] = fullDepPath
     else
       pathAsDirectory = fullDepPath.replace(/.js$/, '')
       if fs.existsSync pathAsDirectory
