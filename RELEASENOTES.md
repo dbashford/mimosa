@@ -1,3 +1,8 @@
+# 0.0.16alpha - August, 10 2012
+### Minor Changes
+* Fixed #17, when requirejs optimization throws, subsequent runs will not automatically also throw
+* Mimosa will continue to recognize path directories from require config after a file has been deleted
+
 # 0.0.15alpha - August, 9 2012
 ### Minor Changes
 * Remove package.json on volo add
