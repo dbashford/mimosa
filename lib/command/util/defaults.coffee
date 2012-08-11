@@ -47,7 +47,7 @@ class MimosaDefaults
     css.extensions =      config.compilers.css.extensions      ?= ["scss", "sass"]
 
     copy = newConfig.copy = config.copy                        ?= {}
-    copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf"]
+    copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml"]
 
     requirejs = newConfig.require = config.require             ?= {}
 
