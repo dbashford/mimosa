@@ -39,7 +39,7 @@ class Watcher
 
   compilerDone: =>
     if ++@compilersDone is @compilers.length
-      clearInterval(@intervalId) if @intervalId?
+      clearInterval(@intervalId) if @intervalId? and !@persist
       compiler.initializationComplete() for compiler in @compilers
       optimizer.optimize(@config)
       @initCallback(@config) if @initCallback?
