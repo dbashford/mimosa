@@ -1,3 +1,11 @@
+# 0.0.17alpha - August, 11 2012
+### Major Changes
+* Added `watch.throttle` config setting to attempt to providing throttling for large number of adds.
+* Added ability to handle `requirejs` global from require.js library.  Previously was just handling `require`.
+
+### Minor Changes
+* Added 'yaml' as another default copy extension
+
 # 0.0.16alpha - August, 10 2012
 ### Minor Changes
 * Fixed #17, when requirejs optimization throws, subsequent runs will not automatically also throw
