@@ -169,11 +169,19 @@ Should you be happy with the defaults (CoffeeScript, Handlebars, and SASS) you c
 
 ### Watch and Compile (watch)
 
-Mimosa will watch the configured `sourceDir`, by default the assets directory.  When files are added, updated, or deleted, the configured compilers will perform necessary actions and keep the `compiledDir` updated with compiled/copied assets.
+Mimosa will watch the configured `watch.sourceDir`, by default the assets directory.  When files are added, updated, or deleted, the configured compilers will perform necessary actions and keep the `watch.compiledDir` updated with compiled/copied assets.
 
  To start watching, execute:
 
     $ mimosa watch
+
+When Mimosa starts up, it registers files in your `sourceDir` all at once.  If you have a very large number of files, 1000 images to copy over for instance, Mimosa may open enough files to cause EMFILE issues.  This means that Mimosa has opened up too many files at one time, more files than your system allows to be open at once.
+
+To combat this, the `watch` config has a `throttle` property.  `throttle` is the number of files Mimosa should handle every 100 milliseconds during the initial Mimosa startup and for subsequent file additions.  For instance, if you set the number to 200, this means that if you have 1000 files, when Mimosa starts up it will process them in 5 chunks of 200, spaced 100 milliseconds apart.  It will do the same if, after Mimosa has started, you add 1000 files with a single copy or paste.
+
+You may still run into EMFILE issues after setting throttle, and it might take some playing around with the number to get things just right.
+
+The default for `throttle` is 0.  When `throttle` is set to 0, throttling is disabled and all files are processed immediately.
 
 #### Serve Assets (--server, -s)
 

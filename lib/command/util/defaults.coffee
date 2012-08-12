@@ -26,6 +26,7 @@ class MimosaDefaults
     newConfig.watch.sourceDir =   path.join(@root, config.watch.sourceDir   ? "assets")
     newConfig.watch.compiledDir = path.join(@root, config.watch.compiledDir ? "public")
     newConfig.watch.ignored =     config.watch.ignored ?= [".sass-cache"]
+    newConfig.watch.throttle =    config.watch.throttle ?= 0
 
     comp = newConfig.compilers = config.compilers ?= {}
     js = comp.javascript = config.compilers.javascript ?= {}
