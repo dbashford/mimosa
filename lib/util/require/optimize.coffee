@@ -23,20 +23,23 @@ class Optimizer
     if files.length is 0
       return @alreadyRunning = false
 
-
     numFiles = files.length
     numProcessed = 0
     done = (almondOutPath) =>
-      if ++numProcessed >= numFiles
+      numProcessed += 1
+      if numProcessed is numFiles
         @alreadyRunning = false
-        fs.unlink almondOutPath
+        fs.unlink almondOutPath if fs.existsSync almondOutPath
         logger.info "Requirejs optimization complete."
+
+      if numProcessed > numFiles
+        logger.warn "Mimosa's optimizer.done method was called too many times, #{numProcessed}, #{numFiles}"
 
     baseUrl = path.join config.watch.compiledDir, config.compilers.javascript.directory
     almondOutPath = path.join baseUrl, "almond.js"
     fs.writeFile almondOutPath, @almondText, 'ascii', (err) =>
       if err?
-        done()
+        done(almondOutPath)
         return logger.error "Cannot write Almond, #{err}"
       for file in files
         runConfig = @setupConfig(config, file, baseUrl)
@@ -62,6 +65,7 @@ class Optimizer
     runConfig.insertRequire = [name]        unless runConfig.insertRequire? or runConfig.insertRequire is null
     runConfig.wrap = true                   unless runConfig.wrap? or runConfig.wrap is null
     runConfig.name = 'almond'               unless runConfig.name? or runConfig.name is null
+    # runConfig.removeCombined = true
     runConfig.out = if runConfig.out
       path.join runConfig.baseUrl, runConfig.out
     else

@@ -32,7 +32,6 @@ class Watcher
   pullFiles: =>
     return if @adds.length is 0
     filesToAdd = if @adds.length <= @throttle
-      clearInterval(@intervalId) unless @persist
       @adds.splice(0, @adds.length)
     else
       @adds.splice(0, @throttle)
@@ -40,6 +39,7 @@ class Watcher
 
   compilerDone: =>
     if ++@compilersDone is @compilers.length
+      clearInterval(@intervalId) if @intervalId?
       compiler.initializationComplete() for compiler in @compilers
       optimizer.optimize(@config)
       @initCallback(@config) if @initCallback?
