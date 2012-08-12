@@ -1,6 +1,11 @@
+# 0.0.18alpha - August, 12 2012
+### Minor Changes
+* #20, removing firefox debug info from stylus compiled files when optimized
+* #!8, when throttling, build should now exit
+
 # 0.0.17alpha - August, 11 2012
 ### Major Changes
-* Added `watch.throttle` config setting to attempt to providing throttling for large number of adds.
+* Added `watch.throttle` config setting to provide throttling for large number of adds.
 * Added ability to handle `requirejs` global from require.js library.  Previously was just handling `require`.
 
 ### Minor Changes
