@@ -28,7 +28,7 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
       .include(path.dirname(fileName))
       .include(@srcDir)
       .set('compress', false)
-      .set('firebug', true)
+      .set('firebug', @fullConfig.optimize? and !@fullConfig.optimize)
       .set('filename', fileName)
       .use(nib())
       .import('nib')
