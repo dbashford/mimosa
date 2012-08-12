@@ -11,19 +11,19 @@ class Watcher
   compilersDone:0
   adds:[]
 
-  constructor: (@config, @compilers, persist, @initCallback) ->
+  constructor: (@config, @compilers, @persist, @initCallback) ->
     @throttle = @config.watch.throttle
     compiler.setStartupDoneCallback(@compilerDone) for compiler in @compilers
-    @startWatcher(persist)
+    @startWatcher()
 
-    logger.info "Watching #{@config.watch.sourceDir}" if persist
+    logger.info "Watching #{@config.watch.sourceDir}" if @persist
 
     if @throttle > 0
-      setInterval(@pullFiles, 100)
+      @intervalId = setInterval(@pullFiles, 100)
       @pullFiles()
 
   startWatcher: (persist) ->
-    watcher = watch.watch(@config.watch.sourceDir, {persistent:persist})
+    watcher = watch.watch(@config.watch.sourceDir, {persistent:@persist})
     watcher.on "change", (f) => @_findCompiler(f)?.updated(f)
     watcher.on "unlink", (f) => @_findCompiler(f)?.removed(f)
     watcher.on "add", (f) =>
@@ -32,6 +32,7 @@ class Watcher
   pullFiles: =>
     return if @adds.length is 0
     filesToAdd = if @adds.length <= @throttle
+      clearInterval(@intervalId) unless @persist
       @adds.splice(0, @adds.length)
     else
       @adds.splice(0, @throttle)
