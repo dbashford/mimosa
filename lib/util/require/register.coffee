@@ -22,6 +22,9 @@ module.exports = class RequireRegister
   process: (fileName, source) ->
     require = @_require(fileName)
     define = @_define(fileName)
+    requirejs = require
+    requirejs.config = require
+    @_requirejs(requirejs)
     try
       eval(source)
     catch e
@@ -56,16 +59,31 @@ module.exports = class RequireRegister
 
   _require: (fileName) ->
     (deps, callback, errback, optional) =>
-      [deps, maps, paths, shims] = @_requireOverride(deps, callback, errback, optional)
-      @requireFiles.push fileName
-      @_handleConfigPaths(fileName, maps, paths)
+      [deps, config] = @_requireOverride(deps, callback, errback, optional)
+      if config
+        @requireFiles.push fileName
+        @_handleConfigPaths(fileName, config.map ? null, config.paths ? null)
+        @_handleShims(fileName, config.shims ? null)
       @_handleDeps(fileName, deps)
-      @_handleShims(fileName, shims)
+
 
   _define: (fileName) ->
     (id, deps, funct) =>
       deps = @_defineOverride(id, deps, funct)
       @_handleDeps(fileName, deps)
+
+  # may not be necessary, but for future reference
+  _requirejs: (r) ->
+    r.version = ''
+    r.onError = ->
+    r.jsExtRegExp = /^\/|:|\?|\.js$/
+    r.isBrowser = true
+    r.load = ->
+    r.exec = ->
+    r.toUrl = -> ""
+    r.undef = ->
+    r.defined = ->
+    r.specified = ->
 
   _deleteForFileName: (fileName, aliases) ->
     delete aliases[fileName] if aliases[fileName]
@@ -208,7 +226,7 @@ module.exports = class RequireRegister
         @aliasDirectories[fileName] ?= {}
         @aliasDirectories[fileName][alias] = pathAsDirectory
       else
-        logger.error "RequireJS dependency [[ #{aliasPath} ]], inside file [[ #{fileName} ]], cannot be found."
+        logger.error "RequireJS dependency [[ #{aliasPath} ]] for path alias [[ #{alias} ]], inside file [[ #{fileName} ]], cannot be found."
 
 
   _verifyFileDeps: (fileName, deps) ->
@@ -315,6 +333,6 @@ module.exports = class RequireRegister
       else
         deps = []
 
-    [deps, config.map ? null, config.paths ? null, config.shim ? null]
+    [deps, config]
 
 module.exports = new RequireRegister()
