@@ -1,3 +1,14 @@
+# 0.0.19alpha - August, 13 2012
+### Major Changes
+* #16, can now use live reload on multiple directories.  Add an `additionaldirs` array to the `reloadOnChange` options hash with the paths to the other directories you'd like to watch.  `mimosa new` will now will now deliver code that will watch the `views` directory.
+
+### Minor Changes
+* #18, prematurely killing interval resulted in builds ending too soon, don't kill until the compilers are done
+* #22, almond appearing and disappearing should no longer bother mimosa projects with huge numbers of files
+
+### Breaking Changes
+* For those using the server code delivered by Mimosa, the `reloadOnChange` options hash `exclude` now takes an array of RegExp strings rather than an array of regular strings.  Be sure to escape your regex.
+
 # 0.0.18alpha - August, 12 2012
 ### Minor Changes
 * #20, removing firefox debug info from stylus compiled files when optimized

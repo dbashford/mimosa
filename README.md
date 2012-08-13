@@ -489,9 +489,11 @@ All of the lint/hinters come with default configurations that Mimosa uses.  Here
 
 ## Live Reload
 
-  The default application you are provided comes built with live reload included.  Live Reload will immediately reload your web page any time an asset is compiled.  So, for instance, if you change some LESS code, the instant it is compiled, and the compiled .css file is written to your `compiledDir`, your browser will update and your CSS updates will be displayed.
+The default application you are provided comes built with live reload included.  Live Reload will immediately reload your web page any time an asset is compiled.  So, for instance, if you change some LESS code, the instant it is compiled, and the compiled .css file is written to your `compiledDir`, your browser will update and your CSS updates will be displayed.
 
-  To do this, the default application is built to include two extra libraries, including socket.io, to talk to the server and determine when to reload the page.  If you wish to turn this off, and thereby not include the two extra files, go into the mimosa-config.coffee file and update `server.useReload` to false.  These two extra files do not get wrapped up by RequireJS.
+For those using the server code delivered to them via `mimosa new`, you have the ability to tweak how the reload works in the [`server.coffee`](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/server.coffee).  The library used for providing the Live Reload functionality is [watch-connect](https://github.com/Filirom1/watch-connect), and the github page has an explanation of the options you can pass in.  By default the reload will fire whenever the code in the `watch.compiledDir` changes, and whenever the code in the `view` directory of the application changes.  You have the ability to add more directories, and to exclude files from causing a reload using regexes.
+
+To perform the Live Reload, the default application is built to include two extra libraries, including socket.io, to talk to the server and determine when to reload the page.  If you wish to turn this off, and thereby not include the two extra files, go into the mimosa-config.coffee file and update `server.useReload` to false.  These two extra files do not get wrapped up by RequireJS.
 
 ## GZip
 
