@@ -6,13 +6,15 @@ routes  =        require './routes'
 
 exports.startServer = (publicPath, useReload, optimize) ->
 
+  viewDirectory = "#{__dirname}/views"
+
   app = express()
   server = app.listen 3000, ->
      console.log "Express server listening on port %d in %s mode", server.address().port, app.settings.env
 
   app.configure ->
     app.set 'port', process.env.PORT || 3000
-    app.set 'views', "#{__dirname}/views"
+    app.set 'views', viewDirectory
     app.set 'view engine', 'jade'
     app.use express.favicon()
     app.use express.bodyParser()
@@ -24,6 +26,7 @@ exports.startServer = (publicPath, useReload, optimize) ->
         verbose: false
         skipAdding:true
         exclude:["almond\.js"]
+        additionaldirs:[viewDirectory]
       app.use reloadOnChange(options)
     app.use app.router
     app.use gzip.staticGzip(publicPath)
@@ -32,6 +35,3 @@ exports.startServer = (publicPath, useReload, optimize) ->
     app.use express.errorHandler()
 
   app.get '/', routes.index(useReload, optimize)
-
-
-
