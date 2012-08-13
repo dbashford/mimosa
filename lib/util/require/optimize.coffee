@@ -26,10 +26,9 @@ class Optimizer
     numFiles = files.length
     numProcessed = 0
     done = (almondOutPath) =>
-      numProcessed += 1
-      if numProcessed is numFiles
+      if ++numProcessed is numFiles
         @alreadyRunning = false
-        fs.unlink almondOutPath if fs.existsSync almondOutPath
+        fs.unlinkSync almondOutPath if fs.existsSync almondOutPath
         logger.info "Requirejs optimization complete."
 
       if numProcessed > numFiles
@@ -65,7 +64,6 @@ class Optimizer
     runConfig.insertRequire = [name]        unless runConfig.insertRequire? or runConfig.insertRequire is null
     runConfig.wrap = true                   unless runConfig.wrap? or runConfig.wrap is null
     runConfig.name = 'almond'               unless runConfig.name? or runConfig.name is null
-    # runConfig.removeCombined = true
     runConfig.out = if runConfig.out
       path.join runConfig.baseUrl, runConfig.out
     else

@@ -40,7 +40,7 @@ startDefaultServer = (config) ->
         watchdir: config.watch.compiledDir
         verbose: false
         skipAdding: true
-        exclude: ["almond.js"]
+        exclude: ["almond\.js"]
       app.use (require 'watch-connect')(options)
 
     app.use config.server.base, gzip.staticGzip(config.watch.compiledDir)
