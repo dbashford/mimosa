@@ -23,14 +23,14 @@ module.exports = class CopyCompiler extends SingleFileCompiler
     @lintVendorJS = config.lint.vendor.javascript
     @lintVendorCSS = config.lint.vendor.css
 
-    if config.require.verify.enabled
+    if config.require.verify.enabled or config.optimize
       @requireRegister = requireRegister
       @requireRegister.setConfig(config)
 
   removed: (fileName) ->
     super(fileName)
-    if @_isJS(fileName) and @requireRegister?
-      @requireRegister.remove(fileName)
+    if @_isJS(fileName)
+      if @requireRegister? then @requireRegister.remove(fileName)
       @optimize(fileName)
 
   compile: (fileName, text, destinationFile, callback) ->

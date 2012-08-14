@@ -16,6 +16,7 @@ module.exports = class RequireRegister
   shims: {}
 
   setConfig: (@config) ->
+    @verify = @config.require.verify.enabled
     unless @rootJavaScriptDir?
       @rootJavaScriptDir = path.join @config.watch.compiledDir, @config.compilers.javascript.directory
 
@@ -28,8 +29,8 @@ module.exports = class RequireRegister
     try
       eval(source)
     catch e
-      logger.warn "File named [#{fileName}] is not wrapped in a 'require' or 'define' function call."
-      logger.warn "#{e}"
+      @_logger "File named [#{fileName}] is not wrapped in a 'require' or 'define' function call.", "warm"
+      @_logger "#{e}", 'warn'
 
   remove: (fileName) ->
     delete @depsRegistry[fileName] if @depsRegistry[fileName]?
@@ -56,6 +57,9 @@ module.exports = class RequireRegister
   ###
   Private
   ###
+
+  _logger: (message, method = 'error') ->
+    logger[method](message) if @verify
 
   _require: (fileName) ->
     (deps, callback, errback, optional) =>
@@ -108,13 +112,13 @@ module.exports = class RequireRegister
 
     for name, config of shims
       unless fs.existsSync @_resolvePath(fileName, name, false)
-        logger.error "RequireJS shim [[ #{name} ]] inside file [[ #{fileName} ]] cannot be found."
+        @_logger "RequireJS shim [[ #{name} ]] inside file [[ #{fileName} ]] cannot be found."
 
       deps = if Array.isArray(config) then config else config.deps
       if deps?
         for dep in deps
           unless fs.existsSync @_resolvePath(fileName, dep, false)
-            logger.error "RequireJS shim [[ #{name} ]] inside file [[ #{fileName} ]] refers to a dependency that cannot be found [[ #{dep} ]]."
+            @_logger "RequireJS shim [[ #{name} ]] inside file [[ #{fileName} ]] refers to a dependency that cannot be found [[ #{dep} ]]."
 
   _buildTree: ->
     for f in @requireFiles
@@ -179,7 +183,7 @@ module.exports = class RequireRegister
           delete maps[module]
           maps[fullDepPath] = mappings
         else
-          logger.error "RequireJS mapping inside file [[ #{fileName} ]], refers to module that cannot be found [[ #{module} ]]."
+          @_logger "RequireJS mapping inside file [[ #{fileName} ]], refers to module that cannot be found [[ #{module} ]]."
           continue
 
     for module, mappings of maps
@@ -198,7 +202,7 @@ module.exports = class RequireRegister
           # i.e. could this work => '*': {'v/jquery':'jquery1.4'} if 'v' didn't exist and
           # was set up like so => 'paths':{"v":"vendor"}
           # this assumes no
-          logger.error "RequireJS mapping inside file [[ #{fileName} ]], for module [[ #{module} ]] has path that cannot be found [[#{aliasPath}]]."
+          @_logger "RequireJS mapping inside file [[ #{fileName} ]], for module [[ #{module} ]] has path that cannot be found [[#{aliasPath}]]."
 
   _verifyConfigPath: (fileName, alias, aliasPath) ->
     if Array.isArray(aliasPath)
@@ -226,8 +230,7 @@ module.exports = class RequireRegister
         @aliasDirectories[fileName] ?= {}
         @aliasDirectories[fileName][alias] = pathAsDirectory
       else
-        logger.error "RequireJS dependency [[ #{aliasPath} ]] for path alias [[ #{alias} ]], inside file [[ #{fileName} ]], cannot be found."
-
+        @_logger "RequireJS dependency [[ #{aliasPath} ]] for path alias [[ #{alias} ]], inside file [[ #{fileName} ]], cannot be found."
 
   _verifyFileDeps: (fileName, deps) ->
     @depsRegistry[fileName] = []
@@ -270,7 +273,7 @@ module.exports = class RequireRegister
         else
           @_registerDependency(fileName, dep)
           # much sadness, cannot find the dependency
-          logger.error "RequireJS dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
+          @_logger "RequireJS dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
 
   _findMappedDepedency: (fileName, dep) ->
     depName = dep.split('!')[1]
@@ -281,12 +284,12 @@ module.exports = class RequireRegister
     for mainFile, mappings of @mappings
       return mappings['*'][depName] if mappings['*']?[depName]?
 
-    logger.error "Mimosa has a bug! Ack! Cannot find mapping and it really should have."
+    @_logger "Mimosa has a bug! Ack! Cannot find mapping and it really should have."
 
   _registerDependency: (fileName, dependency) ->
     @depsRegistry[fileName].push(dependency)
     if @_isCircular(fileName, dependency)
-      logger.warn "A circular dependency exists between [[#{fileName}]] and [[#{dependency}]]"
+      @_logger "A circular dependency exists between [[#{fileName}]] and [[#{dependency}]]", 'warn'
 
   _isCircular: (dep1, dep2) ->
     oneHasTwo = @depsRegistry[dep1]?.indexOf(dep2) >= 0

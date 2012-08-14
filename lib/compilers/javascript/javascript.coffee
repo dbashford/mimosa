@@ -16,7 +16,7 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
       @linter = new Linter(config.lint.rules.javascript)
       @lintVendorJS = config.lint.vendor.javascript
 
-    if config.require.verify.enabled
+    if config.require.verify.enabled or config.optimize
       @requireRegister = requireRegister
       @requireRegister.setConfig(config)
 
