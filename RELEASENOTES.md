@@ -1,3 +1,8 @@
+# 0.0.20alpha - August, 14 2012
+### Major Changes
+* #25, replaced node-glob with node-glob-whatev, which purports to work better on Windows
+* #23, turning verification off also made optimization not work, this should be fixed
+
 # 0.0.19alpha - August, 13 2012
 ### Major Changes
 * #16, can now use live reload on multiple directories.  Add an `additionaldirs` array to the `reloadOnChange` options hash with the paths to the other directories you'd like to watch.  `mimosa new` will now will now deliver code that will watch the `views` directory.
