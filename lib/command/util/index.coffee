@@ -1,7 +1,7 @@
 path  = require 'path'
 fs    = require 'fs'
 
-glob  = require 'glob'
+glob  = require 'glob-whatev'
 color = require('ansi-color').set
 _     = require 'lodash'
 
@@ -10,7 +10,7 @@ defaults = require './defaults'
 
 gatherCompilerInfo = (callback) ->
   compilerPath = path.join __dirname, '..', '..', 'compilers'
-  files = glob.sync "#{compilerPath}/**/*-compiler.coffee"
+  files = glob.glob "#{compilerPath}/**/*-compiler.coffee"
   compilers =
     css:[{prettyName:"None (Raw CSS)", fileName:"none"}]
     javascript:[{prettyName:"None (Raw JS)", fileName:"none"}]

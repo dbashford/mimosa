@@ -3,7 +3,7 @@ path =   require 'path'
 fs =     require 'fs'
 
 wrench = require 'wrench'
-glob =   require 'glob'
+glob =   require 'glob-whatev'
 _ =      require 'lodash'
 
 logger =   require '../util/logger'
@@ -189,8 +189,8 @@ class NewCommand
     data = fs.readFileSync (path.join @currPath, '.npmignore'), 'ascii'
     fs.writeFileSync path.join(@currPath, '.gitignore'), data, 'ascii'
 
-    glob "#{@currPath}/**/.gitkeep", (err, files) ->
-      fs.unlinkSync(file) for file in files
+    files = glob.glob "#{@currPath}/**/.gitkeep", {dot:true}
+    fs.unlinkSync(file) for file in files
 
     # for some reason I can't quite figure out
     # won't copy over a public directory, so hack it out here
