@@ -3,8 +3,8 @@ path =   require 'path'
 
 _ =      require 'lodash'
 wrench = require 'wrench'
-glob =   require 'glob-whatev'
 
+fileUtils = require '../util/file'
 util =   require './util'
 logger = require '../util/logger'
 
@@ -26,7 +26,7 @@ clean = (opts) ->
 
 cleanMisc = (config, compilers) ->
   jsDir = path.join config.watch.compiledDir, config.compilers.javascript.directory
-  files = glob.glob "#{jsDir}/**/*-built.js"
+  files = fileUtils.glob "#{jsDir}/**/*-built.js"
   for file in files
     logger.debug("Deleting '-built' file, [[ #{file} ]]")
     fs.unlinkSync file

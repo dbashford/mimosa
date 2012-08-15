@@ -70,7 +70,8 @@
     "nib": "0.7.0",
     "stylus": "0.28.2",
     "volo": "0.2.2",
-    "glob-whatev": "0.1.8"
+    "glob-whatev": "0.1.8",
+    "glob": "~3.1.12"
   },
   "license": "MIT",
   "engines": {

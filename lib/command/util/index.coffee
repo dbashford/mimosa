@@ -1,16 +1,17 @@
 path  = require 'path'
 fs    = require 'fs'
 
-glob  = require 'glob-whatev'
 color = require('ansi-color').set
 _     = require 'lodash'
 
 logger = require '../../util/logger'
+fileUtils = require '../../util/file'
+
 defaults = require './defaults'
 
 gatherCompilerInfo = (callback) ->
   compilerPath = path.join __dirname, '..', '..', 'compilers'
-  files = glob.glob "#{compilerPath}/**/*-compiler.coffee"
+  files = fileUtils.glob "#{compilerPath}/**/*-compiler.coffee"
   logger.debug "Compilers:\n#{files.join('\n')}"
   compilers =
     css:[{prettyName:"None (Raw CSS)", fileName:"none"}]

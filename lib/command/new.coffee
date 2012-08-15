@@ -3,9 +3,9 @@ path =   require 'path'
 fs =     require 'fs'
 
 wrench = require 'wrench'
-glob =   require 'glob-whatev'
 _ =      require 'lodash'
 
+fileUtils = require '../util/file'
 logger =   require '../util/logger'
 util =     require './util'
 defaults = require './util/defaults'
@@ -201,7 +201,7 @@ class NewCommand
     logger.debug "Writing .gitignore"
     fs.writeFileSync path.join(@currPath, '.gitignore'), data, 'ascii'
 
-    files = glob.glob "#{@currPath}/**/.gitkeep", {dot:true}
+    files = fileUtils.glob "#{@currPath}/**/.gitkeep", {dot:true}
     logger.debug "Removing #{files.length} .gitkeeps"
     fs.unlinkSync(file) for file in files
 

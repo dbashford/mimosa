@@ -1,6 +1,9 @@
 path = require 'path'
 fs = require 'fs'
 
+globWin = require('glob-whatev').glob
+globRest = require('glob').sync
+
 class FileUtils
 
   mkdirRecursive: (p, made) ->
@@ -29,5 +32,17 @@ class FileUtils
     fs.writeFile fileName, content, "ascii", (err) =>
       error = if err? then "Failed to write file: #{fileName}, #{err}"
       callback(error)
+
+  # node-glob doesn't work entirely on win32
+  # node-glob-whatev works on windows, but is terribly inefficient
+  # for now, just switching between the two
+  # Down the road get to a single lib
+  # by 1) building own 2) fixing one of those or 3) finding one that works
+  glob: (str, opts = {}) ->
+    if process.platform is 'win32'
+      globWin str, opts
+    else
+      globRest str
+
 
 module.exports = new FileUtils
