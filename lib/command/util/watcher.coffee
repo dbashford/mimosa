@@ -19,6 +19,7 @@ class Watcher
     logger.info "Watching #{@config.watch.sourceDir}" if @persist
 
     if @throttle > 0
+      logger.debug "Throttle is set, setting interval at 100 milliseconds"
       @intervalId = setInterval(@pullFiles, 100)
       @pullFiles()
 
@@ -45,7 +46,9 @@ class Watcher
       @initCallback(@config) if @initCallback?
 
   _findCompiler: (fileName) ->
-    return if @config.watch.ignored.some((str) -> fileName.indexOf(str) >= 0 )
+    logger.debug "Looking for compiler for #{fileName}"
+    if @config.watch.ignored.some((str) -> fileName.indexOf(str) >= 0 )
+      return logger.debug "Ignoring file, matches #{@config.watch.ignored}"
 
     extension = path.extname(fileName).substring(1)
     return unless extension?.length > 0

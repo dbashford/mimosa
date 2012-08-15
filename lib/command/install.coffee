@@ -12,21 +12,28 @@ class InstallCommand
   constructor: (@program) ->
 
   install: (args...) =>
-    opts = @prepArgs(args)
+    @prepArgs(args)
 
     util.processConfig false, (config) =>
       dirs = @directories(config)
+      logger.debug "All directories found:\n#{dirs.join('\n')}"
 
       logger.green "\n  In which directory would you like to install this library? \n"
       @program.choose dirs, (i) =>
+        logger.blue "\n  You chose #{dirs[i]}. \n"
         logger.info "Beginning install..."
 
         currentDir = process.cwd()
         desiredDir = dirs[i]
         fullDesiredDir = path.join config.watch.sourceDir, desiredDir
+
+        logger.debug "Changing directory to [[#{fullDesiredDir}]]"
         process.chdir fullDesiredDir
         done = ->
+          logger.debug "Removing package.json placed in [[#{fullDesiredDir}]]"
           fs.unlinkSync 'package.json' if fs.existsSync 'package.json'
+
+          logger.debug "And changing directory back to [[#{currentDir}]]"
           process.chdir(currentDir)
           process.stdin.destroy()
 
@@ -35,11 +42,12 @@ class InstallCommand
   prepArgs: (args) ->
     args.unshift('add')                 # adding add
     opts = args.pop()                   # nuking commanders last parm
+    if opts.debug then logger.setDebug()
     args.push('-amd') unless opts.noamd
     args.push('-f')                     # forcing force =p
-    opts
 
   runVolo: (args, destDirectory, jsDir, callback) ->
+    logger.debug "Running volo with the following args:\n#{JSON.stringify(args, null, 2)}"
     volo(args).then (okText) ->
       dependencyName = destDirectory.replace(jsDir, '').replace(path.sep, '')
       okText = okText.replace /\s+at\s+([^\s]+)/g, (a, b) ->
@@ -64,6 +72,7 @@ class InstallCommand
       .command('install')
       .description("install libraries from github via the command line")
       .option("-n, --noamd",  "will load the non-amd version")
+      .option("-D, --debug", "run in debug mode")
       .action(@install)
       .on '--help', ->
         logger.green('  This command exposes basic volo (http://volojs.org/) functionality to install libraries')

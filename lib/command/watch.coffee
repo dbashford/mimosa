@@ -9,6 +9,7 @@ logger =   require '../util/logger'
 Watcher =  require './util/watcher'
 
 watch = (opts) =>
+  if opts.debug then logger.setDebug()
   util.processConfig opts?.server, (config) =>
     config.optimize = opts?.optimize
     compilers = util.fetchConfiguredCompilers(config, true)
@@ -18,6 +19,8 @@ startServer = (config) =>
   if (config.server.useDefaultServer) then startDefaultServer(config) else startProvidedServer(config)
 
 startDefaultServer = (config) ->
+  logger.debug "Setting up default express server"
+
   app = express()
   server = app.listen config.server.port, ->
     logger.success "Mimosa's bundled Express started at http://localhost:#{config.server.port}/#{config.server.base}", true
@@ -35,13 +38,13 @@ startDefaultServer = (config) ->
       next()
 
     if config.server.useReload
-      options =
+      opts =
         server: server
         watchdir: config.watch.compiledDir
         verbose: false
         skipAdding: true
         exclude: ["almond\.js"]
-      app.use (require 'watch-connect')(options)
+      app.use (require 'watch-connect')(opts)
 
     app.use config.server.base, gzip.staticGzip(config.watch.compiledDir)
 
@@ -49,7 +52,9 @@ startDefaultServer = (config) ->
     title:    'Mimosa\'s Express'
     reload:   config.server.useReload
     optimize: config.optimize ? false
-    env:env:  process.env.NODE_ENV ? "development"
+    env:      process.env.NODE_ENV ? "development"
+
+  logger.debug "Options for index:\n#{JSON.stringify(options, null, 2)}"
 
   app.get '/', (req, res) -> res.render 'index', options
 
@@ -71,6 +76,7 @@ register = (program, callback) =>
     .description("watch the filesystem and compile assets")
     .option("-s, --server",   "run a server that will serve up the assets in the compiled directory")
     .option("-o, --optimize", "run require.js optimization after each js file compile")
+    .option("-D, --debug", "run in debug mode")
     .action(callback)
     .on '--help', =>
       logger.green('  The watch command will observe your source directory and compile or copy your assets when they change.')

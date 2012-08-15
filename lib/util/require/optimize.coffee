@@ -69,6 +69,9 @@ class Optimizer
     else
       path.join runConfig.baseUrl, name + "-built.js"
 
+    logger.debug "Mimosa is going to run r.js optimization with the following config: "
+    logger.debug JSON.stringify(runConfig, null, 2)
+
     runConfig
 
   _makeRelativeModulePath: (aPath, baseUrl) ->

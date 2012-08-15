@@ -11,6 +11,7 @@ defaults = require './defaults'
 gatherCompilerInfo = (callback) ->
   compilerPath = path.join __dirname, '..', '..', 'compilers'
   files = glob.glob "#{compilerPath}/**/*-compiler.coffee"
+  logger.debug "Compilers:\n#{files.join('\n')}"
   compilers =
     css:[{prettyName:"None (Raw CSS)", fileName:"none"}]
     javascript:[{prettyName:"None (Raw JS)", fileName:"none"}]
@@ -26,11 +27,13 @@ gatherCompilerInfo = (callback) ->
       prettyName:comp.prettyName()
       fileName:path.basename(file, ".coffee").replace("-compiler","")
       extensions:comp.defaultExtensions()
+    logger.debug "Compiler info for [[#{file}]]\n#{JSON.stringify(compilerInfo, null, 2)}"
     if comp.checkIfExists?
       infoClone = _.clone(compilerInfo)
       fileClone = _.clone(file)
       comp.checkIfExists (exists) =>
         unless exists
+          logger.debug "Compiler for file [[#{file}]], is not installed/available"
           infoClone.prettyName = infoClone.prettyName + color(" (This is not installed and would need to be before use)", "yellow+bold")
         _findCompilers(fileClone, compilers).push infoClone
         gatheredInfoForCompiler()
@@ -74,6 +77,8 @@ processConfig = (server, callback, virgin = false) ->
     config = {}
     configPath = path.dirname path.resolve('right-here.foo')
 
+  logger.debug "Your mimosa config:\n#{JSON.stringify(config, null, 2)}"
+
   config.virgin = virgin
   config.isServer = server
 
@@ -86,10 +91,15 @@ processConfig = (server, callback, virgin = false) ->
 
 _findConfigPath = (configPath = path.resolve('mimosa-config.coffee')) ->
   if fs.existsSync configPath
+    logger.debug "Found mimosa-config: [[#{configPath}]]"
     configPath
   else
+    logger.debug "Unable to find mimosa-config at #{configPath}"
     configPath = path.join(path.dirname(configPath), '..', 'mimosa-config.coffee')
-    return null if configPath.length is 'mimosa-config.coffee'.length + 1
+    logger.debug "Trying #{configPath}"
+    if configPath.length is 'mimosa-config.coffee'.length + 1
+      logger.debug "Unable to find mimosa-config"
+      return null
     _findConfigPath(configPath)
 
 module.exports = {

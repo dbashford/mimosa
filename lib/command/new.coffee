@@ -20,10 +20,15 @@ class NewCommand
       .description("create a skeleton matching Mimosa's defaults, which includes a basic Express setup")
       .option("-n, --noserver", "do not include express in the application setup")
       .option("-d, --defaults",  "bypass prompts and go with Mimosa defaults (CoffeeScript, SASS, Handlebars)")
+      .option("-D, --debug", "run in debug mode")
       .action(@new)
       .on '--help', @printHelp
 
   new: (name, opts) =>
+    if opts.debug then logger.setDebug()
+
+    logger.debug "Project name: #{name}"
+
     return @_create(name, opts) if opts.defaults
 
     logger.green "\n  This is the Mimosa interactive project creation tool.  It will help you configure and set "
@@ -38,6 +43,8 @@ class NewCommand
     compilerPrettyNames = {}
     for type, compilers of compilerInfo
       compilerPrettyNames[type] = compilers.map (compiler) -> compiler.prettyName
+
+    logger.debug "Compiler pretty names:\n#{JSON.stringify(compilerPrettyNames, null, 2)}"
 
     chosenCompilers = {}
 
@@ -87,16 +94,19 @@ class NewCommand
 
   _copySkeletonToCurrentDirectory: (skeletonPath) ->
     logger.info "A project name was not provided, copying skeleton into the current directory"
-    currPath = path.join path.resolve(''), '/'
+    currPath = path.join path.resolve(''), path.sep
     skeletonContents = wrench.readdirSyncRecursive(skeletonPath)
     for item in skeletonContents
       fullSourcePath = path.join skeletonPath, item
       fileStats = fs.statSync fullSourcePath
+      fullOutPath = path.join(currPath, item)
       if fileStats.isDirectory()
-        wrench.mkdirSyncRecursive path.join(currPath, item), 0o0777
+        logger.debug "Copying directory: [[#{fullOutPath}]]"
+        wrench.mkdirSyncRecursive fullOutPath, 0o0777
       if fileStats.isFile()
+        logger.debug "Copying file: [[#{fullOutPath}]]"
         fileContents = fs.readFileSync fullSourcePath
-        fs.writeFileSync path.join(currPath, item), fileContents
+        fs.writeFileSync fullOutPath, fileContents
     currPath
 
   _makeChosenCompilerChanges: (chosenCompilers) ->
@@ -110,8 +120,9 @@ class NewCommand
         template: 'handlebars'
         templateExtensions: ["hbs", "handlebars"]
 
-    @_updateConfigForChosenCompilers(chosenCompilers)
+    logger.debug "Chosen compilers:\n#{JSON.stringify(chosenCompilers, null, 2)}"
 
+    @_updateConfigForChosenCompilers(chosenCompilers)
     @_copyCompilerSpecificExampleFiles(chosenCompilers)
 
   _updateConfigForChosenCompilers: (chosenCompilers) ->
@@ -187,9 +198,11 @@ class NewCommand
 
   _postCopyCleanUp: =>
     data = fs.readFileSync (path.join @currPath, '.npmignore'), 'ascii'
+    logger.debug "Writing .gitignore"
     fs.writeFileSync path.join(@currPath, '.gitignore'), data, 'ascii'
 
     files = glob.glob "#{@currPath}/**/.gitkeep", {dot:true}
+    logger.debug "Removing #{files.length} .gitkeeps"
     fs.unlinkSync(file) for file in files
 
     # for some reason I can't quite figure out
@@ -200,12 +213,13 @@ class NewCommand
 
   # remove express files/directories and update config to point to default server
   _usingDefaultServer: ->
+    logger.debug "Using default server, so removing server resources"
     fs.unlinkSync path.join(@currPath, "server.coffee")
     fs.unlinkSync path.join(@currPath, "package.json")
     wrench.rmdirSyncRecursive path.join(@currPath, "views")
     wrench.rmdirSyncRecursive path.join(@currPath, "routes")
 
-    logger.info "Altering configuration to not use express"
+    logger.debug "Altering configuration to not use express"
     configPath = path.join @currPath, "mimosa-config.coffee"
     fs.readFile configPath, "ascii", (err, data) =>
       data = data.replace "# server:", "server:"
@@ -215,7 +229,7 @@ class NewCommand
   _usingOwnServer: (name) ->
     # minor, kinda silly, but change name in package json to match project name
     if name?.length > 0
-      logger.info "Making package.json edits"
+      logger.debug "Making package.json edits"
       packageJSONPath = path.join @currPath, "package.json"
       data = fs.readFileSync packageJSONPath, "ascii"
       data = data.replace "APPNAME", name

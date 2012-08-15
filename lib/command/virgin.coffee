@@ -3,6 +3,7 @@ logger =   require '../util/logger'
 Watcher =  require './util/watcher'
 
 virgin = (opts) =>
+  if opts.debug then logger.setDebug()
   util.processConfig false, watch, true
 
 watch = (config) ->
@@ -13,6 +14,7 @@ watch = (config) ->
 register = (program, callback) =>
   program
     .command('virgin')
+    .option("-D, --debug", "run in debug mode")
     .description("compile and lint assets but do not write the output")
     .action(callback)
     .on '--help', ->

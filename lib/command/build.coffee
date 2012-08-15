@@ -8,6 +8,7 @@ logger = require '../util/logger'
 Watcher =  require './util/watcher'
 
 build = (opts) =>
+  if opts.debug then logger.setDebug()
   logger.info "Beginning build"
 
   util.processConfig false, (config) =>
@@ -23,17 +24,25 @@ _writeJade = (config) ->
   viewsPath = path.resolve config.watch.sourceDir, '..', 'views', 'index.jade'
 
   if fs.existsSync viewsPath
+
     opts =
       title:    "Mimosa"
       reload:   false
       optimize: config.optimize
       env:      "production"
+
+    logger.debug("Compiling jade file at [[#{viewsPath}]]")
+    logger.debug("With the following context data:\n#{JSON.stringify(opts, null, 2)}")
+
     jade.renderFile viewsPath, opts, (err, html) ->
       if err
         logger.warn "Error compiling/rendering jade template #{viewsPath}"
         logger.warn "Error: #{err}"
       else
         outPath = path.join config.watch.sourceDir, 'index.html'
+
+        logger.debug("Writing html output to [[#{outPath}]]")
+
         fs.writeFile outPath, html, (err) ->
           if err
             logger.warn "Failed to write compiled jade template: #{err}"
@@ -51,6 +60,7 @@ register = (program, callback) =>
     .description("make a single pass through assets and compile them")
     .option("-o, --optimize", "run require.js optimization after building")
     .option("-j, --jade", "compile the provided jade template into an html, for those not deploying to node environment and in need of an html file")
+    .option("-D, --debug", "run in debug mode")
     .action(callback)
     .on '--help', =>
       logger.green('  The build command will make a single pass through your assets and bulid any that need building')

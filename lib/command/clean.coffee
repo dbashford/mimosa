@@ -8,7 +8,8 @@ glob =   require 'glob-whatev'
 util =   require './util'
 logger = require '../util/logger'
 
-clean = ->
+clean = (opts) ->
+  if opts.debug then logger.setDebug()
   util.processConfig false, (config) =>
     items = wrench.readdirSyncRecursive(config.watch.sourceDir)
     files = items.filter (f) -> fs.statSync(path.join(config.watch.sourceDir, f)).isFile()
@@ -26,11 +27,16 @@ clean = ->
 cleanMisc = (config, compilers) ->
   jsDir = path.join config.watch.compiledDir, config.compilers.javascript.directory
   files = glob.glob "#{jsDir}/**/*-built.js"
-  fs.unlinkSync file for file in files
+  for file in files
+    logger.debug("Deleting '-built' file, [[#{file}]]")
+    fs.unlinkSync file
 
   compiledJadeFile = path.join config.watch.compiledDir, 'index.html'
-  fs.unlinkSync compiledJadeFile if fs.existsSync compiledJadeFile
+  if fs.existsSync compiledJadeFile
+    logger.debug("Deleting compiledJadeFile [[#{compiledJadeFile}]]")
+    fs.unlinkSync compiledJadeFile
 
+  logger.debug("Calling individual compiler cleanups")
   compiler.cleanup() for compiler in compilers when compiler.cleanup?
 
 cleanFiles = (config, files, compilers) ->
@@ -47,12 +53,15 @@ cleanFiles = (config, files, compilers) ->
       if compiler? and compiler.getOutExtension()
         compiledPath = compiledPath.replace(/\.\w+$/, ".#{compiler.getOutExtension()}")
 
-    fs.unlinkSync compiledPath if fs.existsSync compiledPath
+    if fs.existsSync compiledPath
+      logger.debug "Deleting file [[#{compiledPath}]]"
+      fs.unlinkSync compiledPath
 
 cleanDirectories = (config, directories) ->
   for dir in directories
     dirPath = path.join(config.watch.compiledDir, dir)
     if fs.existsSync dirPath
+      logger.debug "Deleting directory [[#{dirPath}]]"
       fs.rmdir dirPath, (err) ->
         if err?.code is not "ENOTEMPTY"
           logger.error "Unable to delete directory, #{dirPath}"
@@ -61,6 +70,7 @@ cleanDirectories = (config, directories) ->
 register = (program, callback) =>
   program
     .command('clean')
+    .option("-D, --debug", "run in debug mode")
     .description("clean out all of the compiled assets from the compiled directory")
     .action(callback)
     .on '--help', =>

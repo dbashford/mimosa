@@ -15,7 +15,11 @@ class MimosaDefaults
     @root = path.dirname(configPath)
     config = @_applyDefaults(config)
     @_validateSettings(config)
-    err = if @fatalErrors is 0 then null else @fatalErrors
+    err = if @fatalErrors is 0
+      logger.debug "No mimosa config errors"
+      null
+    else
+      @fatalErrors
     callback(err, config)
 
   _applyDefaults: (config) ->
@@ -93,6 +97,8 @@ class MimosaDefaults
     lint.rules.coffee =        config.lint.rules.coffee        ?= {}
     lint.rules.javascript =    config.lint.rules.javascript    ?= {}
     lint.rules.css =           config.lint.rules.css           ?= {}
+
+    logger.debug "Full mimosa config:\n#{JSON.stringify(newConfig, null, 2)}"
 
     newConfig
 

@@ -5,13 +5,18 @@ fs =     require 'fs'
 util =   require 'util'
 logger = require '../util/logger'
 
-update = ->
+update = (opts) ->
+  if opts.debug then logger.setDebug()
+
   clientPackageJsonPath = _findPackageJsonPath()
   unless clientPackageJsonPath?
     logger.fatal "Cannot run update command, failed to find package.json, are you inside your project directory,"
     return logger.fatal "and did you create that project using the `new` command?"
 
   mimosaPackageJsonPath = path.join __dirname, '..', 'skeleton', 'package.json'
+
+  logger.debug "client package.json path: [[#{clientPackageJsonPath}]]"
+  logger.debug "mimosa package.json path: [[#{mimosaPackageJsonPath}]]"
 
   clientPackageText = fs.readFileSync clientPackageJsonPath, 'ascii'
   mimosaPackageText = fs.readFileSync mimosaPackageJsonPath, 'ascii'
@@ -66,6 +71,7 @@ _findPackageJsonPath = (packagePath = path.resolve('package.json')) ->
 register = (program, callback) ->
   program
     .command('update')
+    .option("-D, --debug", "run in debug mode")
     .description("update all the node libraries that Mimosa packaged into your application")
     .action(callback)
     .on '--help', =>
