@@ -15,10 +15,16 @@ class Optimizer
 
   optimize: (config, fileName) =>
     return unless config.optimize
-    return if @alreadyRunning # hack right now
+    return if @alreadyRunning
     @alreadyRunning = true
 
-    files = if fileName then requireRegister.treeBasesForFile(fileName) else requireRegister.treeBases()
+    files = if fileName
+      logger.debug "Looking for base config files that need optimizing for file [[ #{fileName} ]]"
+      requireRegister.treeBasesForFile(fileName)
+    else
+      requireRegister.treeBases()
+
+    logger.debug "Mimosa found #{files.length} base config files"
 
     if files.length is 0
       return @alreadyRunning = false
@@ -36,16 +42,17 @@ class Optimizer
 
     baseUrl = path.join config.watch.compiledDir, config.compilers.javascript.directory
     almondOutPath = path.join baseUrl, "almond.js"
+    logger.debug "BaseUrl [[ #{baseUrl} ]], AlmondOutPath [[ #{almondOutPath} ]]"
     fs.writeFile almondOutPath, @almondText, 'ascii', (err) =>
       if err?
         done(almondOutPath)
         return logger.error "Cannot write Almond, #{err}"
       for file in files
         runConfig = @setupConfig(config, file, baseUrl)
-        logger.info "Beginning requirejs optimization for module [[#{runConfig.include[0]}]]"
+        logger.info "Beginning requirejs optimization for module [[ #{runConfig.include[0]} ]]"
         try
           requirejs.optimize runConfig, (buildResponse) =>
-            logger.success "The compiled file [[#{runConfig.out}]] is ready for use.", true
+            logger.success "The compiled file [[ #{runConfig.out} ]] is ready for use.", true
             done(almondOutPath)
         catch err
           logger.error err
@@ -69,8 +76,7 @@ class Optimizer
     else
       path.join runConfig.baseUrl, name + "-built.js"
 
-    logger.debug "Mimosa is going to run r.js optimization with the following config: "
-    logger.debug JSON.stringify(runConfig, null, 2)
+    logger.debug "Mimosa is going to run r.js optimization with the following config:\n#{JSON.stringify(runConfig, null, 2)}"
 
     runConfig
 

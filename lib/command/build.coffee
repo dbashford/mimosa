@@ -31,7 +31,7 @@ _writeJade = (config) ->
       optimize: config.optimize
       env:      "production"
 
-    logger.debug("Compiling jade file at [[#{viewsPath}]]")
+    logger.debug("Compiling jade file at [[ #{viewsPath} ]]")
     logger.debug("With the following context data:\n#{JSON.stringify(opts, null, 2)}")
 
     jade.renderFile viewsPath, opts, (err, html) ->
@@ -41,7 +41,7 @@ _writeJade = (config) ->
       else
         outPath = path.join config.watch.sourceDir, 'index.html'
 
-        logger.debug("Writing html output to [[#{outPath}]]")
+        logger.debug("Writing html output to [[ #{outPath} ]]")
 
         fs.writeFile outPath, html, (err) ->
           if err

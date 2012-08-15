@@ -46,7 +46,6 @@ class Watcher
       @initCallback(@config) if @initCallback?
 
   _findCompiler: (fileName) ->
-    logger.debug "Looking for compiler for #{fileName}"
     if @config.watch.ignored.some((str) -> fileName.indexOf(str) >= 0 )
       return logger.debug "Ignoring file, matches #{@config.watch.ignored}"
 

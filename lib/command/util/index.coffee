@@ -27,13 +27,13 @@ gatherCompilerInfo = (callback) ->
       prettyName:comp.prettyName()
       fileName:path.basename(file, ".coffee").replace("-compiler","")
       extensions:comp.defaultExtensions()
-    logger.debug "Compiler info for [[#{file}]]\n#{JSON.stringify(compilerInfo, null, 2)}"
+    logger.debug "Compiler info for [[ #{file} ]]\n#{JSON.stringify(compilerInfo, null, 2)}"
     if comp.checkIfExists?
       infoClone = _.clone(compilerInfo)
       fileClone = _.clone(file)
       comp.checkIfExists (exists) =>
         unless exists
-          logger.debug "Compiler for file [[#{file}]], is not installed/available"
+          logger.debug "Compiler for file [[ #{file} ]], is not installed/available"
           infoClone.prettyName = infoClone.prettyName + color(" (This is not installed and would need to be before use)", "yellow+bold")
         _findCompilers(fileClone, compilers).push infoClone
         gatheredInfoForCompiler()
@@ -91,7 +91,7 @@ processConfig = (server, callback, virgin = false) ->
 
 _findConfigPath = (configPath = path.resolve('mimosa-config.coffee')) ->
   if fs.existsSync configPath
-    logger.debug "Found mimosa-config: [[#{configPath}]]"
+    logger.debug "Found mimosa-config: [[ #{configPath} ]]"
     configPath
   else
     logger.debug "Unable to find mimosa-config at #{configPath}"

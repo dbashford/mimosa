@@ -28,12 +28,12 @@ cleanMisc = (config, compilers) ->
   jsDir = path.join config.watch.compiledDir, config.compilers.javascript.directory
   files = glob.glob "#{jsDir}/**/*-built.js"
   for file in files
-    logger.debug("Deleting '-built' file, [[#{file}]]")
+    logger.debug("Deleting '-built' file, [[ #{file} ]]")
     fs.unlinkSync file
 
   compiledJadeFile = path.join config.watch.compiledDir, 'index.html'
   if fs.existsSync compiledJadeFile
-    logger.debug("Deleting compiledJadeFile [[#{compiledJadeFile}]]")
+    logger.debug("Deleting compiledJadeFile [[ #{compiledJadeFile} ]]")
     fs.unlinkSync compiledJadeFile
 
   logger.debug("Calling individual compiler cleanups")
@@ -54,14 +54,14 @@ cleanFiles = (config, files, compilers) ->
         compiledPath = compiledPath.replace(/\.\w+$/, ".#{compiler.getOutExtension()}")
 
     if fs.existsSync compiledPath
-      logger.debug "Deleting file [[#{compiledPath}]]"
+      logger.debug "Deleting file [[ #{compiledPath} ]]"
       fs.unlinkSync compiledPath
 
 cleanDirectories = (config, directories) ->
   for dir in directories
     dirPath = path.join(config.watch.compiledDir, dir)
     if fs.existsSync dirPath
-      logger.debug "Deleting directory [[#{dirPath}]]"
+      logger.debug "Deleting directory [[ #{dirPath} ]]"
       fs.rmdir dirPath, (err) ->
         if err?.code is not "ENOTEMPTY"
           logger.error "Unable to delete directory, #{dirPath}"

@@ -15,8 +15,8 @@ update = (opts) ->
 
   mimosaPackageJsonPath = path.join __dirname, '..', 'skeleton', 'package.json'
 
-  logger.debug "client package.json path: [[#{clientPackageJsonPath}]]"
-  logger.debug "mimosa package.json path: [[#{mimosaPackageJsonPath}]]"
+  logger.debug "client package.json path: [[ #{clientPackageJsonPath} ]]"
+  logger.debug "mimosa package.json path: [[ #{mimosaPackageJsonPath} ]]"
 
   clientPackageText = fs.readFileSync clientPackageJsonPath, 'ascii'
   mimosaPackageText = fs.readFileSync mimosaPackageJsonPath, 'ascii'

@@ -27,13 +27,13 @@ class InstallCommand
         desiredDir = dirs[i]
         fullDesiredDir = path.join config.watch.sourceDir, desiredDir
 
-        logger.debug "Changing directory to [[#{fullDesiredDir}]]"
+        logger.debug "Changing directory to [[ #{fullDesiredDir} ]]"
         process.chdir fullDesiredDir
         done = ->
-          logger.debug "Removing package.json placed in [[#{fullDesiredDir}]]"
+          logger.debug "Removing package.json placed in [[ #{fullDesiredDir} ]]"
           fs.unlinkSync 'package.json' if fs.existsSync 'package.json'
 
-          logger.debug "And changing directory back to [[#{currentDir}]]"
+          logger.debug "And changing directory back to [[ #{currentDir} ]]"
           process.chdir(currentDir)
           process.stdin.destroy()
 

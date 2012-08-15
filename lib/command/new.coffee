@@ -101,10 +101,10 @@ class NewCommand
       fileStats = fs.statSync fullSourcePath
       fullOutPath = path.join(currPath, item)
       if fileStats.isDirectory()
-        logger.debug "Copying directory: [[#{fullOutPath}]]"
+        logger.debug "Copying directory: [[ #{fullOutPath} ]]"
         wrench.mkdirSyncRecursive fullOutPath, 0o0777
       if fileStats.isFile()
-        logger.debug "Copying file: [[#{fullOutPath}]]"
+        logger.debug "Copying file: [[ #{fullOutPath} ]]"
         fileContents = fs.readFileSync fullSourcePath
         fs.writeFileSync fullOutPath, fileContents
     currPath
