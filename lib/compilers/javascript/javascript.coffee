@@ -39,11 +39,8 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
     @requireRegister?.startupDone()
 
   fileNeedsCompiling: (fileName, destinationFile) ->
-    # force compiling on startup to build require depedency tree
+    # force compiling on startup to build require dependency tree
     if @requireRegister? and !@isInitializationComplete
       true
     else
       super(fileName, destinationFile)
-
-
-

@@ -21,8 +21,11 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
   compile: (fileName, text, destinationFile, callback) =>
 
     cb = (err, css) =>
+      logger.debug "Finished Stylus compile for file [[ #{fileName} ]], errors?  #{err?}"
       @initBaseFilesToCompile--
       callback(err, css, destinationFile)
+
+    logger.debug "Compiling Stylus file [[ #{fileName} ]]"
 
     stylus(text)
       .include(path.dirname(fileName))
@@ -53,7 +56,9 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
             break
         imported.push fullImportPath
 
-    _.difference(@allFiles, imported)
+    baseFiles = _.difference(@allFiles, imported)
+    logger.debug "Base files for Stylus are:\n#{baseFiles.join('\n')}"
+    baseFiles
 
   _getImportFilePath: (baseFile, importPath) ->
     path.join path.dirname(baseFile), importPath

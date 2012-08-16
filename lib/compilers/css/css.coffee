@@ -41,6 +41,7 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
   _compileBasesForInclude: (fileName) ->
     bases = @includeToBaseHash[fileName]
     if bases?
+      logger.debug "Bases files for [[ #{fileName} ]]\n#{bases.join('\n')}"
       for base in bases
         @readAndCompile(base)
         @processWatchedDirectories()
@@ -53,13 +54,16 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
 
     # Determine if any includes necessitate a base file compile
     for include, bases of @includeToBaseHash
-      includeTime = fs.statSync(path.join @fullConfig.root, include).mtime
       for base in bases
         basePath = @findCompiledPath(base)
         if fs.existsSync basePath
+          includeTime = fs.statSync(path.join @fullConfig.root, include).mtime
           baseTime = fs.statSync(basePath).mtime
-          baseFilesToCompileNow.push(base) if includeTime > baseTime
+          if includeTime > baseTime
+            logger.debug "Base [[ #{base} ]] needs compiling because [[ #{include} ]] has been changed recently"
+            baseFilesToCompileNow.push(base)
         else
+          logger.debug "Base file [[ #{base} ]] hasn't been compiled yet, needs compiling"
           baseFilesToCompileNow.push(base)
 
     # Determine if any bases need to be compiled based on their own merit
@@ -67,21 +71,27 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
       baseCompiledPath = @findCompiledPath(base)
       if fs.existsSync baseCompiledPath
         baseSrcPath = path.join @fullConfig.root, base
-        baseFilesToCompileNow.push(base) if fs.statSync(baseSrcPath).mtime > fs.statSync(baseCompiledPath).mtime
+        if fs.statSync(baseSrcPath).mtime > fs.statSync(baseCompiledPath).mtime
+          logger.debug "Base file [[ #{baseSrcPath} ]] needs to be compiled, it has been changed recently"
+          baseFilesToCompileNow.push(base)
       else
+        logger.debug "Base file [[ #{baseCompiledPath} ]] hasn't been compiled yet, needs compiling"
         baseFilesToCompileNow.push(base)
 
     baseFilesToCompileNow = _.uniq(baseFilesToCompileNow)
 
     @initBaseFilesToCompile = baseFilesToCompileNow.length
     if @initBaseFilesToCompile is 0
+      logger.debug "No base files to compile, done with startup"
       @_doneStartup()
     else
       AbstractCSSCompiler::done = =>
         if !@startupFinished and @initBaseFilesToCompile is 0
           @_doneStartup()
 
-      @readAndCompile(base) for base in baseFilesToCompileNow
+      for base in baseFilesToCompileNow
+        logger.debug "Compiling base file [[ #{base} ]]"
+        @readAndCompile(base)
 
   init: =>
     @processWatchedDirectories()
@@ -102,28 +112,38 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
     @_importsForFile(baseFile, baseFile) for baseFile in @baseFiles
 
   afterCompile: (destFileName, source) =>
-    return unless source?.length > 0
+    unless source?.length > 0
+      return logger.debug "Compiled output is empty for [[ #{destFileName} ]]"
+
     if @linter? and (!@_isVendor(destFileName) or @lintVendorCSS)
+      logger.debug "Going to lint [[ #{destFileName} ]]"
       @linter.lint(destFileName, source)
 
     if @fullConfig.optimize
+      logger.debug "Cleaning/optimizing CSS [[ #{destFileName} ]]"
       source = clean.process source
 
     source
 
   getAllFiles: =>
-    wrench.readdirSyncRecursive(@srcDir)
+    files = wrench.readdirSyncRecursive(@srcDir)
       .map (file) =>
         path.join(@srcDir, file)
       .filter (file) =>
         @config.extensions.some (ext) ->
           file.slice(-ext.length) is ext
 
+    logger.debug "All files for extensions [[ #{@config.extensions} ]]:\n#{files.join('\n')}"
+
+    files
+
   # get all imports for a given file, and recurse through
   # those imports until entire tree is built
   _importsForFile: (baseFile, file) ->
     imports = fs.readFileSync(file, 'ascii').match(@importRegex)
     return unless imports?
+
+    logger.debug "Imports for file [[ #{file} ]]: #{imports}"
 
     for anImport in imports
       @importRegex.lastIndex = 0
@@ -134,11 +154,12 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
         f = f.replace(path.extname(f), '') unless @partialKeepsExtension
         f.slice(-fullImportFilePath.length) is fullImportFilePath
 
-
       for includeFile in includeFiles
         hash = @includeToBaseHash[includeFile]
         if hash?
+          logger.debug "Adding base file [[ #{baseFile} ]] to list of base files for include [[ #{includeFile} ]]"
           hash.push(baseFile) if hash.indexOf(baseFile) is -1
         else
+          logger.debug "Creating base file entry for include file [[ #{includeFile} ]], adding base file [[ #{baseFile} ]]"
           @includeToBaseHash[includeFile] = [baseFile]
         @_importsForFile(baseFile, includeFile)

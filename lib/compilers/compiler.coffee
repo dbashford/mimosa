@@ -21,6 +21,7 @@ module.exports = class AbstractCompiler
       ext.length > 1 and @config.extensions.indexOf(ext.substring(1)) >= 0
 
     @initialFileCount = files.length
+    logger.debug "File count for extension(s) [[ #{@config.extensions} ]]: #{@initialFileCount}"
     @initialFilesHandled = 0
 
   # OVERRIDE THESE
@@ -48,17 +49,20 @@ module.exports = class AbstractCompiler
 
   write: (fileName, content) =>
     if @fullConfig.virgin
-      return @success "Compiled #{fileName}"
+      logger.debug "Virgin is turned on, not writing [[ #{fileName} ]]"
+      return @success "Compiled [[ #{fileName} ]]"
 
+    logger.debug "Writing file [[ #{fileName} ]]"
     fileUtils.writeFile fileName, content, (err) =>
       return @failed "Failed to write new file: #{fileName}" if err
-      @success "Compiled/copied #{fileName}"
+      @success "Compiled/copied [[ #{fileName} ]]"
       @afterWrite(fileName) if @afterWrite?
 
   removeTheFile: (fileName, reportSuccess = true) =>
+    logger.debug "Removing file [[ #{fileName} ]]"
     fs.unlink fileName, (err) =>
       return logger.warn("Cannot delete compiled file, #{fileName}. This is ok if it was never successfully compiled.") if err
-      @success "Deleted compiled file #{fileName}" if reportSuccess
+      @success "Deleted compiled file [[ #{fileName} ]]" if reportSuccess
 
   optimize: (fileName) ->
     optimizer.optimize(@fullConfig, fileName) if @isInitializationComplete
@@ -74,6 +78,7 @@ module.exports = class AbstractCompiler
 
   done: ->
     if !@startupFinished and ++@initialFilesHandled is @initialFileCount
+      logger.debug "Compiler for extensions [[ #{@config.extensions} ]] has completed startup"
       @doneStartup()
 
   doneStartup: ->

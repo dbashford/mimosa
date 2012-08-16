@@ -19,7 +19,7 @@ module.exports = class RequireRegister
     @verify = @config.require.verify.enabled
     unless @rootJavaScriptDir?
       @rootJavaScriptDir = path.join @config.watch.compiledDir, @config.compilers.javascript.directory
-      logger.debug "Root Javascript directory set at [[@rootJavaScriptDir]]"
+      logger.debug "Root Javascript directory set at [[ #{@rootJavaScriptDir} ]]"
 
   process: (fileName, source) ->
     require = @_require(fileName)
@@ -41,7 +41,7 @@ module.exports = class RequireRegister
 
   startupDone: (@startupComplete = true) ->
     return if @startupAlreadyDone
-    logger.debug "Require registration has learned that startup has completed"
+    logger.debug "***Require registration has learned that startup has completed, verifying require registrations***"
     @startupAlreadyDone = true
     @_verifyAll()
 
@@ -55,7 +55,7 @@ module.exports = class RequireRegister
     for base, deps of @tree
       bases.push(base) if deps.indexOf(fileName) >= 0
 
-    logger.debug "Depedency tree bases for file #{fileName} are: #{bases.join('\n')}"
+    logger.debug "Dependency tree bases for file [[ #{fileName} ]] are: #{bases.join('\n')}"
 
     bases
 
@@ -75,7 +75,7 @@ module.exports = class RequireRegister
       logger.debug "Inside require function call for [[ #{fileName} ]], file has depedencies of:\n#{deps}"
 
       if config
-        logger.debug "[[ #{fileName} ]] has configuration inside of it:\n#{JSON.stringify(config, null, 2)}"
+        logger.debug "[[ #{fileName} ]] has require configuration inside of it:\n#{JSON.stringify(config, null, 2)}"
         @requireFiles.push fileName
         @_handleConfigPaths(fileName, config.map ? null, config.paths ? null)
         @_handleShims(fileName, config.shims ? null)
@@ -135,7 +135,7 @@ module.exports = class RequireRegister
       deps = if Array.isArray(config) then config else config.deps
       if deps?
         for dep in deps
-          logger.debug "Resolving shim depedency [[ #{dep} ]]"
+          logger.debug "Resolving shim dependency [[ #{dep} ]]"
           unless fs.existsSync @_resolvePath(fileName, dep)
             @_logger "RequireJS shim [[ #{name} ]] inside file [[ #{fileName} ]] refers to a dependency that cannot be found [[ #{dep} ]]."
       else
@@ -150,7 +150,7 @@ module.exports = class RequireRegister
 
   _addDepsToTree: (f, dep, origDep) ->
     unless @depsRegistry[dep]?
-      return logger.debug "Depedency registry has no depedencies for [[ #{dep} ]]"
+      return logger.debug "Dependency registry has no depedencies for [[ #{dep} ]]"
 
     for aDep in @depsRegistry[dep]
       exists = fs.existsSync aDep
@@ -163,17 +163,17 @@ module.exports = class RequireRegister
           return logger.debug "Cannot find dependency [[ #{aDep} ]] in aliases, is likely bad path"
 
         if aDep.indexOf('MAPPED!') >= 0
-          aDep = @_findMappedDepedency(dep, aDep)
-          logger.debug "Depedency found in mappings [[ #{aDep} ]]"
+          aDep = @_findMappedDependency(dep, aDep)
+          logger.debug "Dependency found in mappings [[ #{aDep} ]]"
 
 
       logger.debug "Resolved depencency for file [[ #{dep} ]] to [[ #{aDep} ]]"
 
       if @tree[f].indexOf(aDep) < 0
-        logger.debug "Adding depedency[[ #{aDep} ]] to the tree"
+        logger.debug "Adding dependency [[ #{aDep} ]] to the tree"
         @tree[f].push(aDep)
       else
-        logger.debug "Depedency [[ #{aDep} ]] already in the tree, skipping"
+        logger.debug "Dependency [[ #{aDep} ]] already in the tree, skipping"
 
       if aDep isnt origDep
         @_addDepsToTree(f, aDep, dep)
@@ -296,7 +296,7 @@ module.exports = class RequireRegister
   _verifyDep: (fileName, dep) ->
     # require, module = valid dependencies passed by require
     if dep is 'require' or dep is 'module'
-      return logger.debug "Encountered keywordesque depedency [[ #{dep} ]], ignoring."
+      return logger.debug "Encountered keywordesque dependency [[ #{dep} ]], ignoring."
 
     # as are web resources, CDN, etc
     if dep.indexOf('http') is 0
@@ -306,13 +306,13 @@ module.exports = class RequireRegister
     # handle plugins
     if dep.indexOf('!') >= 0
       [plugin, dep] = dep.split('!')
-      logger.debug "Is plugin dependency, going to verify both plugin path [[ #{plugin}]] and depedency after '!', [[ #{dep} ]] "
+      logger.debug "Is plugin dependency, going to verify both plugin path [[ #{plugin}]] and dependency after '!', [[ #{dep} ]] "
       @_verifyDep(fileName, plugin)
 
     # resolve path, if mapped, find already calculated map path
     fullDepPath = if dep.indexOf('MAPPED') is 0
       logger.debug "Is mapped dependency, looking in mappings..."
-      @_findMappedDepedency(fileName, dep)
+      @_findMappedDependency(fileName, dep)
     else
       @_resolvePath(fileName, dep)
 
@@ -327,7 +327,7 @@ module.exports = class RequireRegister
         # file does not exist, but is aliased, register the alias
         @_registerDependency(fileName, dep)
       else
-        logger.debug "Cannot find depedency as path alias..."
+        logger.debug "Cannot find dependency as path alias..."
         pathWithDirReplaced = @_findPathWhenAliasDiectory(dep)
         if pathWithDirReplaced? and fs.existsSync pathWithDirReplaced
           # file does not exist, but can be found by following directory alias
@@ -337,7 +337,7 @@ module.exports = class RequireRegister
           @_registerDependency(fileName, dep)
           # much sadness, cannot find the dependency
 
-  _findMappedDepedency: (fileName, dep) ->
+  _findMappedDependency: (fileName, dep) ->
     depName = dep.split('!')[1]
 
     for mainFile, mappings of @mappings

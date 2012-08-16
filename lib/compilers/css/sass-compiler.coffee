@@ -14,7 +14,9 @@ module.exports = class SassCompiler extends AbstractCssCompiler
   @prettyName        = -> "(*) SASS - http://sass-lang.com/"
   @defaultExtensions = -> ["scss", "sass"]
   @checkIfExists     = (callback) ->
+    logger.debug "Checking if SASS is available"
     exec 'sass --version', (error, stdout, stderr) ->
+      logger.debug "SASS available? #{!error?}"
       callback(if error then false else true)
 
   constructor: (config) ->
@@ -25,8 +27,11 @@ module.exports = class SassCompiler extends AbstractCssCompiler
         logger.error "SASS is a Ruby gem, information can be found here: http://sass-lang.com/tutorial.html"
         logger.error "SASS can be installed by executing this command: gem install sass"
 
+    logger.debug "Checking if Compass is available"
     exec 'compass --version', (error, stdout, stderr) =>
       @hasCompass = not error
+      logger.debug "Compass available? #{@hasCompass}"
+
 
   compile: (fileName, text, destinationFile, callback) =>
     return @_compile(fileName, text, destinationFile, callback) if @hasCompass?
@@ -39,6 +44,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     do compileOnDelay
 
   _compile: (fileName, text, destinationFile, callback) =>
+    logger.debug "Beginning compile of SASS file [[ #{fileName} ]]"
     result = ''
     error = null
     options = ['--stdin', '--load-path', @srcDir, '--load-path', path.dirname(fileName), '--no-cache']
@@ -51,6 +57,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
       error ?= ''
       error += buffer.toString()
     sass.on 'exit', (code) =>
+      logger.debug "Finished SASS compile for file [[ #{fileName} ]], errors? #{error?}"
       @initBaseFilesToCompile--
       callback(error, result, destinationFile)
 
@@ -58,8 +65,10 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     path.basename(fileName).charAt(0) is '_'
 
   _determineBaseFiles: =>
-    _.filter @allFiles, (file) =>
+    baseFiles = _.filter @allFiles, (file) =>
       (not @_isInclude(file)) and file.indexOf('compass') < 0
+    logger.debug "Base files for SASS are:\n#{baseFiles.join('\n')}"
+    baseFiles
 
   _getImportFilePath: (baseFile, importPath) ->
     path.join baseFile, importPath.replace(/(\w+\.|[\w-]+$)/, '_$1')

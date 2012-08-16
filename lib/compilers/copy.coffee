@@ -1,9 +1,10 @@
 path = require 'path'
 
 SingleFileCompiler = require './single-file'
-CSSLinter =             require '../util/lint/css'
-JSLinter =             require '../util/lint/js'
-requireRegister = require '../util/require/register'
+CSSLinter =          require '../util/lint/css'
+JSLinter =           require '../util/lint/js'
+requireRegister =    require '../util/require/register'
+logger = require '../util/logger'
 
 module.exports = class CopyCompiler extends SingleFileCompiler
 
@@ -30,6 +31,7 @@ module.exports = class CopyCompiler extends SingleFileCompiler
   removed: (fileName) ->
     super(fileName)
     if @_isJS(fileName)
+      logger.debug "Kicking off optimize/register for deleted plain JS file [[ #{fileName} ]]"
       if @requireRegister? then @requireRegister.remove(fileName)
       @optimize(fileName)
 
@@ -50,20 +52,27 @@ module.exports = class CopyCompiler extends SingleFileCompiler
     source
 
   _lint: (destFileName, source) ->
+    logger.debug "Checking to see if mimosa should lint file [[ #{destFileName} ]]"
+
     if @_isVendor(destFileName)
       if @cssLinter? and @lintVendorCSS and @_isCSS(destFileName)
         @cssLinter.lint(destFileName, source.toString())
-      if @jsLinter? and @lintVendorJS and @_isJS(destFileName)
+      else if @jsLinter? and @lintVendorJS and @_isJS(destFileName)
         @jsLinter.lint(destFileName, source.toString())
+      else
+        logger.debug "Will not be linting vendor file [[ #{destFileName} ]]"
     else
       if @cssLinter? and @_isCSS(destFileName)
         @cssLinter.lint(destFileName, source.toString())
-      if @jsLinter? and @_isJS(destFileName)
+      else if @jsLinter? and @_isJS(destFileName)
         @jsLinter.lint(destFileName, source.toString())
+      else
+        logger.debug "Will not be linting non-vendor file [[ #{destFileName} ]]"
 
   fileNeedsCompiling: (fileName, destinationFile) ->
-    # force compiling on startup to build require depedency tree
+    # force compiling on startup to build require dependency tree
     if @requireRegister? and !@isInitializationComplete and @_isJSNotVendor(fileName)
+      logger.debug "File [[ #{fileName} ]] needs compiling"
       true
     else
       super(fileName, destinationFile)

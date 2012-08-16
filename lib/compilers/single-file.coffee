@@ -2,6 +2,7 @@ fs = require 'fs'
 path = require 'path'
 
 AbstractCompiler = require './compiler'
+logger = require '../util/logger'
 
 module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
 
@@ -22,7 +23,9 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
 
   readAndCompile: (fileName, isUpdate = true) ->
     destinationFile = @findCompiledPath fileName
-    return @done() unless isUpdate or @fileNeedsCompiling(fileName, destinationFile)
+    unless isUpdate or @fileNeedsCompiling(fileName, destinationFile)
+      logger.debug "File [[ #{fileName} ]] does not need compiling"
+      return @done()
     fs.readFile fileName, (err, text) =>
       return @failed(err) if err
       text = text.toString() unless @keepBuffer?
@@ -32,6 +35,7 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
     if error
       @failed "Error compiling: #{error}"
     else
+      logger.debug "Compile/Copy for [[ #{destinationFile} ]] has finished"
       results = @afterCompile(destinationFile, results) if @afterCompile?
       @write destinationFile, results
 

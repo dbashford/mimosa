@@ -42,10 +42,12 @@ class MimosaDefaults
     template.compileWith =     config.compilers.template.compileWith     ?= defaultTemplate
     template.extensions =      config.compilers.template.extensions      ?= ["hbs", "handlebars"]
     template.outputFileName =  config.compilers.template.outputFileName  ?= "javascripts/templates"
-    template.helperFile = []
-    helperFiles = config.compilers.template.helperFiles ?= ["javascripts/app/template/handlebars-helpers"]
-    for helperFile in helperFiles
-      template.helperFile.push path.join(@root, helperFile)
+
+    if template.compileWith is "handlebars"
+      template.helperFile = []
+      helperFiles = config.compilers.template.helperFiles ?= ["javascripts/app/template/handlebars-helpers"]
+      for helperFile in helperFiles
+        template.helperFile.push path.join(@root, helperFile)
 
     css = comp.css =      config.compilers.css                 ?= {}
     css.compileWith =     config.compilers.css.compileWith     ?= defaultCss
