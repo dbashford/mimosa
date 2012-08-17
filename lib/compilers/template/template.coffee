@@ -39,6 +39,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     @_gatherFiles()
 
   _gatherFiles: (isRemove = false) ->
+    logger.debug "Gathering files for templates"
     fileNames = []
     allFiles = wrench.readdirSyncRecursive(@srcDir)
       .map (file) => path.join(@srcDir, file)
@@ -49,6 +50,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
     if fileNames.length is 0
       if isRemove
+        logger.debug "No template files left, removing [[ #{@templateFileName} ]]"
         @removeTheFile @templateFileName
         @_removeClientLibrary()
     else
@@ -62,7 +64,11 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   _templateNeedsCompiling: (fileNames) ->
     for file in fileNames
-      return true if @fileNeedsCompiling(file, @templateFileName)
+      if @fileNeedsCompiling(file, @templateFileName)
+        logger.debug "Template file [[ #{@templateFileName} ]] needs compiling"
+        return true
+
+    logger.debug "Template file [[ #{@templateFileName} ]] does not need compiling"
     false
 
   _write: (error, output) =>
@@ -77,11 +83,16 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       @startupFinished = true
 
   _removeClientLibrary: ->
-    fs.unlink @clientPath if @clientPath? and fs.existsSync @clientPath
+    if @clientPath? and fs.existsSync @clientPath
+      logger.debug "Removing client library [[ #{@clientPath} ]]"
+      fs.unlink @clientPath
 
   _writeClientLibrary: (callback) ->
-    return callback() if @fullConfig.virgin or !@clientPath? or fs.existsSync @clientPath
+    if @fullConfig.virgin or !@clientPath? or fs.existsSync @clientPath
+      logger.debug "Not going to write template client library"
+      return callback()
 
+    logger.debug "Writing template client library [[ #{@mimosaClientLibraryPath} ]]"
     fs.readFile @mimosaClientLibraryPath, "ascii", (err, data) =>
       if err?
         logger.error("Cannot read client library: #{@mimosaClientLibraryPath}") if err?

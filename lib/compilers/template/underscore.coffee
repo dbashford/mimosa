@@ -2,6 +2,7 @@ fs = require 'fs'
 path = require 'path'
 
 AbstractTemplateCompiler = require './template'
+logger = require '../../util/logger'
 
 module.exports = class AbstractUnderscoreCompiler extends AbstractTemplateCompiler
 
@@ -13,6 +14,7 @@ module.exports = class AbstractUnderscoreCompiler extends AbstractTemplateCompil
 
     output = "define(['vendor/#{@clientLibrary}'], function (_) { var templates = {};\n"
     for fileName in fileNames
+      logger.debug "Compiling #{@clientLibrary} template [[ #{fileName} ]]"
       content = fs.readFileSync fileName, "ascii"
       templateName = path.basename(fileName, path.extname(fileName))
       try

@@ -4,6 +4,7 @@ path = require 'path'
 jade = require 'jade'
 
 AbstractTemplateCompiler = require './template'
+logger = require '../../util/logger'
 
 module.exports = class JadeCompiler extends AbstractTemplateCompiler
 
@@ -20,6 +21,8 @@ module.exports = class JadeCompiler extends AbstractTemplateCompiler
 
     output = "define(['vendor/#{@clientLibrary}'], function (jade){ var templates = {};\n"
     for fileName in fileNames
+      logger.debug "Compiling Jade template [[ #{fileName} ]]"
+
       content = fs.readFileSync fileName, "ascii"
       templateName = path.basename(fileName, path.extname(fileName))
 

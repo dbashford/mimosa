@@ -4,6 +4,7 @@ path = require 'path'
 dust = require 'dustjs-linkedin'
 
 AbstractTemplateCompiler = require './template'
+logger = require '../../util/logger'
 
 module.exports = class DustCompiler extends AbstractTemplateCompiler
 
@@ -20,6 +21,7 @@ module.exports = class DustCompiler extends AbstractTemplateCompiler
 
     output = "define(['vendor/#{@clientLibrary}'], function (dust){ "
     for fileName in fileNames
+      logger.debug "Compiling Dust template [[ #{fileName} ]]"
       content = fs.readFileSync fileName, "ascii"
       templateName = path.basename fileName, path.extname(fileName)
       try
@@ -29,7 +31,5 @@ module.exports = class DustCompiler extends AbstractTemplateCompiler
         error ?= ''
         error += "#{fileName}, #{err}\n"
     output += 'return dust; });'
-
-
 
     callback(error, output)

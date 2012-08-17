@@ -4,6 +4,7 @@ path = require 'path'
 hogan = require "hogan.js"
 
 AbstractTemplateCompiler = require './template'
+logger = require '../../util/logger'
 
 module.exports = class HoganCompiler extends AbstractTemplateCompiler
 
@@ -20,6 +21,7 @@ module.exports = class HoganCompiler extends AbstractTemplateCompiler
 
     output = "define(['vendor/#{@clientLibrary}'], function (Hogan){ var templates = {};\n"
     for fileName in fileNames
+      logger.debug "Compiling Hogan template [[ #{fileName} ]]"
       content = fs.readFileSync fileName, "ascii"
       templateName = path.basename(fileName, path.extname(fileName))
 

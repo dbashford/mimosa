@@ -5,6 +5,7 @@ handlebars = require 'handlebars'
 _ =          require 'lodash'
 
 AbstractTemplateCompiler = require './template'
+logger = require '../../util/logger'
 
 module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 
@@ -18,6 +19,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
     @_buildOutputStart()
 
   _buildOutputStart: =>
+    logger.debug "Building Handlebars template file wrapper"
     possibleHelperPaths =
       for ext in @fullConfig.compilers.javascript.extensions
         path.join(@srcDir, "#{helperFile}.#{ext}") for helperFile in @config.helperFiles
@@ -28,6 +30,8 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
       helperDefine = helperPath.replace(@srcDir, "").replace(/(^[\\\/]?[A-Za-z]+[\\\/])/, '').replace(/\.\w+$/,"")
       defines.push "'#{helperDefine}'"
     defineString = defines.join ','
+
+    logger.debug "Define string for Handlebars templates [[ #{defineString} ]]"
 
     @outputStart = """
              define([#{defineString}], function (Handlebars){
@@ -44,6 +48,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
     output = @outputStart
 
     for fileName in fileNames
+      logger.debug "Compiling Handlebars template [[ #{fileName} ]]"
       content = fs.readFileSync fileName, "ascii"
       templateName = path.basename fileName, path.extname(fileName)
       try

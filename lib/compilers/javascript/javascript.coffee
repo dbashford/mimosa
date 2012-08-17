@@ -27,6 +27,7 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
 
   afterCompile: (destFileName, source) =>
     if @linter? and (!@_isVendor(destFileName) or @lintVendorJS)
+      logger.debug "Linting [[ #{destFileName} ]]}"
       @linter.lint(destFileName, source)
 
     @requireRegister?.process(destFileName, source)
@@ -41,6 +42,7 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
   fileNeedsCompiling: (fileName, destinationFile) ->
     # force compiling on startup to build require dependency tree
     if @requireRegister? and !@isInitializationComplete
+      logger.debug "Forcing startup compiling for [[ #{fileName} ]] to build require dependency tree"
       true
     else
       super(fileName, destinationFile)

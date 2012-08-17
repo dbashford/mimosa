@@ -4,6 +4,7 @@ path = require 'path'
 _ = require 'underscore'
 
 AbstractTemplateCompiler = require './template'
+logger = require '../../util/logger'
 
 module.exports = class HTMLCompiler extends AbstractTemplateCompiler
 
@@ -25,6 +26,7 @@ module.exports = class HTMLCompiler extends AbstractTemplateCompiler
 
     output = "define(function () { var templates = {};\n"
     for fileName in fileNames
+      logger.debug "Compiling HTML template [[ #{fileName} ]]"
       content = fs.readFileSync fileName, "ascii"
       compiledOutput = _.template(content)
       templateName = path.basename(fileName, path.extname(fileName))
