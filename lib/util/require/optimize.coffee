@@ -31,21 +31,24 @@ class Optimizer
 
     numFiles = files.length
     numProcessed = 0
-    done = (almondOutPath) =>
+
+    baseUrl = path.join config.watch.compiledDir, config.compilers.javascript.directory
+    almondOutPath = path.join baseUrl, "almond.js"
+
+    done = =>
       if ++numProcessed is numFiles
         @alreadyRunning = false
+        logger.debug "Removing Almond at [[ #{almondOutPath} ]]"
         fs.unlinkSync almondOutPath if fs.existsSync almondOutPath
         logger.info "Requirejs optimization complete."
 
       if numProcessed > numFiles
         logger.warn "Mimosa's optimizer.done method was called too many times, #{numProcessed}, #{numFiles}"
 
-    baseUrl = path.join config.watch.compiledDir, config.compilers.javascript.directory
-    almondOutPath = path.join baseUrl, "almond.js"
     logger.debug "BaseUrl [[ #{baseUrl} ]], AlmondOutPath [[ #{almondOutPath} ]]"
     fs.writeFile almondOutPath, @almondText, 'ascii', (err) =>
       if err?
-        done(almondOutPath)
+        done()
         return logger.error "Cannot write Almond, #{err}"
       for file in files
         runConfig = @setupConfig(config, file, baseUrl)
@@ -53,12 +56,12 @@ class Optimizer
         try
           requirejs.optimize runConfig, (buildResponse) =>
             logger.success "The compiled file [[ #{runConfig.out} ]] is ready for use.", true
-            done(almondOutPath)
+            done()
         catch err
           logger.error err
           # see https://github.com/jrburke/r.js/issues/244, need to clean out require by hand
           requirejs._buildReset()
-          done(almondOutPath)
+          done()
 
   setupConfig: (config, file, baseUrl) =>
     runConfig = _.extend({}, config.require.optimize)
