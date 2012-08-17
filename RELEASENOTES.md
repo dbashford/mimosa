@@ -1,3 +1,12 @@
+# 0.0.21alpha - August, 16 2012
+### Major Changes
+* #28, `-D`, `--debug` option added to all commands.  Much debug logging added.
+
+### Minor Changes
+* #31, change in globber significantly impacted performance, so now using both globbers and switching on `win32`
+* #32, added `--removeCombined` flag to `mimosa build` to allow for cleaning up after the optimizer
+* Simple running `mimosa` at the command line will now bring up help instead of doing nothing
+
 # 0.0.20alpha - August, 14 2012
 ### Major Changes
 * #25, replaced node-glob with node-glob-whatev, which purports to work better on Windows

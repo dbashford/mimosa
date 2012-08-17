@@ -242,6 +242,15 @@ If you want to build with optimization, provide a `--optimize` flag.  This will 
     $ mimosa build --optimize
     $ mimosa build -o
 
+#### Remove Leftover Files (--removeCombined, -r)
+
+When used in conjunction with `--optimize` the `--removeCombined` flag will clean up after the optimization.  If, when the optimization is complete, you only want the combined optimized files left behind, this is the flag for you.  This flag is a simple pass-through to the r.js compiler, which takes a `removeCombined` flag of its own.
+
+This must be used with `--optimize` or Mimosa will error out.
+
+    $ mimosa build --optimize --removeCombined
+    $ mimose build -o -r
+
 #### Compile the Provided Jade Template (--jade, -j)
 
 Should you not be deploying a node/Express app, and you need an .html version of the `index.jade` that Mimosa provides with its `new` command, the `jade` flag will provide that.  The `jade` flag will attempt to compile the `index.jade` file by feeding the template production level settings.  `env` will be set to `production`.  `reload` set to `false`.  `optimize` will be set to `true` if you also provide the `optimize` flag.  `title` will be set to `Mimosa`.  It is suggested you remove the `title` variable and hard code your `title`.
@@ -274,6 +283,13 @@ For now Mimosa will not attempt to update any of the other assets it delivers (r
 Mimosa will first run `npm uninstall` for each of the skeleton libraries already in place in your project, and then it will follow up with an `npm install` on each removed library and each new library that wasn't there originally.
 
     $ mimosa update
+
+### Debug Mode (-D, --debug)
+
+All Mimosa commands have a debug mode that will print detailed logs to the console for everything Mimosa is doing.
+
+    $ mimosa [command] --debug
+    $ mimosa [command] -D
 
 ## Meta-Language Compilation
 
@@ -387,7 +403,7 @@ But when you take your application outside of development, you want to include a
 
 Templates are merged together regardless, but they have source information included to make it easy to track back to the destination file, and templates will (ideally) be logic-less and less prone to problems.
 
-### First-Class RequireJS support, JavaScript Optimization
+### RequireJS support, JavaScript Optimization
 
 Mimosa is loaded with AMD/RequireJS support.  Mimosa will..
 
@@ -489,7 +505,7 @@ All of the lint/hinters come with default configurations that Mimosa uses.  Here
 
 ## Live Reload
 
-The default application you are provided comes built with live reload included.  Live Reload will immediately reload your web page any time an asset is compiled.  So, for instance, if you change some LESS code, the instant it is compiled, and the compiled .css file is written to your `compiledDir`, your browser will update and your CSS updates will be displayed.
+The default application you are provided comes built with live reload included.  Live Reload will immediately reload your web page any time an asset is compiled or one of your views changes.  So, for instance, if you change some LESS code, the instant it is compiled, and the compiled .css file is written to your `compiledDir`, your browser will update and your CSS updates will be displayed.
 
 For those using the server code delivered to them via `mimosa new`, you have the ability to tweak how the reload works in the [`server.coffee`](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/server.coffee).  The library used for providing the Live Reload functionality is [watch-connect](https://github.com/Filirom1/watch-connect), and the github page has an explanation of the options you can pass in.  By default the reload will fire whenever the code in the `watch.compiledDir` changes, and whenever the code in the `view` directory of the application changes.  You have the ability to add more directories, and to exclude files from causing a reload using regexes.
 
