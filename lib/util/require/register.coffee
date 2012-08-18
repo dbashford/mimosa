@@ -30,7 +30,7 @@ module.exports = class RequireRegister
     try
       eval(source)
     catch e
-      @_logger "File named [#{fileName}] is not wrapped in a 'require' or 'define' function call.", "warm"
+      @_logger "File named [#{fileName}] is not wrapped in a 'require' or 'define' function call.", "warn"
       @_logger "#{e}", 'warn'
 
   remove: (fileName) ->
