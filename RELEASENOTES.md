@@ -1,3 +1,10 @@
+# 0.0.22alpha - August, 18 2012
+### Major Changes
+* #29, #30, new `require.optimize.inferConfig` setting.  If you do not want Mimosa to infer anything regarding your config set `require.optimize.inferConfig` to false.  Use this setting if you have a need to alter Mimosa's config far from the defaults.  Also use this setting if you are not using JavaScript based main modules (if you are putting your config on .html for instance).  All of Mimosa's default behavior for optimization relies on the existence of a javascript based main module. If there is no main module, optimization is not run.  This will continue to be the case unless `inferConfig` is set to false.
+
+### Breaking Changes
+* Prior to this version, requirejs optimization overrides went inside the `require.optimize` setting.  Those overrides now go into a `require.optimize.overrides` setting.
+
 # 0.0.21alpha - August, 16 2012
 ### Major Changes
 * #28, `-D`, `--debug` option added to all commands.  Much debug logging added.

@@ -55,8 +55,8 @@ module.exports = class AbstractCompiler
     logger.debug "Writing file [[ #{fileName} ]]"
     fileUtils.writeFile fileName, content, (err) =>
       return @failed "Failed to write new file: #{fileName}" if err
-      @success "Compiled/copied [[ #{fileName} ]]"
       @afterWrite(fileName) if @afterWrite?
+      @success "Compiled/copied [[ #{fileName} ]]"
 
   removeTheFile: (fileName, reportSuccess = true) =>
     logger.debug "Removing file [[ #{fileName} ]]"

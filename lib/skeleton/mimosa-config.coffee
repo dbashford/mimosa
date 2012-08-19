@@ -65,12 +65,15 @@ exports.config = {
   # require:                              # configuration for requirejs options.
     # verify:                             # settings for requirejs path verification
       # enabled: true                     # Whether or not to perform verification
-    # optimize :                          # Optimization configuration.  Mimosa figures out all you'd need for a simple r.js optimizer run.
-                                          # If you need to make tweaks simply uncomment this line and add the r.js config
-                                          # (http://requirejs.org/docs/optimization.html#options) as new paramters inside this optimize
-                                          # The require 'baseUrl' is set by combining the watch.compiledDir with the compilers.javascript.directory
-                                          # Modules and paths are determined by scanning your source, and the output of each module is
-                                          # the name of the module + -built.js
+    # optimize :
+      # inferConfig:true                  # Mimosa figures out all you'd need for a simple r.js optimizer run. If you rather Mimosa
+                                          # not do that, set inferConfig to false and provide your config in the overrides section.
+                                          # See ere https://github.com/dbashford/mimosa#requirejs-optimizer-defaults to see what
+                                          # the defaults are.
+      # overrides:                        # Optimization configuration and Mimosa overrides. If you need to make tweaks uncomment
+                                          # this line and add the r.js config (http://requirejs.org/docs/optimization.html#options)
+                                          # as newparamters inside the optimize ojbect. To unset Mimosa's defaults, set a property
+                                          # to null
 
   # growl:
     # onStartup: false                    # Controls whether or not to Growl when aseets successfully compile/copy on startup,

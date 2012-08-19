@@ -69,6 +69,8 @@ class MimosaDefaults
       server.path = path.join(@root, server.path)
 
       requirejs.optimize = newConfig.require.optimize = config.require.optimize     ?= {}
+      requirejs.optimize.inferConfig = config.require.optimize.inferConfig ?= true
+      requirejs.optimize.overrides = config.require.optimize.overrides ?= {}
 
     requirejs.verify = newConfig.require.verify = config.require.verify ?= {}
     requirejs.verify.enabled = config.require.verify.enabled            ?= true

@@ -44,5 +44,4 @@ class FileUtils
     else
       globRest str
 
-
 module.exports = new FileUtils

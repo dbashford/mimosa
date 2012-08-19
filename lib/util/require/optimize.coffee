@@ -15,56 +15,87 @@ class Optimizer
 
   optimize: (config, fileName) =>
     return unless config.optimize
-    return if @alreadyRunning
-    @alreadyRunning = true
+    if fileName?
+      logger.debug "Going to optimize for #{fileName}"
 
-    files = if fileName
-      logger.debug "Looking for base config files that need optimizing for file [[ #{fileName} ]]"
-      requireRegister.treeBasesForFile(fileName)
+    if @currentlyRunning
+      return logger.debug "...but nevermind, optmization is already running."
+
+    @currentlyRunning = true
+
+    if config.require.optimize.inferConfig is false
+      logger.debug "Optimizer will not be inferring config"
+      ors = config.require.optimize.overrides
+      if Object.keys(ors).length is 0
+        logger.warn "inferConfig set to false, but no overrides have been provided"
+        logger.warn "Cannot run optmization"
+        @_done()
+      else
+        # See https://github.com/jrburke/r.js/issues/262, must verify here to stop r.js from process.exit
+        unless ors.name? or ors.include? or ors.modules?
+          logger.error "Missing either a 'name', 'include' or 'modules' option in your require overrides"
+          logger.warn "Cannot run optmization, require.optimize.overrides is missing key value(s)"
+          return @_done()
+
+        unless ors.out? or ors.dir?
+          logger.error "Missing either an \"out\" or \"dir\" config value. If using \"appDir\" for a full project optimization, use \"dir\". If you want to optimize to one file, use \"out\"."
+          logger.warn "Cannot run optmization, require.optimize.overrides is missing key value(s)"
+          return @_done()
+
+        @_executeOptimize config.require.optimize.overrides, @_done
     else
-      requireRegister.treeBases()
+      files = if fileName
+        logger.debug "Looking for main modules that need optimizing for file [[ #{fileName} ]]"
+        requireRegister.treeBasesForFile(fileName)
+      else
+        requireRegister.treeBases()
 
-    logger.debug "Mimosa found #{files.length} base config files"
+      @_optimizeForFiles(files, config)
 
-    if files.length is 0
-      return @alreadyRunning = false
-
+  _optimizeForFiles: (files, config) =>
     numFiles = files.length
-    numProcessed = 0
+    logger.debug "Mimosa found #{numFiles} base config files"
+    if numFiles is 0
+      logger.warn "No main modules found.  Not running optimization."
+      return @_done()
 
     baseUrl = path.join config.watch.compiledDir, config.compilers.javascript.directory
-    almondOutPath = path.join baseUrl, "almond.js"
+    name = config.require.optimize.overrides.name
+    if (name? and name isnt 'almond') or name is null
+      logger.info "r.js name changed from default of 'almond', no not using almond.js"
+    else
+      almondOutPath = path.join baseUrl, "almond.js"
+      fs.writeFileSync almondOutPath, @almondText, 'ascii'
 
-    done = =>
-      if ++numProcessed is numFiles
-        @alreadyRunning = false
-        logger.debug "Removing Almond at [[ #{almondOutPath} ]]"
-        fs.unlinkSync almondOutPath if fs.existsSync almondOutPath
-        logger.info "Requirejs optimization complete."
+    numProcessed = 0
+    done = => @_done(almondOutPath) if ++numProcessed >= numFiles
 
-      if numProcessed > numFiles
-        logger.warn "Mimosa's optimizer.done method was called too many times, #{numProcessed}, #{numFiles}"
+    for file in files
+      runConfig = @_setupConfigForModule(config, file, baseUrl)
+      logger.info "Beginning requirejs optimization for module [[ #{runConfig.include[0]} ]]"
+      @_executeOptimize(runConfig, done)
 
-    logger.debug "BaseUrl [[ #{baseUrl} ]], AlmondOutPath [[ #{almondOutPath} ]]"
-    fs.writeFile almondOutPath, @almondText, 'ascii', (err) =>
-      if err?
-        done()
-        return logger.error "Cannot write Almond, #{err}"
-      for file in files
-        runConfig = @setupConfig(config, file, baseUrl)
-        logger.info "Beginning requirejs optimization for module [[ #{runConfig.include[0]} ]]"
-        try
-          requirejs.optimize runConfig, (buildResponse) =>
-            logger.success "The compiled file [[ #{runConfig.out} ]] is ready for use.", true
-            done()
-        catch err
-          logger.error err
-          # see https://github.com/jrburke/r.js/issues/244, need to clean out require by hand
-          requirejs._buildReset()
-          done()
+  _done: (almondOutPath)->
+    @currentlyRunning = false
+    if almondOutPath?
+      logger.debug "Removing Almond at [[ #{almondOutPath} ]]"
+      fs.unlinkSync almondOutPath if fs.existsSync almondOutPath
+    logger.info "Requirejs optimization complete."
 
-  setupConfig: (config, file, baseUrl) =>
-    runConfig = _.extend({}, config.require.optimize)
+  _executeOptimize: (runConfig, callback) =>
+    logger.debug "Mimosa is going to run r.js optimization with the following config:\n#{JSON.stringify(runConfig, null, 2)}"
+    try
+      requirejs.optimize runConfig, (buildResponse) =>
+        logger.success "The compiled file [[ #{runConfig.out} ]] is ready for use.", true
+        callback()
+    catch err
+      logger.error err
+      # see https://github.com/jrbusrke/r.js/issues/244, need to clean out require by hand
+      requirejs._buildReset()
+      callback()
+
+  _setupConfigForModule: (config, file, baseUrl) =>
+    runConfig = _.extend({}, config.require.optimize.overrides)
     name = @_makeRelativeModulePath(file, baseUrl)
 
     runConfig.baseUrl = baseUrl             unless runConfig.baseUrl? or runConfig.baseUrl is null
@@ -78,8 +109,6 @@ class Optimizer
       path.join runConfig.baseUrl, runConfig.out
     else
       path.join runConfig.baseUrl, name + "-built.js"
-
-    logger.debug "Mimosa is going to run r.js optimization with the following config:\n#{JSON.stringify(runConfig, null, 2)}"
 
     runConfig
 

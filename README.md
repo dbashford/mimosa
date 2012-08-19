@@ -72,7 +72,7 @@ Something missing from Mimosa for the short-term, that Brunch has in abundance, 
 		- [HTML](#html)
 - [Asset Copying](#asset-copying)
 - [Optimize](#optimize)
-	- [First-Class RequireJS support, JavaScript Optimization](#first-class-requirejs-support-javascript-optimization)
+	- [RequireJS support, JavaScript Optimization](#requirejs-support-javascript-optimization)
 	- [CSS Minification](#css-minification)
 - [Immediate Feedback](#immediate-feedback)
 	- [Growl](#growl)
@@ -417,16 +417,26 @@ Mimosa is loaded with AMD/RequireJS support.  Mimosa will..
  * Only compile those modules that need compiling based on the code that just changed
  * Bundle your optimized JavaScript with [Almond](https://github.com/jrburke/almond)
 
-The default, built-in optmizer configuration works like this:
+#### RequireJS Optimizer Defaults
+
+Mimosa will infer some the following default settings for the built-in [r.js optimizer](https://github.com/jrburke/r.js/).
+
  * `baseUrl`: `baseUrl` is set by combining the `watch.compiledDir` with the `compilers.javascript.directory`.
- * `out`: The optimized files are output into the `watch.compiled` + `compilers.javascript.directory` in a file that is the module + `-built.js`
- * `mainConfigFile`: set based on the config file being optimized
- * `findNestedDependencies`: set to `true`
- * `wrap`: set to `true`
- * `include`, `insertRequire`: both set to the name of the module being compiled
+ * `out`: The optimized files are output into the `watch.compiled` + `compilers.javascript.directory` in a file that is your main module + `-built.js`
+ * `mainConfigFile`: set to the file path of the main module
+ * `findNestedDependencies`: `true`
+ * `wrap`: `true`
+ * `include`: set to the name of the module being compiled
+ * `insertRequire`: set to the name of the module being compiled
  * `name`: set to `almond`
 
-You can override and include any of the RequireJS optimizer [configuration options](http://requirejs.org/docs/optimization.html#options) in the mimosa-config if the default behavior isn't to your liking.  Simply uncomment the `require.optimize` setting and toss your settings in there.  You can both override and remove settings.  If you want a setting removed, set it to `null`.
+These settings will package up each individual module you have into its own optimized file wrapped with Almond.
+
+You can include any of the other RequireJS optimizer [configuration options](http://requirejs.org/docs/optimization.html#options) in the mimosa-config.  Simply uncomment the `require.optimize.overrides` setting and toss your settings in there.  You can both override and remove settings.  If you want to override a Mimosa setting, just put it in the `overrides`.  If you want a Mimosa default setting removed, set it to `null`.  For instance setting `mainConfigFile : null` will blank out that setting and it will not be passed to the optimizer.
+
+You can also choose to not have Mimosa infer anything and to go entirely with your own configuration.  Set `require.optimize.inferConfig` to false and Mimosa will run r.js with the settings you give it
+
+Also use `require.optimize.inferConfig:false` if you choose to have your configuration settings in script tags in an HTML file, or in any other file that does not compile to JavaScript.  For now, Mimosa is only able to make inferences for configs in JavaScript files.  If your configuration (and `require`/`requirejs` method calls) are in script tags on an HTML page, Mimosa will not find any modules to compile for optimization and therefore will not run optimization, so you'll need to provide your own configuration in `overrides` and set `inferConfig` to false
 
 ### CSS Minification
 
