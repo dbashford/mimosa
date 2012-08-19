@@ -25,6 +25,7 @@ class Watcher
 
   startWatcher: (persist) ->
     watcher = watch.watch(@config.watch.sourceDir, {persistent:@persist})
+    watcher.on "error", (error) -> logger.debug "File watching error: #{error}"
     watcher.on "change", (f) => @_findCompiler(f)?.updated(f)
     watcher.on "unlink", (f) => @_findCompiler(f)?.removed(f)
     watcher.on "add", (f) =>
