@@ -239,6 +239,9 @@ class NewCommand
     currentDir = process.cwd()
     process.chdir @currPath
     exec "npm install", (err, sout, serr) =>
+      logger.debug "Node module install err: #{err}"
+      logger.debug "Node module install sout: #{sout}"
+      logger.debug "Node module install serr: #{serr}"
       process.chdir currentDir
       @_done()
 

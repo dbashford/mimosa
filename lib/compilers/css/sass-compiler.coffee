@@ -15,9 +15,16 @@ module.exports = class SassCompiler extends AbstractCssCompiler
   @defaultExtensions = -> ["scss", "sass"]
   @checkIfExists     = (callback) ->
     logger.debug "Checking if SASS is available"
-    exec 'sass --version', (error, stdout, stderr) ->
-      logger.debug "SASS available? #{!error?}"
+    exec "#{runSass} --version", (error, stdout, stderr) ->
+      logger.debug "SASS available error: #{error}"
+      logger.debug "SASS available stderr: #{stderr}"
+      logger.debug "SASS available stdout: #{stdout}"
       callback(if error then false else true)
+
+  runSass = 'sass'
+  if process.platform is 'win32'
+    runSass = 'sass.bat'
+    logger.debug "win32 detected, changing sass command to #{runSass}"
 
   constructor: (config) ->
     super(config)
@@ -50,7 +57,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     options = ['--stdin', '--load-path', @srcDir, '--load-path', path.dirname(fileName), '--no-cache']
     options.push '--compass' if @hasCompass
     options.push '--scss' if /\.scss$/.test fileName
-    sass = spawn 'sass', options
+    sass = spawn runSass, options
     sass.stdin.end text
     sass.stdout.on 'data', (buffer) -> result += buffer.toString()
     sass.stderr.on 'data', (buffer) ->
