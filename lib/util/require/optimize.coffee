@@ -89,9 +89,7 @@ class Optimizer
         logger.success "The compiled file [[ #{runConfig.out} ]] is ready for use.", true
         callback()
     catch err
-      logger.error err
-      # see https://github.com/jrbusrke/r.js/issues/244, need to clean out require by hand
-      requirejs._buildReset()
+      logger.error "Error occured inside r.js optimizer, error is as follows... #{err}"
       callback()
 
   _setupConfigForModule: (config, file, baseUrl) =>
