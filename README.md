@@ -36,6 +36,9 @@ Something missing from Mimosa for the short-term, that Brunch has in abundance, 
 
 ## Table Of Contents
 
+- [Features](#features)
+	- [Why Mimosa?](#why-mimosa)
+- [Table Of Contents](#table-of-contents)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
@@ -52,10 +55,12 @@ Something missing from Mimosa for the short-term, that Brunch has in abundance, 
 	- [Just Watch, Do Not Write (virgin)](#just-watch-do-not-write-virgin)
 	- [One Time Asset Build (build)](#one-time-asset-build-build)
 		- [Optimized Build (--optimize, -o)](#optimized-build---optimize--o)
+		- [Remove Leftover Files (--removeCombined, -r)](#remove-leftover-files---removecombined--r)
 		- [Compile the Provided Jade Template (--jade, -j)](#compile-the-provided-jade-template---jade--j)
 	- [Clean Compiled Assets (clean)](#clean-compiled-assets-clean)
 	- [Copy Config (config)](#copy-config-config)
 	- [Update Install (update)](#update-install-update)
+	- [Debug Mode (-D, --debug)](#debug-mode--d---debug)
 - [Meta-Language Compilation](#meta-language-compilation)
 	- [JavaScript Meta-Languages](#javascript-meta-languages)
 	- [CSS Meta-Languages](#css-meta-languages)
@@ -73,6 +78,7 @@ Something missing from Mimosa for the short-term, that Brunch has in abundance, 
 - [Asset Copying](#asset-copying)
 - [Optimize](#optimize)
 	- [RequireJS support, JavaScript Optimization](#requirejs-support-javascript-optimization)
+		- [RequireJS Optimizer Defaults](#requirejs-optimizer-defaults)
 	- [CSS Minification](#css-minification)
 - [Immediate Feedback](#immediate-feedback)
 	- [Growl](#growl)
@@ -87,6 +93,7 @@ Something missing from Mimosa for the short-term, that Brunch has in abundance, 
 - [Cache Busting](#cache-busting)
 - [Roadmap](#roadmap)
 - [Suggestions? Comments?](#suggestions-comments)
+- [License](#license)
 
 ## Installation
 
@@ -419,10 +426,10 @@ Mimosa is loaded with AMD/RequireJS support.  Mimosa will..
 
 #### RequireJS Optimizer Defaults
 
-Mimosa will infer some the following default settings for the built-in [r.js optimizer](https://github.com/jrburke/r.js/).
+Mimosa will infer the following default settings for the built-in [r.js optimizer](https://github.com/jrburke/r.js/).
 
- * `baseUrl`: `baseUrl` is set by combining the `watch.compiledDir` with the `compilers.javascript.directory`.
- * `out`: The optimized files are output into the `watch.compiled` + `compilers.javascript.directory` in a file that is your main module + `-built.js`
+ * `baseUrl`: set by combining the mimosa-config `watch.compiledDir` with the `compilers.javascript.directory`
+ * `out`: optimized files are output into the `watch.compiled` + `compilers.javascript.directory` in a file that is your main module name + `-built.js`
  * `mainConfigFile`: set to the file path of the main module
  * `findNestedDependencies`: `true`
  * `wrap`: `true`
@@ -547,7 +554,7 @@ To perform the Live Reload, the default application is built to include two extr
 
 (The MIT License)
 
-Copyright (c) 2011 David Bashford
+Copyright (c) 2012 David Bashford
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
