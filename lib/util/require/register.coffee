@@ -287,6 +287,7 @@ module.exports = class RequireRegister
         @aliasDirectories[fileName][alias] = pathAsDirectory
       else
         @_logger "RequireJS dependency [[ #{aliasPath} ]] for path alias [[ #{alias} ]], inside file [[ #{fileName} ]], cannot be found."
+        logger.debug "Used this as full depedency path [[ #{fullDepPath} ]]"
 
   _verifyFileDeps: (fileName, deps) ->
     @depsRegistry[fileName] = []
@@ -296,7 +297,7 @@ module.exports = class RequireRegister
   _verifyDep: (fileName, dep) ->
     # require, module = valid dependencies passed by require
     if dep is 'require' or dep is 'module'
-      return logger.debug "Encountered keywordesque dependency [[ #{dep} ]], ignoring."
+      return logger.debug "Encountered keyword-esque dependency [[ #{dep} ]], ignoring."
 
     # as are web resources, CDN, etc
     if dep.indexOf('http') is 0
@@ -334,6 +335,7 @@ module.exports = class RequireRegister
           @_registerDependency(fileName, pathWithDirReplaced)
         else
           @_logger "RequireJS dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
+          logger.debug "Used this as full depedency path [[ #{fullDepPath} ]]"
           @_registerDependency(fileName, dep)
           # much sadness, cannot find the dependency
 
@@ -368,6 +370,10 @@ module.exports = class RequireRegister
   _resolvePath: (fileName, dep) ->
     if dep.indexOf(@rootJavaScriptDir) is 0
       return dep
+
+    # handle windows paths by splitting and rejoining
+    dep = dep.split('/').join(path.sep)
+
     fullPath = if dep.charAt(0) is '.'
       path.resolve path.dirname(fileName), dep
     else

@@ -39,7 +39,6 @@ module.exports = class SassCompiler extends AbstractCssCompiler
       @hasCompass = not error
       logger.debug "Compass available? #{@hasCompass}"
 
-
   compile: (fileName, text, destinationFile, callback) =>
     return @_compile(fileName, text, destinationFile, callback) if @hasCompass?
 
