@@ -44,7 +44,7 @@ _writeJade = (config) ->
         logger.warn "Error compiling/rendering jade template #{viewsPath}"
         logger.warn "Error: #{err}"
       else
-        outPath = path.join config.watch.sourceDir, 'index.html'
+        outPath = path.join config.watch.compiledDir, 'index.html'
 
         logger.debug("Writing html output to [[ #{outPath} ]]")
 
