@@ -7,6 +7,8 @@ And know there is more to come!  Mimosa is in full dev mode on its way to featur
 
 [Give it a whirl](#quick-start).  Please do [file issues](https://github.com/dbashford/mimosa/issues) should you find them, and don't hesitate to [request features](https://github.com/dbashford/mimosa/issues).  I haven't spent time testing Mimosa on Windows, so I wouldn't be surprised to learn it has issues.
 
+See Mimosa in action, check out a [demo app](https://github.com/dbashford/AngularFunMimosa).
+
 ## Features
 
  * Sane defaults allow you to get started without touching the configuration
@@ -540,8 +542,10 @@ To perform the Live Reload, the default application is built to include two extr
 
   Many little bits and pieces, but the big ones are, in no certain order:
 
- * More require support: shim path verification, handle plugin depedencies, path fallbacks
- * More compilers across the board
+ * windows support
+ * compile and run templates down to html for static site generation, for mimosajs.com for instance
+ * package command
+ * image optimization
  * example skeletons with things like Backbone/Chaplin/Angular/Ember, Bootstrap, etc
  * Tests for the Mimosa codebase
  * Integrated testing framework for your codebase
