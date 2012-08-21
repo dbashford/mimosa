@@ -164,7 +164,7 @@ class NewCommand
     cssExts =  if chosenCompilers.css        is "none" then ["css"]  else chosenCompilers.cssExtensions
     tempExts = if chosenCompilers.template   is "none" then ["html"] else chosenCompilers.templateExtensions
     safePaths = _.flatten([compExts, cssExts, tempExts]).map (path) -> "\\.#{path}$"
-    safePaths.push path.join("javascripts[/\\\\]vendor")
+    safePaths.push "javascripts[/\\\\]vendor"
 
     assetsPath = path.join @currPath,  'assets'
     allItems = wrench.readdirSyncRecursive(assetsPath)
