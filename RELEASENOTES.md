@@ -1,3 +1,14 @@
+# 0.0.23alpha - August, 20 2012
+### Major Changes
+* Major strides in Windows compatibility thanks to @brzpegasus. Solved: issues with command line help, sass compilation, and pathing issues galore.  More to come.
+
+### Minor Changes
+* #13, updated to watch-connect 0.3.4 to handle problem with file renames/removes and live reload functionality
+* #36, jade compiling to right directory
+
+### You'll need to...
+* Running with a server delivered by `mimosa new`?  Then run `mimosa update` from inside your project to get the latest watch-connect
+
 # 0.0.22alpha - August, 19 2012
 ### Major Changes
 * #29, #30, new `require.optimize.inferConfig` setting.  If you do not want Mimosa to infer anything regarding your config set `require.optimize.inferConfig` to false.  Use this setting if you have a need to alter Mimosa's config far from the defaults.  Also use this setting if you are not using JavaScript based main modules (if you are putting your config on .html for instance).  All of Mimosa's default behavior for optimization relies on the existence of a javascript based main module. If there is no main module, optimization is not run.  This will continue to be the case unless `inferConfig` is set to false.
