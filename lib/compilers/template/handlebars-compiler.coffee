@@ -27,7 +27,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 
     defines = ["'vendor/#{@clientLibrary}'"]
     for helperPath in helperPaths
-      helperDefine = helperPath.replace(@srcDir, "").replace(/(^[\\\/]?[A-Za-z]+[\\\/])/, '').replace(/\.\w+$/,'').replace(/\\/g, '')
+      helperDefine = helperPath.replace(@srcDir, '').replace(/\\/g, '/').replace(/^\/?\w+\/|\.\w+$/g, '')
       defines.push "'#{helperDefine}'"
     defineString = defines.join ','
 
