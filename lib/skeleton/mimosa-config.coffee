@@ -18,7 +18,7 @@ exports.config = {
                                           # those files finish their processing. This helps avoid EMFILE issues for projects
                                           # containing large numbers of files that all get copied at once. If the throttle is
                                           # set to 0, no throttling is performed. Recommended to leave this set at 0, the
-                                          # default, be until you start encountering EMFILE problems.
+                                          # default, until you start encountering EMFILE problems.
 
   # compilers:
     # javascript:
