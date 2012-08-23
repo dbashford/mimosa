@@ -54,10 +54,19 @@ _uninstallDependencies = (deps, clientDeps, callback) ->
 _installDependencies = (deps, done) ->
   names = for name, version of deps
     logger.info "Installing node package: #{name}:#{version}"
-    name
+    if version.indexOf("github.com") > -1
+      version
+    else
+      "#{name}@#{version}"
 
-  exec "npm install #{names.join(' ')} --save", (err, sout, serr) =>
+  installString = "npm install #{names.join(' ')} --save"
+
+  logger.debug "Installing, npm command is '#{installString}'"
+
+  exec installString, (err, sout, serr) =>
     if err then logger.info(err) else logger.success "Installs successful"
+    logger.debug "NPM INSTALL standard out\n#{sout}"
+    logger.debug "NPM INSTALL standard err\n#{serr}"
     done()
 
 _findPackageJsonPath = (packagePath = path.resolve('package.json')) ->
