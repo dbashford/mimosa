@@ -111,25 +111,7 @@ If you want the latest and greatest:
 
 ## Quick Start
 
-The easiest way to get started with Mimosa is to use it to create a new application skeleton. By default, Mimosa will create a basic Express app configured to match your desired meta-langauges.
-
-First navigate to a directory within which you want to place your application. Create the default app:
-
-    $ mimosa new nameOfApplicationHere
-
-Follow the prompts and choose the meta-languages you'd like to use.
-
-Change into the directory that was created and execute:
-
-    $ mimosa watch --server
-
-In your browser navigate to http://localhost:3000 to see the sample app.
-
-Mimosa will watch your `assets` directory and compile changes made to your `public` directory.  It will also give you console and growl notifications for compilation results and code quality as files as saved.
-
-To run the app in optimize mode, with all your JavaScript assets bundled into a single file, execute:
-
-    $ mimosa watch --server --optimize
+http://mimosajs.com/started.html
 
 ## Configuration
 
@@ -141,7 +123,7 @@ You can find the configuration [inside the skeleton directory](https://github.co
 
 ## Command Line
 
-One interacts with Mimosa via the command-line.
+http://mimosajs.com/commands.html
 
 ### Help
 
@@ -149,149 +131,6 @@ Mimosa includes extensive help documentation on the command line for each of the
 
     $ mimosa --help
     $ mimosa new -h
-
-### New Project (new)
-
-The best way to get started with Mimosa is to use it to create a new application/project structure for you.  Create a new project like so:
-
-    $ mimosa new nameOfApplicationHere
-
-This will kick off a series of prompts that will allow you to pick out the meta-languages and templating library you'd like to use.  When you've finished picking, Mimosa will create a directory at your current location using the name provided as the name of the directory.  Inside that directory Mimosa will populate an application skeleton with public and asset directories, as well as the bare essentials for a base [Express](http://expressjs.com/) application.  You'll have Express [Jade template](http://jade-lang.com/) views, a simple Express [router](http://expressjs.com/guide.html#routing) and a server.coffee file that will be used by Mimosa to get Express [started](#serve-assets---server).
-
-The public directory will be empty; it is the destination for your compiled JavaScript and CSS.  The assets directory has some example code -- chosen based on the selections you made via the prompts -- to get you started, and has a group of vendor scripts, like require.js.
-
-The created directory will also contain the configuration file for Mimosa.  Almost everything inside of it is commented out, but all the options and explanations for each option are present.  The only things that will not be commented out will the javascript, css, and template compilers if you chose something other than the defaults.
-
-#### No Server (--noserver, -n)
-
-Should you not need all of the Express stuff, you can give Mimosa a `--noserver` flag when you create the project.  This will only give you the configuration file, the empty public directory, and the assets directory and all of its contents.
-
-    $ mimosa new nameOfApplicationHere --noserver
-    $ mimosa new nameOfApplicationHere -n
-
-#### Pick the defaults (--defaults, -d)
-
-Should you be happy with the defaults (CoffeeScript, Handlebars, and SASS) you can bypass the prompts by providing a `--defaults` flag.
-
-    $ mimosa new nameOfApplicationHere --defaults
-    $ mimosa new nameOfApplicationHere -d
-
-### Watch and Compile (watch)
-
-Mimosa will watch the configured `watch.sourceDir`, by default the assets directory.  When files are added, updated, or deleted, the configured compilers will perform necessary actions and keep the `watch.compiledDir` updated with compiled/copied assets.
-
- To start watching, execute:
-
-    $ mimosa watch
-
-When Mimosa starts up, it registers files in your `sourceDir` all at once.  If you have a very large number of files, 1000 images to copy over for instance, Mimosa may open enough files to cause EMFILE issues.  This means that Mimosa has opened up too many files at one time, more files than your system allows to be open at once.
-
-To combat this, the `watch` config has a `throttle` property.  `throttle` is the number of files Mimosa should handle every 100 milliseconds during the initial Mimosa startup and for subsequent file additions.  For instance, if you set the number to 200, this means that if you have 1000 files, when Mimosa starts up it will process them in 5 chunks of 200, spaced 100 milliseconds apart.  It will do the same if, after Mimosa has started, you add 1000 files with a single copy or paste.
-
-You may still run into EMFILE issues after setting throttle, and it might take some playing around with the number to get things just right.
-
-The default for `throttle` is 0.  When `throttle` is set to 0, throttling is disabled and all files are processed immediately.
-
-#### Serve Assets (--server, -s)
-
-If you are not already running a server, and you need to serve your assets up, start Mimosa with the server flag.
-
-    $ mimosa watch --server
-    $ mimosa watch -s
-
-By default, this will look for and run an Express app located at `server.path`.  If you used the Mimosa command line to build your new project, and you didn't provide the `--noserver` flag, you will have a server.coffee at the root of your file structure.  Mimosa will run the `startServer` method in this file.  You can leave this file as is if you are simply serving up assets, but this gives you the opportunity to build out an actual Express app should that be your desire.
-
-You can change to using an embedded default (not-extendable) Express server by changing the `server.useDefaultServer` configuration to `true`.  If you created a project using the `--noserver` flag, this will have already been done for you.
-
-#### Serve Optimized Assets (--optimize, -o)
-
-Start Mimosa watching with the `--optimize` flag turned on and Mimosa will run RequireJS's optimizer on start-up and with every javascript file change.  So when you point at either the Express or default server's base URL with optimize flagged, you will be served the result of RequireJS's optimization, packaged with [Almond](https://github.com/jrburke/almond).
-
-When `optimize` is turned on, Mimosa will also minify your CSS.
-
-To start up with optimization turned on, execute the following:
-
-    $ mimosa watch [--server] --optimize
-    $ mimosa watch [--server] -o
-
-### Install Dependencies (install)
-
-    $ mimosa install [libraryName]
-
-The `install` command will use [Volo](http://volojs.org/) to install dependencies for you.  Mimosa will first ask where you want to place the dependency, then it will use Volo to go fetch it from GitHub.  See the [Volo documentation](https://github.com/volojs/volo) for more details.
-
-    $ mimosa install jquery
-
-#### Non-AMD dependencies (--noamd, -n)
-
-The only Volo option exposed by Mimosa at this time is the ability to turn on and off whether you are looking for an AMD or non-AMD version.  By default Mimosa will set the install to AMD.  But if you wish a non-AMD version of a library, provide a `-n` flag.
-
-    $ mimosa install backbone --noamd
-
-### Just Watch, Do Not Write (virgin)
-
-Because, after all, a virgin mimosa is just orange juice.
-
-    $ mimosa virgin
-
-This command is just the watching, compiling, linting and notifications.  No server, no optimizations, no writing the output.  Use this if you've already got an application framework, you don't need files served, and you don't need optimizations.  But you do want to know if something doesn't compile before you reload the page, and you do want to introduce linting to your workflow.
-
-### One Time Asset Build (build)
-
- If you just want to compile a set of assets, and you don't want to start up a watching process to do it, you can use Mimosa's build command.
-
-    $ mimosa build
-
- This will run through your assets and compile any that need compiling, deliver the results to the public directory, and then exit.
-
-#### Optimized Build (--optimize, -o)
-
-If you want to build with optimization, provide a `--optimize` flag.  This will compile all the assets, create the requirejs optimized files, and minify your compiled CSS.
-
-    $ mimosa build --optimize
-    $ mimosa build -o
-
-#### Remove Leftover Files (--removeCombined, -r)
-
-When used in conjunction with `--optimize` the `--removeCombined` flag will clean up after the optimization.  If, when the optimization is complete, you only want the combined optimized files left behind, this is the flag for you.  This flag is a simple pass-through to the r.js compiler, which takes a `removeCombined` flag of its own.
-
-This must be used with `--optimize` or Mimosa will error out.
-
-    $ mimosa build --optimize --removeCombined
-    $ mimose build -o -r
-
-#### Compile the Provided Jade Template (--jade, -j)
-
-Should you not be deploying a node/Express app, and you need an .html version of the `index.jade` that Mimosa provides with its `new` command, the `jade` flag will provide that.  The `jade` flag will attempt to compile the `index.jade` file by feeding the template production level settings.  `env` will be set to `production`.  `reload` set to `false`.  `optimize` will be set to `true` if you also provide the `optimize` flag.  `title` will be set to `Mimosa`.  It is suggested you remove the `title` variable and hard code your `title`.
-
-If the `index.jade` file is changed to take different variables, or removed or renamed, the jade compilation will fail with warnings explaining the failures.
-
-    $ mimosa build --jade
-    $ mimosa build -j
-
-### Clean Compiled Assets (clean)
-
-A companion to build, this command will wipe out any files it is responsible for placing into the `compiledDir`.  It makes a pass to clean out the files, and once done, it makes a pass to clean out any directories that are now empty.  If for some reason there are files in your `compiledDir` directory structure that Mimosa didn't place there, they'll be left in place.
-
-    $ mimosa clean
-
-### Copy Config (config)
-
-    $ mimosa config
-
-If you've already got a project and want to use Mimosa with it, this command will copy the default configuration into whatever directory you are in.  You'll likely have some configuration to update to point Mimosa at your source and compiled directories.
-
-### Update Install (update)
-
-If you installed an application using the `new` command, you may want to keep your application up to date with the Mimosa skeleton as it evolves and advances.
-
-Use the `install` command to update the node packages that Mimosa installed inside your application when it was created and to get any new libraries it has included.  This command saves you needing to update and keep current the packages installed at the outset.
-
-For now Mimosa will not attempt to update any of the other assets it delivers (routes, example skeleton files, etc) because many of them may have significantly changed from when they were created.
-
-Mimosa will first run `npm uninstall` for each of the skeleton libraries already in place in your project, and then it will follow up with an `npm install` on each removed library and each new library that wasn't there originally.
-
-    $ mimosa update
 
 ### Debug Mode (-D, --debug)
 
@@ -302,107 +141,11 @@ All Mimosa commands have a debug mode that will print detailed logs to the conso
 
 ## Meta-Language Compilation
 
-When Mimosa detects that a file change has occurred, Mimosa will compile your meta-languages and place the output in the public directory.
-
-The meta-languages being used can be changed in the config.  The [default config file](https://github.com/dbashford/mimosa/blob/master/lib/skeleton/mimosa-config.coffee) contains a list of other options for each `compileWith`.
-
-### JavaScript Meta-Languages
-
-Mimosa will compile all of your CoffeeScript and Iced CoffeeScript files to JavaScript.
-
-### CSS Meta-Languages
-
- Mimosa comes with three meta-languages that compile down to CSS   In all cases Mimosa keeps track of the 'base' files that require compilation, and will compile these base files when they change, or when one of their dependencies change.
-
- A base file is defined as a file that is imported by no other file.  Mimosa works under the assumption that if a file is imported, it does not need to be compiled individually, but the file doing the importing does.  So Mimosa follows your imports and compiles only those files that are at the root of the import tree.
-
- When the list of base files changes in some way post-startup, Mimosa lets you know via the console.
-
-#### SASS
-
-Mimosa will compile your [SASS](http://sass-lang.com/).  [Compass](http://compass-style.org/) can also be used with your SASS.
-
-SASS and Compass are external Ruby dependencies that'll need to be installed outside of Mimosa.  See [here](http://sass-lang.com/) and [here](http://compass-style.org/install/) for install instructions.
-
-#### LESS
-
-Mimosa will compile your [LESS](http://lesscss.org/) files.
-
-#### Stylus
-
-Mimosa will compile your [Stylus](http://learnboost.github.com/stylus/) files and will include [nib](http://visionmedia.github.com/nib/) in the compilation, so all of nib's functionality is available to you.
-
-### Micro-Templating Libraries
-
- Listed below are the six different micro-templating libraries Mimosa has built in.  As with the CSS and JavaScript meta-languages, the micro-templating libraries will be compiled when saved.  In all cases, the resulting compiled templates will be merged into a single file for use in the client.  Within that file will be @sourceUrl like information to allow you to easily track errors back to specific files in your codebase.
-
- The name and location of that single file is configurable (`compilers.template.outputFileName`), but by default it is kept at javascripts/template.  When this file is injected via require, the behavior differs per library, see below.
-
- For each templating langauge, the injected javascript file provides a JSON object of templates, keyed by the name of the the template originated in.
-
-#### Handlebars
-
- [Handlebars](http://handlebarsjs.com/) is the default templating langauge.  To access a Handlebars template originating from a file named "example.hbs", do this...
-
- `var html = templates.example({})`
-
-...passing in JSON data the template needs to render.
-
- Handlebars also provides the ability to code reusable helper methods in pure JavaScript.  You can code those in the meta-language of your choosing inside the `compilers.template.helperFiles` files.  The helpers and the templates are all pulled together via requirejs.
-
-#### Dust
-
- To access a [Dust](https://github.com/linkedin/dustjs/) template originating from a file named "example.dust", do this...
-
- ```
- templates.render('example', {}, (err, html) -> $(element).append(html))
- ```
-
- You can reference dust partials, `{>example_partial/}`, and they will be available because all the templates are merged together.
-
-#### Hogan
-
- To access a [Hogan](http://twitter.github.com/hogan.js/) template originating from a file named "example.hogan", do this...
-
- ```
- templates.example.render({name:'Hogan', css:'CSSHERE'}, templates)
- ```
-
- Note the passing of the templates object into the render method.  This isn't necessary, but if you use partials, it is all you'll need to do to make partials work since all partials are included in the compiled template file.
-
-#### Jade
-
-To access a [Jade](http://jade-lang.com/) template originating from a file named "example.jade", do this...
-
- `var html = templates.example({})`
-
-#### Underscore
-
-To access an [Underscore](http://underscorejs.org/) template originating from a file named "example.tpl", do this...
-
-`var html = templates.example({})`
-
-#### LoDash
-
-To access a [LoDash](http://lodash.com/) template originating from a file named "example.lodash", do this...
-
-`var html = templates.example({})`
-
-#### HTML
-
-If you just want to use plain HTML templates, you can do that too.
-
-To access a plain HTML template originating from a file named "example.template", do this...
-
-`var html = templates.example`
-
-Full disclosure: Mimosa uses Underscore under the hood to handle getting your plain HTML templates to the browser as strings.  In this case, the Underscore compiler has been made so that it'll not understand it's usual delimiters for code or interpolation, and the resulting compiled Underscore templates are delivered as self-executing.  Will work on unhacking that in the future.
+http://mimosajs.com/compilers.html
 
 ## Asset Copying
 
-In the configuration there is a `copy.extensions` setting which lists the assets that will simply be moved over.  So, for example, images, plain ol' JavaScript (like vendor files, or should you choose code JavaScript), and regular CSS will be copied over.
-
-If there are extra files you need copied over, uncomment the `copy.extensions` config and add it to the list.  Or, better yet, make a suggestion by [filing an issue](https://github.com/dbashford/mimosa/issues).  No harm in me growing the list of extensions in the default.
+http://mimosajs.com/compilers.html#copy
 
 ## Optimize
 
