@@ -36,7 +36,10 @@ class MimosaDefaults
     js = comp.javascript = config.compilers.javascript ?= {}
     js.directory =         config.compilers.javascript.directory         ?= "javascripts"
     js.compileWith =       config.compilers.javascript.compileWith       ?= defaultJavascript
-    js.extensions =        config.compilers.javascript.extensions        ?= ["coffee"]
+    if js.compileWith is "none"
+      js.extensions = ['js']
+    else
+      js.extensions = config.compilers.javascript.extensions        ?= ["coffee"]
 
     template = comp.template = config.compilers.template                 ?= {}
     template.compileWith =     config.compilers.template.compileWith     ?= defaultTemplate
@@ -51,7 +54,10 @@ class MimosaDefaults
 
     css = comp.css =      config.compilers.css                 ?= {}
     css.compileWith =     config.compilers.css.compileWith     ?= defaultCss
-    css.extensions =      config.compilers.css.extensions      ?= ["scss", "sass"]
+    if css.compileWith is "none"
+      css.extensions = ['css']
+    else
+      css.extensions = config.compilers.css.extensions      ?= ["scss", "sass"]
 
     copy = newConfig.copy = config.copy                        ?= {}
     copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml"]
