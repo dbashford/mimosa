@@ -70,19 +70,11 @@ Something missing from Mimosa for the short-term, that Brunch has in abundance, 
 
 ## Installation
 
-As dev continues, I'll push to NPM whenever it makes sense.
-
-    $ npm install -g mimosa
-
-If you want the latest and greatest:
-
-    $ git clone https://github.com/dbashford/mimosa.git
-    $ cd mimosa
-    $ npm install -g
+http://mimosajs.com/started.html#install
 
 ## Quick Start
 
-http://mimosajs.com/started.html
+http://mimosajs.com/started.html#quick
 
 ## Configuration
 
