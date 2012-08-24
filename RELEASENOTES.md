@@ -1,3 +1,16 @@
+# 0.0.24alpha - August, 24 2012
+### Major Changes
+* More strides towards Windows compatibility, including #42, requirejs alias directory path issues
+* #39, `mimosa update` should now behave and install the correct versions of libraries
+
+### Minor Changes
+* #35, `mimosa virgin` should now be ok with requirejs path verification
+* #41, shim validation had stopped working awhile back, is re-enabled
+* #40, issues with plain JS + handlebars fixed
+
+### You'll need to...
+* Run `mimosa update` at any point?  It was broken, there's a chance you have versions of libraries installed that you ought not have. Now that it is fixed, it is best you run `mimosa update` again to get the correct versions.
+
 # 0.0.23alpha - August, 20 2012
 ### Major Changes
 * Major strides in Windows compatibility thanks to @brzpegasus. Solved: issues with command line help, sass compilation, and pathing issues galore.  More to come.
