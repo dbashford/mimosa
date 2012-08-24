@@ -17,7 +17,7 @@ build = (opts) =>
 
   util.processConfig false, (config) =>
     config.optimize = opts?.optimize
-    if opts.removeCombined then config.require.optimize.removeCombined = true
+    if opts.removeCombined then config.require.optimize.overrides.removeCombined = true
     compilers = util.fetchConfiguredCompilers config, false
     new Watcher config, compilers, false, _buildFinished
 
