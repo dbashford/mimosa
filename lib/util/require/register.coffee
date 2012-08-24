@@ -417,6 +417,16 @@ module.exports = class RequireRegister
     [deps, config]
 
   _fileExists: (filePath) ->
-    fs.existsSync filePath
+    return true if fs.existsSync filePath
+    if @config.virgin
+      # templates is fine, will never be written, doesn't actually exist unless it is written
+      return true if filePath is path.join(@rootJavaScriptDir, "templates.js")
+
+      logger.debug "Is virgin, need to try a bit harder to find file in source directories using extensions [[ #{@config.compilers.javascript.extensions} ]]"
+      for extension in @config.compilers.javascript.extensions
+        filePath = filePath.replace(/\.[^.]+$/, ".#{extension}")
+        return true if fs.existsSync filePath
+
+    false
 
 module.exports = new RequireRegister()
