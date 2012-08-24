@@ -1,3 +1,12 @@
+# 0.0.25alpha - August, ?? 2012
+### Major Changes
+* `removeCombined` works again, #43
+
+### Minor Changes
+
+### You'll need to...
+
+
 # 0.0.24alpha - August, 24 2012
 ### Major Changes
 * More strides towards Windows compatibility, including #42, requirejs alias directory path issues
