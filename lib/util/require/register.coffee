@@ -18,7 +18,10 @@ module.exports = class RequireRegister
   setConfig: (@config) ->
     @verify = @config.require.verify.enabled
     unless @rootJavaScriptDir?
-      @rootJavaScriptDir = path.join @config.watch.compiledDir, @config.compilers.javascript.directory
+      @rootJavaScriptDir = if config.virgin
+        path.join @config.watch.sourceDir, @config.compilers.javascript.directory
+      else
+        path.join @config.watch.compiledDir, @config.compilers.javascript.directory
       logger.debug "Root Javascript directory set at [[ #{@rootJavaScriptDir} ]]"
 
   process: (fileName, source) ->
@@ -78,7 +81,7 @@ module.exports = class RequireRegister
         logger.debug "[[ #{fileName} ]] has require configuration inside of it:\n#{JSON.stringify(config, null, 2)}"
         @requireFiles.push fileName
         @_handleConfigPaths(fileName, config.map ? null, config.paths ? null)
-        @_handleShims(fileName, config.shims ? null)
+        @_handleShims(fileName, config.shim ? null)
       @_handleDeps(fileName, deps)
 
   _define: (fileName) ->
@@ -115,7 +118,7 @@ module.exports = class RequireRegister
     @_verifyConfigForFile(file)  for file in @requireFiles
     @_verifyFileDeps(file, deps) for file, deps of @depsRegistry
     @_verifyShims(file, shims) for file, shims of @shims
-    @_buildTree()
+    @_buildTree() unless @config.virgin
 
   _handleShims: (fileName, shims) ->
     if @startupComplete
@@ -129,17 +132,17 @@ module.exports = class RequireRegister
 
     for name, config of shims
       logger.debug "Processing shim [[ #{name} ]] with config of [[ #{JSON.stringify(config)} ]]"
-      unless fs.existsSync @_resolvePath(fileName, name)
+      unless @_fileExists(@_resolvePath(fileName, name))
         @_logger "RequireJS shim path [[ #{name} ]] inside file [[ #{fileName} ]] cannot be found."
 
       deps = if Array.isArray(config) then config else config.deps
       if deps?
         for dep in deps
           logger.debug "Resolving shim dependency [[ #{dep} ]]"
-          unless fs.existsSync @_resolvePath(fileName, dep)
+          unless @_fileExists(@_resolvePath(fileName, dep))
             @_logger "RequireJS shim [[ #{name} ]] inside file [[ #{fileName} ]] refers to a dependency that cannot be found [[ #{dep} ]]."
       else
-        logged.debug "No 'deps' found for shim"
+        logger.debug "No 'deps' found for shim"
 
   _buildTree: ->
     for f in @requireFiles
@@ -153,7 +156,7 @@ module.exports = class RequireRegister
       return logger.debug "Dependency registry has no depedencies for [[ #{dep} ]]"
 
     for aDep in @depsRegistry[dep]
-      exists = fs.existsSync aDep
+      exists = @_fileExists aDep
 
       unless exists
         logger.debug "Cannot find dependency [[ #{aDep} ]] for file [[ #{dep} ]], checking aliases/paths/maps"
@@ -195,7 +198,7 @@ module.exports = class RequireRegister
   _handleDeps: (fileName, deps) ->
     if @startupComplete
       @_verifyFileDeps(fileName, deps)
-      @_buildTree()
+      @_buildTree() unless @config.virgin
     else
       @depsRegistry[fileName] = deps
 
@@ -221,7 +224,7 @@ module.exports = class RequireRegister
     for module, mappings of maps
       if module isnt '*'
         fullDepPath = @_resolvePath(fileName, module)
-        exists = fs.existsSync fullDepPath
+        exists = @_fileExists fullDepPath
         if exists
           logger.debug "Verified path for module [[ #{module} ]] at [[ #{fullDepPath} ]]"
           delete maps[module]
@@ -240,7 +243,7 @@ module.exports = class RequireRegister
           @aliasFiles[fileName][alias] = "MAPPED!#{alias}"
           continue
 
-        exists = fs.existsSync fullDepPath
+        exists = @_fileExists fullDepPath
         if exists
           logger.debug "Found mapped dependency [[ #{alias} ]] at [[ #{fullDepPath} ]]"
           @aliasFiles[fileName][alias] = "MAPPED!#{alias}"
@@ -271,7 +274,7 @@ module.exports = class RequireRegister
 
     fullDepPath = @_resolvePath(fileName, aliasPath)
 
-    exists = fs.existsSync fullDepPath
+    exists = @_fileExists fullDepPath
     if exists
       if fs.statSync(fullDepPath).isDirectory()
         logger.debug "Path found at [[ #{fullDepPath}]], is a directory, adding to list of alias directories"
@@ -281,7 +284,7 @@ module.exports = class RequireRegister
         @aliasFiles[fileName][alias] = fullDepPath
     else
       pathAsDirectory = fullDepPath.replace(/.js$/, '')
-      if fs.existsSync pathAsDirectory
+      if @_fileExists pathAsDirectory
         logger.debug "Path exists as directory, [[ #{pathAsDirectory} ]], adding to list of alias directories"
         @aliasDirectories[fileName] ?= {}
         @aliasDirectories[fileName][alias] = pathAsDirectory
@@ -317,7 +320,7 @@ module.exports = class RequireRegister
     else
       @_resolvePath(fileName, dep)
 
-    exists = fs.existsSync fullDepPath
+    exists = @_fileExists fullDepPath
     if exists
       # file exists, register it
       @_registerDependency(fileName, fullDepPath)
@@ -330,7 +333,7 @@ module.exports = class RequireRegister
       else
         logger.debug "Cannot find dependency as path alias..."
         pathWithDirReplaced = @_findPathWhenAliasDiectory(dep)
-        if pathWithDirReplaced? and fs.existsSync pathWithDirReplaced
+        if pathWithDirReplaced? and @_fileExists pathWithDirReplaced
           # file does not exist, but can be found by following directory alias
           @_registerDependency(fileName, pathWithDirReplaced)
         else
@@ -378,10 +381,11 @@ module.exports = class RequireRegister
       path.resolve path.dirname(fileName), dep
     else
       path.join @rootJavaScriptDir, dep
+
     "#{fullPath}.js"
 
   _findPathWhenAliasDiectory: (dep) ->
-    pathPieces = dep.split(path.sep)
+    pathPieces = dep.split('/')
     alias = @_findAlias(pathPieces[0], @aliasDirectories)
     if alias
       logger.debug "Found alias as directory [[ #{alias} ]]"
@@ -411,5 +415,8 @@ module.exports = class RequireRegister
         deps = []
 
     [deps, config]
+
+  _fileExists: (filePath) ->
+    fs.existsSync filePath
 
 module.exports = new RequireRegister()
