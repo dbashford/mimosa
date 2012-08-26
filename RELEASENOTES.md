@@ -6,6 +6,20 @@
 ### Minor Changes
 
 ### You'll need to...
+* With the new `minify` section in the mimosa-config, you will no longer have an up to date, commented out, version of the mimosa-config.  It is suggested that you find a place in your config and paste this:
+
+```
+# minify:                               # Configuration for non-require minification/compression via uglify using the --minify flag.
+  # exclude:["\.min\."]                 # List of excluded file regexes when running minify using the --minify flag.  Any file
+                                        # possessing ".min." in its name, like jquery.min.js, is assumed to already be minified
+                                        # in a way that preserves functionality of the library, so it will be ignored.  If you have
+                                        # other files that you'd like to exempt from minification, overrides this property and
+                                        # include them.
+```
+
+`minify` is a top level configuration parameter.
+
+* If you were having trouble with the r.js minifier breaking your code, take a hard look at using `--minify` and `--optimize` together in combination with the `minify.excludes` option in the mimosa-config.
 
 
 # 0.0.24alpha - August, 24 2012

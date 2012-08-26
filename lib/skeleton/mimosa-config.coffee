@@ -76,7 +76,7 @@ exports.config = {
                                           # to null
 
   # minify:                               # Configuration for non-require minification/compression via uglify using the --minify flag.
-    # exclude:["\.min\."]              # List of excluded file regexes when running minify using the --minify flag.  Any file
+    # exclude:["\.min\."]                 # List of excluded file regexes when running minify using the --minify flag.  Any file
                                           # possessing ".min." in its name, like jquery.min.js, is assumed to already be minified
                                           # in a way that preserves functionality of the library, so it will be ignored.  If you have
                                           # other files that you'd like to exempt from minification, overrides this property and
