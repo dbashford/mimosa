@@ -69,7 +69,7 @@ fetchConfiguredCompilers = (config, persist = false) ->
       logger.info "Unable to find matching compiler for #{category}/#{catConfig.compileWith}: #{err}"
   compilers
 
-processConfig = (server, callback, virgin = false) ->
+processConfig = (opts, callback) ->
   configPath = _findConfigPath()
   {config} = require configPath if configPath?
   unless config?
@@ -80,8 +80,10 @@ processConfig = (server, callback, virgin = false) ->
 
   logger.debug "Your mimosa config:\n#{JSON.stringify(config, null, 2)}"
 
-  config.virgin = virgin
-  config.isServer = server
+  config.virgin =   opts?.virgin
+  config.isServer = opts?.server
+  config.optimize = opts?.optimize
+  config.min =      opts?.minify
 
   defaults.applyAndValidateDefaults config, configPath, (err, newConfig) =>
     if err

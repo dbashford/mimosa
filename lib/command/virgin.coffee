@@ -4,10 +4,10 @@ Watcher =  require './util/watcher'
 
 virgin = (opts) =>
   if opts.debug then logger.setDebug()
-  util.processConfig false, watch, true
+  opts.virgin = true
+  util.processConfig opts, watch
 
 watch = (config) ->
-  config.virgin = true
   compilers = util.fetchConfiguredCompilers(config, true)
   new Watcher(config, compilers, true)
 

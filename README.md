@@ -1,3 +1,8 @@
+
+
+8/26 Update: For a short time, the documentation here and http://mimosajs.com/ will combine to cover all of the documentable features of Mimosa.  I expect within the next week or two to get everything in this README up on http://mimosajs.com/, at which point this README becomes obsolete.  New features and updates to existing features will be documented there, not here.
+
+
 Mimosa - a modern browser development toolkit
 ======
 

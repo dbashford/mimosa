@@ -10,8 +10,7 @@ Watcher =  require './util/watcher'
 
 watch = (opts) =>
   if opts.debug then logger.setDebug()
-  util.processConfig opts?.server, (config) =>
-    config.optimize = opts?.optimize
+  util.processConfig opts, (config) =>
     compilers = util.fetchConfiguredCompilers(config, true)
     new Watcher(config, compilers, true, startServer if opts?.server)
 
@@ -76,6 +75,7 @@ register = (program, callback) =>
     .description("watch the filesystem and compile assets")
     .option("-s, --server",   "run a server that will serve up the assets in the compiled directory")
     .option("-o, --optimize", "run require.js optimization after each js file compile")
+    .option("-m, --minify", "minify each asset as it is compiled using uglify")
     .option("-D, --debug", "run in debug mode")
     .action(callback)
     .on '--help', =>
@@ -94,6 +94,14 @@ register = (program, callback) =>
       logger.green('  single files for the named requirejs modules.  It will do this any time a JavaScript asset is changed.')
       logger.blue( '\n    $ mimosa watch --optimize')
       logger.blue( '    $ mimosa watch -o\n')
+      logger.green('  Pass an \'minify\' flag and Mimosa will use uglify to minify/compress your assets as they are compiled.')
+      logger.green('  You can provide exclude, files you do not want to minify, in the mimosa-config.  If you run \'minify\' ')
+      logger.green('  and \'optimize\' at the same time, optimize will not run the uglify portion of its processing which occurs as')
+      logger.green('  a separate step after everything has compiled and does not allow control of what gets uglified. Use \'optimize\'')
+      logger.green('  and \'minify\' together if you need to control which files get mangled by uglify (because sometimes uglify')
+      logger.green('  can break them) but you still want everything together in a single file.')
+      logger.blue( '\n    $ mimosa watch --minify')
+      logger.blue( '    $ mimosa watch -m\n')
 
 module.exports = (program) ->
   register(program, watch)

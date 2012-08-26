@@ -24,7 +24,11 @@ class MimosaDefaults
 
   _applyDefaults: (config) ->
     newConfig = {}
-    newConfig.virgin = config.virgin
+
+    newConfig.virgin =   config.virgin
+    newConfig.isServer = config.isServer
+    newConfig.optimize = config.optimize
+    newConfig.min =      config.min
 
     newConfig.watch =             config.watch ?= {}
     newConfig.watch.sourceDir =   path.join(@root, config.watch.sourceDir   ? "assets")
@@ -36,10 +40,10 @@ class MimosaDefaults
     js = comp.javascript = config.compilers.javascript ?= {}
     js.directory =         config.compilers.javascript.directory         ?= "javascripts"
     js.compileWith =       config.compilers.javascript.compileWith       ?= defaultJavascript
-    if js.compileWith is "none"
-      js.extensions = ['js']
+    js.extensions = if js.compileWith is "none"
+       ['js']
     else
-      js.extensions = config.compilers.javascript.extensions        ?= ["coffee"]
+      config.compilers.javascript.extensions ? ["coffee"]
 
     template = comp.template = config.compilers.template                 ?= {}
     template.compileWith =     config.compilers.template.compileWith     ?= defaultTemplate
@@ -54,10 +58,10 @@ class MimosaDefaults
 
     css = comp.css =      config.compilers.css                 ?= {}
     css.compileWith =     config.compilers.css.compileWith     ?= defaultCss
-    if css.compileWith is "none"
-      css.extensions = ['css']
+    css.extensions = if css.compileWith is "none"
+      ['css']
     else
-      css.extensions = config.compilers.css.extensions      ?= ["scss", "sass"]
+      config.compilers.css.extensions ? ["scss", "sass"]
 
     copy = newConfig.copy = config.copy                        ?= {}
     copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml"]
@@ -81,13 +85,21 @@ class MimosaDefaults
     requirejs.verify = newConfig.require.verify = config.require.verify ?= {}
     requirejs.verify.enabled = config.require.verify.enabled            ?= true
 
+    minify = newConfig.minify =       config.minify             ?= {}
+    minify.exclude = config.minify.exclude                ?= ["\.min\."]
+
+    # need to set some requirejs stuf
+    if config.optimize and config.min
+      logger.info "Optimize and minify both selected, setting r.js optimize property to 'none'"
+      requirejs.optimize.overrides.optimize = "none"
+
     growl = newConfig.growl =       config.growl                ?= {}
-    growl.onStartup =               config.onStartup            ?= false
-    growl.onSuccess =               config.onSuccess            ?= {}
-    growl.onSuccess.javascript =    config.onSuccess.javascript ?= true
-    growl.onSuccess.css =           config.onSuccess.css        ?= true
-    growl.onSuccess.template =      config.onSuccess.template   ?= true
-    growl.onSuccess.copy =          config.onSuccess.copy       ?= true
+    growl.onStartup =               config.growl.onStartup            ?= false
+    growl.onSuccess =               config.growl.onSuccess            ?= {}
+    growl.onSuccess.javascript =    config.growl.onSuccess.javascript ?= true
+    growl.onSuccess.css =           config.growl.onSuccess.css        ?= true
+    growl.onSuccess.template =      config.growl.onSuccess.template   ?= true
+    growl.onSuccess.copy =          config.growl.onSuccess.copy       ?= true
 
     lint = newConfig.lint =    config.lint                     ?= {}
     lint.compiled =            config.lint.compiled            ?= {}

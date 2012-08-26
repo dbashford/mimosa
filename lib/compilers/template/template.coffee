@@ -5,6 +5,8 @@ wrench = require 'wrench'
 
 fileUtils = require '../../util/file'
 logger = require '../../util/logger'
+minifier = require '../../util/minify'
+
 AbstractCompiler = require '../compiler'
 
 module.exports = class AbstractTemplateCompiler extends AbstractCompiler
@@ -16,6 +18,9 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
       @clientPath = path.join path.dirname(@templateFileName), 'vendor', "#{@clientLibrary}.js"
     @notifyOnSuccess = config.growl.onSuccess.template
+
+    if @fullConfig.min
+      @minifier = minifier.setExclude(@fullConfig.minify.exclude)
 
   # OVERRIDE THIS
   compile: (fileNames, callback) ->
@@ -75,7 +80,10 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     if error
       @failed error
     else
-      @write(@templateFileName, output) if output?
+      if output?
+        if @minifier?
+          output = @minifier.minify(@templateFileName, output)
+        @write(@templateFileName, output)
 
   _reportStartupDone: =>
     unless @startupFinished
@@ -97,6 +105,10 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       if err?
         logger.error("Cannot read client library: #{@mimosaClientLibraryPath}") if err?
         return callback()
+
+      if @minifier?
+        data = @minifier.minify(@clientPath, data)
+
       fileUtils.writeFile @clientPath, data, (err) =>
         @failed("Cannot write client library: #{err}") if err?
         callback()

@@ -3,6 +3,7 @@ logger = require '../../util/logger'
 Linter = require '../../util/lint/js'
 
 requireRegister = require '../../util/require/register'
+minifier = require '../../util/minify'
 
 module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileCompiler
   outExtension: 'js'
@@ -20,6 +21,9 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
       @requireRegister = requireRegister
       @requireRegister.setConfig(config)
 
+    if @fullConfig.min
+      @minifier = minifier.setExclude(@fullConfig.minify.exclude)
+
   removed: (fileName) ->
     super(fileName)
     @requireRegister?.remove(fileName)
@@ -30,7 +34,11 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
       logger.debug "Linting [[ #{destFileName} ]]}"
       @linter.lint(destFileName, source)
 
+    if @minifier?
+      source =@minifier.minify(destFileName, source)
+
     @requireRegister?.process(destFileName, source)
+
     source
 
   afterWrite: (fileName) ->

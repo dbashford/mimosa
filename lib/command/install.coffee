@@ -14,7 +14,7 @@ class InstallCommand
   install: (args...) =>
     @prepArgs(args)
 
-    util.processConfig false, (config) =>
+    util.processConfig {}, (config) =>
       dirs = @directories(config)
       logger.debug "All directories found:\n#{dirs.join('\n')}"
 

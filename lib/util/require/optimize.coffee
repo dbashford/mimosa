@@ -6,12 +6,14 @@ requirejs = require 'requirejs'
 
 logger =    require '../logger'
 requireRegister = require './register'
+minifier = require '../minify'
 
 class Optimizer
 
   constructor: ->
     almondInPath  = path.join __dirname, "..", "assets", "almond.js"
     @almondText = fs.readFileSync almondInPath, "ascii"
+    @almondText = minifier.minify(almondInPath, @almondText)
 
   optimize: (config, fileName) =>
     return unless config.optimize

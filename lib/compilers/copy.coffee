@@ -5,6 +5,7 @@ CSSLinter =          require '../util/lint/css'
 JSLinter =           require '../util/lint/js'
 requireRegister =    require '../util/require/register'
 logger = require '../util/logger'
+minifier = require '../util/minify'
 
 module.exports = class CopyCompiler extends SingleFileCompiler
 
@@ -28,6 +29,9 @@ module.exports = class CopyCompiler extends SingleFileCompiler
       @requireRegister = requireRegister
       @requireRegister.setConfig(config)
 
+    if config.min
+      @minifier = minifier.setExclude(config.minify.exclude)
+
   removed: (fileName) ->
     super(fileName)
     if @_isJS(fileName)
@@ -48,6 +52,9 @@ module.exports = class CopyCompiler extends SingleFileCompiler
 
     if @_isJSNotVendor(destFileName)
       @requireRegister?.process(destFileName, source.toString())
+
+    if @minifier? and @_isJS(destFileName)
+      source = @minifier.minify(destFileName, source.toString())
 
     source
 

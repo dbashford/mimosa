@@ -15,8 +15,7 @@ build = (opts) =>
   if opts.debug then logger.setDebug()
   logger.info "Beginning build"
 
-  util.processConfig false, (config) =>
-    config.optimize = opts?.optimize
+  util.processConfig opts, (config) =>
     if opts.removeCombined then config.require.optimize.overrides.removeCombined = true
     compilers = util.fetchConfiguredCompilers config, false
     new Watcher config, compilers, false, _buildFinished
@@ -66,6 +65,7 @@ register = (program, callback) =>
     .option("-o, --optimize", "run r.js optimization after building")
     .option("-r, --removeCombined", "removes all of the files involved in the optimization, leaving behind just the built files")
     .option("-j, --jade", "compile the provided jade template into an html, for those not deploying to node environment and in need of an html file")
+    .option("-m, --minify", "minify each asset as it is compiled using uglify")
     .option("-D, --debug", "run in debug mode")
     .action(callback)
     .on '--help', =>
@@ -89,6 +89,14 @@ register = (program, callback) =>
       logger.green('  altered your index.jade file to take parameters other than those it originally was delivered to take.')
       logger.blue( '\n    $ mimosa build --jade')
       logger.blue( '    $ mimosa build -j\n')
+      logger.green('  Pass an \'minify\' flag and Mimosa will use uglify to minify/compress your assets when they are compiled.')
+      logger.green('  You can provide exclude, files you do not want to minify, in the mimosa-config.  If you run \'minify\' ')
+      logger.green('  and \'optimize\' at the same time, optimize will not run the uglify portion of its processing which occurs as')
+      logger.green('  a separate step after everything has compiled and does not allow control of what gets uglified. Use \'optimize\'')
+      logger.green('  and \'minify\' together if you need to control which files get mangled by uglify (because sometimes uglify')
+      logger.green('  can break them) but you still want everything together in a single file.')
+      logger.blue( '\n    $ mimosa watch --minify')
+      logger.blue( '    $ mimosa watch -m\n')
 
 
 module.exports = (program) ->

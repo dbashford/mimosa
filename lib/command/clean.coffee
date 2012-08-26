@@ -10,7 +10,7 @@ logger = require '../util/logger'
 
 clean = (opts) ->
   if opts.debug then logger.setDebug()
-  util.processConfig false, (config) =>
+  util.processConfig opts, (config) =>
     items = wrench.readdirSyncRecursive(config.watch.sourceDir)
     files = items.filter (f) -> fs.statSync(path.join(config.watch.sourceDir, f)).isFile()
     directories = items.filter (f) -> fs.statSync(path.join(config.watch.sourceDir, f)).isDirectory()

@@ -10,8 +10,7 @@ build = (opts) =>
 
   logger.info "Beginning build"
 
-  util.processConfig false, (config) =>
-    config.optimize = opts?.optimize
+  util.processConfig opts, (config) =>
     compilers = util.fetchConfiguredCompilers config, false
     new Watcher config, compilers, false, _buildFinished
 
