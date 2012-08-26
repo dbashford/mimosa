@@ -19,7 +19,7 @@
 
 `minify` is a top level configuration parameter.
 
-* If you were having trouble with the r.js minifier breaking your code, take a hard look at using `--minify` and `--optimize` together in combination with the `minify.excludes` option in the mimosa-config.
+* If you were having trouble with the r.js minifier breaking your code, take a hard look at using `--minify` and `--optimize` together in combination with the `minify.excludes` option in the mimosa-config. [This commit](https://github.com/dbashford/AngularFunMimosa/commit/1816016a3444ab960dd79c2f65b63c6bf9fdc488) shows a good example of selective exclusion of files from uglification allowing the r.js optimization to occur. In that case optimization was entirely turned off because r.js does not allow you to exclude files from being uglified.  That commit re-enables uglifications and selectively omits the file that was causing trouble.
 
 
 # 0.0.24alpha - August, 24 2012
