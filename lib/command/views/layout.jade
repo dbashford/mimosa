@@ -3,14 +3,17 @@ html
   head
     title= title
 
-    - var url = '/app/stylesheets/style.css'
-    - if (!(env == 'production')) {url += "?d=" + (new Date().getTime())}
-    link(rel='stylesheet', href=url)
+    - var urlCss = base + '/stylesheets/style.css'
+    - if (!(env == 'production')) {urlCss += "?d=" + (new Date().getTime())}
+    link(rel='stylesheet', href=urlCss)
 
     if optimize
-      script(src='/app/javascripts/main-built.js')
+      - var urlBuilt = base + '/javascripts/main-built.js'
+      script(src=urlBuilt)
     else
-      script(src='/app/javascripts/vendor/require.js', data-main='/app/javascripts/main.js')
+      - var urlRequire = base + '/javascripts/vendor/require.js'
+      - var urlMain = base + '/javascripts/main.js'
+      script(src=urlRequire, data-main=urlMain)
 
     if reload
       script(src='/socket.io/socket.io.js')

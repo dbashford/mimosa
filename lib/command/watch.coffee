@@ -22,7 +22,7 @@ startDefaultServer = (config) ->
 
   app = express()
   server = app.listen config.server.port, ->
-    logger.success "Mimosa's bundled Express started at http://localhost:#{config.server.port}/#{config.server.base}", true
+    logger.success "Mimosa's bundled Express started at http://localhost:#{config.server.port}#{config.server.base}", true
 
   app.configure =>
     app.set 'port', config.server.port
@@ -52,6 +52,7 @@ startDefaultServer = (config) ->
     reload:   config.server.useReload
     optimize: config.optimize ? false
     env:      process.env.NODE_ENV ? "development"
+    base:     if config.server.base then config.server.base else ""
 
   logger.debug "Options for index:\n#{JSON.stringify(options, null, 2)}"
 
