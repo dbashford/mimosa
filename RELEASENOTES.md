@@ -3,8 +3,6 @@
 * `removeCombined` works again, #43
 * #27, but bigger than that.  `mimosa watch` and `mimosa build` now both have a `--minify` option.  When `--minify` is used by itself, all compiled JS assets will be mangled and compressed using Uglify.  `--minify` has a new, small config in the mimosa-config that will let you exclude certain files from minification. By default, any file containing `.min.` will not be uglified, but you can adjust the settings to include more files. When `--minify` and `--optimize` are used in conjunction, the optimization (r.js) process will have uglification turned off (`optimize:'none'`).  In combination, `--minify` and `--optimize` allow you to control which files get mangled and still take advantage of the r.js optimizer zipping all your files together and wrapping them in Almond.  There are many cases where r.js optimization cannot be used because uglify breaks a given file.  The two combined options save you from needing a custom minification strategy in those instances.
 
-### Minor Changes
-
 ### You'll need to...
 * With the new `minify` section in the mimosa-config, you will no longer have an up to date, commented out, version of the mimosa-config.  It is suggested that you find a place in your config and paste this:
 
