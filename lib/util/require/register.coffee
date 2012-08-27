@@ -133,14 +133,18 @@ module.exports = class RequireRegister
     for name, config of shims
       logger.debug "Processing shim [[ #{name} ]] with config of [[ #{JSON.stringify(config)} ]]"
       unless @_fileExists(@_resolvePath(fileName, name))
-        @_logger "RequireJS shim path [[ #{name} ]] inside file [[ #{fileName} ]] cannot be found."
+        alias = @_findAlias(name, @aliasFiles)
+        unless alias
+          @_logger "RequireJS shim path [[ #{name} ]] inside file [[ #{fileName} ]] cannot be found."
 
       deps = if Array.isArray(config) then config else config.deps
       if deps?
         for dep in deps
           logger.debug "Resolving shim dependency [[ #{dep} ]]"
           unless @_fileExists(@_resolvePath(fileName, dep))
-            @_logger "RequireJS shim [[ #{name} ]] inside file [[ #{fileName} ]] refers to a dependency that cannot be found [[ #{dep} ]]."
+            alias = @_findAlias(dep, @aliasFiles)
+            unless alias
+              @_logger "RequireJS shim [[ #{name} ]] inside file [[ #{fileName} ]] refers to a dependency that cannot be found [[ #{dep} ]]."
       else
         logger.debug "No 'deps' found for shim"
 
