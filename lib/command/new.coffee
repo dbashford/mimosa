@@ -12,6 +12,11 @@ defaults = require './util/defaults'
 
 class NewCommand
 
+  servers: [
+      {name:"express", prettyName:"(*) Express - http://expressjs.com/"}
+      {name:"none", prettyName:"None - Mimosa will serve your application for you"}
+    ]
+
   constructor: (@program) ->
 
   register: =>
@@ -29,22 +34,29 @@ class NewCommand
 
     logger.debug "Project name: #{name}"
 
+    # give them something to read while we check to see if SASS is installed
+    unless opts.defaults
+      logger.green "\n  Mimosa will guide you through project creation. You will be prompted to pick the JavaScript"
+      logger.green "  meta-language, CSS meta-language, and micro-templating library you would like to use. For more"
+      logger.green "  about those choices, see http://mimosajs.com/compilers.html.  You will also be prompted to pick"
+      logger.green "  the server you would like to use. If you pick no server, Mimosa will serve your assets for you.\n"
+      logger.green "  For all of the technologies, if your favorite is not an option, you can add a GitHub issue"
+      logger.green "  and we'll look into adding it. (https://github.com/dbashford/mimosa/issues)\n"
+
     util.projectPossibilities (compilers) =>
       if opts.defaults
-        @_createWithDefaults(compilers, name, opts)
+        @_createWithDefaults(compilers, name)
       else
-        @_prompting(compilers, name, opts)
+        @_prompting(compilers, name)
 
-  _prompting: (compilers, name, opts) =>
+  _prompting: (compilers, name) =>
     logger.debug "Compilers :\n#{JSON.stringify(compilers, null, 2)}"
 
     chosen = {}
 
-    logger.green "\n  This is the Mimosa interactive project creation tool.  It will help you configure and set "
-    logger.green "  up your project. You will be prompted to pick the meta-languages you would like to use."
-    logger.green "  Should your favorite not be listed, you can add a github issue and we'll look into adding it."
-    logger.green "  (https://github.com/dbashford/mimosa/issues)\n"
-    logger.green "  In case you are unsure which options to pick, the ones with asterisks are Mimosa favorites."
+    logger.green "  If you are unsure which options to pick, the ones with asterisks are Mimosa favorites. Feel free"
+    logger.green "  to hit the web to research your selections, Mimosa will be here when you get back."
+
     logger.green "\n  To start, please choose your JavaScript meta-language: \n"
     @program.choose _.pluck(compilers.javascript, 'prettyName'), (i) =>
       logger.blue "\n  You chose #{compilers.javascript[i].prettyName}."
@@ -53,21 +65,25 @@ class NewCommand
       @program.choose _.pluck(compilers.css, 'prettyName'), (i) =>
         logger.blue "\n  You chose #{compilers.css[i].prettyName}."
         chosen.css = compilers.css[i]
-        logger.green "\n  And finally, choose your micro-templating language:\n"
+        logger.green "\n  And choose your micro-templating language:\n"
         @program.choose _.pluck(compilers.template, 'prettyName'),(i) =>
           logger.blue "\n  You chose #{compilers.template[i].prettyName}."
           chosen.template = compilers.template[i]
-          logger.green "\n  Creating and setting up your project... \n"
-          @_create(name, opts, chosen)
+          logger.green "\n  And finally choose your server technology:\n"
+          @program.choose _.pluck(@servers, 'prettyName'),(i) =>
+            logger.blue "\n  You chose #{@servers[i].prettyName}."
+            chosen.server = @servers[i]
+            logger.green "\n  Creating and setting up your project... \n"
+            @_create(name, chosen)
 
-  _createWithDefaults: (compilers, name, opts) =>
+  _createWithDefaults: (compilers, name) =>
     chosenCompilers = {}
     chosenCompilers.css =        (compilers.css.filter        (item) -> item.isDefault)[0]
     chosenCompilers.javascript = (compilers.javascript.filter (item) -> item.isDefault)[0]
     chosenCompilers.template =   (compilers.template.filter   (item) -> item.isDefault)[0]
-    @_create(name, opts, chosenCompilers)
+    @_create(name, chosenCompilers)
 
-  _create: (name, opts, chosen) =>
+  _create: (name, chosen) =>
     skeletonPath = path.join __dirname, '..', 'skeleton'
 
     # if name provided, simply copy directory into directory by that name
@@ -81,7 +97,10 @@ class NewCommand
 
     @_postCopyCleanUp()
 
-    if opts.noserver then @_usingDefaultServer() else @_usingOwnServer(name)
+    if chosen.server.name is "none"
+      @_usingDefaultServer()
+    else
+      @_usingOwnServer(name, chosen.server.name)
 
   _copySkeletonToProvidedDirectory: (skeletonPath, name) ->
     currPath = path.join path.resolve(''), name
@@ -197,19 +216,19 @@ class NewCommand
   # remove express files/directories and update config to point to default server
   _usingDefaultServer: ->
     logger.debug "Using default server, so removing server resources"
-    fs.unlinkSync path.join(@currPath, "server.coffee")
     fs.unlinkSync path.join(@currPath, "package.json")
     wrench.rmdirSyncRecursive path.join(@currPath, "views")
     wrench.rmdirSyncRecursive path.join(@currPath, "routes")
+    wrench.rmdirSyncRecursive path.join(@currPath, "servers")
 
-    logger.debug "Altering configuration to not use express"
+    logger.debug "Altering configuration to not use server"
     configPath = path.join @currPath, "mimosa-config.coffee"
     fs.readFile configPath, "ascii", (err, data) =>
       data = data.replace "# server:", "server:"
       data = data.replace "# useDefaultServer: false", "useDefaultServer: true"
       fs.writeFile configPath, data, @_done
 
-  _usingOwnServer: (name) ->
+  _usingOwnServer: (name, serverName) ->
     # minor, kinda silly, but change name in package json to match project name
     if name?.length > 0
       logger.debug "Making package.json edits"
@@ -217,6 +236,18 @@ class NewCommand
       data = fs.readFileSync packageJSONPath, "ascii"
       data = data.replace "APPNAME", name
       fs.writeFileSync packageJSONPath, data
+
+    logger.debug "Moving server into place"
+    servers = wrench.readdirSyncRecursive path.join(@currPath, "servers")
+    for server in servers
+      if path.basename(server).indexOf(serverName) is 0
+        serverContents = fs.readFileSync path.join(@currPath, "servers", server), "ascii"
+        newPath = path.join @currPath, "server#{path.extname(server)}"
+        console.log "new path for server #{newPath}"
+        fs.writeFileSync newPath, serverContents
+        break
+
+    wrench.rmdirSyncRecursive path.join(@currPath, "servers")
 
     logger.info "Installing node modules"
     currentDir = process.cwd()
