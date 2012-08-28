@@ -11,8 +11,9 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 
   clientLibrary: "handlebars"
 
-  @prettyName        = -> "(*) Handlebars - http://handlebarsjs.com/"
-  @defaultExtensions = -> ["hbs", "handlebars"]
+  @prettyName        = "(*) Handlebars - http://handlebarsjs.com/"
+  @defaultExtensions = ["hbs", "handlebars"]
+  @isDefault         = true
 
   constructor: (config) ->
     super(config)

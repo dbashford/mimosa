@@ -9,53 +9,29 @@ fileUtils = require '../../util/file'
 
 defaults = require './defaults'
 
-gatherCompilerInfo = (callback) ->
+baseDirRegex = /([^//]*)$/
+
+gatherProjectPossibilities = (callback) ->
   compilerPath = path.join __dirname, '..', '..', 'compilers'
   files = fileUtils.glob "#{compilerPath}/**/*-compiler.coffee"
   logger.debug "Compilers:\n#{files.join('\n')}"
-  compilers =
-    css:[{prettyName:"None (Raw CSS)", fileName:"none"}]
-    javascript:[{prettyName:"None (Raw JS)", fileName:"none"}]
-    template:[{prettyName:"None (No Templating)", fileName:"none"}]
-
-  gatheredCount = 0
-  gatheredInfoForCompiler = =>
-    callback(compilers) if ++gatheredCount is files.length
+  compilers = {css:[], javascript:[], template:[]}
 
   for file in files
     comp = require(file)
-    compilerInfo =
-      prettyName:comp.prettyName()
-      fileName:path.basename(file, ".coffee").replace("-compiler","")
-      extensions:comp.defaultExtensions()
-    logger.debug "Compiler info for [[ #{file} ]]\n#{JSON.stringify(compilerInfo, null, 2)}"
+    comp.fileName = path.basename(file, ".coffee").replace("-compiler","")
+    key = baseDirRegex.exec(path.dirname(file))[0]
+    compilers[key].push comp
+
+  for comp in compilers.css
+    # just need to check SASS
     if comp.checkIfExists?
-      infoClone = _.clone(compilerInfo)
-      fileClone = _.clone(file)
       comp.checkIfExists (exists) =>
         unless exists
-          logger.debug "Compiler for file [[ #{file} ]], is not installed/available"
-          infoClone.prettyName = infoClone.prettyName + color(" (This is not installed and would need to be before use)", "yellow+bold")
-        _findCompilers(fileClone, compilers).push infoClone
-        gatheredInfoForCompiler()
-    else
-      compilerInfo.exists = true
-      _findCompilers(file, compilers).push compilerInfo
-      gatheredInfoForCompiler()
-
-_findCompilers = (file, compilers) ->
-  # use regex to do this a bit better
-  dirname = path.dirname(file)
-
-  endsWith = (str, endsWith) ->
-    str.slice(-endsWith.length) is endsWith
-
-  if endsWith(dirname, 'css') then compilers.css
-  else if endsWith(dirname, 'template') then compilers.template
-  else if endsWith(dirname, 'javascript') then compilers.javascript
-  else
-    logger.fatal "Bad file in compilers directory: #{file}"
-    process.exit(1)
+          logger.debug "Compiler for file [[ #{comp.fileName} ]], is not installed/available"
+          comp.prettyName = comp.prettyName + color(" (This is not installed and would need to be before use)", "yellow+bold")
+        callback(compilers)
+      break
 
 fetchConfiguredCompilers = (config, persist = false) ->
   compilers = [new (require("../../compilers/copy"))(config)]
@@ -108,5 +84,5 @@ _findConfigPath = (configPath = path.resolve('mimosa-config.coffee')) ->
 module.exports = {
   processConfig: processConfig
   fetchConfiguredCompilers: fetchConfiguredCompilers
-  gatherCompilerInfo:gatherCompilerInfo
+  projectPossibilities:gatherProjectPossibilities
 }

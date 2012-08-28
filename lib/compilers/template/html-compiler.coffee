@@ -10,8 +10,8 @@ module.exports = class HTMLCompiler extends AbstractTemplateCompiler
 
   clientLibrary: null
 
-  @prettyName        = -> "HTML - Just Plain HTML Snippets, no compiling"
-  @defaultExtensions = -> ["template"]
+  @prettyName        = "HTML - Just Plain HTML Snippets, no compiling"
+  @defaultExtensions = ["template"]
 
   constructor: (config) ->
     super(config)

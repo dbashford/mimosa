@@ -4,8 +4,8 @@ fs =   require 'fs'
 logger =   require '../../util/logger'
 
 defaultJavascript = "coffee"
-defaultCss =        "sass"
-defaultTemplate =   "handlebars"
+defaultCss = "sass"
+defaultTemplate = "handlebars"
 
 class MimosaDefaults
 
@@ -158,7 +158,4 @@ class MimosaDefaults
 
 module.exports = {
   applyAndValidateDefaults: (new MimosaDefaults()).applyAndValidateDefaults
-  defaultJavascript: defaultJavascript
-  defaultCss:        defaultCss
-  defaultTemplate:   defaultTemplate
 }

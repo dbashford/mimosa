@@ -10,8 +10,8 @@ module.exports = class HoganCompiler extends AbstractTemplateCompiler
 
   clientLibrary: "hogan-template"
 
-  @prettyName        = -> "Hogan - http://twitter.github.com/hogan.js/"
-  @defaultExtensions = -> ["hog", "hogan"]
+  @prettyName        = "Hogan - http://twitter.github.com/hogan.js/"
+  @defaultExtensions = ["hog", "hogan"]
 
   constructor: (config) ->
     super(config)

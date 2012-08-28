@@ -29,46 +29,44 @@ class NewCommand
 
     logger.debug "Project name: #{name}"
 
-    return @_create(name, opts) if opts.defaults
+    util.projectPossibilities (compilers) =>
 
-    logger.green "\n  This is the Mimosa interactive project creation tool.  It will help you configure and set "
-    logger.green "  up your project. You will be prompted to pick the meta-languages you would like to use."
-    logger.green "  Should your favorite not be listed, you can add a github issue and we'll look into adding it."
-    logger.green "  (https://github.com/dbashford/mimosa/issues)\n"
+      return @_createWithDefaults(compilers, name, opts) if opts.defaults
 
-    util.gatherCompilerInfo (compilerInfo) =>
-      @_prompting(compilerInfo, name, opts)
+      logger.green "\n  This is the Mimosa interactive project creation tool.  It will help you configure and set "
+      logger.green "  up your project. You will be prompted to pick the meta-languages you would like to use."
+      logger.green "  Should your favorite not be listed, you can add a github issue and we'll look into adding it."
+      logger.green "  (https://github.com/dbashford/mimosa/issues)\n"
 
-  _prompting: (compilerInfo, name, opts) =>
-    compilerPrettyNames = {}
-    for type, compilers of compilerInfo
-      compilerPrettyNames[type] = compilers.map (compiler) -> compiler.prettyName
+      @_prompting(compilers, name, opts)
 
-    logger.debug "Compiler pretty names:\n#{JSON.stringify(compilerPrettyNames, null, 2)}"
+  _prompting: (compilers, name, opts) =>
+    logger.debug "Compilers :\n#{JSON.stringify(compilers, null, 2)}"
 
     chosenCompilers = {}
 
     logger.green "  In case you are unsure which options to pick, the ones with asterisks are Mimosa favorites."
     logger.green "\n  To start, please choose your JavaScript meta-language: \n"
-    @program.choose compilerPrettyNames.javascript, (i) =>
-      logger.blue "\n  You chose #{compilerPrettyNames.javascript[i]}."
+    @program.choose _.pluck(compilers.javascript, 'prettyName'), (i) =>
+      logger.blue "\n  You chose #{compilers.javascript[i].prettyName}."
+      chosenCompilers.javascript = compilers.javascript[i]
       logger.green "\n  Now choose your CSS meta-language:\n"
-      comp = (compilerInfo.javascript.filter (item) => item.prettyName is compilerPrettyNames.javascript[i])[0]
-      chosenCompilers.javascript = comp.fileName
-      chosenCompilers.javascriptExtensions = comp.extensions
-      @program.choose compilerPrettyNames.css, (i) =>
-        logger.blue "\n  You chose #{compilerPrettyNames.css[i]}."
+      @program.choose _.pluck(compilers.css, 'prettyName'), (i) =>
+        logger.blue "\n  You chose #{compilers.css[i].prettyName}."
+        chosenCompilers.css = compilers.css[i]
         logger.green "\n  And finally, choose your micro-templating language:\n"
-        comp = (compilerInfo.css.filter (item) => item.prettyName is compilerPrettyNames.css[i])[0]
-        chosenCompilers.css = comp.fileName
-        chosenCompilers.cssExtensions = comp.extensions
-        @program.choose compilerPrettyNames.template,(i) =>
-          logger.blue "\n  You chose #{compilerPrettyNames.template[i]}."
+        @program.choose _.pluck(compilers.template, 'prettyName'),(i) =>
+          logger.blue "\n  You chose #{compilers.template[i].prettyName}."
+          chosenCompilers.template = compilers.template[i]
           logger.green "\n  Creating and setting up your project... \n"
-          comp = (compilerInfo.template.filter (item) => item.prettyName is compilerPrettyNames.template[i])[0]
-          chosenCompilers.template = comp.fileName
-          chosenCompilers.templateExtensions = comp.extensions
           @_create(name, opts, chosenCompilers)
+
+  _createWithDefaults: (compilers, name, opts) =>
+    chosenCompilers = {}
+    chosenCompilers.css =        (compilers.css.filter        (item) -> item.isDefault)[0]
+    chosenCompilers.javascript = (compilers.javascript.filter (item) -> item.isDefault)[0]
+    chosenCompilers.template =   (compilers.template.filter   (item) -> item.isDefault)[0]
+    @_create(name, opts, chosenCompilers)
 
   _create: (name, opts, chosenCompilers) =>
     skeletonPath = path.join __dirname, '..', 'skeleton'
@@ -110,60 +108,46 @@ class NewCommand
     currPath
 
   _makeChosenCompilerChanges: (chosenCompilers) ->
-    # defaults
-    unless chosenCompilers?
-      chosenCompilers =
-        javascript: 'coffee'
-        javascriptExtensions: ['coffee']
-        css: 'sass'
-        cssExtensions: ["scss", "sass"]
-        template: 'handlebars'
-        templateExtensions: ["hbs", "handlebars"]
-
     logger.debug "Chosen compilers:\n#{JSON.stringify(chosenCompilers, null, 2)}"
 
     @_updateConfigForChosenCompilers(chosenCompilers)
     @_copyCompilerSpecificExampleFiles(chosenCompilers)
 
-  _updateConfigForChosenCompilers: (chosenCompilers) ->
+  _updateConfigForChosenCompilers: (comps) ->
 
     # return if all the defaults were chosen
-    return if chosenCompilers.javascript is defaults.defaultJavascript and
-      chosenCompilers.css is defaults.defaultCss and
-      chosenCompilers.template is defaults.defaultTemplate
+    return if comps.javascript.isDefault and comps.css.isDefault and comps.template.isDefault
 
     configPath = path.join @currPath, "mimosa-config.coffee"
     config = fs.readFileSync configPath, "ascii"
     config = config.replace "# compilers:", "compilers:"
 
-    unless chosenCompilers.javascript is defaults.defaultJavascript
+    unless comps.javascript.isDefault
       config = config.replace "# javascript:", "javascript:"
-      config = config.replace '# compileWith: "coffee"', 'compileWith: ' + JSON.stringify(chosenCompilers.javascript)
-      unless chosenCompilers.javascript is "none"
-        config = config.replace '# extensions: ["coffee"]', 'extensions:' + JSON.stringify(chosenCompilers.javascriptExtensions)
+      config = config.replace '# compileWith: "coffee"', 'compileWith: ' + JSON.stringify(comps.javascript.fileName)
+      unless comps.javascript.fileName is "none"
+        config = config.replace '# extensions: ["coffee"]', 'extensions:' + JSON.stringify(comps.javascript.defaultExtensions)
 
-    unless chosenCompilers.css is defaults.defaultCss
+    unless comps.css.isDefault
       config = config.replace "# css:", "css:"
-      config = config.replace '# compileWith: "sass"', 'compileWith: ' + JSON.stringify(chosenCompilers.css)
-      unless chosenCompilers.css is "none"
-        config = config.replace '# extensions: ["scss", "sass"]', 'extensions:' + JSON.stringify(chosenCompilers.cssExtensions)
+      config = config.replace '# compileWith: "sass"', 'compileWith: ' + JSON.stringify(comps.css.fileName)
+      unless comps.css.fileName is "none"
+        config = config.replace '# extensions: ["scss", "sass"]', 'extensions:' + JSON.stringify(comps.css.defaultExtensions)
 
-    unless chosenCompilers.template is defaults.defaultTemplate
+    unless comps.template.isDefault
       config = config.replace "# template:", "template:"
-      config = config.replace '# compileWith: "handlebars"', 'compileWith: ' + JSON.stringify(chosenCompilers.template)
-      unless chosenCompilers.template is "none"
-        config = config.replace '# extensions: ["hbs", "handlebars"]', 'extensions:' + JSON.stringify(chosenCompilers.templateExtensions)
+      config = config.replace '# compileWith: "handlebars"', 'compileWith: ' + JSON.stringify(comps.template.fileName)
+      unless comps.template.fileName is "none"
+        config = config.replace '# extensions: ["hbs", "handlebars"]', 'extensions:' + JSON.stringify(comps.template.defaultExtensions)
 
     fs.writeFileSync configPath, config
 
     logger.success "Config changed to use selected compilers and to watch default extensions for those compilers."
     logger.success "You may want to check that the extensions Mimosa will watch match those you intend to use."
 
-  _copyCompilerSpecificExampleFiles: (chosenCompilers) ->
-    compExts = if chosenCompilers.javascript is "none" then ["js"]   else chosenCompilers.javascriptExtensions
-    cssExts =  if chosenCompilers.css        is "none" then ["css"]  else chosenCompilers.cssExtensions
-    tempExts = if chosenCompilers.template   is "none" then ["html"] else chosenCompilers.templateExtensions
-    safePaths = _.flatten([compExts, cssExts, tempExts]).map (path) -> "\\.#{path}$"
+  _copyCompilerSpecificExampleFiles: (comps) ->
+    safePaths = _.flatten([comps.javascript.defaultExtensions, comps.css.defaultExtensions, comps.template.defaultExtensions]).map (path) ->
+      "\\.#{path}$"
     safePaths.push "javascripts[/\\\\]vendor"
 
     assetsPath = path.join @currPath,  'assets'
@@ -177,13 +161,13 @@ class NewCommand
       # clear out the bad views
       if isSafe
         if filePath.indexOf('example-view-') >= 0
-          unless _.some(tempExts, (ext) -> filePath.indexOf("-#{ext}.") >= 0)
+          unless _.some(comps.template.defaultExtensions, (ext) -> filePath.indexOf("-#{ext}.") >= 0)
             isSafe = false
           else
             templateView = filePath
 
         isSafe = false if filePath.indexOf('handlebars-helpers') >= 0 and
-          not _.some(tempExts, (ext) -> ext is "hbs")
+          not _.some(comps.template.defaultExtensions, (ext) -> ext is "hbs")
 
       fs.unlink filePath unless isSafe
 
@@ -191,7 +175,7 @@ class NewCommand
     if templateView?
       data = fs.readFileSync templateView, "ascii"
       fs.unlink templateView
-      cssFramework = if chosenCompilers.css is "none" then "pure CSS" else chosenCompilers.css
+      cssFramework = if comps.css.fileName is "none" then "pure CSS" else comps.css.fileName
       data = data.replace "CSSHERE", cssFramework
       templateView = templateView.replace /-\w+\./, "."
       fs.writeFile templateView, data
