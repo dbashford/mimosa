@@ -1,3 +1,8 @@
+# 0.0.26alpha - August ?? 2012
+* Refactor of `mimosa new` in general
+* Make choosing a server part of the prompt flow rather than a flag.
+* Delivered server and routes now match chosen javascript compiler (server.js if JavaScript is chosen)
+
 # 0.0.25alpha - August 26 2012
 ### Major Changes
 * `removeCombined` works again, #43

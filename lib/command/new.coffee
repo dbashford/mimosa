@@ -13,7 +13,7 @@ defaults = require './util/defaults'
 class NewCommand
 
   servers: [
-      {name:"express", prettyName:"(*) Express - http://expressjs.com/"}
+      {name:"express", prettyName:"(*) Express - http://expressjs.com/", isDefault:true}
       {name:"none", prettyName:"None - Mimosa will serve your application for you"}
     ]
 
@@ -23,7 +23,6 @@ class NewCommand
     @program
       .command('new [name]')
       .description("create a skeleton matching Mimosa's defaults, which includes a basic Express setup")
-      .option("-n, --noserver", "do not include express in the application setup")
       .option("-d, --defaults",  "bypass prompts and go with Mimosa defaults (CoffeeScript, SASS, Handlebars)")
       .option("-D, --debug", "run in debug mode")
       .action(@new)
@@ -77,11 +76,12 @@ class NewCommand
             @_create(name, chosen)
 
   _createWithDefaults: (compilers, name) =>
-    chosenCompilers = {}
-    chosenCompilers.css =        (compilers.css.filter        (item) -> item.isDefault)[0]
-    chosenCompilers.javascript = (compilers.javascript.filter (item) -> item.isDefault)[0]
-    chosenCompilers.template =   (compilers.template.filter   (item) -> item.isDefault)[0]
-    @_create(name, chosenCompilers)
+    chosen = {}
+    chosen.css =        (compilers.css.filter        (item) -> item.isDefault)[0]
+    chosen.javascript = (compilers.javascript.filter (item) -> item.isDefault)[0]
+    chosen.template =   (compilers.template.filter   (item) -> item.isDefault)[0]
+    chosen.server =     (@servers.filter             (item) -> item.isDefault)[0]
+    @_create(name, chosen)
 
   _create: (name, chosen) =>
     skeletonPath = path.join __dirname, '..', 'skeleton'
@@ -100,7 +100,7 @@ class NewCommand
     if chosen.server.name is "none"
       @_usingDefaultServer()
     else
-      @_usingOwnServer(name, chosen.server.name)
+      @_usingOwnServer(name, chosen)
 
   _copySkeletonToProvidedDirectory: (skeletonPath, name) ->
     currPath = path.join path.resolve(''), name
@@ -111,11 +111,15 @@ class NewCommand
   _copySkeletonToCurrentDirectory: (skeletonPath) ->
     logger.info "A project name was not provided, copying skeleton into the current directory"
     currPath = path.join path.resolve(''), path.sep
-    skeletonContents = wrench.readdirSyncRecursive(skeletonPath)
-    for item in skeletonContents
-      fullSourcePath = path.join skeletonPath, item
+    @_moveDirectoryContents(skeletonPath)
+    currPath
+
+  _moveDirectoryContents: (sourcePath, outPath) ->
+    contents = wrench.readdirSyncRecursive(sourcePath)
+    for item in contents
+      fullSourcePath = path.join sourcePath, item
       fileStats = fs.statSync fullSourcePath
-      fullOutPath = path.join(currPath, item)
+      fullOutPath = path.join(outPath, item)
       if fileStats.isDirectory()
         logger.debug "Copying directory: [[ #{fullOutPath} ]]"
         wrench.mkdirSyncRecursive fullOutPath, 0o0777
@@ -123,7 +127,6 @@ class NewCommand
         logger.debug "Copying file: [[ #{fullOutPath} ]]"
         fileContents = fs.readFileSync fullSourcePath
         fs.writeFileSync fullOutPath, fileContents
-    currPath
 
   _makeChosenCompilerChanges: (chosenCompilers) ->
     logger.debug "Chosen compilers:\n#{JSON.stringify(chosenCompilers, null, 2)}"
@@ -143,6 +146,8 @@ class NewCommand
     unless comps.javascript.isDefault
       config = config.replace "# javascript:", "javascript:"
       config = config.replace '# compileWith: "coffee"', 'compileWith: ' + JSON.stringify(comps.javascript.fileName)
+      config = config.replace "# server:", "server:"
+      config = config.replace "# path: 'server.coffee'", "path: 'server.#{comps.javascript.defaultExtensions[0]}'"
       unless comps.javascript.fileName is "none"
         config = config.replace '# extensions: ["coffee"]', 'extensions:' + JSON.stringify(comps.javascript.defaultExtensions)
 
@@ -189,6 +194,14 @@ class NewCommand
 
       fs.unlink filePath unless isSafe
 
+    serverPath = path.join @currPath,  'servers'
+    allItems = wrench.readdirSyncRecursive(serverPath)
+    files = allItems.filter (i) -> fs.statSync(path.join(serverPath, i)).isFile()
+    for file in files
+      filePath = path.join(serverPath, file)
+      isSafe = safePaths.some (path) -> file.match(path)
+      fs.unlink filePath unless isSafe
+
     # alter template view name and insert css framework
     if templateView?
       data = fs.readFileSync templateView, "ascii"
@@ -218,7 +231,6 @@ class NewCommand
     logger.debug "Using default server, so removing server resources"
     fs.unlinkSync path.join(@currPath, "package.json")
     wrench.rmdirSyncRecursive path.join(@currPath, "views")
-    wrench.rmdirSyncRecursive path.join(@currPath, "routes")
     wrench.rmdirSyncRecursive path.join(@currPath, "servers")
 
     logger.debug "Altering configuration to not use server"
@@ -228,25 +240,20 @@ class NewCommand
       data = data.replace "# useDefaultServer: false", "useDefaultServer: true"
       fs.writeFile configPath, data, @_done
 
-  _usingOwnServer: (name, serverName) ->
+  _usingOwnServer: (name, chosen) ->
     # minor, kinda silly, but change name in package json to match project name
     if name?.length > 0
       logger.debug "Making package.json edits"
-      packageJSONPath = path.join @currPath, "package.json"
-      data = fs.readFileSync packageJSONPath, "ascii"
-      data = data.replace "APPNAME", name
-      fs.writeFileSync packageJSONPath, data
+      jPath = path.join @currPath, "package.json"
+      packageJson = require(jPath)
+      packageJson.name = name
+      unless chosen.javascript.fileName is "iced"
+        logger.debug "removing iced coffee from package.json"
+        delete packageJson.dependencies["iced-coffee-script"]
+      fs.writeFileSync jPath, JSON.stringify(packageJson, null, 2)
 
     logger.debug "Moving server into place"
-    servers = wrench.readdirSyncRecursive path.join(@currPath, "servers")
-    for server in servers
-      if path.basename(server).indexOf(serverName) is 0
-        serverContents = fs.readFileSync path.join(@currPath, "servers", server), "ascii"
-        newPath = path.join @currPath, "server#{path.extname(server)}"
-        console.log "new path for server #{newPath}"
-        fs.writeFileSync newPath, serverContents
-        break
-
+    @_moveDirectoryContents(path.join(@currPath, "servers", chosen.server.name), @currPath)
     wrench.rmdirSyncRecursive path.join(@currPath, "servers")
 
     logger.info "Installing node modules"
@@ -265,24 +272,17 @@ class NewCommand
     process.stdin.destroy()
 
   printHelp: ->
-    logger.green('  The new command will take you through a series of questions regarding what meta-lanauges/compilers you would')
-    logger.green('  like in your project.  Once you have answered the questions, Mimosa will create a directory using the name')
-    logger.green('  provided, and place a project skeleton inside of it.  That project skeleton will by default include a basic')
-    logger.green('  Express app, with sample routes and views.  It will also include some sample assets for the meta-lanauges/')
-    logger.green('  compilers you selected.')
+    logger.green('  The new command will take you through a series of questions regarding what JavaScript meta-language, CSS')
+    logger.green('  meta-language, micro-templating library, and server technology you would like to use to build your project')
+    logger.green('  Once you have answered the questions, Mimosa will create a directory using the name you provided, and place')
+    logger.green('  a project skeleton inside of it.  That project skeleton will by default include a basic application using')
+    logger.green('  the technologies you selected')
     logger.blue( '\n    $ mimosa new [nameOfProject]\n')
     logger.green('  If you wish to copy the project skeleton into your current directory instead of into a new one leave off the')
     logger.green('  then leave off name.')
     logger.blue( '\n    $ mimosa new\n')
-    logger.green('  Pass a \'noserver\' flag to not include the basic Express app.  With this set up, if you choose to have')
-    logger.green('  Mimosa serve up your assets, it will do so with an embedded Mimosa Express app, and not with one inside')
-    logger.green('  your project')
-    logger.blue( '\n    $ mimosa new [name] --noserver')
-    logger.blue( '    $ mimosa new --noserver')
-    logger.blue( '    $ mimosa new [name] -n')
-    logger.blue( '    $ mimosa new -n\n')
-    logger.green('  If you are happy with the defaults (CoffeeScript, SASS, Handlebars), you can bypass the prompts by providing')
-    logger.green('  a \'defaults\' flag.')
+    logger.green('  If you are happy with the defaults (CoffeeScript, SASS, Handlebars, Express), you can bypass the prompts')
+    logger.green('   by providing a \'defaults\' flag.')
     logger.blue( '\n    $ mimosa new [name] --defaults')
     logger.blue( '    $ mimosa new [name] -d\n')
 
