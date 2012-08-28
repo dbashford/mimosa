@@ -418,6 +418,10 @@ module.exports = class RequireRegister
       else
         deps = []
 
+    if !Array.isArray(deps)
+      logger.warn "Not validating dependencies [[ #{deps} ]]. 'require' dependencies not set correctly. Dependencies should be an array."
+      deps = []
+
     [deps, config]
 
   _fileExists: (filePath) ->
