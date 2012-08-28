@@ -9,7 +9,7 @@ fileUtils = require '../../util/file'
 
 defaults = require './defaults'
 
-baseDirRegex = /([^//]*)$/
+baseDirRegex = /([^[\/\\\\]*]*)$/
 
 gatherProjectPossibilities = (callback) ->
   compilerPath = path.join __dirname, '..', '..', 'compilers'

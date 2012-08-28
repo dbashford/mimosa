@@ -30,36 +30,35 @@ class NewCommand
     logger.debug "Project name: #{name}"
 
     util.projectPossibilities (compilers) =>
-
-      return @_createWithDefaults(compilers, name, opts) if opts.defaults
-
-      logger.green "\n  This is the Mimosa interactive project creation tool.  It will help you configure and set "
-      logger.green "  up your project. You will be prompted to pick the meta-languages you would like to use."
-      logger.green "  Should your favorite not be listed, you can add a github issue and we'll look into adding it."
-      logger.green "  (https://github.com/dbashford/mimosa/issues)\n"
-
-      @_prompting(compilers, name, opts)
+      if opts.defaults
+        @_createWithDefaults(compilers, name, opts)
+      else
+        @_prompting(compilers, name, opts)
 
   _prompting: (compilers, name, opts) =>
     logger.debug "Compilers :\n#{JSON.stringify(compilers, null, 2)}"
 
-    chosenCompilers = {}
+    chosen = {}
 
+    logger.green "\n  This is the Mimosa interactive project creation tool.  It will help you configure and set "
+    logger.green "  up your project. You will be prompted to pick the meta-languages you would like to use."
+    logger.green "  Should your favorite not be listed, you can add a github issue and we'll look into adding it."
+    logger.green "  (https://github.com/dbashford/mimosa/issues)\n"
     logger.green "  In case you are unsure which options to pick, the ones with asterisks are Mimosa favorites."
     logger.green "\n  To start, please choose your JavaScript meta-language: \n"
     @program.choose _.pluck(compilers.javascript, 'prettyName'), (i) =>
       logger.blue "\n  You chose #{compilers.javascript[i].prettyName}."
-      chosenCompilers.javascript = compilers.javascript[i]
+      chosen.javascript = compilers.javascript[i]
       logger.green "\n  Now choose your CSS meta-language:\n"
       @program.choose _.pluck(compilers.css, 'prettyName'), (i) =>
         logger.blue "\n  You chose #{compilers.css[i].prettyName}."
-        chosenCompilers.css = compilers.css[i]
+        chosen.css = compilers.css[i]
         logger.green "\n  And finally, choose your micro-templating language:\n"
         @program.choose _.pluck(compilers.template, 'prettyName'),(i) =>
           logger.blue "\n  You chose #{compilers.template[i].prettyName}."
-          chosenCompilers.template = compilers.template[i]
+          chosen.template = compilers.template[i]
           logger.green "\n  Creating and setting up your project... \n"
-          @_create(name, opts, chosenCompilers)
+          @_create(name, opts, chosen)
 
   _createWithDefaults: (compilers, name, opts) =>
     chosenCompilers = {}
@@ -68,7 +67,7 @@ class NewCommand
     chosenCompilers.template =   (compilers.template.filter   (item) -> item.isDefault)[0]
     @_create(name, opts, chosenCompilers)
 
-  _create: (name, opts, chosenCompilers) =>
+  _create: (name, opts, chosen) =>
     skeletonPath = path.join __dirname, '..', 'skeleton'
 
     # if name provided, simply copy directory into directory by that name
@@ -78,7 +77,7 @@ class NewCommand
     else
       @_copySkeletonToCurrentDirectory(skeletonPath)
 
-    @_makeChosenCompilerChanges(chosenCompilers)
+    @_makeChosenCompilerChanges(chosen)
 
     @_postCopyCleanUp()
 
