@@ -1,3 +1,7 @@
+# 0.0.28alpha - August ?? 2012
+### Minor Change
+* added `kml` to list of default extensions
+
 # 0.0.27alpha - August 29 2012
 ### Minor Change
 * #49, fixing pathing issues with compiled paths outside the project directory

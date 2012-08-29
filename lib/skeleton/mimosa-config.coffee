@@ -48,7 +48,7 @@ exports.config = {
   # the extensions of files to simply copy from sourceDir to compiledDir.  vendor js/css, images, etc.
   ###
   # copy:
-    # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml"]
+    # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
 
   # server:                               # configuration for server when server option is enabled via CLI
     # useDefaultServer: false             # whether or not mimosa starts a default server for you,
