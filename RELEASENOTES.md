@@ -1,3 +1,7 @@
+# 0.0.27alpha - August 29 2012
+### Minor Change
+* #49, fixing pathing issues with compiled paths outside the project directory
+
 # 0.0.26alpha - August 29 2012
 ### Major Changes
 * Refactor of `mimosa new` in general
