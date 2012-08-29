@@ -40,7 +40,8 @@ module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
       @write destinationFile, results
 
   findCompiledPath: (fileName) ->
-    fileName.replace(@srcDir, @compDir).substring(0, fileName.lastIndexOf(".")) + ".#{@outExtension}"
+    baseCompDir = fileName.replace(@srcDir, @compDir)
+    baseCompDir.substring(0, baseCompDir.lastIndexOf(".")) + ".#{@outExtension}"
 
   _isCSS: (fileName) ->
     path.extname(fileName) is ".css"
