@@ -6,6 +6,7 @@
 
 ### Minor Changes
 * fixed #47, issues with dropped in commonjs modules and incorrect recognition of dependencies
+* fixed #46, maps and config paths, living together
 
 # 0.0.25alpha - August 26 2012
 ### Major Changes
