@@ -219,8 +219,8 @@ module.exports = class RequireRegister
 
     @aliasFiles[fileName] = {}
     @aliasDirectories[fileName] = {}
-    @_verifyConfigMappings(fileName, maps)
     @_verifyConfigPath(fileName, alias, aliasPath) for alias, aliasPath of paths
+    @_verifyConfigMappings(fileName, maps)
 
   _verifyConfigMappings: (fileName, maps) ->
     logger.debug "Verifying [[ #{fileName} ]] maps:\n#{JSON.stringify(maps, null, 2)}"
@@ -248,15 +248,15 @@ module.exports = class RequireRegister
           continue
 
         exists = @_fileExists fullDepPath
+        unless exists
+          alias = @_findAlias(aliasPath, @aliasFiles)
+          if alias then exists = true
+
         if exists
           logger.debug "Found mapped dependency [[ #{alias} ]] at [[ #{fullDepPath} ]]"
           @aliasFiles[fileName][alias] = "MAPPED!#{alias}"
           maps[module][alias] = fullDepPath
         else
-          # ??? Can paths in mappings utilize paths to paths set up in config.paths?
-          # i.e. could this work => '*': {'v/jquery':'jquery1.4'} if 'v' didn't exist and
-          # was set up like so => 'paths':{"v":"vendor"}
-          # this assumes no
           @_logger "RequireJS mapping inside file [[ #{fileName} ]], for module [[ #{module} ]] has path that cannot be found [[ #{aliasPath} ]]."
 
   _verifyConfigPath: (fileName, alias, aliasPath) ->
