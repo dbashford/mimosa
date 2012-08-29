@@ -1,4 +1,4 @@
-# 0.0.26alpha - August ?? 2012
+# 0.0.26alpha - August 29 2012
 ### Major Changes
 * Refactor of `mimosa new` in general
 * Make choosing a server part of the prompt flow rather than a flag.
