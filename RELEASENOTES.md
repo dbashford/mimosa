@@ -1,5 +1,8 @@
 # 0.0.28alpha - August ?? 2012
-### Minor Change
+### Major Changes
+* #50, integrated handlbars partials into handlebars compiler, which obviates Handlebars.registerPartial, just refer to other templates from inside your Handlebars templates and it'll just find them and use them
+
+### Minor Changes
 * added `kml` to list of default extensions
 
 # 0.0.27alpha - August 29 2012

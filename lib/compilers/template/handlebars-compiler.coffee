@@ -36,6 +36,20 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 
     @outputStart = """
              define([#{defineString}], function (Handlebars){
+
+               if (!Object.keys) {
+                   Object.keys = function (obj) {
+                       var keys = [],
+                           k;
+                       for (k in obj) {
+                           if (Object.prototype.hasOwnProperty.call(obj, k)) {
+                               keys.push(k);
+                           }
+                       }
+                       return keys;
+                   };
+               }
+
                if (!Handlebars) {
                  console.log("Handlebars library has not been passed in successfully via require");
                  return;
@@ -54,6 +68,8 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
       templateName = path.basename fileName, path.extname(fileName)
       try
         compiledOutput = handlebars.precompile(content)
+        compiledOutput = compiledOutput.replace("partials || Handlebars.partials;",
+          "partials || Handlebars.partials; if (Object.keys(partials).length == 0) {partials = templates;}")
         output += @addTemplateToOutput(fileName, templateName, "template(#{compiledOutput})")
       catch err
         error ?= ''
