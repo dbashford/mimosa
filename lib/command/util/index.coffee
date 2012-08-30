@@ -3,6 +3,7 @@ fs    = require 'fs'
 
 color = require('ansi-color').set
 _     = require 'lodash'
+wrench = require 'wrench'
 
 logger = require '../../util/logger'
 fileUtils = require '../../util/file'
@@ -82,8 +83,68 @@ _findConfigPath = (configPath = path.resolve('mimosa-config.coffee')) ->
       return null
     _findConfigPath(configPath)
 
+cleanCompiledDirectories = (config) ->
+  items = wrench.readdirSyncRecursive(config.watch.sourceDir)
+  files = items.filter (f) -> fs.statSync(path.join(config.watch.sourceDir, f)).isFile()
+  directories = items.filter (f) -> fs.statSync(path.join(config.watch.sourceDir, f)).isDirectory()
+  directories = _.sortBy(directories, 'length').reverse()
+
+  compilers = fetchConfiguredCompilers(config)
+
+  _cleanMisc(config, compilers)
+  _cleanFiles(config, files, compilers)
+  _cleanDirectories(config, directories)
+
+  logger.success "[[ #{config.watch.compiledDir} ]] has been cleaned."
+
+_cleanMisc = (config, compilers) ->
+  jsDir = path.join config.watch.compiledDir, config.compilers.javascript.directory
+  files = fileUtils.glob "#{jsDir}/**/*-built.js"
+  for file in files
+    logger.debug("Deleting '-built' file, [[ #{file} ]]")
+    fs.unlinkSync file
+
+  compiledJadeFile = path.join config.watch.compiledDir, 'index.html'
+  if fs.existsSync compiledJadeFile
+    logger.debug("Deleting compiledJadeFile [[ #{compiledJadeFile} ]]")
+    fs.unlinkSync compiledJadeFile
+
+  logger.debug("Calling individual compiler cleanups")
+  compiler.cleanup() for compiler in compilers when compiler.cleanup?
+
+_cleanFiles = (config, files, compilers) ->
+  for file in files
+    compiledPath = path.join config.watch.compiledDir, file
+
+    extension = path.extname(file)
+    if extension?.length > 0
+      extension = extension.substring(1)
+      compiler = _.find compilers, (comp) ->
+        for ext in comp.getExtensions()
+          return true if extension is ext
+        return false
+      if compiler? and compiler.getOutExtension()
+        compiledPath = compiledPath.replace(/\.\w+$/, ".#{compiler.getOutExtension()}")
+
+    if fs.existsSync compiledPath
+      logger.debug "Deleting file [[ #{compiledPath} ]]"
+      fs.unlinkSync compiledPath
+
+_cleanDirectories = (config, directories) ->
+  for dir in directories
+    dirPath = path.join(config.watch.compiledDir, dir)
+    if fs.existsSync dirPath
+      logger.debug "Deleting directory [[ #{dirPath} ]]"
+      fs.rmdir dirPath, (err) ->
+        if err?.code is not "ENOTEMPTY"
+          logger.error "Unable to delete directory, #{dirPath}"
+          logger.error err
+
+
 module.exports = {
   processConfig: processConfig
   fetchConfiguredCompilers: fetchConfiguredCompilers
   projectPossibilities:gatherProjectPossibilities
+  cleanCompiledDirectories:cleanCompiledDirectories
+
 }
