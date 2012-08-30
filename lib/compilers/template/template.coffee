@@ -59,6 +59,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
         @removeTheFile @templateFileName
         @_removeClientLibrary()
     else
+      @_testForSameTemplateName(fileNames)
       @_writeClientLibrary =>
         if @_templateNeedsCompiling fileNames
           AbstractTemplateCompiler::done = =>
@@ -66,6 +67,16 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
           @compile fileNames, @_write
         else
           @_reportStartupDone()
+
+  _testForSameTemplateName: (fileNames) ->
+    templateHash = {}
+    for fileName in fileNames
+      templateName = path.basename(fileName, path.extname(fileName))
+      if templateHash[templateName]?
+        logger.error "Files [[ #{templateHash[templateName]} ]] and [[ #{fileName} ]] result in templates of the same name " +
+                     "being created.  You will want to change the name for one of them or they will collide."
+      else
+        templateHash[templateName] = fileName
 
   _templateNeedsCompiling: (fileNames) ->
     for file in fileNames
