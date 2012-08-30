@@ -6,6 +6,7 @@
 * added `kml` to list of default extensions
 * #51, not adding public directory to directory structure with `mimosa new`.  Also not erroring out when it is not present.  Will create it if it is missing.
 * #52, if you name a template the same name you will now get an error/growl that this has happened.
+* #53, added `--force` flag to `clean` command to wipe entire `compiledDir`.  `clean` without force can leave behind any orphaned files.
 
 ### You'll need to...
 * You don't NEED to do it, but you might want to delete all your calls to Handlebars.registerPartial.  They should prove unnecessary.

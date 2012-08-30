@@ -27,10 +27,11 @@ class MimosaDefaults
   _applyDefaults: (config) ->
     newConfig = {}
 
-    newConfig.virgin =   config.virgin
-    newConfig.isServer = config.isServer
-    newConfig.optimize = config.optimize
-    newConfig.min =      config.min
+    newConfig.virgin =       config.virgin
+    newConfig.isServer =     config.isServer
+    newConfig.optimize =     config.optimize
+    newConfig.min =          config.min
+    newConfig.isForceClean = config.isForceClean
 
     newConfig.watch =             config.watch ?= {}
     newConfig.watch.sourceDir =   path.join(@root, config.watch.sourceDir   ? "assets")
@@ -129,7 +130,7 @@ class MimosaDefaults
   _validateSettings: (config) ->
     @_testPathExists(config.watch.sourceDir, "watch.sourceDir", true)
     unless config.virgin
-      unless fs.existsSync config.watch.compiledDir
+      if !fs.existsSync(config.watch.compiledDir) and !config.isForceClean
         logger.info "Did not find compiled directory [[ #{config.watch.compiledDir} ]], so making it for you"
         wrench.mkdirSyncRecursive config.watch.compiledDir, 0o0777
 
