@@ -1,4 +1,4 @@
-# 0.0.28alpha - August ?? 2012
+# 0.0.28alpha - August 30 2012
 ### Major Changes
 * #50, integrated handlebars partials into handlebars compiler, which obviates Handlebars.registerPartial, just refer to other templates from inside your Handlebars templates and it'll just find them and use them
 * #53, added `--force` flag to `clean` command to wipe entire `compiledDir`.  `clean` without force can leave behind any orphaned files.
