@@ -1,6 +1,8 @@
 path = require 'path'
 fs =   require 'fs'
 
+wrench = require 'wrench'
+
 logger =   require '../../util/logger'
 
 defaultJavascript = "coffee"
@@ -127,7 +129,10 @@ class MimosaDefaults
   _validateSettings: (config) ->
     @_testPathExists(config.watch.sourceDir, "watch.sourceDir", true)
     unless config.virgin
-      @_testPathExists(config.watch.compiledDir, "watch.compiledDir", true)
+      unless fs.existsSync config.watch.compiledDir
+        logger.info "Did not find compiled directory [[ #{config.watch.compiledDir} ]], so making it for you"
+        wrench.mkdirSyncRecursive config.watch.compiledDir, 0o0777
+
       @_testPathExists(config.server.path, "server.path", false) if config.isServer and not config.server.useDefaultServer
 
     comp = config.compilers
