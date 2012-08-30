@@ -79,4 +79,4 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     baseFiles
 
   _getImportFilePath: (baseFile, importPath) ->
-    path.join baseFile, importPath.replace(/(\w+\.|[\w-]+$)/, '_$1')
+    path.join path.dirname(baseFile), importPath.replace(/(\w+\.|[\w-]+$)/, '_$1')
