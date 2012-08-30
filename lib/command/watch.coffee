@@ -11,6 +11,7 @@ Watcher =  require './util/watcher'
 watch = (opts) =>
   if opts.debug then logger.setDebug()
   util.processConfig opts, (config) =>
+    util.cleanCompiledDirectories(config) if opts.clean
     compilers = util.fetchConfiguredCompilers(config, true)
     new Watcher(config, compilers, true, startServer if opts?.server)
 
@@ -77,6 +78,7 @@ register = (program, callback) =>
     .option("-s, --server",   "run a server that will serve up the assets in the compiled directory")
     .option("-o, --optimize", "run require.js optimization after each js file compile")
     .option("-m, --minify", "minify each asset as it is compiled using uglify")
+    .option("-c, --clean", "clean the compiled directory before you begin the watch, this forces a recompile of all your assets")
     .option("-D, --debug", "run in debug mode")
     .action(callback)
     .on '--help', =>
@@ -91,6 +93,10 @@ register = (program, callback) =>
       logger.green('  configuration options and explanations can be found in the \'server\' settings in the mimosa-config.')
       logger.blue( '\n    $ mimosa watch --server')
       logger.blue( '    $ mimosa watch -s\n')
+      logger.green('  Pass a \'clean\' flag and Mimosa will first clean out all your assets before starting the watch.  This')
+      logger.green('  has the effect of forcing a recompile of all of your assets.')
+      logger.blue( '\n    $ mimosa watch --clean')
+      logger.blue( '    $ mimosa watch -c\n')
       logger.green('  Pass an \'optimize\' flag and Mimosa will use requirejs to optimize your assets and provide you with')
       logger.green('  single files for the named requirejs modules.  It will do this any time a JavaScript asset is changed.')
       logger.blue( '\n    $ mimosa watch --optimize')
