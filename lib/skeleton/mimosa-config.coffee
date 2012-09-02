@@ -13,7 +13,8 @@ exports.config = {
   # watch:
     # sourceDir: "assets"                 # directory location of web assets
     # compiledDir: "public"               # directory location of compiled web assets
-    # ignored: [".sass-cache"]            # file extensions to not watch on file system
+    # ignored: [".sass-cache"]            # files to not watch on file system, any file containing one of the strings listed here
+                                          # will be skipped
     # throttle: 0                         # number of file adds the watcher handles before taking a 100 millisecond pause to let
                                           # those files finish their processing. This helps avoid EMFILE issues for projects
                                           # containing large numbers of files that all get copied at once. If the throttle is
