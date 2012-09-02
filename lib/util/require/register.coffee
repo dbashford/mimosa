@@ -27,8 +27,12 @@ module.exports = class RequireRegister
   process: (fileName, source) ->
     require = @_require(fileName)
     define = @_define(fileName)
+    define.amd = {jquery:true}
+    require.config = require
     requirejs = require
     requirejs.config = require
+    # pretend this isn't node
+    exports = undefined
     @_requirejs(requirejs)
     try
       eval(source)
@@ -294,7 +298,7 @@ module.exports = class RequireRegister
         @aliasDirectories[fileName][alias] = pathAsDirectory
       else
         @_logger "RequireJS dependency [[ #{aliasPath} ]] for path alias [[ #{alias} ]], inside file [[ #{fileName} ]], cannot be found."
-        logger.debug "Used this as full depedency path [[ #{fullDepPath} ]]"
+        logger.debug "Used this as full dependency path [[ #{fullDepPath} ]]"
 
   _verifyFileDeps: (fileName, deps) ->
     @depsRegistry[fileName] = []
@@ -303,7 +307,7 @@ module.exports = class RequireRegister
 
   _verifyDep: (fileName, dep) ->
     # require, module = valid dependencies passed by require
-    if dep is 'require' or dep is 'module'
+    if dep is 'require' or dep is 'module' or dep is 'exports'
       return logger.debug "Encountered keyword-esque dependency [[ #{dep} ]], ignoring."
 
     # as are web resources, CDN, etc
@@ -342,7 +346,7 @@ module.exports = class RequireRegister
           @_registerDependency(fileName, pathWithDirReplaced)
         else
           @_logger "RequireJS dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
-          logger.debug "Used this as full depedency path [[ #{fullDepPath} ]]"
+          logger.debug "Used this as full dependency path [[ #{fullDepPath} ]]"
           @_registerDependency(fileName, dep)
           # much sadness, cannot find the dependency
 
@@ -385,6 +389,8 @@ module.exports = class RequireRegister
       path.resolve path.dirname(fileName), dep
     else
       path.join @rootJavaScriptDir, dep
+
+    #if fullPath.
 
     "#{fullPath}.js"
 
