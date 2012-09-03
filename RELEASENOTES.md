@@ -1,3 +1,12 @@
+# 0.0.30alpha - September ?? 2012
+### Major Changes
+
+### Minor Changes
+* For maximum future flexibility, now passing clone of entire mimosa config plus whatever mimosa enriches the config with (like startup flags) to startServer function of user server code
+
+### You'll need to...
+* Alter the code inside your express server to take a single config object, and then pull the fields of importance out of it.  See this commit for details:
+
 # 0.0.29alpha - September 3 2012
 ### Major Changes
 * #55, fixed SASS path issue

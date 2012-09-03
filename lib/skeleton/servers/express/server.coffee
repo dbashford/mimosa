@@ -4,7 +4,10 @@ gzip =           require 'gzippo'
 
 routes  =        require './routes'
 
-exports.startServer = (publicPath, useReload, optimize) ->
+exports.startServer = (config) ->
+
+  publicPath = config.watch.compiledDir
+  useReload = config.server.useReload
 
   viewDirectory = "#{__dirname}/views"
 
@@ -34,4 +37,4 @@ exports.startServer = (publicPath, useReload, optimize) ->
   app.configure 'development', ->
     app.use express.errorHandler()
 
-  app.get '/', routes.index(useReload, optimize)
+  app.get '/', routes.index(useReload, config.optimize)

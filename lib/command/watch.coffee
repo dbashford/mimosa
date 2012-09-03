@@ -3,6 +3,7 @@ fs =       require 'fs'
 
 gzip =     require 'gzippo'
 express =  require 'express'
+_ =        require 'lodash'
 
 util =     require './util'
 logger =   require '../util/logger'
@@ -65,7 +66,8 @@ startProvidedServer = (config) ->
       server = require config.server.path
       if server.startServer
         logger.success "Mimosa is starting your server: #{config.server.path}", true
-        server.startServer(config.watch.compiledDir, config.server.useReload, config.optimize)
+        conf = _.extend({}, config)
+        server.startServer(conf)
       else
         logger.error "Found provided server located at #{config.server.path} (#{serverPath}) but it does not contain a 'startServer' method."
     else
