@@ -320,13 +320,14 @@ module.exports = class RequireRegister
       [plugin, dep] = dep.split('!')
       logger.debug "Is plugin dependency, going to verify both plugin path [[ #{plugin}]] and dependency after '!', [[ #{dep} ]] "
       @_verifyDep(fileName, plugin)
+      plugin = true
 
     # resolve path, if mapped, find already calculated map path
     fullDepPath = if dep.indexOf('MAPPED') is 0
       logger.debug "Is mapped dependency, looking in mappings..."
       @_findMappedDependency(fileName, dep)
     else
-      @_resolvePath(fileName, dep)
+      @_resolvePath(fileName, dep, plugin)
 
     exists = @_fileExists fullDepPath
     if exists
@@ -378,7 +379,7 @@ module.exports = class RequireRegister
         logger.debug "Found alias [[ #{paths[dep]} ]] in file name [[ #{fileName} ]] for dependency [[ #{dep} ]]"
         return paths[dep]
 
-  _resolvePath: (fileName, dep) ->
+  _resolvePath: (fileName, dep, plugin = false) ->
     if dep.indexOf(@rootJavaScriptDir) is 0
       return dep
 
@@ -390,9 +391,11 @@ module.exports = class RequireRegister
     else
       path.join @rootJavaScriptDir, dep
 
-    #if fullPath.
-
-    "#{fullPath}.js"
+    if fullPath.match(/\.\w+$/) and plugin
+      logger.debug "Encountered plugin file with extension, letting that pass as is [[ fullPath ]]"
+      fullPath
+    else
+      "#{fullPath}.js"
 
   _findPathWhenAliasDiectory: (dep) ->
     pathPieces = dep.split('/')
