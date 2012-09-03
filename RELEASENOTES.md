@@ -1,3 +1,11 @@
+# 0.0.29alpha - September 3 2012
+### Major Changes
+* #55, fixed SASS path issue
+
+### Minor Changes
+* #57, various amd path verification issues ironed out
+* #56, plugin + path with extension are let through for verification without altering the extension
+
 # 0.0.28alpha - August 30 2012
 ### Major Changes
 * #50, integrated handlebars partials into handlebars compiler, which obviates Handlebars.registerPartial, just refer to other templates from inside your Handlebars templates and it'll just find them and use them
