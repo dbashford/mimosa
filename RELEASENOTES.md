@@ -5,7 +5,7 @@
 * For maximum future flexibility, now passing clone of entire mimosa config plus whatever mimosa enriches the config with (like startup flags) to startServer function of user server code
 
 ### You'll need to...
-* Alter the code inside your express server to take a single config object, and then pull the fields of importance out of it.  See this commit for details:
+* Alter the code inside your express server to take a single config object, and then pull the fields of importance out of it.  See this commit for details: https://github.com/dbashford/mimosa/commit/df642531c8e5c3eb3f91e1a64ff4e568c712d8d5#L2L6
 
 # 0.0.29alpha - September 3 2012
 ### Major Changes
