@@ -9,16 +9,14 @@ exports.startServer = (config) ->
   publicPath = config.watch.compiledDir
   useReload = config.server.useReload
 
-  viewDirectory = "#{__dirname}/views"
-
   app = express()
   server = app.listen 3000, ->
      console.log "Express server listening on port %d in %s mode", server.address().port, app.settings.env
 
   app.configure ->
     app.set 'port', process.env.PORT || 3000
-    app.set 'views', viewDirectory
-    app.set 'view engine', 'jade'
+    app.set 'views', config.server.views.path
+    app.set 'view engine', config.server.views.compileWith
     app.use express.favicon()
     app.use express.bodyParser()
     app.use express.methodOverride()
@@ -29,7 +27,7 @@ exports.startServer = (config) ->
         verbose: false
         skipAdding:true
         exclude:["almond\.js"]
-        additionaldirs:[viewDirectory]
+        additionaldirs:[config.server.views.path]
       app.use reloadOnChange(options)
     app.use app.router
     app.use gzip.staticGzip(publicPath)

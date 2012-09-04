@@ -12,8 +12,10 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
 
   importRegex: /@import ['"](.*)['"]/g
 
-  @prettyName        = "Stylus - http://learnboost.github.com/stylus/"
+  @prettyName        = "(*) Stylus - http://learnboost.github.com/stylus/"
   @defaultExtensions = ["styl"]
+  @isDefault         = true
+
 
   constructor: (config) ->
     super(config)

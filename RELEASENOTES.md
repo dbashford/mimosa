@@ -1,11 +1,22 @@
 # 0.0.30alpha - September ?? 2012
+
+Big changes in this release as Mimosa nears moving out of alpha.
+
 ### Major Changes
+* Default base app path, `server.base`, is now blank. It was formerly `/app`.
+* Added server view selection to `mimosa new`, options for now are `none` and `jade`.
+* Allowing you to create a new project without a server, but with views so you have a modicum of control over the web app you build
+* Two new config settings, `server.views.path` and `server.views.compileWith`.  These are primarily for use with Mimosa's default server, but can also be utilized with the delivered server and will be used with the delivered server out of the box. The strings these settings represent are placed inside the server config of the delivered server.coffee
+* Stylus is now the default CSS meta-language
 
 ### Minor Changes
 * For maximum future flexibility, now passing clone of entire mimosa config plus whatever mimosa enriches the config with (like startup flags) to startServer function of user server code
 
 ### You'll need to...
-* Alter the code inside your express server to take a single config object, and then pull the fields of importance out of it.  See this commit for details: https://github.com/dbashford/mimosa/commit/df642531c8e5c3eb3f91e1a64ff4e568c712d8d5#L2L6
+* Alter the code inside your express server to take a single config object, and then pull the fields of importance (optimize, serverPath, useReload) out of it.  See this commit for details: https://github.com/dbashford/mimosa/commit/df642531c8e5c3eb3f91e1a64ff4e568c712d8d5#L2L6
+* If you are using the default server with the default `server.base`, you'll need to override the path to reset it to `/app` as the default was changed to be blank
+* If you are using SASS, the fact that it is no longer the default extension means you need to update the Mimosa config and set `compilers.css.compileWith` to `sass` and the `compilers.css.extensions` to `['sass','scss']`
+* If you are using Stylus, you can now re-comment out the `compilers.css.compileWith` and `compilers.css.extensions` configuration as it is no longer needed.
 
 # 0.0.29alpha - September 3 2012
 ### Major Changes

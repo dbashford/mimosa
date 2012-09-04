@@ -13,8 +13,14 @@ defaults = require './util/defaults'
 class NewCommand
 
   servers: [
-      {name:"express", prettyName:"(*) Express - http://expressjs.com/", isDefault:true}
       {name:"none", prettyName:"None - Mimosa will serve your application for you"}
+      {name:"express", prettyName:"(*) Express - http://expressjs.com/", isDefault:true}
+    ]
+
+  views: [
+      {name:"none", prettyName:"None - You do not need a view layer, or you will work with Mimosa's limited default views"}
+      {name:"jade",  prettyName:"(*) Jade - http://jade-lang.com/", isDefault:true}
+      #{name:"hogan", prettyName:"Hogan - http://twitter.github.com/hogan.js/"}
     ]
 
   constructor: (@program) ->
@@ -33,14 +39,7 @@ class NewCommand
 
     logger.debug "Project name: #{name}"
 
-    # give them something to read while we check to see if SASS is installed
-    unless opts.defaults
-      logger.green "\n  Mimosa will guide you through project creation. You will be prompted to pick the JavaScript"
-      logger.green "  meta-language, CSS meta-language, and micro-templating library you would like to use. For more"
-      logger.green "  about those choices, see http://mimosajs.com/compilers.html.  You will also be prompted to pick"
-      logger.green "  the server you would like to use. If you pick no server, Mimosa will serve your assets for you.\n"
-      logger.green "  For all of the technologies, if your favorite is not an option, you can add a GitHub issue"
-      logger.green "  and we'll look into adding it. (https://github.com/dbashford/mimosa/issues)\n"
+    logger.green "\n  Determining system capabilities..."
 
     util.projectPossibilities (compilers) =>
       if opts.defaults
@@ -53,6 +52,14 @@ class NewCommand
 
     chosen = {}
 
+    logger.green "\n  Mimosa will guide you through project creation. You will be prompted to pick the JavaScript"
+    logger.green "  meta-language, CSS meta-language, and micro-templating library you would like to use. For more"
+    logger.green "  about those choices, see http://mimosajs.com/compilers.html. You will also be prompted to pick"
+    logger.green "  the server and server-side view technologies you would like to use. If you pick no server,"
+    logger.green "  Mimosa will serve your assets for you.\n"
+    logger.green "  For all of the technologies, if your favorite is not an option, you can add a GitHub issue"
+    logger.green "  and we'll look into adding it. (https://github.com/dbashford/mimosa/issues)\n"
+
     logger.green "  If you are unsure which options to pick, the ones with asterisks are Mimosa favorites. Feel free"
     logger.green "  to hit the web to research your selections, Mimosa will be here when you get back."
 
@@ -60,20 +67,27 @@ class NewCommand
     @program.choose _.pluck(compilers.javascript, 'prettyName'), (i) =>
       logger.blue "\n  You chose #{compilers.javascript[i].prettyName}."
       chosen.javascript = compilers.javascript[i]
-      logger.green "\n  Now choose your CSS meta-language:\n"
+      logger.green "\n  Choose your CSS meta-language:\n"
       @program.choose _.pluck(compilers.css, 'prettyName'), (i) =>
         logger.blue "\n  You chose #{compilers.css[i].prettyName}."
         chosen.css = compilers.css[i]
-        logger.green "\n  And choose your micro-templating language:\n"
+        logger.green "\n  Choose your micro-templating language:\n"
         @program.choose _.pluck(compilers.template, 'prettyName'),(i) =>
           logger.blue "\n  You chose #{compilers.template[i].prettyName}."
           chosen.template = compilers.template[i]
-          logger.green "\n  And finally choose your server technology:\n"
+          logger.green "\n  Choose your server technology:\n"
           @program.choose _.pluck(@servers, 'prettyName'),(i) =>
             logger.blue "\n  You chose #{@servers[i].prettyName}."
             chosen.server = @servers[i]
-            logger.green "\n  Creating and setting up your project... \n"
-            @_create(name, chosen)
+            # if server is not none, views cannot be none, so remove from array
+            # views can only be none if server is also none
+            @views.shift() if chosen.server.name isnt "none"
+            logger.green "\n  And finally choose your server view templating library:\n"
+            @program.choose _.pluck(@views, 'prettyName'),(i) =>
+              logger.blue "\n  You chose #{@views[i].prettyName}."
+              chosen.views = @views[i]
+              logger.green "\n  Creating and setting up your project... \n"
+              @_create(name, chosen)
 
   _createWithDefaults: (compilers, name) =>
     chosen = {}
@@ -81,6 +95,7 @@ class NewCommand
     chosen.javascript = (compilers.javascript.filter (item) -> item.isDefault)[0]
     chosen.template =   (compilers.template.filter   (item) -> item.isDefault)[0]
     chosen.server =     (@servers.filter             (item) -> item.isDefault)[0]
+    chosen.views =      (@views.filter               (item) -> item.isDefault)[0]
     @_create(name, chosen)
 
   _create: (name, chosen) =>
@@ -101,6 +116,11 @@ class NewCommand
       @_usingDefaultServer()
     else
       @_usingOwnServer(name, chosen)
+
+    if chosen.views.name is "none"
+      @_usingDefaultViews()
+    else
+      @_usingOwnViews(chosen)
 
   _copySkeletonToProvidedDirectory: (skeletonPath, name) ->
     currPath = path.join path.resolve(''), name
@@ -153,9 +173,9 @@ class NewCommand
 
     unless comps.css.isDefault
       config = config.replace "# css:", "css:"
-      config = config.replace '# compileWith: "sass"', 'compileWith: ' + JSON.stringify(comps.css.fileName)
+      config = config.replace '# compileWith: "stylus"', 'compileWith: ' + JSON.stringify(comps.css.fileName)
       unless comps.css.fileName is "none"
-        config = config.replace '# extensions: ["scss", "sass"]', 'extensions:' + JSON.stringify(comps.css.defaultExtensions)
+        config = config.replace '# extensions: ["styl"]', 'extensions:' + JSON.stringify(comps.css.defaultExtensions)
 
     unless comps.template.isDefault
       config = config.replace "# template:", "template:"
@@ -220,11 +240,19 @@ class NewCommand
     logger.debug "Removing #{files.length} .gitkeeps"
     fs.unlinkSync(file) for file in files
 
+  _usingDefaultViews: ->
+    logger.debug "Using default views, so removing view resources"
+    wrench.rmdirSyncRecursive path.join(@currPath, "view")
+
+  _usingOwnViews: (chosen) ->
+    logger.debug "Moving views into place"
+    @_moveDirectoryContents(path.join(@currPath, "view", chosen.views.name), @currPath)
+    wrench.rmdirSyncRecursive path.join(@currPath, "view")
+
   # remove express files/directories and update config to point to default server
   _usingDefaultServer: ->
     logger.debug "Using default server, so removing server resources"
     fs.unlinkSync path.join(@currPath, "package.json")
-    wrench.rmdirSyncRecursive path.join(@currPath, "views")
     wrench.rmdirSyncRecursive path.join(@currPath, "servers")
 
     logger.debug "Altering configuration to not use server"
@@ -267,10 +295,10 @@ class NewCommand
 
   printHelp: ->
     logger.green('  The new command will take you through a series of questions regarding what JavaScript meta-language, CSS')
-    logger.green('  meta-language, micro-templating library, and server technology you would like to use to build your project')
-    logger.green('  Once you have answered the questions, Mimosa will create a directory using the name you provided, and place')
-    logger.green('  a project skeleton inside of it.  That project skeleton will by default include a basic application using')
-    logger.green('  the technologies you selected')
+    logger.green('  meta-language, micro-templating library, server and server view technology you would like to use to build')
+    logger.green('  your project. Once you have answered the questions, Mimosa will create a directory using the name you')
+    logger.green('  provided, and place a project skeleton inside of it.  That project skeleton will by default include a')
+    logger.green('  basic application using the technologies you selected')
     logger.blue( '\n    $ mimosa new [nameOfProject]\n')
     logger.green('  If you wish to copy the project skeleton into your current directory instead of into a new one leave off the')
     logger.green('  then leave off name.')

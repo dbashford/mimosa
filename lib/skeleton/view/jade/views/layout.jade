@@ -3,15 +3,18 @@ html
   head
     title= title
 
+    // Ensuring cache busting for CSS
     - var url = '/stylesheets/style.css'
     - if (!(env == 'production')) {url += "?d=" + (new Date().getTime())}
     link(rel='stylesheet', href=url)
 
+    // Switch between optimized and non-optimized modes
     if optimize
       script(src='/javascripts/main-built.js')
     else
       script(src='/javascripts/vendor/require.js', data-main='/javascripts/main.js')
 
+    // Do not remove this if you want to take advantage of live reload
     if reload
       script(src='/socket.io/socket.io.js')
       script(src='/socket-enable.js')

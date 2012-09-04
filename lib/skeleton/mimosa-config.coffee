@@ -41,9 +41,9 @@ exports.config = {
                                                                      # to exist
 
     # css:
-      # compileWith: "sass"                   # Other options: "none", "less", "stylus".  "none" assumes you are coding pure CSS and
-                                              # the copy config will move that over for you.  More compilers to come.
-      # extensions: ["scss", "sass"]          # list of extensions to compile
+      # compileWith: "stylus"              # Other options: "none", "less", "sass".  "none" assumes you are coding pure CSS and
+                                           # the copy config will move that over for you.  More compilers to come.
+      # extensions: ["styl"]               # list of extensions to compile
 
   ###
   # the extensions of files to simply copy from sourceDir to compiledDir.  vendor js/css, images, etc.
@@ -61,7 +61,11 @@ exports.config = {
     # path: 'server.coffee'               # valid when useDefaultServer: false, path to file for provided server
                                           # which must contain a start() method
     # port: 3000                          # valid when useDefaultServer: true, port the default server will start on
-    # base: '/app'                        # valid when useDefaultServer: true, base of the app in default mode
+    # base: ''                            # valid when useDefaultServer: true, base of the app in default mode
+    # views:                              # configuration for the view layer of your application
+      # compileWith: 'jade'               # Other ops: "none". The compiler for your views.  "none" is only valid for
+                                          # useDefaultServer: true
+      # path: 'views'                     # path from the root of your project to your views
 
   # require:                              # configuration for requirejs options.
     # verify:                             # settings for requirejs path verification

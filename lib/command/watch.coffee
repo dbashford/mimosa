@@ -22,14 +22,19 @@ startServer = (config) =>
 startDefaultServer = (config) ->
   logger.debug "Setting up default express server"
 
+  viewsPath = if config.server.views.compileWith is "none"
+    path.join(__dirname, "views")
+  else
+    config.server.views.path
+
   app = express()
   server = app.listen config.server.port, ->
     logger.success "Mimosa's bundled Express started at http://localhost:#{config.server.port}#{config.server.base}", true
 
   app.configure =>
     app.set 'port', config.server.port
-    app.set 'views', "#{__dirname}/views"
-    app.set 'view engine', 'jade'
+    app.set 'views', viewsPath
+    app.set 'view engine', config.server.views.compileWith
     app.use express.favicon()
     app.use express.bodyParser()
     app.use express.methodOverride()
@@ -45,6 +50,8 @@ startDefaultServer = (config) ->
         verbose: false
         skipAdding: true
         exclude: ["almond\.js"]
+        additionaldirs: [config.server.views.path]
+
       app.use (require 'watch-connect')(opts)
 
     app.use config.server.base, gzip.staticGzip(config.watch.compiledDir)

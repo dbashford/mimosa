@@ -6,7 +6,7 @@ wrench = require 'wrench'
 logger =   require '../../util/logger'
 
 defaultJavascript = "coffee"
-defaultCss = "sass"
+defaultCss = "stylus"
 defaultTemplate = "handlebars"
 
 class MimosaDefaults
@@ -64,7 +64,7 @@ class MimosaDefaults
     css.extensions = if css.compileWith is "none"
       ['css']
     else
-      config.compilers.css.extensions ? ["scss", "sass"]
+      config.compilers.css.extensions ? ["styl"]
 
     copy = newConfig.copy = config.copy                        ?= {}
     copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
@@ -72,14 +72,17 @@ class MimosaDefaults
     requirejs = newConfig.require = config.require             ?= {}
 
     unless config.virgin
-      server = newConfig.server = config.server                  ?= {}
-      server.useDefaultServer =   config.server.useDefaultServer ?= false
-      server.port =               config.server.port             ?= 3000
-      server.base =               config.server.base             ?= '/app'
-      server.useReload =          config.server.useReload        ?= true
-      server.path =               config.server.path             ?= 'server.coffee'
-
+      server = newConfig.server = config.server                   ?= {}
+      server.useDefaultServer =   config.server.useDefaultServer  ?= false
+      server.port =               config.server.port              ?= 3000
+      server.base =               config.server.base              ?= ''
+      server.useReload =          config.server.useReload         ?= true
+      server.path =               config.server.path              ?= 'server.coffee'
       server.path = path.join(@root, server.path)
+      server.views =              config.server.views             ?= {}
+      server.views.compileWith =  config.server.views.compileWith ?= "jade"
+      server.views.path =         config.server.views.path        ?= "views"
+      server.views.path = path.join(@root, server.views.path)
 
       requirejs.optimize = newConfig.require.optimize = config.require.optimize     ?= {}
       requirejs.optimize.inferConfig = config.require.optimize.inferConfig ?= true
