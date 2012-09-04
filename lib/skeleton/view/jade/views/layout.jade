@@ -2,11 +2,7 @@ doctype 5
 html
   head
     title= title
-
-    // Ensuring cache busting for CSS
-    - var url = '/stylesheets/style.css'
-    - if (!(env == 'production')) {url += "?d=" + (new Date().getTime())}
-    link(rel='stylesheet', href=url)
+    link(rel='stylesheet', href='/stylesheets/style.css' + cachebust)
 
     // Switch between optimized and non-optimized modes
     if optimize

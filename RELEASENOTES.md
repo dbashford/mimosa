@@ -11,6 +11,7 @@ Big changes in this release as Mimosa nears moving out of alpha.
 
 ### Minor Changes
 * For maximum future flexibility, now passing clone of entire mimosa config plus whatever mimosa enriches the config with (like startup flags) to startServer function of user server code
+* Simplified routes and layout.jade css cache busting
 
 ### You'll need to...
 * Alter the code inside your express server to take a single config object, and then pull the fields of importance (optimize, serverPath, useReload) out of it.  See this commit for details: https://github.com/dbashford/mimosa/commit/df642531c8e5c3eb3f91e1a64ff4e568c712d8d5#L2L6
