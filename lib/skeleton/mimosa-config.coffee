@@ -65,6 +65,7 @@ exports.config = {
     # views:                              # configuration for the view layer of your application
       # compileWith: 'jade'               # Other ops: "none". The compiler for your views.  "none" is only valid for
                                           # useDefaultServer: true
+      # extension: 'jade'                  # extension of your server views
       # path: 'views'                     # path from the root of your project to your views
 
   # require:                              # configuration for requirejs options.

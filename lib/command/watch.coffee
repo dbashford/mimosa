@@ -4,6 +4,7 @@ fs =       require 'fs'
 gzip =     require 'gzippo'
 express =  require 'express'
 _ =        require 'lodash'
+engines =  require 'consolidate'
 
 util =     require './util'
 logger =   require '../util/logger'
@@ -34,11 +35,16 @@ startDefaultServer = (config) ->
   app.configure =>
     app.set 'port', config.server.port
     app.set 'views', viewsPath
-    app.set 'view engine', config.server.views.compileWith
+    if config.server.views.name is "none"
+      app.set 'view engine', config.server.views.compileWith
+    else
+      app.engine config.server.views.extension, engines[config.server.views.compileWith]
+      app.set 'view engine', config.server.views.extension
+
     app.use express.favicon()
     app.use express.bodyParser()
     app.use express.methodOverride()
-    app.use config.server.base || '', app.router
+    app.use config.server.base, app.router
     app.use (req, res, next) ->
       res.header 'Cache-Control', 'no-cache'
       next()
@@ -57,11 +63,11 @@ startDefaultServer = (config) ->
     app.use config.server.base, gzip.staticGzip(config.watch.compiledDir)
 
   options =
-    title:    'Mimosa\'s Express'
-    reload:   config.server.useReload
-    optimize: config.optimize ? false
-    env:      process.env.NODE_ENV ? "development"
-    base:     if config.server.base then config.server.base else ""
+    title:     'Mimosa\'s Express'
+    reload:    config.server.useReload
+    optimize:  config.optimize ? false
+    cachebust: if process.env.NODE_ENV isnt "production" then "?b=#{(new Date()).getTime()}" else ''
+    base:      if config.server.base then config.server.base else ""
 
   logger.debug "Options for index:\n#{JSON.stringify(options, null, 2)}"
 

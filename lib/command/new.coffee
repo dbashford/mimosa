@@ -6,9 +6,10 @@ wrench = require 'wrench'
 _ =      require 'lodash'
 
 fileUtils = require '../util/file'
-logger =   require '../util/logger'
-util =     require './util'
-defaults = require './util/defaults'
+logger =    require '../util/logger'
+util =      require './util'
+defaults =  require './util/defaults'
+deps =      require('../../package.json').dependencies
 
 class NewCommand
 
@@ -18,12 +19,30 @@ class NewCommand
     ]
 
   views: [
-      {name:"none", prettyName:"None - You do not need a view layer, or you will work with Mimosa's limited default views"}
-      {name:"jade",  prettyName:"(*) Jade - http://jade-lang.com/", isDefault:true}
-      #{name:"hogan", prettyName:"Hogan - http://twitter.github.com/hogan.js/"}
+      {
+        name:"none"
+        prettyName:"None - You do not need a view layer, or you will work with Mimosa's limited default views"
+        library: null
+        extension:null
+      }
+      {
+        name:"hogan"
+        prettyName:"Hogan - http://twitter.github.com/hogan.js/"
+        library: "hogan.js"
+        extension:"hjs"
+      }
+      {
+        name:"jade"
+        prettyName:"(*) Jade - http://jade-lang.com/"
+        library: "jade"
+        extension:"jade"
+        isDefault:true
+      }
     ]
 
   constructor: (@program) ->
+    for view in @views
+      view.version = deps[view.library]
 
   register: =>
     @program
@@ -183,6 +202,14 @@ class NewCommand
       unless comps.template.fileName is "none"
         config = config.replace '# extensions: ["hbs", "handlebars"]', 'extensions:' + JSON.stringify(comps.template.defaultExtensions)
 
+    unless comps.views.isDefault
+      if config.indexOf("# server:") > -1
+        config = config.replace "# server:", "server:"
+      config = config.replace "# views:", "views:"
+      config = config.replace "# compileWith: 'jade'", "compileWith: '#{comps.views.name}'"
+      unless comps.views.name is "none"
+        config = config.replace "# extension: 'jade'", "extension: '#{comps.views.extension}'"
+
     fs.writeFileSync configPath, config
 
     logger.success "Config changed to use selected compilers and to watch default extensions for those compilers."
@@ -269,9 +296,11 @@ class NewCommand
       jPath = path.join @currPath, "package.json"
       packageJson = require(jPath)
       packageJson.name = name
+      packageJson.dependencies[chosen.views.library] = chosen.views.version
       unless chosen.javascript.fileName is "iced"
         logger.debug "removing iced coffee from package.json"
         delete packageJson.dependencies["iced-coffee-script"]
+
       fs.writeFileSync jPath, JSON.stringify(packageJson, null, 2)
 
     logger.debug "Moving server into place"

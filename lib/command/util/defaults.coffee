@@ -78,11 +78,12 @@ class MimosaDefaults
       server.base =               config.server.base              ?= ''
       server.useReload =          config.server.useReload         ?= true
       server.path =               config.server.path              ?= 'server.coffee'
-      server.path = path.join(@root, server.path)
+      server.path =               path.join(@root, server.path)
       server.views =              config.server.views             ?= {}
       server.views.compileWith =  config.server.views.compileWith ?= "jade"
+      server.views.extension =    config.server.views.extension   ?= "jade"
       server.views.path =         config.server.views.path        ?= "views"
-      server.views.path = path.join(@root, server.views.path)
+      server.views.path =         path.join(@root, server.views.path)
 
       requirejs.optimize = newConfig.require.optimize = config.require.optimize     ?= {}
       requirejs.optimize.inferConfig = config.require.optimize.inferConfig ?= true

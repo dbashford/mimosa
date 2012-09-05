@@ -1,6 +1,7 @@
 express =        require 'express'
 reloadOnChange = require 'watch-connect'
 gzip =           require 'gzippo'
+engines =        require 'consolidate'
 
 routes  =        require './routes'
 
@@ -16,7 +17,8 @@ exports.startServer = (config) ->
   app.configure ->
     app.set 'port', process.env.PORT || 3000
     app.set 'views', config.server.views.path
-    app.set 'view engine', config.server.views.compileWith
+    app.engine config.server.views.extension, engines[config.server.views.compileWith]
+    app.set 'view engine', config.server.views.extension
     app.use express.favicon()
     app.use express.bodyParser()
     app.use express.methodOverride()
