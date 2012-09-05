@@ -10,19 +10,14 @@ update = (opts) ->
 
   clientPackageJsonPath = _findPackageJsonPath()
   unless clientPackageJsonPath?
-    logger.fatal "Cannot run update command, failed to find package.json, are you inside your project directory,"
-    return logger.fatal "and did you create that project using the `new` command?"
-
-  mimosaPackageJsonPath = path.join __dirname, '..', 'skeleton', 'package.json'
+    return logger.info "Did not find package.json.  Nothing to update."
 
   logger.debug "client package.json path: [[ #{clientPackageJsonPath} ]]"
+  clientPackageJson = require clientPackageJsonPath
+
+  mimosaPackageJsonPath = path.join __dirname, '..', 'skeleton', 'package.json'
   logger.debug "mimosa package.json path: [[ #{mimosaPackageJsonPath} ]]"
-
-  clientPackageText = fs.readFileSync clientPackageJsonPath, 'ascii'
-  mimosaPackageText = fs.readFileSync mimosaPackageJsonPath, 'ascii'
-
-  clientPackageJson = JSON.parse(clientPackageText)
-  mimosaPackageJson = JSON.parse(mimosaPackageText)
+  mimosaPackageJson = require mimosaPackageJsonPath
 
   currentDir = process.cwd()
   process.chdir path.dirname(clientPackageJsonPath)
@@ -60,9 +55,7 @@ _installDependencies = (deps, done) ->
       "#{name}@#{version}"
 
   installString = "npm install #{names.join(' ')} --save"
-
   logger.debug "Installing, npm command is '#{installString}'"
-
   exec installString, (err, sout, serr) =>
     if err then logger.info(err) else logger.success "Installs successful"
     logger.debug "NPM INSTALL standard out\n#{sout}"
