@@ -17,10 +17,12 @@ Big changes in this release as Mimosa nears moving out of alpha.
 
 ### You'll need to...
 * Alter the code inside your express server to take a single config object, and then pull the fields of importance (optimize, serverPath, useReload) out of it.  See this commit for details: https://github.com/dbashford/mimosa/commit/df642531c8e5c3eb3f91e1a64ff4e568c712d8d5#L2L6
+* The provided Jade template no longer has an `env` property in it, therefore, the `mimosa build --jade` command will no longer be passing an `env` meaning the compilation will fail.  Check out this commit: https://github.com/dbashford/mimosa/commit/3354a810ee0742d623ba80094186f7618050b8e4#lib/skeleton/view/jade/views/layout.jade specifically line 5 of the new layout.jade for the change you will need to make
+* You do not HAVE to, but it is best if you grab the updates to the mimosa-config and paste them into your config.  https://github.com/dbashford/mimosa/blob/master/lib/skeleton/mimosa-config.coffee  The significant changes are in the server portion.  The comment for `port` changed, it is not just valid for the default server.  The default for `base` changed to blank, ''.  And the `views` section is brand new.
 * If you are using the default server with the default `server.base`, you'll need to override the path to reset it to `/app` as the default was changed to be blank
 * If you are using SASS, the fact that it is no longer the default extension means you need to update the Mimosa config and set `compilers.css.compileWith` to `sass` and the `compilers.css.extensions` to `['sass','scss']`
 * If you are using Stylus, you can now re-comment out the `compilers.css.compileWith` and `compilers.css.extensions` configuration as it is no longer needed.
-* The provided Jade template no longer has an `env` property in it, therefore, the `mimosa build --jade` command will no longer be passing an `env` meaning the compilation will fail.  Check out this commit: https://github.com/dbashford/mimosa/commit/3354a810ee0742d623ba80094186f7618050b8e4#lib/skeleton/view/jade/views/layout.jade specifically line 5 of the new layout.jade for the change you will need to make
+
 
 # 0.0.29alpha - September 3 2012 (this never got pushed to NPM)
 ### Major Changes
