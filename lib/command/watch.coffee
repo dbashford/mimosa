@@ -35,8 +35,9 @@ startDefaultServer = (config) ->
   app.configure =>
     app.set 'port', config.server.port
     app.set 'views', viewsPath
-    if config.server.views.name is "none"
-      app.set 'view engine', config.server.views.compileWith
+    if config.server.views.compileWith is "none"
+      # use mimosa's own jade templates
+      app.set 'view engine', "jade"
     else
       app.engine config.server.views.extension, engines[config.server.views.compileWith]
       app.set 'view engine', config.server.views.extension
@@ -55,7 +56,9 @@ startDefaultServer = (config) ->
         watchdir: config.watch.compiledDir
         skipAdding: true
         exclude: ["almond\.js"]
-        additionaldirs: [config.server.views.path]
+
+      if config.server.views.compileWith isnt "none"
+        opts.additionaldirs = [config.server.views.path]
 
       app.use (require 'watch-connect')(opts)
 
