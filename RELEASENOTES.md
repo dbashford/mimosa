@@ -1,4 +1,4 @@
-# 0.0.30alpha - September ?? 2012
+# 0.0.30alpha - September 05 2012
 
 Big changes in this release as Mimosa nears moving out of alpha.
 
@@ -8,9 +8,9 @@ Big changes in this release as Mimosa nears moving out of alpha.
 * Allowing you to create a new project without a server, but with views so you have a modicum of control over the web app you build
 * Three new config settings, `server.views.path` and `server.views.compileWith`, `server.views.extension`.  These are primarily for use with Mimosa's default server, but are also utilized with the delivered server as well.
 * Stylus is now the default CSS meta-language
+* For maximum future flexibility, now passing clone of entire mimosa config plus whatever mimosa enriches the config with (like startup flags) to startServer function of user server code
 
 ### Minor Changes
-* For maximum future flexibility, now passing clone of entire mimosa config plus whatever mimosa enriches the config with (like startup flags) to startServer function of user server code
 * Simplified routes and layout.jade css cache busting
 * Added `hjs` as 3rd default extension for hogan
 * skeleton server now using all the mimosa-config server properties
@@ -21,7 +21,7 @@ Big changes in this release as Mimosa nears moving out of alpha.
 * If you are using SASS, the fact that it is no longer the default extension means you need to update the Mimosa config and set `compilers.css.compileWith` to `sass` and the `compilers.css.extensions` to `['sass','scss']`
 * If you are using Stylus, you can now re-comment out the `compilers.css.compileWith` and `compilers.css.extensions` configuration as it is no longer needed.
 
-# 0.0.29alpha - September 3 2012
+# 0.0.29alpha - September 3 2012 (this never got pushed to NPM)
 ### Major Changes
 * #55, fixed SASS path issue
 
