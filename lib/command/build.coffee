@@ -30,10 +30,10 @@ _writeJade = (config) ->
   if fs.existsSync viewsPath
 
     opts =
-      title:    "Mimosa"
-      reload:   false
-      optimize: config.optimize
-      env:      "production"
+      title:     "Mimosa"
+      reload:    false
+      optimize:  config.optimize
+      cachebust: ''
 
     logger.debug("Compiling jade file at [[ #{viewsPath} ]]")
     logger.debug("With the following context data:\n#{JSON.stringify(opts, null, 2)}")
