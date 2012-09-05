@@ -4,14 +4,16 @@ Big changes in this release as Mimosa nears moving out of alpha.
 
 ### Major Changes
 * Default base app path, `server.base`, is now blank. It was formerly `/app`.
-* Added server view selection to `mimosa new`, options for now are `none` and `jade`.
+* Added server view selection to `mimosa new`, options are `none`, `jade` and `hogan`. More coming.
 * Allowing you to create a new project without a server, but with views so you have a modicum of control over the web app you build
-* Two new config settings, `server.views.path` and `server.views.compileWith`.  These are primarily for use with Mimosa's default server, but can also be utilized with the delivered server and will be used with the delivered server out of the box. The strings these settings represent are placed inside the server config of the delivered server.coffee
+* Three new config settings, `server.views.path` and `server.views.compileWith`, `server.views.extension`.  These are primarily for use with Mimosa's default server, but are also utilized with the delivered server as well.
 * Stylus is now the default CSS meta-language
 
 ### Minor Changes
 * For maximum future flexibility, now passing clone of entire mimosa config plus whatever mimosa enriches the config with (like startup flags) to startServer function of user server code
 * Simplified routes and layout.jade css cache busting
+* Added `hjs` as 3rd default extension for hogan
+* skeleton server now using all the mimosa-config server properties
 
 ### You'll need to...
 * Alter the code inside your express server to take a single config object, and then pull the fields of importance (optimize, serverPath, useReload) out of it.  See this commit for details: https://github.com/dbashford/mimosa/commit/df642531c8e5c3eb3f91e1a64ff4e568c712d8d5#L2L6

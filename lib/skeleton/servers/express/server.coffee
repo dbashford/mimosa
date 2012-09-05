@@ -11,11 +11,11 @@ exports.startServer = (config) ->
   useReload = config.server.useReload
 
   app = express()
-  server = app.listen 3000, ->
+  server = app.listen config.server.port, ->
      console.log "Express server listening on port %d in %s mode", server.address().port, app.settings.env
 
   app.configure ->
-    app.set 'port', process.env.PORT || 3000
+    app.set 'port', config.server.port
     app.set 'views', config.server.views.path
     app.engine config.server.views.extension, engines[config.server.views.compileWith]
     app.set 'view engine', config.server.views.extension
@@ -26,12 +26,11 @@ exports.startServer = (config) ->
       options =
         server:server
         watchdir:publicPath
-        verbose: false
         skipAdding:true
         exclude:["almond\.js"]
         additionaldirs:[config.server.views.path]
       app.use reloadOnChange(options)
-    app.use app.router
+    app.use config.server.base, app.router
     app.use gzip.staticGzip(publicPath)
 
   app.configure 'development', ->

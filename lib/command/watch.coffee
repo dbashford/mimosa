@@ -53,7 +53,6 @@ startDefaultServer = (config) ->
       opts =
         server: server
         watchdir: config.watch.compiledDir
-        verbose: false
         skipAdding: true
         exclude: ["almond\.js"]
         additionaldirs: [config.server.views.path]

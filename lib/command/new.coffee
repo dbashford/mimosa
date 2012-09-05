@@ -55,9 +55,7 @@ class NewCommand
 
   new: (name, opts) =>
     if opts.debug then logger.setDebug()
-
     logger.debug "Project name: #{name}"
-
     logger.green "\n  Determining system capabilities..."
 
     util.projectPossibilities (compilers) =>
@@ -68,8 +66,6 @@ class NewCommand
 
   _prompting: (compilers, name) =>
     logger.debug "Compilers :\n#{JSON.stringify(compilers, null, 2)}"
-
-    chosen = {}
 
     logger.green "\n  Mimosa will guide you through project creation. You will be prompted to pick the JavaScript"
     logger.green "  meta-language, CSS meta-language, and micro-templating library you would like to use. For more"
@@ -85,7 +81,7 @@ class NewCommand
     logger.green "\n  To start, please choose your JavaScript meta-language: \n"
     @program.choose _.pluck(compilers.javascript, 'prettyName'), (i) =>
       logger.blue "\n  You chose #{compilers.javascript[i].prettyName}."
-      chosen.javascript = compilers.javascript[i]
+      chosen = {javascript: compilers.javascript[i]}
       logger.green "\n  Choose your CSS meta-language:\n"
       @program.choose _.pluck(compilers.css, 'prettyName'), (i) =>
         logger.blue "\n  You chose #{compilers.css[i].prettyName}."
@@ -169,7 +165,6 @@ class NewCommand
 
   _makeChosenCompilerChanges: (chosenCompilers) ->
     logger.debug "Chosen compilers:\n#{JSON.stringify(chosenCompilers, null, 2)}"
-
     @_updateConfigForChosenCompilers(chosenCompilers)
     @_copyCompilerSpecificExampleFiles(chosenCompilers)
 
@@ -178,37 +173,41 @@ class NewCommand
     # return if all the defaults were chosen
     return if comps.javascript.isDefault and comps.css.isDefault and comps.template.isDefault
 
-    configPath = path.join @currPath, "mimosa-config.coffee"
-    config = fs.readFileSync configPath, "ascii"
-    config = config.replace "# compilers:", "compilers:"
+    replacements = {}
+    replacements["# compilers:"] = "compilers:"
 
     unless comps.javascript.isDefault
-      config = config.replace "# javascript:", "javascript:"
-      config = config.replace '# compileWith: "coffee"', 'compileWith: ' + JSON.stringify(comps.javascript.fileName)
-      config = config.replace "# server:", "server:"
-      config = config.replace "# path: 'server.coffee'", "path: 'server.#{comps.javascript.defaultExtensions[0]}'"
+      replacements["# javascript:"]             = "javascript:"
+      replacements["# compileWith: \"coffee\""] = 'compileWith: ' + JSON.stringify(comps.javascript.fileName)
+      replacements["# server:"]                 = "server:"
+      replacements["# path: 'server.coffee'"]   = "path: 'server.#{comps.javascript.defaultExtensions[0]}'"
       unless comps.javascript.fileName is "none"
-        config = config.replace '# extensions: ["coffee"]', 'extensions:' + JSON.stringify(comps.javascript.defaultExtensions)
+        replacements["# extensions: [\"coffee\"]"] = 'extensions:' + JSON.stringify(comps.javascript.defaultExtensions)
 
     unless comps.css.isDefault
-      config = config.replace "# css:", "css:"
-      config = config.replace '# compileWith: "stylus"', 'compileWith: ' + JSON.stringify(comps.css.fileName)
+      replacements["# css:"]                     = "css:"
+      replacements["# compileWith: \"stylus\""]  = 'compileWith: ' + JSON.stringify(comps.css.fileName)
       unless comps.css.fileName is "none"
-        config = config.replace '# extensions: ["styl"]', 'extensions:' + JSON.stringify(comps.css.defaultExtensions)
+        replacements["# extensions: [\"styl\"]"] = 'extensions:' + JSON.stringify(comps.css.defaultExtensions)
 
     unless comps.template.isDefault
-      config = config.replace "# template:", "template:"
-      config = config.replace '# compileWith: "handlebars"', 'compileWith: ' + JSON.stringify(comps.template.fileName)
+      replacements["# template:"]                   = "template:"
+      replacements["# compileWith: \"handlebars\""] = 'compileWith: ' + JSON.stringify(comps.template.fileName)
       unless comps.template.fileName is "none"
-        config = config.replace '# extensions: ["hbs", "handlebars"]', 'extensions:' + JSON.stringify(comps.template.defaultExtensions)
+        replacements["# extensions: [\"hbs\", \"handlebars\"]"] = 'extensions:' + JSON.stringify(comps.template.defaultExtensions)
 
     unless comps.views.isDefault
-      if config.indexOf("# server:") > -1
-        config = config.replace "# server:", "server:"
-      config = config.replace "# views:", "views:"
-      config = config.replace "# compileWith: 'jade'", "compileWith: '#{comps.views.name}'"
+      replacements["# server:"]             = "server:"
+      replacements["# views:"]              = "views:"
+      replacements["# compileWith: 'jade'"] = "compileWith: '#{comps.views.name}'"
       unless comps.views.name is "none"
-        config = config.replace "# extension: 'jade'", "extension: '#{comps.views.extension}'"
+        replacements["# extension: 'jade'"] = "extension: '#{comps.views.extension}'"
+
+    configPath = path.join @currPath, "mimosa-config.coffee"
+    config = fs.readFileSync configPath, "ascii"
+
+    for thiz, that of replacements
+      config = config.replace thiz, that
 
     fs.writeFileSync configPath, config
 
