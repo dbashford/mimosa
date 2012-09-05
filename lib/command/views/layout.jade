@@ -2,10 +2,7 @@ doctype 5
 html
   head
     title= title
-
-    - var urlCss = base + '/stylesheets/style.css'
-    - if (!(env == 'production')) {urlCss += "?d=" + (new Date().getTime())}
-    link(rel='stylesheet', href=urlCss)
+    link(rel='stylesheet', href= base + '/stylesheets/style.css' + cachebust)
 
     if optimize
       - var urlBuilt = base + '/javascripts/main-built.js'
