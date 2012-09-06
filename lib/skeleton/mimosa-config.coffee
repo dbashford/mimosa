@@ -82,11 +82,9 @@ exports.config = {
                                           # to null
 
   # minify:                               # Configuration for non-require minification/compression via uglify using the --minify flag.
-    # exclude:["\.min\."]                 # List of excluded file regexes when running minify using the --minify flag.  Any file
-                                          # possessing ".min." in its name, like jquery.min.js, is assumed to already be minified
-                                          # in a way that preserves functionality of the library, so it will be ignored.  If you have
-                                          # other files that you'd like to exempt from minification, overrides this property and
-                                          # include them.
+    # exclude:["\.min\."]                 # List of regexes to exclude files when running minification.  Any path with ".min." in its
+                                          # name, like jquery.min.js, is assumed to already be minified and is ignored by default.
+                                          # Override this property if you have other files that you'd like to exempt from minification
 
   # growl:
     # onStartup: false                    # Controls whether or not to Growl when aseets successfully compile/copy on startup,
