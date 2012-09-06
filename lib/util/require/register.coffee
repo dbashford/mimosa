@@ -15,6 +15,9 @@ module.exports = class RequireRegister
   mappings: {}
   shims: {}
 
+  requireStringRegex: /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g
+  commentRegExp: /(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg
+
   setConfig: (@config) ->
     @verify = @config.require.verify.enabled
     unless @rootJavaScriptDir?
@@ -139,7 +142,7 @@ module.exports = class RequireRegister
       unless @_fileExists(@_resolvePath(fileName, name))
         alias = @_findAlias(name, @aliasFiles)
         unless alias
-          @_logger "RequireJS shim path [[ #{name} ]] inside file [[ #{fileName} ]] cannot be found."
+          @_logger "Shim path [[ #{name} ]] inside file [[ #{fileName} ]] cannot be found."
 
       deps = if Array.isArray(config) then config else config.deps
       if deps?
@@ -148,7 +151,7 @@ module.exports = class RequireRegister
           unless @_fileExists(@_resolvePath(fileName, dep))
             alias = @_findAlias(dep, @aliasFiles)
             unless alias
-              @_logger "RequireJS shim [[ #{name} ]] inside file [[ #{fileName} ]] refers to a dependency that cannot be found [[ #{dep} ]]."
+              @_logger "Shim [[ #{name} ]] inside file [[ #{fileName} ]] refers to a dependency that cannot be found [[ #{dep} ]]."
       else
         logger.debug "No 'deps' found for shim"
 
@@ -238,7 +241,7 @@ module.exports = class RequireRegister
           delete maps[module]
           maps[fullDepPath] = mappings
         else
-          @_logger "RequireJS mapping inside file [[ #{fileName} ]], refers to module that cannot be found [[ #{module} ]]."
+          @_logger "Mapping inside file [[ #{fileName} ]], refers to module that cannot be found [[ #{module} ]]."
           continue
       else
         logger.debug "Not going to verify path for '*'"
@@ -261,7 +264,7 @@ module.exports = class RequireRegister
           @aliasFiles[fileName][alias] = "MAPPED!#{alias}"
           maps[module][alias] = fullDepPath
         else
-          @_logger "RequireJS mapping inside file [[ #{fileName} ]], for module [[ #{module} ]] has path that cannot be found [[ #{aliasPath} ]]."
+          @_logger "Mapping inside file [[ #{fileName} ]], for module [[ #{module} ]] has path that cannot be found [[ #{aliasPath} ]]."
 
   _verifyConfigPath: (fileName, alias, aliasPath) ->
     logger.debug "Verifying configPath in fileName [[ #{fileName} ]], path alias [[ #{alias} ]], with aliasPath(s) of [[ #{aliasPath} ]]"
@@ -297,7 +300,7 @@ module.exports = class RequireRegister
         @aliasDirectories[fileName] ?= {}
         @aliasDirectories[fileName][alias] = pathAsDirectory
       else
-        @_logger "RequireJS dependency [[ #{aliasPath} ]] for path alias [[ #{alias} ]], inside file [[ #{fileName} ]], cannot be found."
+        @_logger "Dependency [[ #{aliasPath} ]] for path alias [[ #{alias} ]], inside file [[ #{fileName} ]], cannot be found."
         logger.debug "Used this as full dependency path [[ #{fullDepPath} ]]"
 
   _verifyFileDeps: (fileName, deps) ->
@@ -346,7 +349,7 @@ module.exports = class RequireRegister
           # file does not exist, but can be found by following directory alias
           @_registerDependency(fileName, pathWithDirReplaced)
         else
-          @_logger "RequireJS dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
+          @_logger "Dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
           logger.debug "Used this as full dependency path [[ #{fullDepPath} ]]"
           @_registerDependency(fileName, dep)
           # much sadness, cannot find the dependency
@@ -408,14 +411,21 @@ module.exports = class RequireRegister
     else
       null
 
-  _defineOverride: (id, deps, funct) ->
-    if Array.isArray(id)
-      deps = id
-    else if typeof id isnt 'string'
-      deps = undefined
+  _defineOverride: (name, deps, callback) ->
+    if typeof name isnt 'string'
+      callback = deps
+      deps = name
 
-    if deps && !Array.isArray(deps)
-      deps = undefined
+    if !Array.isArray(deps)
+      callback = deps
+      deps = []
+
+    if !deps.length and _.isFunction(callback)
+      if (callback.length)
+        callback.toString()
+          .replace(@commentRegExp, '')
+          .replace @requireStringRegex, (match, dep) ->
+            deps.push(dep)
 
     deps
 
@@ -424,6 +434,7 @@ module.exports = class RequireRegister
       config = deps
       if Array.isArray(callback)
         deps = callback
+        callback = errback
       else
         deps = []
 

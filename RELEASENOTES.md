@@ -1,3 +1,9 @@
+# 0.0.31alpha - September ?? 2012
+### Major Changes
+
+### Minor Changes
+* #58, recognize and validate amd wrapped commonjs paths
+
 # 0.0.30alpha - September 05 2012
 
 Big changes in this release as Mimosa nears moving out of alpha.
