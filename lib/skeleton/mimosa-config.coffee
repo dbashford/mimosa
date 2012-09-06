@@ -42,7 +42,7 @@ exports.config = {
 
     # css:
       # compileWith: "stylus"              # Other options: "none", "less", "sass".  "none" assumes you are coding pure CSS and
-                                           # the copy config will move that over for you.  More compilers to come.
+                                           # the copy config will move that over for you.
       # extensions: ["styl"]               # list of extensions to compile
 
   ###
