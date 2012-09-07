@@ -52,20 +52,19 @@ exports.config = {
     # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
 
   # server:                               # configuration for server when server option is enabled via CLI
-    # useDefaultServer: false             # whether or not mimosa starts a default server for you,
-                                          # when true, mimosa starts its own on the port below
-                                          # when false, mimosa will use server provided by path below
-    # useReload: true                     # valid for both default and custom server, when true, browser will be
-                                          # reloaded when asset is compiled.  This adds a few javascript files to
-                                          # the layout of the dev version of the app
-    # path: 'server.coffee'               # valid when useDefaultServer: false, path to file for provided server
-                                          # which must contain a start() method
+    # useDefaultServer: false             # whether or not mimosa starts a default server for you, when true, mimosa starts its
+                                          # own on the port below, when false, mimosa will use server provided by path below
+    # useReload: true                     # valid for both default and custom server, when true, browser will be reloaded when
+                                          # asset is compiled.  This adds a few javascript files to the layout of the dev
+                                          # version of the app
+    # path: 'server.coffee'               # valid when useDefaultServer: false, path to file for provided server which must contain
+                                          # export startServer method that takes an enriched mimosa-config object
     # port: 3000                          # port to start server on
     # base: ''                            # valid when useDefaultServer: true, base of the app in default mode
     # views:                              # configuration for the view layer of your application
       # compileWith: 'jade'               # Other ops: "none". The compiler for your views.  "none" is only valid for
                                           # useDefaultServer: true
-      # extension: 'jade'                  # extension of your server views
+      # extension: 'jade'                 # extension of your server views
       # path: 'views'                     # path from the root of your project to your views
 
   # require:                              # configuration for requirejs options.
@@ -74,11 +73,11 @@ exports.config = {
     # optimize :
       # inferConfig:true                  # Mimosa figures out all you'd need for a simple r.js optimizer run. If you rather Mimosa
                                           # not do that, set inferConfig to false and provide your config in the overrides section.
-                                          # See ere https://github.com/dbashford/mimosa#requirejs-optimizer-defaults to see what
+                                          # See here https://github.com/dbashford/mimosa#requirejs-optimizer-defaults to see what
                                           # the defaults are.
       # overrides:                        # Optimization configuration and Mimosa overrides. If you need to make tweaks uncomment
                                           # this line and add the r.js config (http://requirejs.org/docs/optimization.html#options)
-                                          # as newparamters inside the optimize ojbect. To unset Mimosa's defaults, set a property
+                                          # as newparamters inside the overrides ojbect. To unset Mimosa's defaults, set a property
                                           # to null
 
   # minify:                               # Configuration for non-require minification/compression via uglify using the --minify flag.
