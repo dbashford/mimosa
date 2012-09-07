@@ -60,7 +60,7 @@ exports.config = {
     # path: 'server.coffee'               # valid when useDefaultServer: false, path to file for provided server which must contain
                                           # export startServer method that takes an enriched mimosa-config object
     # port: 3000                          # port to start server on
-    # base: ''                            # valid when useDefaultServer: true, base of the app in default mode
+    # base: ''                            # base of the app in default mode
     # views:                              # configuration for the view layer of your application
       # compileWith: 'jade'               # Other ops: "none". The compiler for your views.  "none" is only valid for
                                           # useDefaultServer: true
@@ -86,7 +86,7 @@ exports.config = {
                                           # Override this property if you have other files that you'd like to exempt from minification
 
   # growl:
-    # onStartup: false                    # Controls whether or not to Growl when aseets successfully compile/copy on startup,
+    # onStartup: false                    # Controls whether or not to Growl when assets successfully compile/copy on startup,
                                           # If you've got 100 CoffeeScript files, and you do a clean and then start watching,
                                           # you'll get 100 Growl notifications.  This is set to false be default to prevent that.
     # onSuccess:                          # Controls whether or not to Growl when assets successfully compile/copy
