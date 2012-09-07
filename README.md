@@ -1,7 +1,17 @@
 
+# ==> http://www.mimosajs.com <==
 
-8/26 Update: For a short time, the documentation here and http://mimosajs.com/ will combine to cover all of the documentable features of Mimosa.  I expect within the next week or two to get everything in this README up on http://mimosajs.com/, at which point this README becomes obsolete.  New features and updates to existing features will be documented there, not here.
+The content below is out of date and will only fall further out of date.  For the short-term I'll be keeping it here for search engine purposes.
 
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
 Mimosa - a modern browser development toolkit
 ======
