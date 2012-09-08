@@ -1,8 +1,15 @@
 # 0.0.31alpha - September ?? 2012
 ### Major Changes
+* #60, no more Mimosa hosted views, they just don't make much sense.
 
 ### Minor Changes
 * #58, recognize and validate amd wrapped commonjs paths
+* #59, Hogan templates built with live reload scripts included, minor omission last release
+* Mimosa views no longer delivered with title as parameter.  Best just leave that to you. =)
+* Mimosa skeleton projects now pass entire config into router functions
+
+### You'll need to...
+* If you were (strangely) relying on Mimosa hosted views, you'll need views of your own.  Code your own, or check out the Mimosa skeleton for candidates: https://github.com/dbashford/mimosa/tree/master/lib/skeleton/view . You'll also need to update your `mimosa-config` to point at your new view language/tech.
 
 # 0.0.30alpha - September 05 2012
 
