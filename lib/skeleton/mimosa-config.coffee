@@ -62,8 +62,7 @@ exports.config = {
     # port: 3000                          # port to start server on
     # base: ''                            # base of the app in default mode
     # views:                              # configuration for the view layer of your application
-      # compileWith: 'jade'               # Other ops: "none". The compiler for your views.  "none" is only valid for
-                                          # useDefaultServer: true
+      # compileWith: 'jade'               # Other valid options: "hogan". The compiler for your views.
       # extension: 'jade'                 # extension of your server views
       # path: 'views'                     # path from the root of your project to your views
 

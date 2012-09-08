@@ -1,4 +1,4 @@
-# 0.0.31alpha - September ?? 2012
+# 0.0.31alpha - September 08 2012
 ### Major Changes
 * #60, no more Mimosa hosted views, they just don't make much sense.
 
