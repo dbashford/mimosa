@@ -23,25 +23,15 @@ startServer = (config) =>
 startDefaultServer = (config) ->
   logger.debug "Setting up default express server"
 
-  viewsPath = if config.server.views.compileWith is "none"
-    path.join(__dirname, "views")
-  else
-    config.server.views.path
-
   app = express()
   server = app.listen config.server.port, ->
     logger.success "Mimosa's bundled Express started at http://localhost:#{config.server.port}#{config.server.base}", true
 
   app.configure =>
     app.set 'port', config.server.port
-    app.set 'views', viewsPath
-    if config.server.views.compileWith is "none"
-      # use mimosa's own jade templates
-      app.set 'view engine', "jade"
-    else
-      app.engine config.server.views.extension, engines[config.server.views.compileWith]
-      app.set 'view engine', config.server.views.extension
-
+    app.set 'views', config.server.views.path
+    app.engine config.server.views.extension, engines[config.server.views.compileWith]
+    app.set 'view engine', config.server.views.extension
     app.use express.favicon()
     app.use express.bodyParser()
     app.use express.methodOverride()
@@ -54,22 +44,18 @@ startDefaultServer = (config) ->
       opts =
         server: server
         watchdir: config.watch.compiledDir
-        skipAdding: true
+        skipAdding: config.server.views.extension is "html"
         exclude: ["almond\.js"]
-
-      if config.server.views.compileWith isnt "none"
-        opts.additionaldirs = [config.server.views.path]
+        additionaldirs: [config.server.views.path]
 
       app.use (require 'watch-connect')(opts)
 
     app.use config.server.base, gzip.staticGzip(config.watch.compiledDir)
 
   options =
-    title:     'Mimosa\'s Express'
     reload:    config.server.useReload
     optimize:  config.optimize ? false
     cachebust: if process.env.NODE_ENV isnt "production" then "?b=#{(new Date()).getTime()}" else ''
-    base:      if config.server.base then config.server.base else ""
 
   logger.debug "Options for index:\n#{JSON.stringify(options, null, 2)}"
 

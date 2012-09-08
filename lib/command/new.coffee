@@ -20,12 +20,6 @@ class NewCommand
 
   views: [
       {
-        name:"none"
-        prettyName:"None - You do not need a view layer, or you will work with Mimosa's limited default views"
-        library: null
-        extension:null
-      }
-      {
         name:"hogan"
         prettyName:"Hogan - http://twitter.github.com/hogan.js/"
         library: "hogan.js"
@@ -94,9 +88,6 @@ class NewCommand
           @program.choose _.pluck(@servers, 'prettyName'),(i) =>
             logger.blue "\n  You chose #{@servers[i].prettyName}."
             chosen.server = @servers[i]
-            # if server is not none, views cannot be none, so remove from array
-            # views can only be none if server is also none
-            @views.shift() if chosen.server.name isnt "none"
             logger.green "\n  And finally choose your server view templating library:\n"
             @program.choose _.pluck(@views, 'prettyName'),(i) =>
               logger.blue "\n  You chose #{@views[i].prettyName}."
@@ -132,10 +123,7 @@ class NewCommand
     else
       @_usingOwnServer(name, chosen)
 
-    if chosen.views.name is "none"
-      @_usingDefaultViews()
-    else
-      @_usingOwnViews(chosen)
+    @_usingOwnViews(chosen)
 
   _copySkeletonToProvidedDirectory: (skeletonPath, name) ->
     currPath = path.join path.resolve(''), name
@@ -200,8 +188,7 @@ class NewCommand
       replacements["# server:"]             = "server:"
       replacements["# views:"]              = "views:"
       replacements["# compileWith: 'jade'"] = "compileWith: '#{comps.views.name}'"
-      unless comps.views.name is "none"
-        replacements["# extension: 'jade'"] = "extension: '#{comps.views.extension}'"
+      replacements["# extension: 'jade'"] = "extension: '#{comps.views.extension}'"
 
     configPath = path.join @currPath, "mimosa-config.coffee"
     config = fs.readFileSync configPath, "ascii"
@@ -265,10 +252,6 @@ class NewCommand
     files = fileUtils.glob "#{@currPath}/**/.gitkeep", {dot:true}
     logger.debug "Removing #{files.length} .gitkeeps"
     fs.unlinkSync(file) for file in files
-
-  _usingDefaultViews: ->
-    logger.debug "Using default views, so removing view resources"
-    wrench.rmdirSyncRecursive path.join(@currPath, "view")
 
   _usingOwnViews: (chosen) ->
     logger.debug "Moving views into place"

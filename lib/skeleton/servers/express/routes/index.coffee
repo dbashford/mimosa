@@ -1,9 +1,8 @@
-index = (useReload, optimize) ->
+index = (config) ->
 
   options =
-    title:     "Express"
-    reload:    useReload
-    optimize:  optimize ? false
+    reload:    config.server.useReload
+    optimize:  config.optimize ? false
     cachebust: if process.env.NODE_ENV isnt "production" then "?b=#{(new Date()).getTime()}" else ''
 
   (req, res) -> res.render 'index', options

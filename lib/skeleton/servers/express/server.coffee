@@ -8,7 +8,6 @@ routes  =        require './routes'
 exports.startServer = (config) ->
 
   publicPath = config.watch.compiledDir
-  useReload = config.server.useReload
 
   app = express()
   server = app.listen config.server.port, ->
@@ -22,11 +21,11 @@ exports.startServer = (config) ->
     app.use express.favicon()
     app.use express.bodyParser()
     app.use express.methodOverride()
-    if useReload
+    if config.server.useReload
       options =
         server:server
         watchdir:publicPath
-        skipAdding:true
+        skipAdding: config.server.views.extension is "html"
         exclude:["almond\.js"]
         additionaldirs:[config.server.views.path]
       app.use reloadOnChange(options)
@@ -36,4 +35,4 @@ exports.startServer = (config) ->
   app.configure 'development', ->
     app.use express.errorHandler()
 
-  app.get '/', routes.index(useReload, config.optimize)
+  app.get '/', routes.index(config)
