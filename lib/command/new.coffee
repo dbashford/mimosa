@@ -38,12 +38,12 @@ class NewCommand
         library: "ejs"
         extension:"html"
       }
-      #{
-      #  name:"ejs"
-      #  prettyName:"Embedded JavaScript Templates (EJS) - https://github.com/visionmedia/ejs"
-      #  library: "ejs"
-      #  extension:"ejs"
-      #}
+      {
+        name:"ejs"
+        prettyName:"Embedded JavaScript Templates (EJS) - https://github.com/visionmedia/ejs"
+        library: "ejs"
+        extension:"ejs"
+      }
     ]
 
   constructor: (@program) ->

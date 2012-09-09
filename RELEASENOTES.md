@@ -1,5 +1,7 @@
 # 0.0.32alpha - September 08 2012
 ### Major Changes
+* Added plain HTML views via EJS
+* Added EJS views
 
 ### Minor Changes
 
