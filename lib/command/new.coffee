@@ -20,18 +20,30 @@ class NewCommand
 
   views: [
       {
-        name:"hogan"
-        prettyName:"Hogan - http://twitter.github.com/hogan.js/"
-        library: "hogan.js"
-        extension:"hjs"
-      }
-      {
         name:"jade"
         prettyName:"(*) Jade - http://jade-lang.com/"
         library: "jade"
         extension:"jade"
         isDefault:true
       }
+      {
+        name:"hogan"
+        prettyName:"Hogan - http://twitter.github.com/hogan.js/"
+        library: "hogan.js"
+        extension:"hjs"
+      }
+      {
+        name:"html"
+        prettyName:"Plain HTML"
+        library: "ejs"
+        extension:"html"
+      }
+      #{
+      #  name:"ejs"
+      #  prettyName:"Embedded JavaScript Templates (EJS) - https://github.com/visionmedia/ejs"
+      #  library: "ejs"
+      #  extension:"ejs"
+      #}
     ]
 
   constructor: (@program) ->

@@ -62,7 +62,7 @@ exports.config = {
     # port: 3000                          # port to start server on
     # base: ''                            # base of the app in default mode
     # views:                              # configuration for the view layer of your application
-      # compileWith: 'jade'               # Other valid options: "hogan". The compiler for your views.
+      # compileWith: 'jade'               # Other valid options: "hogan", "html". The compiler for your views.
       # extension: 'jade'                 # extension of your server views
       # path: 'views'                     # path from the root of your project to your views
 

@@ -32,7 +32,6 @@ startDefaultServer = (config) ->
     app.set 'views', config.server.views.path
     app.engine config.server.views.extension, engines[config.server.views.compileWith]
     app.set 'view engine', config.server.views.extension
-    app.use express.favicon()
     app.use express.bodyParser()
     app.use express.methodOverride()
     app.use config.server.base, app.router
@@ -43,8 +42,9 @@ startDefaultServer = (config) ->
     if config.server.useReload
       opts =
         server: server
+        basedir: config.server.views.path
         watchdir: config.watch.compiledDir
-        skipAdding: config.server.views.extension is "html"
+        skipAdding: config.server.views.html
         exclude: ["almond\.js"]
         additionaldirs: [config.server.views.path]
 
@@ -52,14 +52,21 @@ startDefaultServer = (config) ->
 
     app.use config.server.base, gzip.staticGzip(config.watch.compiledDir)
 
-  options =
-    reload:    config.server.useReload
-    optimize:  config.optimize ? false
-    cachebust: if process.env.NODE_ENV isnt "production" then "?b=#{(new Date()).getTime()}" else ''
+  if config.server.views.html
+    name = if config.optimize
+      'index-optimize'
+    else
+      'index'
+    app.get '/', (req, res) -> res.render name
+  else
+    options =
+      reload:    config.server.useReload
+      optimize:  config.optimize ? false
+      cachebust: if process.env.NODE_ENV isnt "production" then "?b=#{(new Date()).getTime()}" else ''
 
-  logger.debug "Options for index:\n#{JSON.stringify(options, null, 2)}"
+    logger.debug "Options for index:\n#{JSON.stringify(options, null, 2)}"
 
-  app.get '/', (req, res) -> res.render 'index', options
+    app.get '/', (req, res) -> res.render 'index', options
 
 startProvidedServer = (config) ->
   fs.exists config.server.path, (exists) =>

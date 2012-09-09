@@ -11,7 +11,9 @@ exports.startServer = (config) ->
 
   app = express()
   server = app.listen config.server.port, ->
-     console.log "Express server listening on port %d in %s mode", server.address().port, app.settings.env
+    console.log "Express server listening on port %d in %s mode", server.address().port, app.settings.env
+
+  app.get '/', routes.index(config)
 
   app.configure ->
     app.set 'port', config.server.port
@@ -24,8 +26,9 @@ exports.startServer = (config) ->
     if config.server.useReload
       options =
         server:server
+        basedir: config.server.views.path
         watchdir:publicPath
-        skipAdding: config.server.views.extension is "html"
+        skipAdding: !config.server.views.html
         exclude:["almond\.js"]
         additionaldirs:[config.server.views.path]
       app.use reloadOnChange(options)
@@ -34,5 +37,3 @@ exports.startServer = (config) ->
 
   app.configure 'development', ->
     app.use express.errorHandler()
-
-  app.get '/', routes.index(config)

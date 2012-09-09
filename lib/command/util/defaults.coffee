@@ -81,6 +81,9 @@ class MimosaDefaults
       server.path =               path.join(@root, server.path)
       server.views =              config.server.views             ?= {}
       server.views.compileWith =  config.server.views.compileWith ?= "jade"
+      if server.views.compileWith is "html"
+        server.views.compileWith = "ejs"
+        server.views.html = true
       server.views.extension =    config.server.views.extension   ?= "jade"
       server.views.path =         config.server.views.path        ?= "views"
       server.views.path =         path.join(@root, server.views.path)
