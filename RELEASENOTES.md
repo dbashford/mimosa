@@ -1,10 +1,10 @@
-# 0.0.32alpha - September 08 2012
+# 0.0.32alpha - September 10 2012
 ### Major Changes
 * Added plain HTML views via EJS
 * Added EJS views
 
 ### Minor Changes
-
+* #61, bug with require call in jade-runtime
 
 # 0.0.31alpha - September 08 2012
 ### Major Changes

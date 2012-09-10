@@ -66,6 +66,7 @@ startDefaultServer = (config) ->
 
     logger.debug "Options for index:\n#{JSON.stringify(options, null, 2)}"
 
+    # TODO, consider a configurable object of, action/url/viewname
     app.get '/', (req, res) -> res.render 'index', options
 
 startProvidedServer = (config) ->
