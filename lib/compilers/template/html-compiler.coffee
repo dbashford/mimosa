@@ -13,7 +13,7 @@ module.exports = class HTMLCompiler extends AbstractTemplateCompiler
   @prettyName        = "HTML - Just Plain HTML Snippets, no compiling"
   @defaultExtensions = ["template"]
 
-  constructor: (config) ->
+  constructor: (config, @extensions) ->
     super(config)
 
     # we don't want underscore to actually work, just to wrap stuff

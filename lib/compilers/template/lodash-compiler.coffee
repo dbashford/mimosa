@@ -5,9 +5,9 @@ module.exports = class LodashCompiler extends AbstractUnderscoreCompiler
   clientLibrary: "lodash"
 
   @prettyName        = "LoDash - http://lodash.com/docs#template"
-  @defaultExtensions = ["tpl", "lodash"]
+  @defaultExtensions = ["tmpl", "lodash"]
 
-  constructor: (config) ->
+  constructor: (config, @extensions) ->
     super(config)
 
   getLibrary: ->

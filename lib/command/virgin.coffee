@@ -8,8 +8,7 @@ virgin = (opts) =>
   util.processConfig opts, watch
 
 watch = (config) ->
-  compilers = util.fetchConfiguredCompilers(config, true)
-  new Watcher(config, compilers, true)
+  new Watcher(config, true)
 
 register = (program, callback) =>
   program

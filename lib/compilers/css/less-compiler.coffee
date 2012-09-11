@@ -16,7 +16,7 @@ module.exports = class LessCompiler extends AbstractCssCompiler
   @prettyName        = "LESS - http://lesscss.org/"
   @defaultExtensions = ["less"]
 
-  constructor: (config) ->
+  constructor: (config, @extensions) ->
     super(config)
 
   compile: (fileName, text, destinationFile, callback) =>

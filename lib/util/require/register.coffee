@@ -22,9 +22,9 @@ module.exports = class RequireRegister
     @verify = @config.require.verify.enabled
     unless @rootJavaScriptDir?
       @rootJavaScriptDir = if config.virgin
-        path.join @config.watch.sourceDir, @config.compilers.javascript.directory
+        path.join @config.watch.sourceDir, @config.watch.javascriptDir
       else
-        path.join @config.watch.compiledDir, @config.compilers.javascript.directory
+        path.join @config.watch.compiledDir, @config.watch.javascriptDir
       logger.debug "Root Javascript directory set at [[ #{@rootJavaScriptDir} ]]"
 
   process: (fileName, source) ->
@@ -450,8 +450,8 @@ module.exports = class RequireRegister
       # templates is fine, will never be written, doesn't actually exist unless it is written
       return true if filePath is path.join(@rootJavaScriptDir, "templates.js")
 
-      logger.debug "Is virgin, need to try a bit harder to find file in source directories using extensions [[ #{@config.compilers.javascript.extensions} ]]"
-      for extension in @config.compilers.javascript.extensions
+      logger.debug "Is virgin, need to try a bit harder to find file in source directories using extensions [[ #{@config.javascriptExtensions} ]]"
+      for extension in @config.javascriptExtensions
         filePath = filePath.replace(/\.[^.]+$/, ".#{extension}")
         return true if fs.existsSync filePath
 

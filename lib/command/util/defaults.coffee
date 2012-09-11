@@ -33,38 +33,22 @@ class MimosaDefaults
     newConfig.min =          config.min
     newConfig.isForceClean = config.isForceClean
 
-    newConfig.watch =             config.watch ?= {}
-    newConfig.watch.sourceDir =   path.join(@root, config.watch.sourceDir   ? "assets")
-    newConfig.watch.compiledDir = path.join(@root, config.watch.compiledDir ? "public")
-    newConfig.watch.ignored =     config.watch.ignored ?= [".sass-cache"]
-    newConfig.watch.throttle =    config.watch.throttle ?= 0
+    newConfig.watch =               config.watch ?= {}
+    newConfig.watch.sourceDir =     path.join(@root, config.watch.sourceDir   ? "assets")
+    newConfig.watch.compiledDir =   path.join(@root, config.watch.compiledDir ? "public")
+    newConfig.watch.javascriptDir = config.watch.javascriptDir ?= "javascripts"
+    newConfig.watch.ignored =       config.watch.ignored ?= [".sass-cache"]
+    newConfig.watch.throttle =      config.watch.throttle ?= 0
 
-    comp = newConfig.compilers = config.compilers ?= {}
-    js = comp.javascript = config.compilers.javascript ?= {}
-    js.directory =         config.compilers.javascript.directory         ?= "javascripts"
-    js.compileWith =       config.compilers.javascript.compileWith       ?= defaultJavascript
-    js.extensions = if js.compileWith is "none"
-       ['js']
-    else
-      config.compilers.javascript.extensions ? ["coffee"]
+    newConfig.compilers = config.compilers ?= {}
+    newConfig.compilers.extensionOverrides = config.compilers.extensionOverrides ?= {}
 
-    template = comp.template = config.compilers.template                 ?= {}
-    template.compileWith =     config.compilers.template.compileWith     ?= defaultTemplate
-    template.extensions =      config.compilers.template.extensions      ?= ["hbs", "handlebars"]
-    template.outputFileName =  config.compilers.template.outputFileName  ?= "javascripts/templates"
-
-    if template.compileWith is "handlebars"
-      template.helperFile = []
-      helperFiles = config.compilers.template.helperFiles ?= ["javascripts/app/template/handlebars-helpers"]
-      for helperFile in helperFiles
-        template.helperFile.push path.join(@root, helperFile)
-
-    css = comp.css =      config.compilers.css                 ?= {}
-    css.compileWith =     config.compilers.css.compileWith     ?= defaultCss
-    css.extensions = if css.compileWith is "none"
-      ['css']
-    else
-      config.compilers.css.extensions ? ["styl"]
+    template = newConfig.template = config.template ?= {}
+    template.outputFileName =  config.template.outputFileName  ?= "javascripts/templates"
+    template.helperFiles = []
+    helperFiles = config.template.helperFiles ?= ["javascripts/app/template/handlebars-helpers"]
+    for helperFile in helperFiles
+      template.helperFiles.push path.join(@root, helperFile)
 
     copy = newConfig.copy = config.copy                        ?= {}
     copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
@@ -143,17 +127,10 @@ class MimosaDefaults
 
       @_testPathExists(config.server.path, "server.path", false) if config.isServer and not config.server.useDefaultServer
 
-    comp = config.compilers
-    templatePath = path.join(__dirname, '..', '..', 'compilers/template',  "#{comp.template.compileWith}-compiler.coffee")
-    jsPath = path.join(      __dirname, '..', '..', 'compilers/javascript', "#{comp.javascript.compileWith}-compiler.coffee")
-    cssPath = path.join(     __dirname, '..', '..', 'compilers/css',        "#{comp.css.compileWith}-compiler.coffee")
+    # TODO, compilers: overrides paths
 
-    @_testPathExists(templatePath, "compilers.template.compileWith", false) unless comp.template.compileWith is "none"
-    @_testPathExists(cssPath,      "compilers.css.compileWith", false)      unless comp.css.compileWith is "none"
-    unless comp.javascript.compileWith is "none"
-      @_testPathExists(jsPath, "compilers.javascript.compileWith", false)
-      jsDir = path.join(config.watch.sourceDir, comp.javascript.directory)
-      @_testPathExists(jsDir,"compilers.javascript.directory", true) unless config.virgin
+    jsDir = path.join(config.watch.sourceDir, config.watch.javascriptDir)
+    @_testPathExists(jsDir,"watch.javascriptDir", true) unless config.virgin
 
   _testPathExists: (filePath, name, isDirectory) ->
     unless fs.existsSync filePath

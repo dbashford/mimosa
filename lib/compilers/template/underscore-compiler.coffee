@@ -7,7 +7,7 @@ module.exports = class UnderscoreCompiler extends AbstractUnderscoreCompiler
   @prettyName        = "Underscore - http://underscorejs.org/#template"
   @defaultExtensions = ["tpl", "underscore"]
 
-  constructor: (config) ->
+  constructor: (config, @extensions) ->
     super(config)
 
   getLibrary: ->

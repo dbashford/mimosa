@@ -1,3 +1,33 @@
+# 0.0.33alpha - September ?? 2012
+
+Likely the last big release before going beta and establishing some sane versioning.  This one has a bunch of possible breaking changes depending on how much you might have been configuring.  Also the need for compiler configuration is mostly gone, so you'll want to address your `mimosa-config`
+
+### Major Changes
+* The `compilers` is drastically changed and reduced; no need to configure compilers anymore.  There are no more `css`, `javascript` and `template` sections.  The `compilers` config now looks like this:
+
+```
+# compilers:
+  # extensionOverrides:                 # A list of extension overrides, format is compilerName:[arrayOfExtensions]
+                                        # see http://mimosajs.com/compilers.html for a list of compiler names
+    # coffee: ["coff"]                  # This is an example override, this is not a default
+```
+
+It only contains overrides.  Mimosa will automatically use whichever compiler it needs to in order to compile your code based on the list of default extensions Mimosa uses for each compiler.  You can see the list of extensions here: http://mimosajs.com/compilers.html.  The `extensionOverrides` gives you the ability to tell a specific compiler to pay attention to an extension it might not otherwise be looking at.
+* What the above change means, besides needing less configuration, is you can mix and match your meta-languages.  The most common use case that comes to mind is, if you want to code Stylus or SASS, but want to compile Bootstrap from its LESS source, you can now have it both ways.  You can have Bootstrap in LESS form compiling on the fly as you change its source, and you can have your own Stylus files as well doing the same thing.
+* A few `compilers` config properties have survived by moving elsewhere.
+`compilers.javascripts.directory` is now `watch.javascriptDir`.  `compilers.template.outputFileName` is now `template.outputFileName`, and `compilers.template.helperFiles` is now `template.helperFiles`
+* To differentiate it from Underscore, Lodash's default extension `tpl` has been changed to `tmpl`
+
+### Minor Changes
+
+### You'll need to...
+* Mimosa-config update: If you were using Lodash with a `.tpl` extension, you'll need to either 1) change your extensions or Underscore will do your compiling as `.tpl` is now solely Underscore's extension or 2) add a `compilers.extensionOverrides` for Lodash and `['tpl']`.
+* Mimosa-config update: `watch.javascriptDir` is the new home for what was previously `compilers.javascript.directory`
+* Mimosa-config update: `template.outputFileName` is then new home for what was previously `compilers.template.outputFileName`
+* Mimosa-config update:`template.helperFiles` is then new home for what was previously `compilers.template.helperFiles`
+* Mimosa-config update: If you are using any extensions for Mimosa's compilers that vary from the default, you'll need to add a `compilers.extensionOverrides` section that will contain a map of the name of the compiler to the extensions you wish to use for it.  Ex: `coffee:['coffee']`
+* Mimosa-config update: The ONLY thing that should be in your `compilers` config is the `extensionOverrides`, everything else can be removed.
+
 # 0.0.32alpha - September 10 2012
 ### Major Changes
 * Added plain HTML views via EJS

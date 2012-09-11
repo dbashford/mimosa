@@ -14,7 +14,7 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
   outExtension: 'css'
 
   constructor: (config) ->
-    super(config, config.compilers.css)
+    super(config)
 
     @notifyOnSuccess = config.growl.onSuccess.css
 
@@ -130,10 +130,10 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
       .map (file) =>
         path.join(@srcDir, file)
       .filter (file) =>
-        @config.extensions.some (ext) ->
+        @extensions.some (ext) ->
           file.slice(-ext.length) is ext
 
-    logger.debug "All files for extensions [[ #{@config.extensions} ]]:\n#{files.join('\n')}"
+    logger.debug "All files for extensions [[ #{@extensions} ]]:\n#{files.join('\n')}"
 
     files
 

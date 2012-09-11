@@ -171,30 +171,12 @@ class NewCommand
   _updateConfigForChosenCompilers: (comps) ->
 
     # return if all the defaults were chosen
-    return if comps.javascript.isDefault and comps.css.isDefault and comps.template.isDefault
+    return if comps.javascript.isDefault and comps.views.isDefault
 
     replacements = {}
-    replacements["# compilers:"] = "compilers:"
-
     unless comps.javascript.isDefault
-      replacements["# javascript:"]             = "javascript:"
-      replacements["# compileWith: \"coffee\""] = 'compileWith: ' + JSON.stringify(comps.javascript.fileName)
       replacements["# server:"]                 = "server:"
       replacements["# path: 'server.coffee'"]   = "path: 'server.#{comps.javascript.defaultExtensions[0]}'"
-      unless comps.javascript.fileName is "none"
-        replacements["# extensions: [\"coffee\"]"] = 'extensions:' + JSON.stringify(comps.javascript.defaultExtensions)
-
-    unless comps.css.isDefault
-      replacements["# css:"]                     = "css:"
-      replacements["# compileWith: \"stylus\""]  = 'compileWith: ' + JSON.stringify(comps.css.fileName)
-      unless comps.css.fileName is "none"
-        replacements["# extensions: [\"styl\"]"] = 'extensions:' + JSON.stringify(comps.css.defaultExtensions)
-
-    unless comps.template.isDefault
-      replacements["# template:"]                   = "template:"
-      replacements["# compileWith: \"handlebars\""] = 'compileWith: ' + JSON.stringify(comps.template.fileName)
-      unless comps.template.fileName is "none"
-        replacements["# extensions: [\"hbs\", \"handlebars\"]"] = 'extensions:' + JSON.stringify(comps.template.defaultExtensions)
 
     unless comps.views.isDefault
       replacements["# server:"]             = "server:"
@@ -209,9 +191,6 @@ class NewCommand
       config = config.replace thiz, that
 
     fs.writeFileSync configPath, config
-
-    logger.success "Config changed to use selected compilers and to watch default extensions for those compilers."
-    logger.success "You may want to check that the extensions Mimosa will watch match those you intend to use."
 
   _copyCompilerSpecificExampleFiles: (comps) ->
     safePaths = _.flatten([comps.javascript.defaultExtensions, comps.css.defaultExtensions, comps.template.defaultExtensions]).map (path) ->

@@ -17,8 +17,7 @@ build = (opts) =>
 
   util.processConfig opts, (config) =>
     if opts.removeCombined then config.require.optimize.overrides.removeCombined = true
-    compilers = util.fetchConfiguredCompilers config, false
-    new Watcher config, compilers, false, _buildFinished
+    new Watcher config, false, _buildFinished
 
     _writeJade(config) if opts.jade
 

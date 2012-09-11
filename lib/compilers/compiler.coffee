@@ -11,17 +11,17 @@ module.exports = class AbstractCompiler
 
   isInitializationComplete:false
 
-  constructor: (@fullConfig, @config) ->
+  constructor: (@fullConfig) ->
     @srcDir = @fullConfig.watch.sourceDir
     @compDir = @fullConfig.watch.compiledDir
     @init() if @init?
 
     files = wrench.readdirSyncRecursive(@srcDir).filter (f) =>
       ext = path.extname(f)
-      ext.length > 1 and @config.extensions.indexOf(ext.substring(1)) >= 0
+      ext.length > 1 and @extensions.indexOf(ext.substring(1)) >= 0
 
     @initialFileCount = files.length
-    logger.debug "File count for extension(s) [[ #{@config.extensions} ]]: #{@initialFileCount}"
+    logger.debug "File count for extension(s) [[ #{@extensions} ]]: #{@initialFileCount}"
     @initialFilesHandled = 0
 
   # OVERRIDE THESE
@@ -32,11 +32,9 @@ module.exports = class AbstractCompiler
   setStartupDoneCallback: (@startupDoneCallback) ->
     @startupDoneCallback() if @initialFileCount is 0
 
-  getExtensions: =>
-    @config.extensions
+  getExtensions: => @extensions
 
-  getOutExtension: =>
-    @outExtension
+  getOutExtension: => @outExtension
 
   initializationComplete: (@isInitializationComplete = true) ->
     @postInitialization() if @postInitialization?
@@ -50,19 +48,23 @@ module.exports = class AbstractCompiler
   write: (fileName, content) =>
     if @fullConfig.virgin
       logger.debug "Virgin is turned on, not writing [[ #{fileName} ]]"
-      return @success "Compiled [[ #{fileName} ]]"
+      @success "Compiled [[ #{fileName} ]]"
+      return @done()
 
     logger.debug "Writing file [[ #{fileName} ]]"
     fileUtils.writeFile fileName, content, (err) =>
       return @failed "Failed to write new file: #{fileName}" if err
-      @afterWrite(fileName) if @afterWrite?
       @success "Compiled/copied [[ #{fileName} ]]"
+      @afterWrite(fileName) if @afterWrite?
+      @done()
+
 
   removeTheFile: (fileName, reportSuccess = true) =>
     logger.debug "Removing file [[ #{fileName} ]]"
     fs.unlink fileName, (err) =>
-      return logger.warn("Cannot delete compiled file, #{fileName}. This is ok if it was never successfully compiled.") if err
-      @success "Deleted compiled file [[ #{fileName} ]]" if reportSuccess
+      unless err?
+        @success "Deleted compiled file [[ #{fileName} ]]" if reportSuccess
+        @done()
 
   optimize: (fileName) ->
     optimizer.optimize(@fullConfig, fileName) if @isInitializationComplete
@@ -74,11 +76,10 @@ module.exports = class AbstractCompiler
   success: (message) =>
     growlIt = @notifyOnSuccess and (@isInitializationComplete or @fullConfig.growl.onStartup)
     logger.success message, growlIt
-    @done()
 
   done: ->
     if !@startupFinished and ++@initialFilesHandled is @initialFileCount
-      logger.debug "Compiler for extensions [[ #{@config.extensions} ]] has completed startup"
+      logger.debug "Compiler for extensions [[ #{@extensions} ]] has completed startup"
       @doneStartup()
 
   doneStartup: ->

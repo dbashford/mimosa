@@ -12,8 +12,8 @@ AbstractCompiler = require '../compiler'
 module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   constructor: (config) ->
-    super(config, config.compilers.template)
-    @templateFileName = path.join(@compDir, @config.outputFileName + ".js")
+    super(config)
+    @templateFileName = path.join(@compDir, @fullConfig.template.outputFileName + ".js")
     if @clientLibrary?
       @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
       @clientPath = path.join path.dirname(@templateFileName), 'vendor', "#{@clientLibrary}.js"
@@ -51,7 +51,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
     for file in allFiles
       extension = path.extname(file).substring(1)
-      fileNames.push(file) if @config.extensions.indexOf(extension) >= 0
+      fileNames.push(file) if @extensions.indexOf(extension) >= 0
 
     if fileNames.length is 0
       if isRemove

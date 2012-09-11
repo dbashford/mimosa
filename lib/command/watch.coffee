@@ -14,8 +14,7 @@ watch = (opts) =>
   if opts.debug then logger.setDebug()
   util.processConfig opts, (config) =>
     util.cleanCompiledDirectories(config) if opts.clean
-    compilers = util.fetchConfiguredCompilers(config, true)
-    new Watcher(config, compilers, true, startServer if opts?.server)
+    new Watcher(config, true, startServer if opts?.server)
 
 startServer = (config) =>
   if (config.server.useDefaultServer) then startDefaultServer(config) else startProvidedServer(config)
@@ -44,7 +43,7 @@ startDefaultServer = (config) ->
         server: server
         basedir: config.server.views.path
         watchdir: config.watch.compiledDir
-        skipAdding: config.server.views.html
+        skipAdding: !config.server.views.html
         exclude: ["almond\.js"]
         additionaldirs: [config.server.views.path]
 

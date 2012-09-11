@@ -16,8 +16,7 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
   @defaultExtensions = ["styl"]
   @isDefault         = true
 
-
-  constructor: (config) ->
+  constructor: (config, @extensions) ->
     super(config)
 
   compile: (fileName, text, destinationFile, callback) =>

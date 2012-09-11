@@ -27,7 +27,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     runSass = 'sass.bat'
     logger.debug "win32 detected, changing sass command to #{runSass}"
 
-  constructor: (config) ->
+  constructor: (config, @extensions) ->
     super(config)
     SassCompiler.checkIfExists (exists) ->
       unless exists

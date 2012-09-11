@@ -13,6 +13,8 @@ exports.config = {
   # watch:
     # sourceDir: "assets"                 # directory location of web assets
     # compiledDir: "public"               # directory location of compiled web assets
+    # javascriptDir: "javascripts"        # Location of precompiled javascript (coffeescript for instance), and therefore
+                                          # also the location of the compiled javascript.
     # ignored: [".sass-cache"]            # files to not watch on file system, any file containing one of the strings listed here
                                           # will be skipped
     # throttle: 0                         # number of file adds the watcher handles before taking a 100 millisecond pause to let
@@ -22,28 +24,15 @@ exports.config = {
                                           # default, until you start encountering EMFILE problems.
 
   # compilers:
-    # javascript:
-      # directory: "javascripts"              # Location of precompiled javascript (coffeescript for instance), and therefore
-                                              # also the location of the compiled javascript.
-                                              # For now this is only used by requirejs optimization, the rest of Mimosa doesn't
-                                              # care where you put your javascript (as long as it is inside the sourceDir)
-      # compileWith: "coffee"                 # Other options: "iced", "none".  "none" assumes you are coding js by hand and
-                                              # the copy config will move that over for you
-      # extensions: ["coffee"]                # list of extensions to compile
+    # extensionOverrides:                 # A list of extension overrides, format is compilerName:[arrayOfExtensions]
+                                          # see http://mimosajs.com/compilers.html for a list of compiler names
+      # coffee: ["coff"]                  # This is an example override, this is not a default, it must take the form of an array
 
-    # template:
-      # compileWith: "handlebars"                                    # Other ops:"dust","jade","hogan","underscore","lodash","html","none".
-                                                                     # "none" assumes you aren't using any micro-templating solution.
-      # extensions: ["hbs", "handlebars"]                            # list of extensions to compile
-      # outputFileName: "javascripts/templates"                      # the file all templates are compiled into
-      # helperFiles:["javascripts/app/template/handlebars-helpers"]  # relevant to handlebars only, the paths from sourceDir to the files
-                                                                     # containing handlebars helper/partial registrations, does not need
-                                                                     # to exist
-
-    # css:
-      # compileWith: "stylus"              # Other options: "none", "less", "sass".  "none" assumes you are coding pure CSS and
-                                           # the copy config will move that over for you.
-      # extensions: ["styl"]               # list of extensions to compile
+  # template:
+    # outputFileName: "javascripts/templates"                      # the file all templates are compiled into
+    # helperFiles:["javascripts/app/template/handlebars-helpers"]  # relevant to handlebars only, the paths from sourceDir to
+                                                                   # the files containing handlebars helper/partial registrations,
+                                                                   # does not need to exist
 
   ###
   # the extensions of files to simply copy from sourceDir to compiledDir.  vendor js/css, images, etc.

@@ -7,7 +7,7 @@ module.exports = class CoffeeCompiler extends AbstractJavascriptCompiler
   @defaultExtensions = ["coffee"]
   @isDefault         = true
 
-  constructor: (config) ->
+  constructor: (config, @extensions) ->
     super(config)
 
   compile: (fileName, text, destinationFile, callback) ->

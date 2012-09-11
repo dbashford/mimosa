@@ -11,8 +11,7 @@ build = (opts) =>
   logger.info "Beginning build"
 
   util.processConfig opts, (config) =>
-    compilers = util.fetchConfiguredCompilers config, false
-    new Watcher config, compilers, false, _buildFinished
+    new Watcher config, false, _buildFinished
 
 _buildFinished = ->
   logger.success "Finished build"

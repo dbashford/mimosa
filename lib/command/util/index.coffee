@@ -7,14 +7,13 @@ wrench = require 'wrench'
 
 logger = require '../../util/logger'
 fileUtils = require '../../util/file'
-
 defaults = require './defaults'
+compilerCentral = require '../../compilers'
 
 baseDirRegex = /([^[\/\\\\]*]*)$/
 
 gatherProjectPossibilities = (callback) ->
-  compilerPath = path.join __dirname, '..', '..', 'compilers'
-  files = fileUtils.glob "#{compilerPath}/**/*-compiler.coffee"
+  files = compilerCentral.compilersWithoutCopy()
   logger.debug "Compilers:\n#{files.join('\n')}"
   compilers = {css:[], javascript:[], template:[]}
 
@@ -33,18 +32,6 @@ gatherProjectPossibilities = (callback) ->
           comp.prettyName = comp.prettyName + color(" (This is not installed and would need to be before use)", "yellow+bold")
         callback(compilers)
       break
-
-fetchConfiguredCompilers = (config, persist = false) ->
-  compilers = [new (require("../../compilers/copy"))(config)]
-  for category, catConfig of config.compilers
-    try
-      continue if catConfig.compileWith is "none"
-      compiler = require "../../compilers/#{category}/#{catConfig.compileWith}-compiler"
-      compilers.push(new compiler(config))
-      logger.info "Adding compiler: #{category}/#{catConfig.compileWith}-compiler" if persist
-    catch err
-      logger.info "Unable to find matching compiler for #{category}/#{catConfig.compileWith}: #{err}"
-  compilers
 
 processConfig = (opts, callback) ->
   configPath = _findConfigPath()
@@ -89,16 +76,16 @@ cleanCompiledDirectories = (config) ->
   directories = items.filter (f) -> fs.statSync(path.join(config.watch.sourceDir, f)).isDirectory()
   directories = _.sortBy(directories, 'length').reverse()
 
-  compilers = fetchConfiguredCompilers(config)
+  {compilerExtensionHash, compilers} = compilerCentral.buildCompilerExtensionHash(config)
 
   _cleanMisc(config, compilers)
-  _cleanFiles(config, files, compilers)
+  _cleanFiles(config, files, compilerExtensionHash)
   _cleanDirectories(config, directories)
 
   logger.success "[[ #{config.watch.compiledDir} ]] has been cleaned."
 
 _cleanMisc = (config, compilers) ->
-  jsDir = path.join config.watch.compiledDir, config.compilers.javascript.directory
+  jsDir = path.join config.watch.compiledDir, config.watch.javascriptDir
   files = fileUtils.glob "#{jsDir}/**/*-built.js"
   for file in files
     logger.debug("Deleting '-built' file, [[ #{file} ]]")
@@ -112,17 +99,14 @@ _cleanMisc = (config, compilers) ->
   logger.debug("Calling individual compiler cleanups")
   compiler.cleanup() for compiler in compilers when compiler.cleanup?
 
-_cleanFiles = (config, files, compilers) ->
+_cleanFiles = (config, files, compilerExtensionHash) ->
   for file in files
     compiledPath = path.join config.watch.compiledDir, file
 
     extension = path.extname(file)
     if extension?.length > 0
       extension = extension.substring(1)
-      compiler = _.find compilers, (comp) ->
-        for ext in comp.getExtensions()
-          return true if extension is ext
-        return false
+      compiler = compilerExtensionHash[extension]
       if compiler? and compiler.getOutExtension()
         compiledPath = compiledPath.replace(/\.\w+$/, ".#{compiler.getOutExtension()}")
 
@@ -143,8 +127,6 @@ _cleanDirectories = (config, directories) ->
 
 module.exports = {
   processConfig: processConfig
-  fetchConfiguredCompilers: fetchConfiguredCompilers
   projectPossibilities:gatherProjectPossibilities
   cleanCompiledDirectories:cleanCompiledDirectories
-
 }

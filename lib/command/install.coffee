@@ -37,7 +37,7 @@ class InstallCommand
           process.chdir(currentDir)
           process.stdin.destroy()
 
-        @runVolo(args, desiredDir, config.compilers.javascript.directory, done)
+        @runVolo(args, desiredDir, config.watch.javascriptDir, done)
 
   prepArgs: (args) ->
     args.unshift('add')                 # adding add
@@ -64,7 +64,7 @@ class InstallCommand
     items = wrench.readdirSyncRecursive(config.watch.sourceDir)
     items.filter (f) ->
       fullPath = path.join config.watch.sourceDir, f
-      fs.statSync(fullPath).isDirectory() and f.indexOf(config.compilers.javascript.directory) >= 0
+      fs.statSync(fullPath).isDirectory() and f.indexOf(config.watch.javascriptDir) >= 0
     .sort()
 
   register: =>

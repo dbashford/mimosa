@@ -61,7 +61,7 @@ class Optimizer
       logger.warn "No main modules found.  Not running optimization."
       return @_done()
 
-    baseUrl = path.join config.watch.compiledDir, config.compilers.javascript.directory
+    baseUrl = path.join config.watch.compiledDir, config.watch.javascriptDir
     name = config.require.optimize.overrides.name
     if (name? and name isnt 'almond') or name is null
       logger.info "r.js name changed from default of 'almond', no not using almond.js"

@@ -12,7 +12,8 @@ module.exports = class CopyCompiler extends SingleFileCompiler
   keepBuffer: true
 
   constructor: (config) ->
-    super(config, config.copy)
+    @extensions = config.copy.extensions
+    super(config)
 
     @notifyOnSuccess = config.growl.onSuccess.copy
 

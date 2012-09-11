@@ -13,7 +13,7 @@ module.exports = class HoganCompiler extends AbstractTemplateCompiler
   @prettyName        = "Hogan - http://twitter.github.com/hogan.js/"
   @defaultExtensions = ["hog", "hogan", "hjs"]
 
-  constructor: (config) ->
+  constructor: (config, @extensions) ->
     super(config)
 
   compile: (fileNames, callback) ->

@@ -5,14 +5,17 @@ _ =         require 'lodash'
 
 logger =    require '../../util/logger'
 optimizer = require '../../util/require/optimize'
+compilerCentral = require '../../compilers'
 
 class Watcher
 
   compilersDone:0
   adds:[]
 
-  constructor: (@config, @compilers, @persist, @initCallback) ->
+  constructor: (@config, @persist, @initCallback) ->
+    {@compilerExtensionHash, @compilers} = compilerCentral.buildCompilerExtensionHash(@config)
     @throttle = @config.watch.throttle
+
     compiler.setStartupDoneCallback(@compilerDone) for compiler in @compilers
     @startWatcher()
 
@@ -53,10 +56,7 @@ class Watcher
     extension = path.extname(fileName).substring(1)
     return unless extension?.length > 0
 
-    compiler = _.find @compilers, (comp) ->
-      for ext in comp.getExtensions()
-        return true if extension is ext
-      return false
+    compiler = @compilerExtensionHash[extension]
 
     return compiler if compiler
     logger.warn "No compiler has been registered: #{extension}, #{fileName}"

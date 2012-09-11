@@ -9,7 +9,7 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
   outExtension: 'js'
 
   constructor: (config) ->
-    super(config, config.compilers.javascript)
+    super(config)
 
     @notifyOnSuccess = config.growl.onSuccess.javascript
 

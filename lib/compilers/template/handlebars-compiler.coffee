@@ -15,15 +15,14 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
   @defaultExtensions = ["hbs", "handlebars"]
   @isDefault         = true
 
-  constructor: (config) ->
+  constructor: (config, @extensions) ->
     super(config)
-    @_buildOutputStart()
 
   _buildOutputStart: =>
     logger.debug "Building Handlebars template file wrapper"
     possibleHelperPaths =
-      for ext in @fullConfig.compilers.javascript.extensions
-        path.join(@srcDir, "#{helperFile}.#{ext}") for helperFile in @config.helperFiles
+      for ext in @fullConfig.javascriptExtensions
+        path.join(@srcDir, "#{helperFile}.#{ext}") for helperFile in @fullConfig.template.helperFiles
     helperPaths = _.flatten(possibleHelperPaths).filter((p) -> fs.existsSync(p))
 
     defines = ["'vendor/#{@clientLibrary}'"]
@@ -60,7 +59,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
   compile: (fileNames, callback) ->
     error = null
 
-    output = @outputStart
+    output = @_buildOutputStart()
 
     for fileName in fileNames
       logger.debug "Compiling Handlebars template [[ #{fileName} ]]"

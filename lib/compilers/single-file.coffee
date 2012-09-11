@@ -6,8 +6,8 @@ logger = require '../util/logger'
 
 module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
 
-  constructor: (config, targetConfig) ->
-    super config, targetConfig
+  constructor: (config) ->
+    super config
 
   compile: (fileName, fileAsText, destinationFile, callback) ->
     throw new Error "Method compile must be implemented"
