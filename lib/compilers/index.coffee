@@ -24,8 +24,6 @@ class CompilerCentral
     for base, ext of config.compilers.extensionOverrides
       allOverriddenExtensions.push(ext...)
 
-    console.log allOverriddenExtensions
-
     logger.debug("All overridden extension [[ #{allOverriddenExtensions.join(', ')}]]")
 
     config.javascriptExtensions = ['js']
