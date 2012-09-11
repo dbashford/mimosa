@@ -21,6 +21,13 @@ It only contains overrides.  Mimosa will automatically use whichever compiler it
 ### Minor Changes
 
 ### You'll need to...
+
+Many possible `mimosa-config` updates.  Check out this commit to get a feel for what changed: https://github.com/dbashford/mimosa/commit/9256afd0de978df2ada9faf95cd7806f6a9ff1a3#L31L13
+
+The details are below.  Even if you are not overriding any of these paramters and are therefore uneffected, it is suggested you make the changes to the commented out config.
+
+Here are the details:
+
 * Mimosa-config update: If you were using Lodash with a `.tpl` extension, you'll need to either 1) change your extensions or Underscore will do your compiling as `.tpl` is now solely Underscore's extension or 2) add a `compilers.extensionOverrides` for Lodash and `['tpl']`.
 * Mimosa-config update: `watch.javascriptDir` is the new home for what was previously `compilers.javascript.directory`
 * Mimosa-config update: `template.outputFileName` is then new home for what was previously `compilers.template.outputFileName`
