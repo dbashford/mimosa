@@ -10,21 +10,12 @@ fileUtils = require '../../util/file'
 defaults = require './defaults'
 compilerCentral = require '../../compilers'
 
-baseDirRegex = /([^[\/\\\\]*]*)$/
-
 exports.projectPossibilities = (callback) ->
-  files = compilerCentral.compilersWithoutCopy()
-  logger.debug "Compilers:\n#{files.join('\n')}"
-  compilers = {css:[], javascript:[], template:[]}
+  compilers = compilerCentral.compilersByType()
 
-  for file in files
-    comp = require(file)
-    comp.fileName = path.basename(file, ".coffee").replace("-compiler","")
-    key = baseDirRegex.exec(path.dirname(file))[0]
-    compilers[key].push comp
-
+  # just need to check SASS
   for comp in compilers.css
-    # just need to check SASS
+    # this won't work as is if a second compiler needs to shell out
     if comp.checkIfExists?
       comp.checkIfExists (exists) =>
         unless exists
@@ -63,7 +54,7 @@ exports.cleanCompiledDirectories = (config) ->
   directories = items.filter (f) -> fs.statSync(path.join(config.watch.sourceDir, f)).isDirectory()
   directories = _.sortBy(directories, 'length').reverse()
 
-  {compilerExtensionHash, compilers} = compilerCentral.buildCompilerExtensionHash(config)
+  {compilerExtensionHash, compilers} = compilerCentral.getCompilers(config)
 
   _cleanMisc(config, compilers)
   _cleanFiles(config, files, compilerExtensionHash)
@@ -76,7 +67,6 @@ _findConfigPath = (configPath = path.resolve('mimosa-config.coffee')) ->
     logger.debug "Found mimosa-config: [[ #{configPath} ]]"
     configPath
   else
-    logger.debug "Unable to find mimosa-config at #{configPath}"
     configPath = path.join(path.dirname(configPath), '..', 'mimosa-config.coffee')
     logger.debug "Trying #{configPath}"
     if configPath.length is 'mimosa-config.coffee'.length + 1

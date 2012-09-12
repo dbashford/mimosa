@@ -13,7 +13,7 @@ class Watcher
   adds:[]
 
   constructor: (@config, @persist, @initCallback) ->
-    {@compilerExtensionHash, @compilers} = compilerCentral.buildCompilerExtensionHash(@config)
+    {@compilerExtensionHash, @compilers} = compilerCentral.getCompilers(@config)
     @throttle = @config.watch.throttle
 
     compiler.setStartupDoneCallback(@compilerDone) for compiler in @compilers

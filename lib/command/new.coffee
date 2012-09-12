@@ -57,7 +57,7 @@ class NewCommand
       .option("-d, --defaults",  "bypass prompts and go with Mimosa defaults (CoffeeScript, SASS, Handlebars)")
       .option("-D, --debug", "run in debug mode")
       .action(@new)
-      .on '--help', @printHelp
+      .on '--help', @_printHelp
 
   new: (name, opts) =>
     if opts.debug then logger.setDebug()
@@ -263,18 +263,16 @@ class NewCommand
       fs.writeFile configPath, data, @_done
 
   _usingOwnServer: (name, chosen) ->
-    # minor, kinda silly, but change name in package json to match project name
-    if name?.length > 0
-      logger.debug "Making package.json edits"
-      jPath = path.join @currPath, "package.json"
-      packageJson = require(jPath)
-      packageJson.name = name
-      packageJson.dependencies[chosen.views.library] = chosen.views.version
-      unless chosen.javascript.fileName is "iced"
-        logger.debug "removing iced coffee from package.json"
-        delete packageJson.dependencies["iced-coffee-script"]
+    logger.debug "Making package.json edits"
+    jPath = path.join @currPath, "package.json"
+    packageJson = require(jPath)
+    packageJson.name = name if name?
+    packageJson.dependencies[chosen.views.library] = chosen.views.version
+    unless chosen.javascript.fileName is "iced"
+      logger.debug "removing iced coffee from package.json"
+      delete packageJson.dependencies["iced-coffee-script"]
 
-      fs.writeFileSync jPath, JSON.stringify(packageJson, null, 2)
+    fs.writeFileSync jPath, JSON.stringify(packageJson, null, 2)
 
     logger.debug "Moving server into place"
     @_moveDirectoryContents(path.join(@currPath, "servers", chosen.server.name), @currPath)
@@ -295,12 +293,12 @@ class NewCommand
     logger.success "Execute 'mimosa watch --server' from inside your project to monitor the file system. then start coding!"
     process.stdin.destroy()
 
-  printHelp: ->
+  _printHelp: ->
     logger.green('  The new command will take you through a series of questions regarding what JavaScript meta-language, CSS')
     logger.green('  meta-language, micro-templating library, server and server view technology you would like to use to build')
     logger.green('  your project. Once you have answered the questions, Mimosa will create a directory using the name you')
     logger.green('  provided, and place a project skeleton inside of it.  That project skeleton will by default include a')
-    logger.green('  basic application using the technologies you selected')
+    logger.green('  basic application using the technologies you selected.')
     logger.blue( '\n    $ mimosa new [nameOfProject]\n')
     logger.green('  If you wish to copy the project skeleton into your current directory instead of into a new one leave off the')
     logger.green('  then leave off name.')

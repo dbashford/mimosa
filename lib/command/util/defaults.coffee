@@ -5,10 +5,6 @@ wrench = require 'wrench'
 
 logger =   require '../../util/logger'
 
-defaultJavascript = "coffee"
-defaultCss = "stylus"
-defaultTemplate = "handlebars"
-
 class MimosaDefaults
 
   fatalErrors: 0
@@ -32,6 +28,7 @@ class MimosaDefaults
     newConfig.optimize =     config.optimize
     newConfig.min =          config.min
     newConfig.isForceClean = config.isForceClean
+    newConfig.javascriptExtensions = ['js']
 
     newConfig.watch =               config.watch ?= {}
     newConfig.watch.sourceDir =     path.join(@root, config.watch.sourceDir   ? "assets")
