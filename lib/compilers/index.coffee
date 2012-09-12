@@ -9,9 +9,8 @@ logger = require '../util/logger'
 class CompilerCentral
 
   constructor: ->
-    files = fileUtils.glob "#{__dirname}/**/*-compiler.coffee"
-    files.push "#{__dirname}/copy.coffee"
-    @all = files
+    @all = fileUtils.glob "#{__dirname}/**/*-compiler.coffee"
+    @all.push "#{__dirname}/copy.coffee"
 
   compilersWithoutCopy: ->
     @all.filter (file) -> file.indexOf('copy.coffee') is -1
@@ -27,7 +26,7 @@ class CompilerCentral
     logger.debug("All overridden extension [[ #{allOverriddenExtensions.join(', ')}]]")
 
     config.javascriptExtensions = ['js']
-    hash = {}
+    allCompilers = []
     for file in @compilersWithoutNone()
       base = path.basename(file, ".coffee").replace('-compiler', '')
       Compiler = require(file)
@@ -37,20 +36,15 @@ class CompilerCentral
         # check and see if an overridden extension conflicts with an existing one
         _.difference Compiler.defaultExtensions, allOverriddenExtensions
 
-      if extensions.length is 0 and base isnt "copy"
-        logger.debug "Compiler [[ #{base} ]] is being excluded because its extensions have been overridden"
-        continue
-      else
-        logger.debug "OkExtensions for compiler [[ #{base} ]] are [[ #{extensions.join(', ')} ]]"
+      continue if extensions.length is 0 and base isnt "copy"
 
       compiler = new Compiler(config, extensions)
-      config.javascriptExtensions.push(compiler.extensions...)
-      hash[base] = compiler
+      if compiler.javascript
+        config.javascriptExtensions.push(compiler.extensions...)
+      allCompilers.push compiler
 
     extHash = {}
-    allCompilers = []
-    for base, compiler of hash
-      allCompilers.push compiler
+    for compiler in allCompilers
       continue unless compiler.extensions?
       for ext in compiler.extensions
         extHash[ext] = compiler

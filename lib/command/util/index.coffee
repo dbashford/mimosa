@@ -1,8 +1,8 @@
-path  = require 'path'
-fs    = require 'fs'
+path   = require 'path'
+fs     = require 'fs'
 
-color = require('ansi-color').set
-_     = require 'lodash'
+color  = require('ansi-color').set
+_      = require 'lodash'
 wrench = require 'wrench'
 
 logger = require '../../util/logger'
@@ -12,7 +12,7 @@ compilerCentral = require '../../compilers'
 
 baseDirRegex = /([^[\/\\\\]*]*)$/
 
-gatherProjectPossibilities = (callback) ->
+exports.projectPossibilities = (callback) ->
   files = compilerCentral.compilersWithoutCopy()
   logger.debug "Compilers:\n#{files.join('\n')}"
   compilers = {css:[], javascript:[], template:[]}
@@ -33,7 +33,7 @@ gatherProjectPossibilities = (callback) ->
         callback(compilers)
       break
 
-processConfig = (opts, callback) ->
+exports.processConfig = (opts, callback) ->
   configPath = _findConfigPath()
   {config} = require configPath if configPath?
   unless config?
@@ -57,20 +57,7 @@ processConfig = (opts, callback) ->
     else
       callback(newConfig)
 
-_findConfigPath = (configPath = path.resolve('mimosa-config.coffee')) ->
-  if fs.existsSync configPath
-    logger.debug "Found mimosa-config: [[ #{configPath} ]]"
-    configPath
-  else
-    logger.debug "Unable to find mimosa-config at #{configPath}"
-    configPath = path.join(path.dirname(configPath), '..', 'mimosa-config.coffee')
-    logger.debug "Trying #{configPath}"
-    if configPath.length is 'mimosa-config.coffee'.length + 1
-      logger.debug "Unable to find mimosa-config"
-      return null
-    _findConfigPath(configPath)
-
-cleanCompiledDirectories = (config) ->
+exports.cleanCompiledDirectories = (config) ->
   items = wrench.readdirSyncRecursive(config.watch.sourceDir)
   files = items.filter (f) -> fs.statSync(path.join(config.watch.sourceDir, f)).isFile()
   directories = items.filter (f) -> fs.statSync(path.join(config.watch.sourceDir, f)).isDirectory()
@@ -83,6 +70,19 @@ cleanCompiledDirectories = (config) ->
   _cleanDirectories(config, directories)
 
   logger.success "[[ #{config.watch.compiledDir} ]] has been cleaned."
+
+_findConfigPath = (configPath = path.resolve('mimosa-config.coffee')) ->
+  if fs.existsSync configPath
+    logger.debug "Found mimosa-config: [[ #{configPath} ]]"
+    configPath
+  else
+    logger.debug "Unable to find mimosa-config at #{configPath}"
+    configPath = path.join(path.dirname(configPath), '..', 'mimosa-config.coffee')
+    logger.debug "Trying #{configPath}"
+    if configPath.length is 'mimosa-config.coffee'.length + 1
+      logger.debug "Unable to find mimosa-config"
+      return null
+    _findConfigPath(configPath)
 
 _cleanMisc = (config, compilers) ->
   jsDir = path.join config.watch.compiledDir, config.watch.javascriptDir
@@ -123,10 +123,3 @@ _cleanDirectories = (config, directories) ->
         if err?.code is not "ENOTEMPTY"
           logger.error "Unable to delete directory, #{dirPath}"
           logger.error err
-
-
-module.exports = {
-  processConfig: processConfig
-  projectPossibilities:gatherProjectPossibilities
-  cleanCompiledDirectories:cleanCompiledDirectories
-}

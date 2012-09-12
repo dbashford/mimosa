@@ -11,6 +11,7 @@ Linter =             require '../../util/lint/css'
 
 module.exports = class AbstractCSSCompiler extends SingleFileCompiler
 
+  css:true
   outExtension: 'css'
 
   constructor: (config) ->

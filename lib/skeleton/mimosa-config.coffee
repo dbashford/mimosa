@@ -30,6 +30,9 @@ exports.config = {
 
   # template:
     # outputFileName: "javascripts/templates"                      # the file all templates are compiled into
+                                                                   # Optionally outputFileName can be provided a hash of template library
+                                                                   # name to file name in the event you are using multiple templating
+                                                                   # libraries.  Ex: {hogan:"js/hogans", jade:"js/jades"}
     # helperFiles:["javascripts/app/template/handlebars-helpers"]  # relevant to handlebars only, the paths from sourceDir to
                                                                    # the files containing handlebars helper/partial registrations,
                                                                    # does not need to exist

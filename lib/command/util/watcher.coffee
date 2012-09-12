@@ -17,16 +17,16 @@ class Watcher
     @throttle = @config.watch.throttle
 
     compiler.setStartupDoneCallback(@compilerDone) for compiler in @compilers
-    @startWatcher()
+    @_startWatcher()
 
     logger.info "Watching #{@config.watch.sourceDir}" if @persist
 
     if @throttle > 0
       logger.debug "Throttle is set, setting interval at 100 milliseconds"
-      @intervalId = setInterval(@pullFiles, 100)
-      @pullFiles()
+      @intervalId = setInterval(@_pullFiles, 100)
+      @_pullFiles()
 
-  startWatcher: (persist) ->
+  _startWatcher:  ->
     watcher = watch.watch(@config.watch.sourceDir, {persistent:@persist})
     watcher.on "error", (error) -> logger.debug "File watching error: #{error}"
     watcher.on "change", (f) => @_findCompiler(f)?.updated(f)
@@ -34,7 +34,7 @@ class Watcher
     watcher.on "add", (f) =>
       if @throttle > 0 then @adds.push(f) else @_findCompiler(f)?.created(f)
 
-  pullFiles: =>
+  _pullFiles: =>
     return if @adds.length is 0
     filesToAdd = if @adds.length <= @throttle
       @adds.splice(0, @adds.length)
@@ -45,9 +45,20 @@ class Watcher
   compilerDone: =>
     if ++@compilersDone is @compilers.length
       clearInterval(@intervalId) if @intervalId? and !@persist
-      compiler.initializationComplete() for compiler in @compilers
+      @_processFinishedCompilers()
       optimizer.optimize(@config)
       @initCallback(@config) if @initCallback?
+
+  _processFinishedCompilers: ->
+    templateLibraryWithFiles = 0
+    for compiler in @compilers
+      compiler.initializationComplete()
+      if compiler.initialFileCount > 0 and compiler.template
+        templateLibraryWithFiles++
+
+    if templateLibraryWithFiles > 1 and _.isString(@config.template.outputFileName)
+      logger.error "More than one template library being used, but multiple template.outputFileName entries not found." +
+        " You will want to configure a map of outfileFileName entries in your config, otherwise your"
 
   _findCompiler: (fileName) ->
     if @config.watch.ignored.some((str) -> fileName.indexOf(str) >= 0 )
@@ -57,8 +68,8 @@ class Watcher
     return unless extension?.length > 0
 
     compiler = @compilerExtensionHash[extension]
-
     return compiler if compiler
+
     logger.warn "No compiler has been registered: #{extension}, #{fileName}"
     null
 

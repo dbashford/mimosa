@@ -7,6 +7,7 @@ minifier = require '../../util/minify'
 
 module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileCompiler
   outExtension: 'js'
+  javascript:true
 
   constructor: (config) ->
     super(config)

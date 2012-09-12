@@ -11,6 +11,8 @@ AbstractCompiler = require '../compiler'
 
 module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
+  template:true
+
   constructor: (config) ->
     super(config)
     @templateFileName = path.join(@compDir, @fullConfig.template.outputFileName + ".js")
