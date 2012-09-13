@@ -290,7 +290,7 @@ class NewCommand
 
   _done: ->
     logger.success "New project creation complete!"
-    logger.success "Execute 'mimosa watch --server' from inside your project to monitor the file system. then start coding!"
+    logger.success "Execute 'mimosa watch --server' from inside your project to monitor the file system. Then start coding!"
     process.stdin.destroy()
 
   _printHelp: ->
