@@ -1,5 +1,3 @@
-# Mimosa Config
-#
 # All of the below are mimosa defaults and only need to be uncommented
 # in the event you want to override them.
 #
@@ -9,7 +7,6 @@
 # to respect coffeescript indentation rules.  2 spaces per level please! =)
 
 exports.config = {
-
   # watch:
     # sourceDir: "assets"                 # directory location of web assets
     # compiledDir: "public"               # directory location of compiled web assets
@@ -103,5 +100,4 @@ exports.config = {
         # plusplus: true                  # This is an example override, this is not a default
       # css:                              # Settings: https://github.com/stubbornella/csslint/wiki/Rules
         # floats: false                   # This is an example override, this is not a default
-
 }

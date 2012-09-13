@@ -57,8 +57,9 @@ class Watcher
         templateLibraryWithFiles++
 
     if templateLibraryWithFiles > 1 and _.isString(@config.template.outputFileName)
-      logger.error "More than one template library being used, but multiple template.outputFileName entries not found." +
-        " You will want to configure a map of outfileFileName entries in your config, otherwise your"
+      logger.error "More than one template library is being used, but multiple template.outputFileName entries not found." +
+        " You will want to configure a map of outfileFileName entries in your config, otherwise you will only get" +
+        " template output for one of the libraries."
 
   _findCompiler: (fileName) ->
     if @config.watch.ignored.some((str) -> fileName.indexOf(str) >= 0 )

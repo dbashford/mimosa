@@ -16,6 +16,8 @@ It only contains overrides.  Mimosa will automatically use whichever compiler it
 * What the above change means, besides needing less configuration, is you can mix and match your meta-languages.  The most common use case that comes to mind is, if you want to code Stylus or SASS, but want to compile Bootstrap from its LESS source, you can now have it both ways.  You can have Bootstrap in LESS form compiling on the fly as you change its source, and you can have your own Stylus files as well doing the same thing.
 * A few `compilers` config properties have survived by moving elsewhere.
 `compilers.javascripts.directory` is now `watch.javascriptDir`.  `compilers.template.outputFileName` is now `template.outputFileName`, and `compilers.template.helperFiles` is now `template.helperFiles`
+* `template.outputFileName` is still, by default, `javascripts/templates`, but to accommodate you possibly using multiple templating languages on your front end, `template.outputFileName` will take a hash of compiler type to path to output file from `watch.sourceDir` such as `{hogan:"js/hogans", underscore:"js/underscores"}`.
+* Should multiple template libraries be used, but no hash provided, mimosa will log/growl an error to let you know you'll have template issues
 * To differentiate it from Underscore, Lodash's default extension `tpl` has been changed to `tmpl`
 
 ### Minor Changes
@@ -24,7 +26,7 @@ It only contains overrides.  Mimosa will automatically use whichever compiler it
 
 Many possible `mimosa-config` updates.  Check out this commit to get a feel for what changed: https://github.com/dbashford/mimosa/commit/9256afd0de978df2ada9faf95cd7806f6a9ff1a3#L31L13
 
-The details are below.  Even if you are not overriding any of these paramters and are therefore uneffected, it is suggested you make the changes to the commented out config.
+The details are below.  Even if you are not overriding any of these parameters and are therefore unaffected, it is suggested you make the changes to the commented out config.
 
 Here are the details:
 

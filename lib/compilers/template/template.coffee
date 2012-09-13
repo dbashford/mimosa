@@ -1,11 +1,12 @@
 path = require 'path'
-fs = require 'fs'
+fs =   require 'fs'
 
 wrench = require 'wrench'
+_ =      require 'lodash'
 
 fileUtils = require '../../util/file'
-logger = require '../../util/logger'
-minifier = require '../../util/minify'
+logger =    require '../../util/logger'
+minifier =  require '../../util/minify'
 
 AbstractCompiler = require '../compiler'
 
@@ -15,12 +16,16 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   constructor: (config) ->
     super(config)
-    @templateFileName = path.join(@compDir, @fullConfig.template.outputFileName + ".js")
+    @templateFileName = if @fullConfig.template.outputFileName[@constructor.base]
+      path.join(@compDir, @fullConfig.template.outputFileName[@constructor.base] + ".js")
+    else
+      path.join(@compDir, @fullConfig.template.outputFileName + ".js")
+
     if @clientLibrary?
       @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
       @clientPath = path.join path.dirname(@templateFileName), 'vendor', "#{@clientLibrary}.js"
-    @notifyOnSuccess = config.growl.onSuccess.template
 
+    @notifyOnSuccess = config.growl.onSuccess.template
     if @fullConfig.min
       @minifier = minifier.setExclude(@fullConfig.minify.exclude)
 
@@ -28,7 +33,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
   compile: (fileNames, callback) ->
     throw new Error "Method compile(fileNames, callback) must be implemented"
 
-  created: =>
+  created: (fileName) =>
     if @startupFinished then @_gatherFiles() else @done()
 
   updated: =>
@@ -64,7 +69,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       @_testForSameTemplateName(fileNames)
       @_writeClientLibrary =>
         if @_templateNeedsCompiling fileNames
-          AbstractTemplateCompiler::done = =>
+          @constructor::done = =>
             @_reportStartupDone() if !@startupFinished
           @compile fileNames, @_write
         else
