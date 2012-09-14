@@ -1,6 +1,6 @@
-# 0.0.33alpha - September ?? 2012
+# 0.0.33alpha - September 14 2012
 
-Likely the last big release before going beta and establishing some sane versioning.  This one has a bunch of possible breaking changes depending on how much you might have been configuring.  Also the need for compiler configuration is mostly gone, so you'll want to address your `mimosa-config`
+Likely the last big update before going beta and establishing some sane versioning.  The theme with this is a big reduction in configuration for compilers, and the ability to use as many compilers as you'd like.  This one has a bunch of possible breaking changes depending on how much you might have been configuring.  Also the need for compiler configuration is mostly gone, so you'll want to address your `mimosa-config`.
 
 ### Major Changes
 * The `compilers` is drastically changed and reduced; no need to configure compilers anymore.  There are no more `css`, `javascript` and `template` sections.  The `compilers` config now looks like this:
