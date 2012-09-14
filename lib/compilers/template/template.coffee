@@ -7,7 +7,7 @@ _ =      require 'lodash'
 fileUtils = require '../../util/file'
 logger =    require '../../util/logger'
 minifier =  require '../../util/minify'
-
+requireRegister = require '../../util/require/register'
 AbstractCompiler = require '../compiler'
 
 module.exports = class AbstractTemplateCompiler extends AbstractCompiler
@@ -28,6 +28,10 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     @notifyOnSuccess = config.growl.onSuccess.template
     if @fullConfig.min
       @minifier = minifier.setExclude(@fullConfig.minify.exclude)
+
+    if config.require.verify.enabled or config.optimize
+      @requireRegister = requireRegister
+      @requireRegister.setConfig(config)
 
   # OVERRIDE THIS
   compile: (fileNames, callback) ->
@@ -95,6 +99,8 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     false
 
   _write: (error, output) =>
+    @requireRegister?.process(@templateFileName, output)
+
     if error
       @failed error
     else
