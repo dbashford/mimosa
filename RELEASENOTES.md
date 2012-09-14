@@ -20,8 +20,6 @@ It only contains overrides.  Mimosa will automatically use whichever compiler it
 * Should multiple template libraries be used, but no hash provided, mimosa will log/growl an error to let you know you'll have template issues
 * To differentiate it from Underscore, Lodash's default extension `tpl` has been changed to `tmpl`
 
-### Minor Changes
-
 ### You'll need to...
 
 Many possible `mimosa-config` updates.  Check out this commit to get a feel for what changed: https://github.com/dbashford/mimosa/commit/9256afd0de978df2ada9faf95cd7806f6a9ff1a3#L31L13
