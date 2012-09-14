@@ -41,11 +41,8 @@ class MimosaDefaults
     newConfig.compilers.extensionOverrides = config.compilers.extensionOverrides ?= {}
 
     template = newConfig.template = config.template ?= {}
-    template.outputFileName =  config.template.outputFileName  ?= "javascripts/templates"
-    template.helperFiles = []
-    helperFiles = config.template.helperFiles ?= ["javascripts/app/template/handlebars-helpers"]
-    for helperFile in helperFiles
-      template.helperFiles.push path.join(@root, helperFile)
+    template.outputFileName = config.template.outputFileName  ?= "javascripts/templates"
+    template.helperFiles =   config.template.helperFiles ?= ["javascripts/app/template/handlebars-helpers"]
 
     copy = newConfig.copy = config.copy                        ?= {}
     copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]

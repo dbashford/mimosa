@@ -59,6 +59,8 @@ class CompilerCentral
       if Compiler.type is "javascript"
         config.javascriptExtensions.push(extensions...)
 
+    config.javascriptExtensions = _.uniq(config.javascriptExtensions)
+
     logger.debug("Compiler/Extension hash \n #{extHash}")
 
     {compilerExtensionHash:extHash, compilers:allCompilers}
