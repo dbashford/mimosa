@@ -19,7 +19,7 @@ module.exports = class JadeCompiler extends AbstractTemplateCompiler
   compile: (fileNames, callback) ->
     error = null
 
-    output = "define(['vendor/#{@clientLibrary}'], function (jade){ var templates = {};\n"
+    output = "define(['#{@libraryPath()}'], function (jade){ var templates = {};\n"
     for fileName in fileNames
       logger.debug "Compiling Jade template [[ #{fileName} ]]"
 

@@ -19,7 +19,7 @@ module.exports = class HoganCompiler extends AbstractTemplateCompiler
   compile: (fileNames, callback) ->
     error = null
 
-    output = "define(['vendor/#{@clientLibrary}'], function (Hogan){ var templates = {};\n"
+    output = "define(['#{@libraryPath()}'], function (Hogan){ var templates = {};\n"
     for fileName in fileNames
       logger.debug "Compiling Hogan template [[ #{fileName} ]]"
       content = fs.readFileSync fileName, "ascii"

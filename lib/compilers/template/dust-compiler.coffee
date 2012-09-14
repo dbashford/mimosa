@@ -19,7 +19,7 @@ module.exports = class DustCompiler extends AbstractTemplateCompiler
   compile: (fileNames, callback) ->
     error = null
 
-    output = "define(['vendor/#{@clientLibrary}'], function (dust){ "
+    output = "define(['#{@libraryPath()}'], function (dust){ "
     for fileName in fileNames
       logger.debug "Compiling Dust template [[ #{fileName} ]]"
       content = fs.readFileSync fileName, "ascii"

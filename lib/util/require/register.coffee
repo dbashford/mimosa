@@ -69,6 +69,12 @@ module.exports = class RequireRegister
 
     bases
 
+  # determine if an alias exists for a given path
+  aliasForPath: (filePath) ->
+    for main, paths of @aliasFiles
+      for alias, dep of paths
+        return alias if dep is filePath
+
   ###
   Private
   ###

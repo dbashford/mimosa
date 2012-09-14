@@ -137,6 +137,11 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
         @failed("Cannot write client library: #{err}") if err?
         callback()
 
+  libraryPath: ->
+    libPath = "vendor/#{@clientLibrary}"
+    requireRegister.aliasForPath(libPath) ? libPath
+
+
   templatePreamble: (fileName, templateName) ->
     """
     \n//
