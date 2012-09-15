@@ -20,9 +20,10 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 
   _buildOutputStart: =>
     logger.debug "Building Handlebars template file wrapper"
+    jsDir = path.join @srcDir, @fullConfig.watch.javascriptDir
     possibleHelperPaths =
       for ext in @fullConfig.javascriptExtensions
-        path.join(@srcDir, "#{helperFile}.#{ext}") for helperFile in @fullConfig.template.helperFiles
+        path.join(jsDir, "#{helperFile}.#{ext}") for helperFile in @fullConfig.template.helperFiles
     helperPaths = _.flatten(possibleHelperPaths).filter((p) -> fs.existsSync(p))
 
     defines = ["'#{@libraryPath()}'"]

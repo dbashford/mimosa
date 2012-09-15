@@ -8,31 +8,31 @@
 
 exports.config = {
   # watch:
-    # sourceDir: "assets"                 # directory location of web assets
-    # compiledDir: "public"               # directory location of compiled web assets
-    # javascriptDir: "javascripts"        # Location of precompiled javascript (coffeescript for instance), and therefore
-                                          # also the location of the compiled javascript.
-    # ignored: [".sass-cache"]            # files to not watch on file system, any file containing one of the strings listed here
-                                          # will be skipped
-    # throttle: 0                         # number of file adds the watcher handles before taking a 100 millisecond pause to let
-                                          # those files finish their processing. This helps avoid EMFILE issues for projects
-                                          # containing large numbers of files that all get copied at once. If the throttle is
-                                          # set to 0, no throttling is performed. Recommended to leave this set at 0, the
-                                          # default, until you start encountering EMFILE problems.
+    # sourceDir: "assets"             # directory location of web assets
+    # compiledDir: "public"           # directory location of compiled web assets
+    # javascriptDir: "javascripts"    # Location of precompiled javascript (coffeescript for instance), and therefore
+                                      # also the location of the compiled javascript.
+    # ignored: [".sass-cache"]        # files to not watch on file system, any file containing one of the strings listed here
+                                      # will be skipped
+    # throttle: 0                     # number of file adds the watcher handles before taking a 100 millisecond pause to let
+                                      # those files finish their processing. This helps avoid EMFILE issues for projects
+                                      # containing large numbers of files that all get copied at once. If the throttle is
+                                      # set to 0, no throttling is performed. Recommended to leave this set at 0, the
+                                      # default, until you start encountering EMFILE problems.
 
   # compilers:
-    # extensionOverrides:                 # A list of extension overrides, format is compilerName:[arrayOfExtensions]
-                                          # see http://mimosajs.com/compilers.html for a list of compiler names
-      # coffee: ["coff"]                  # This is an example override, this is not a default, it must take the form of an array
+    # extensionOverrides:             # A list of extension overrides, format is compilerName:[arrayOfExtensions]
+                                      # see http://mimosajs.com/compilers.html for a list of compiler names
+      # coffee: ["coff"]              # This is an example override, this is not a default, it must take the form of an array
 
   # template:
-    # outputFileName: "templates"                                  # the file all templates are compiled into, is relative to watch.javascriptDir
-                                                                   # Optionally outputFileName can be provided a hash of template library
-                                                                   # name to file name in the event you are using multiple templating
-                                                                   # libraries.  Ex: {hogan:"js/hogans", jade:"js/jades"}
-    # helperFiles:["javascripts/app/template/handlebars-helpers"]  # relevant to handlebars only, the paths from sourceDir to
-                                                                   # the files containing handlebars helper/partial registrations,
-                                                                   # does not need to exist
+    # outputFileName: "templates"                      # the file all templates are compiled into, is relative to watch.javascriptDir
+                                                       # Optionally outputFileName can be provided a hash of template library
+                                                       # name to file name in the event you are using multiple templating
+                                                       # libraries.  Ex: {hogan:"js/hogans", jade:"js/jades"}
+    # helperFiles:["app/template/handlebars-helpers"]  # relevant to handlebars only, the paths from watch.javascriptDir to
+                                                       # the files containing handlebars helper/partial registrations,
+                                                       # does not need to exist
 
   ###
   # the extensions of files to simply copy from sourceDir to compiledDir.  vendor js/css, images, etc.

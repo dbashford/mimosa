@@ -42,7 +42,7 @@ class MimosaDefaults
 
     template = newConfig.template = config.template ?= {}
     template.outputFileName = config.template.outputFileName  ?= "templates"
-    template.helperFiles =   config.template.helperFiles ?= ["javascripts/app/template/handlebars-helpers"]
+    template.helperFiles =   config.template.helperFiles ?= ["app/template/handlebars-helpers"]
 
     copy = newConfig.copy = config.copy                        ?= {}
     copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
