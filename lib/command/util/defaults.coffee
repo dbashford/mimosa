@@ -30,18 +30,18 @@ class MimosaDefaults
     newConfig.isForceClean = config.isForceClean
     newConfig.javascriptExtensions = ['js']
 
-    newConfig.watch =               config.watch ?= {}
-    newConfig.watch.sourceDir =     path.join(@root, config.watch.sourceDir   ? "assets")
-    newConfig.watch.compiledDir =   path.join(@root, config.watch.compiledDir ? "public")
-    newConfig.watch.javascriptDir = config.watch.javascriptDir ?= "javascripts"
-    newConfig.watch.ignored =       config.watch.ignored ?= [".sass-cache"]
-    newConfig.watch.throttle =      config.watch.throttle ?= 0
+    newConfig.watch =                config.watch ?= {}
+    newConfig.watch.sourceDir =      path.join(@root, config.watch.sourceDir   ? "assets")
+    newConfig.watch.compiledDir =    path.join(@root, config.watch.compiledDir ? "public")
+    newConfig.watch.javascriptDir =  config.watch.javascriptDir ?= "javascripts"
+    newConfig.watch.ignored =        config.watch.ignored ?= [".sass-cache"]
+    newConfig.watch.throttle =       config.watch.throttle ?= 0
 
     newConfig.compilers = config.compilers ?= {}
     newConfig.compilers.extensionOverrides = config.compilers.extensionOverrides ?= {}
 
     template = newConfig.template = config.template ?= {}
-    template.outputFileName = config.template.outputFileName  ?= "javascripts/templates"
+    template.outputFileName = config.template.outputFileName  ?= "templates"
     template.helperFiles =   config.template.helperFiles ?= ["javascripts/app/template/handlebars-helpers"]
 
     copy = newConfig.copy = config.copy                        ?= {}

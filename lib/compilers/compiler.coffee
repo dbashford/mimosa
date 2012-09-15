@@ -58,7 +58,6 @@ module.exports = class AbstractCompiler
       @afterWrite(fileName) if @afterWrite?
       @done()
 
-
   removeTheFile: (fileName, reportSuccess = true) =>
     logger.debug "Removing file [[ #{fileName} ]]"
     fs.unlink fileName, (err) =>

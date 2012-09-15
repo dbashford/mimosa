@@ -4,10 +4,10 @@ fs =   require 'fs'
 wrench = require 'wrench'
 _ =      require 'lodash'
 
-fileUtils = require '../../util/file'
-logger =    require '../../util/logger'
-minifier =  require '../../util/minify'
-requireRegister = require '../../util/require/register'
+fileUtils =        require '../../util/file'
+logger =           require '../../util/logger'
+minifier =         require '../../util/minify'
+requireRegister =  require '../../util/require/register'
 AbstractCompiler = require '../compiler'
 
 module.exports = class AbstractTemplateCompiler extends AbstractCompiler
@@ -16,18 +16,19 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   constructor: (config) ->
     super(config)
-    @templateFileName = if @fullConfig.template.outputFileName[@constructor.base]
-      path.join(@compDir, @fullConfig.template.outputFileName[@constructor.base] + ".js")
+    jsDir = path.join @compDir, config.watch.javascriptDir
+    @templateFileName = if config.template.outputFileName[@constructor.base]
+      path.join(jsDir, config.template.outputFileName[@constructor.base] + ".js")
     else
-      path.join(@compDir, @fullConfig.template.outputFileName + ".js")
+      path.join(jsDir, config.template.outputFileName + ".js")
 
     if @clientLibrary?
       @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
-      @clientPath = path.join path.dirname(@templateFileName), 'vendor', "#{@clientLibrary}.js"
+      @clientPath = path.join jsDir, 'vendor', "#{@clientLibrary}.js"
 
     @notifyOnSuccess = config.growl.onSuccess.template
-    if @fullConfig.min
-      @minifier = minifier.setExclude(@fullConfig.minify.exclude)
+    if config.min
+      @minifier = minifier.setExclude(config.minify.exclude)
 
     if config.require.verify.enabled or config.optimize
       @requireRegister = requireRegister
@@ -99,12 +100,11 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     false
 
   _write: (error, output) =>
-    @requireRegister?.process(@templateFileName, output)
-
     if error
       @failed error
     else
       if output?
+        @requireRegister?.process(@templateFileName, output)
         if @minifier?
           output = @minifier.minify(@templateFileName, output)
         @write(@templateFileName, output)
