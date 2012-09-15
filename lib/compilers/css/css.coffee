@@ -58,7 +58,7 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
       for base in bases
         basePath = @findCompiledPath(base)
         if fs.existsSync basePath
-          includeTime = fs.statSync(path.join @fullConfig.root, include).mtime
+          includeTime = fs.statSync(path.join @config.root, include).mtime
           baseTime = fs.statSync(basePath).mtime
           if includeTime > baseTime
             logger.debug "Base [[ #{base} ]] needs compiling because [[ #{include} ]] has been changed recently"
@@ -71,7 +71,7 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
     for base in @baseFiles
       baseCompiledPath = @findCompiledPath(base)
       if fs.existsSync baseCompiledPath
-        baseSrcPath = path.join @fullConfig.root, base
+        baseSrcPath = path.join @config.root, base
         if fs.statSync(baseSrcPath).mtime > fs.statSync(baseCompiledPath).mtime
           logger.debug "Base file [[ #{baseSrcPath} ]] needs to be compiled, it has been changed recently"
           baseFilesToCompileNow.push(base)
@@ -120,7 +120,7 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
       logger.debug "Going to lint [[ #{destFileName} ]]"
       @linter.lint(destFileName, source)
 
-    if @fullConfig.optimize
+    if @config.optimize
       logger.debug "Cleaning/optimizing CSS [[ #{destFileName} ]]"
       source = clean.process source
 

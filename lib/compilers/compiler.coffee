@@ -11,9 +11,9 @@ module.exports = class AbstractCompiler
 
   isInitializationComplete:false
 
-  constructor: (@fullConfig) ->
-    @srcDir = @fullConfig.watch.sourceDir
-    @compDir = @fullConfig.watch.compiledDir
+  constructor: (@config) ->
+    @srcDir = @config.watch.sourceDir
+    @compDir = @config.watch.compiledDir
     @init() if @init?
 
     files = wrench.readdirSyncRecursive(@srcDir).filter (f) =>
@@ -46,7 +46,7 @@ module.exports = class AbstractCompiler
     origStats.mtime > destStats.mtime
 
   write: (fileName, content) =>
-    if @fullConfig.virgin
+    if @config.virgin
       logger.debug "Virgin is turned on, not writing [[ #{fileName} ]]"
       @success "Compiled [[ #{fileName} ]]"
       return @done()
@@ -66,14 +66,14 @@ module.exports = class AbstractCompiler
         @done()
 
   optimize: (fileName) ->
-    optimizer.optimize(@fullConfig, fileName) if @isInitializationComplete
+    optimizer.optimize(@config, fileName) if @isInitializationComplete
 
   failed: (message) ->
     logger.error message
     @done()
 
   success: (message) =>
-    growlIt = @notifyOnSuccess and (@isInitializationComplete or @fullConfig.growl.onStartup)
+    growlIt = @notifyOnSuccess and (@isInitializationComplete or @config.growl.onStartup)
     logger.success message, growlIt
 
   done: ->

@@ -120,7 +120,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       fs.unlink @clientPath
 
   _writeClientLibrary: (callback) ->
-    if @fullConfig.virgin or !@clientPath? or fs.existsSync @clientPath
+    if @config.virgin or !@clientPath? or fs.existsSync @clientPath
       logger.debug "Not going to write template client library"
       return callback()
 

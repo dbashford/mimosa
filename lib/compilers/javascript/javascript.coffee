@@ -22,8 +22,8 @@ module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileComp
       @requireRegister = requireRegister
       @requireRegister.setConfig(config)
 
-    if @fullConfig.min
-      @minifier = minifier.setExclude(@fullConfig.minify.exclude)
+    if config.min
+      @minifier = minifier.setExclude(config.minify.exclude)
 
   removed: (fileName) ->
     super(fileName)
