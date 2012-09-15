@@ -86,7 +86,7 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
       logger.debug "No base files to compile, done with startup"
       @_doneStartup()
     else
-      AbstractCSSCompiler::done = =>
+      @constructor::done = =>
         if !@startupFinished and @initBaseFilesToCompile is 0
           @_doneStartup()
 
