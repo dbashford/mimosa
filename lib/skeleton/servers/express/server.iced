@@ -28,7 +28,7 @@ exports.startServer = (config) ->
         server:server
         basedir: config.server.views.path
         watchdir:publicPath
-        skipAdding: !config.server.views.html
+        skipAdding: true
         exclude:["almond\.js"]
         additionaldirs:[config.server.views.path]
       app.use reloadOnChange(options)
