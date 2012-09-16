@@ -1,4 +1,4 @@
-# 0.0.34alpha - September ?? 2012
+# 0.0.34alpha - September 15 2012
 
 Purely bug fixes and a little tiding of template paths which might require a little tweak to some folks mimosa-configs.
 
