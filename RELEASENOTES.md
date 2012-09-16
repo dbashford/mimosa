@@ -1,3 +1,25 @@
+# 0.0.34alpha - September ?? 2012
+
+Purely bug fixes and a little tiding of template paths which might require a little tweak to some folks mimosa-configs.
+
+### Major Changes
+
+* #67, #68, #69, all `mimosa-config` template paths are now relative to `watch.javascriptDir`.  Previously, for both `template.outputFileName` and `template.helperFiles`, you'd have to prepend your javascripts directory, which is already provided in `watch.javascriptDir`
+* #48, the templates file will now point at your requirejs paths config setup for your client-side library if you have it.  For instance, if you have `underscore:'vendor/underscore'`, mimosa will detect that, and use `underscore` as the AMD path to your templating library. Previously you'd need to include an ugly map config.
+
+### Minor Changes
+
+* #64, templates file now passes through requirejs validation and registration, which means saving of handlebars templates will kick off optimization if running in `optimize` mode.
+* #71, fixed issue when running with multiple CSS compilers where startup would not finish properly
+* #66, fixed bug with handlebars helper files not being added to templates depedencies.  This was hot patched into .33alpha in NPM.
+* #63, to address issues with live reload not working with plain html templates, live reload scripts are now included at the top of the delivered html templates.
+* #70, upgraded jquery and requirejs client libraries
+
+### You'll need to...
+* If you were overriding the `template.outputFileName` or `template.helperFiles`, you'll want to update those settings to not include the path from `watch.javascriptDir`.  Those paths are now relative to `watch.javascriptDir`.
+* If you were not overriding those settings, you may want to update the commened out config if you've kept it.  Just remove `javascripts/` from the `template.` settings.
+
+
 # 0.0.33alpha - September 14 2012
 
 Likely the last big update before going beta and establishing some sane versioning.  The theme with this is a big reduction in configuration for compilers, and the ability to use as many compilers as you'd like.  This one has a bunch of possible breaking changes depending on how much you might have been configuring.  Also the need for compiler configuration is mostly gone, so you'll want to address your `mimosa-config`.
