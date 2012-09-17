@@ -1,3 +1,10 @@
+# 0.1.0beta - September ?? 2012
+
+Beta entered! Going to be working on some bigger things for beta2 over the next few weeks and only releasing bug fixes and non-breaking features.
+
+### Minor Changes
+* #48, fixed an issue with templates using requirejs config paths.
+
 # 0.0.34alpha - September 15 2012
 
 Purely bug fixes and a little tiding of template paths which might require a little tweak to some folks mimosa-configs.
