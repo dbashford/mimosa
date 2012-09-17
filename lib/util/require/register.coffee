@@ -73,7 +73,8 @@ module.exports = class RequireRegister
   aliasForPath: (filePath) ->
     for main, paths of @aliasFiles
       for alias, dep of paths
-        return alias if dep is filePath
+        if dep is filePath or dep is path.join @rootJavaScriptDir, "#{filePath}.js"
+          return alias
 
   ###
   Private

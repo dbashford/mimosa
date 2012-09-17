@@ -141,7 +141,6 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     libPath = "vendor/#{@clientLibrary}"
     requireRegister.aliasForPath(libPath) ? libPath
 
-
   templatePreamble: (fileName, templateName) ->
     """
     \n//
