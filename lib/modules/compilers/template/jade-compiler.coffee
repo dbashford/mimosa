@@ -4,7 +4,7 @@ path = require 'path'
 jade = require 'jade'
 
 AbstractTemplateCompiler = require './template'
-logger = require '../../util/logger'
+logger = require '../../../util/logger'
 
 module.exports = class JadeCompiler extends AbstractTemplateCompiler
 

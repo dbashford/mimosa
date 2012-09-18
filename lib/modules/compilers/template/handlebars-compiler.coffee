@@ -5,7 +5,7 @@ handlebars = require 'handlebars'
 _ =          require 'lodash'
 
 AbstractTemplateCompiler = require './template'
-logger = require '../../util/logger'
+logger = require '../../../util/logger'
 
 module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 
@@ -22,7 +22,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
     logger.debug "Building Handlebars template file wrapper"
     jsDir = path.join @srcDir, @config.watch.javascriptDir
     possibleHelperPaths =
-      for ext in @config.javascriptExtensions
+      for ext in @config.extensions.javascript
         path.join(jsDir, "#{helperFile}.#{ext}") for helperFile in @config.template.helperFiles
     helperPaths = _.flatten(possibleHelperPaths).filter((p) -> fs.existsSync(p))
 

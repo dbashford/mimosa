@@ -1,11 +1,11 @@
 path = require 'path'
 
 SingleFileCompiler = require './single-file'
-CSSLinter =          require '../util/lint/css'
-JSLinter =           require '../util/lint/js'
-requireRegister =    require '../util/require/register'
-logger = require '../util/logger'
-minifier = require '../util/minify'
+CSSLinter =          require '../../util/lint/css'
+JSLinter =           require '../../util/lint/js'
+requireRegister =    require '../../util/require/register'
+logger = require '../../util/logger'
+minifier = require '../../util/minify'
 
 module.exports = class CopyCompiler extends SingleFileCompiler
 

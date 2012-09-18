@@ -6,7 +6,7 @@ stylus = require 'stylus'
 _ = require 'lodash'
 
 AbstractCssCompiler = require './css'
-logger = require '../../util/logger'
+logger = require '../../../util/logger'
 
 module.exports = class StylusCompiler extends AbstractCssCompiler
 

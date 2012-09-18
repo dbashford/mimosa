@@ -4,7 +4,7 @@ path = require 'path'
 _ = require 'underscore'
 
 AbstractTemplateCompiler = require './template'
-logger = require '../../util/logger'
+logger = require '../../../util/logger'
 
 module.exports = class HTMLCompiler extends AbstractTemplateCompiler
 

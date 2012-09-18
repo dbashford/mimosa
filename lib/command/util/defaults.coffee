@@ -28,14 +28,19 @@ class MimosaDefaults
     newConfig.optimize =     config.optimize
     newConfig.min =          config.min
     newConfig.isForceClean = config.isForceClean
-    newConfig.javascriptExtensions = ['js']
+    newConfig.extensions = {}
+    newConfig.extensions.javascript = ['js']
+    newConfig.extensions.css =        ['css']
+    newConfig.extensions.template =   []
+    newConfig.extensions.copy =       []
 
-    newConfig.watch =                config.watch ?= {}
-    newConfig.watch.sourceDir =      path.join(@root, config.watch.sourceDir   ? "assets")
-    newConfig.watch.compiledDir =    path.join(@root, config.watch.compiledDir ? "public")
-    newConfig.watch.javascriptDir =  config.watch.javascriptDir ?= "javascripts"
-    newConfig.watch.ignored =        config.watch.ignored ?= [".sass-cache"]
-    newConfig.watch.throttle =       config.watch.throttle ?= 0
+    newConfig.watch =                       config.watch ?= {}
+    newConfig.watch.sourceDir =             path.join(@root, config.watch.sourceDir   ? "assets")
+    newConfig.watch.compiledDir =           path.join(@root, config.watch.compiledDir ? "public")
+    newConfig.watch.javascriptDir =         config.watch.javascriptDir ?= "javascripts"
+    newConfig.watch.compiledJavascriptDir = path.join(newConfig.watch.compiledDir, newConfig.watch.javascriptDir)
+    newConfig.watch.ignored =               config.watch.ignored ?= [".sass-cache"]
+    newConfig.watch.throttle =              config.watch.throttle ?= 0
 
     newConfig.compilers = config.compilers ?= {}
     newConfig.compilers.extensionOverrides = config.compilers.extensionOverrides ?= {}

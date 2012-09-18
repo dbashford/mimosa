@@ -6,8 +6,8 @@ _ =      require 'lodash'
 clean  = require 'clean-css'
 
 SingleFileCompiler = require '../single-file'
-logger =             require '../../util/logger'
-Linter =             require '../../util/lint/css'
+logger =             require '../../../util/logger'
+Linter =             require '../../../util/lint/css'
 
 module.exports = class AbstractCSSCompiler extends SingleFileCompiler
 

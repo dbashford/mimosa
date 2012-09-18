@@ -3,9 +3,9 @@ fs = require 'fs'
 
 wrench = require 'wrench'
 
-logger = require '../util/logger'
-fileUtils = require '../util/file'
-optimizer = require '../util/require/optimize'
+logger = require '../../util/logger'
+fileUtils = require '../../util/file'
+optimizer = require '../../util/require/optimize'
 
 module.exports = class AbstractCompiler
 
@@ -31,8 +31,6 @@ module.exports = class AbstractCompiler
 
   setStartupDoneCallback: (@startupDoneCallback) ->
     @startupDoneCallback() if @initialFileCount is 0
-
-  getExtensions: => @extensions
 
   getOutExtension: => @outExtension
 

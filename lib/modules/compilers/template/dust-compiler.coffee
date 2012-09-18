@@ -4,7 +4,7 @@ path = require 'path'
 dust = require 'dustjs-linkedin'
 
 AbstractTemplateCompiler = require './template'
-logger = require '../../util/logger'
+logger = require '../../../util/logger'
 
 module.exports = class DustCompiler extends AbstractTemplateCompiler
 

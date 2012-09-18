@@ -8,7 +8,7 @@ wrench = require 'wrench'
 logger = require '../../util/logger'
 fileUtils = require '../../util/file'
 defaults = require './defaults'
-compilerCentral = require '../../compilers'
+compilerCentral = require '../../modules/compilers'
 
 exports.projectPossibilities = (callback) ->
   compilers = compilerCentral.compilersByType()
@@ -86,8 +86,17 @@ _cleanMisc = (config, compilers) ->
     logger.debug("Deleting compiledJadeFile [[ #{compiledJadeFile} ]]")
     fs.unlinkSync compiledJadeFile
 
-  logger.debug("Calling individual compiler cleanups")
-  compiler.cleanup() for compiler in compilers when compiler.cleanup?
+  logger.debug("Cleaning up templates")
+  outputFileName = config.template.outputFileName
+  if _.isString(outputFileName)
+    filePath = path.join config.watch.compiledJavascriptDir, outputFileName + ".js"
+    fs.unlinkSync filePath if fs.existsSync filePath
+  else
+    for ext, fileName of outputFileName
+      filePath = path.join config.watch.compiledJavascriptDir, fileName + ".js"
+      fs.unlinkSync filePath if fs.existsSync filePath
+
+  compiler.removeClientLibrary() for compiler in compilers when compiler.removeClientLibrary?
 
 _cleanFiles = (config, files, compilerExtensionHash) ->
   for file in files

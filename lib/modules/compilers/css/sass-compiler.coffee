@@ -5,7 +5,7 @@ path = require 'path'
 _ = require 'lodash'
 
 AbstractCssCompiler = require './css'
-logger = require '../../util/logger'
+logger = require '../../../util/logger'
 
 module.exports = class SassCompiler extends AbstractCssCompiler
 

@@ -457,8 +457,8 @@ module.exports = class RequireRegister
       # templates is fine, will never be written, doesn't actually exist unless it is written
       return true if filePath is path.join(@rootJavaScriptDir, "templates.js")
 
-      logger.debug "Is virgin, need to try a bit harder to find file in source directories using extensions [[ #{@config.javascriptExtensions} ]]"
-      for extension in @config.javascriptExtensions
+      logger.debug "Is virgin, need to try a bit harder to find file in source directories using extensions [[ #{@config.extensions.javascript} ]]"
+      for extension in @config.extensions.javascript
         filePath = filePath.replace(/\.[^.]+$/, ".#{extension}")
         return true if fs.existsSync filePath
 

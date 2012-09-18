@@ -2,7 +2,7 @@ fs = require 'fs'
 path = require 'path'
 
 AbstractTemplateCompiler = require './template'
-logger = require '../../util/logger'
+logger = require '../../../util/logger'
 
 module.exports = class AbstractUnderscoreCompiler extends AbstractTemplateCompiler
 

@@ -27,8 +27,8 @@ exports.config = {
 
   # template:
     # outputFileName: "templates"                      # the file all templates are compiled into, is relative to watch.javascriptDir
-                                                       # Optionally outputFileName can be provided a hash of template library
-                                                       # name to file name in the event you are using multiple templating
+                                                       # Optionally outputFileName can be provided a hash of file extension
+                                                       # to file name in the event you are using multiple templating
                                                        # libraries.  Ex: {hogan:"js/hogans", jade:"js/jades"}
     # helperFiles:["app/template/handlebars-helpers"]  # relevant to handlebars only, the paths from watch.javascriptDir to
                                                        # the files containing handlebars helper/partial registrations,

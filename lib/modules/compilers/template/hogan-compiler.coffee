@@ -4,7 +4,7 @@ path = require 'path'
 hogan = require "hogan.js"
 
 AbstractTemplateCompiler = require './template'
-logger = require '../../util/logger'
+logger = require '../../../util/logger'
 
 module.exports = class HoganCompiler extends AbstractTemplateCompiler
 

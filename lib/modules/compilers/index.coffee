@@ -2,8 +2,8 @@ path = require 'path'
 
 _ = require 'lodash'
 
-fileUtils =  require '../util/file'
-logger = require '../util/logger'
+fileUtils =  require '../../util/file'
+logger = require '../../util/logger'
 
 baseDirRegex = /([^[\/\\\\]*]*)$/
 
@@ -19,7 +19,19 @@ class CompilerCentral
       Compiler.base = path.basename(file, ".coffee").replace('-compiler', '')
       if Compiler.base isnt "copy"
         Compiler.type = baseDirRegex.exec(path.dirname(file))[0]
+      else
+        Compiler.type = "copy"
       @all.push(Compiler)
+
+  lifecycleRegistration: (config) ->
+    compilers = @getCompilers(config)
+
+    extensionReg = {}
+    for compiler in compilers
+      for ext in compiler.extentions
+        extensionReg[ext] = compiler.compile
+
+    {compile:extensionReg}
 
   _compilersWithoutCopy: ->
     @all.filter (comp) -> comp.base isnt "copy"
@@ -55,11 +67,10 @@ class CompilerCentral
       compiler = new Compiler(config, extensions)
       allCompilers.push compiler
       extHash[ext] = compiler for ext in compiler.extensions
+      config.extensions[Compiler.type].push(extensions...)
 
-      if Compiler.type is "javascript"
-        config.javascriptExtensions.push(extensions...)
-
-    config.javascriptExtensions = _.uniq(config.javascriptExtensions)
+    for type, extensions of config.extensions
+      config.extensions[type] = _.uniq(extensions)
 
     logger.debug("Compiler/Extension hash \n #{extHash}")
 

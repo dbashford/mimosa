@@ -2,7 +2,7 @@ fs = require 'fs'
 path = require 'path'
 
 AbstractCompiler = require './compiler'
-logger = require '../util/logger'
+logger = require '../../util/logger'
 
 module.exports = class AbstractSingleFileCompiler extends AbstractCompiler
 

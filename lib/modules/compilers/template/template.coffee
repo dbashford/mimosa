@@ -4,10 +4,10 @@ fs =   require 'fs'
 wrench = require 'wrench'
 _ =      require 'lodash'
 
-fileUtils =        require '../../util/file'
-logger =           require '../../util/logger'
-minifier =         require '../../util/minify'
-requireRegister =  require '../../util/require/register'
+fileUtils =        require '../../../util/file'
+logger =           require '../../../util/logger'
+minifier =         require '../../../util/minify'
+requireRegister =  require '../../../util/require/register'
 AbstractCompiler = require '../compiler'
 
 module.exports = class AbstractTemplateCompiler extends AbstractCompiler
@@ -48,10 +48,6 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     @_gatherFiles true
     @optimize(fileName)
 
-  cleanup: ->
-    @_removeClientLibrary()
-    @removeTheFile(@templateFileName, false) if fs.existsSync @templateFileName
-
   doneStartup: ->
     @_gatherFiles()
 
@@ -69,7 +65,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       if isRemove
         logger.debug "No template files left, removing [[ #{@templateFileName} ]]"
         @removeTheFile @templateFileName
-        @_removeClientLibrary()
+        @removeClientLibrary()
     else
       @_testForSameTemplateName(fileNames)
       @_writeClientLibrary =>
@@ -114,7 +110,7 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       @startupDoneCallback()
       @startupFinished = true
 
-  _removeClientLibrary: ->
+  removeClientLibrary: ->
     if @clientPath? and fs.existsSync @clientPath
       logger.debug "Removing client library [[ #{@clientPath} ]]"
       fs.unlink @clientPath

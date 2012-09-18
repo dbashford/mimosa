@@ -1,9 +1,9 @@
 AbstractSingleFileCompiler = require '../single-file'
-logger = require '../../util/logger'
-Linter = require '../../util/lint/js'
+logger = require '../../../util/logger'
+Linter = require '../../../util/lint/js'
 
-requireRegister = require '../../util/require/register'
-minifier = require '../../util/minify'
+requireRegister = require '../../../util/require/register'
+minifier = require '../../../util/minify'
 
 module.exports = class AbstractJavaScriptCompiler extends AbstractSingleFileCompiler
   outExtension: 'js'
