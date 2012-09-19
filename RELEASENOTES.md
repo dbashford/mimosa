@@ -1,6 +1,21 @@
+# 0.2.0beta-rc1 - October ?? 2012
 
-beta changes
+### Major Changes
 * templateFileName, extension rather than library name
+
+# 0.1.0beta - September 19 2012
+
+Beta entered! Going to be working on some bigger things for beta2 over the next few weeks and only releasing any necessary bug fixes and non-breaking features. So releases will slow down quite a bit, but that doesn't mean I'm not busy. =)
+
+### Major Changes
+* Upgraded all of Mimosa's own dependent libraries to their latest versions.
+* Upgraded the skeleton express and jade to their latest versions
+
+### Minor Changes
+* #48, fixed an issue with templates using requirejs config paths.
+
+### You'll need to...
+* Entirely optional, but if you are running with your own server, you may want to run `mimosa update` to get the latest express and jade installed in your app.
 
 # 0.0.34alpha - September 15 2012
 
