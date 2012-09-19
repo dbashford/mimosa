@@ -303,8 +303,8 @@ class NewCommand
     logger.green('  If you wish to copy the project skeleton into your current directory instead of into a new one leave off the')
     logger.green('  then leave off name.')
     logger.blue( '\n    $ mimosa new\n')
-    logger.green('  If you are happy with the defaults (CoffeeScript, SASS, Handlebars, Express), you can bypass the prompts')
-    logger.green('   by providing a \'defaults\' flag.')
+    logger.green('  If you are happy with the defaults (CoffeeScript, SASS, Handlebars, Express, Jade), you can bypass the')
+    logger.green('  prompts by providing a \'defaults\' flag.')
     logger.blue( '\n    $ mimosa new [name] --defaults')
     logger.blue( '    $ mimosa new [name] -d\n')
 
