@@ -6,7 +6,6 @@ _ =      require 'lodash'
 
 fileUtils =        require '../../../util/file'
 logger =           require '../../../util/logger'
-minifier =         require '../../../util/minify'
 requireRegister =  require '../../../util/require/register'
 AbstractCompiler = require '../compiler'
 
@@ -27,12 +26,6 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       @clientPath = path.join jsDir, 'vendor', "#{@clientLibrary}.js"
 
     @notifyOnSuccess = config.growl.onSuccess.template
-    if config.min
-      @minifier = minifier.setExclude(config.minify.exclude)
-
-    if config.require.verify.enabled or config.optimize
-      @requireRegister = requireRegister
-      @requireRegister.setConfig(config)
 
   # OVERRIDE THIS
   compile: (fileNames, callback) ->
@@ -46,7 +39,6 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
 
   removed: (fileName) =>
     @_gatherFiles true
-    @optimize(fileName)
 
   doneStartup: ->
     @_gatherFiles()
@@ -64,7 +56,6 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     if fileNames.length is 0
       if isRemove
         logger.debug "No template files left, removing [[ #{@templateFileName} ]]"
-        @removeTheFile @templateFileName
         @removeClientLibrary()
     else
       @_testForSameTemplateName(fileNames)
@@ -95,16 +86,6 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     logger.debug "Template file [[ #{@templateFileName} ]] does not need compiling"
     false
 
-  _write: (error, output) =>
-    if error
-      @failed error
-    else
-      if output?
-        @requireRegister?.process(@templateFileName, output)
-        if @minifier?
-          output = @minifier.minify(@templateFileName, output)
-        @write(@templateFileName, output)
-
   _reportStartupDone: =>
     unless @startupFinished
       @startupDoneCallback()
@@ -125,9 +106,6 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       if err?
         logger.error("Cannot read client library: #{@mimosaClientLibraryPath}") if err?
         return callback()
-
-      if @minifier?
-        data = @minifier.minify(@clientPath, data)
 
       fileUtils.writeFile @clientPath, data, (err) =>
         @failed("Cannot write client library: #{err}") if err?
@@ -150,6 +128,3 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
     #{@templatePreamble(fileName, templateName)}
     templates['#{templateName}'] = #{source};\n
     """
-
-  afterWrite: (fileName) ->
-    @optimize(fileName)

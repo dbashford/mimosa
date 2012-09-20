@@ -113,6 +113,9 @@ class MimosaDefaults
     lint.rules.javascript =    config.lint.rules.javascript    ?= {}
     lint.rules.css =           config.lint.rules.css           ?= {}
 
+    # helpful shortcuts
+    config.requireRegister = config.require.verify.enabled or config.optimize
+
     logger.debug "Full mimosa config:\n#{JSON.stringify(newConfig, null, 2)}"
 
     newConfig

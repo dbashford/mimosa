@@ -1,24 +1,25 @@
-path =      require 'path'
+path =   require 'path'
 
 wrench = require 'wrench'
+_ =      require 'lodash'
 
 logger = require '../util/logger'
 
 module.exports = class LifeCycleManager
 
   startup:true
+  initialFilesHandled:0
 
   types:
-    add:["beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete", "startupComplete"]
-    update:["beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
-    remove:["beforeRead", "read", "afterRead", "beforeDelete", "delete", "afterDelete", "complete"]
-    startup:null
+    startup:     ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
+    add:         ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
+    update:      ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
+    remove:      ["init", "beforeRead", "read", "afterRead", "beforeDelete", "delete", "afterDelete", "complete"]
+    postStartup: ["compile", "afterCompile", "complete"]
 
   registration: {}
 
   constructor: (@config, modules) ->
-    @types.startup = ['init', @types.add..., 'startupDone']
-
     for type, steps of @types
       @registration[type] = {}
       for step in steps
@@ -26,26 +27,25 @@ module.exports = class LifeCycleManager
 
     @lifecycleRegistration(module) for module in modules
 
-    # register reader
-    # register writer
+    e = @config.extensions
+    extensions = [e.javascript..., e.css..., e.template..., config.copy.extensions...]
+    files = wrench.readdirSyncRecursive(@config.watch.sourceDir).filter (f) =>
+      ext = path.extname(f).substring(1)
+      ext.length >= 1 and extensions.indexOf(ext) >= 0
+
+    @initialFileCount = files.length
+
+    # compile, startup register for compilers css/template, just skip
+
     # register compilers
-    # register lint
     # register logger
     # establish error object
-    # register requireRegister
-    # register requireOptimizer
-    # register minifier
-    # register
-    # beforeRead(inputFileName, destinationFileName, done)
-    # read(inputFileName, done)
-    # afterRead(inputFileName, text, done)
-    # beforeCompile(inputFileName, destinationFileName, text, done)
-    # compile()
 
   lifecycleRegistration: (module) ->
-
     modulesReg = module.lifecycleRegistration(@config)
     for moduleReg in modulesReg
+      continue if Object.keys(moduleReg).length is 0
+
       for type in moduleReg.types
 
         if !@types[type]?
@@ -69,20 +69,32 @@ module.exports = class LifeCycleManager
       @_execute(fileName, 'add')
 
   _execute: (fileName, type) ->
+    ext = path.extname(fileName)
+    ext = if ext.length > 1 then ext.substring(1) else ''
+
     options =
       inputFile:fileName
-      extension:path.extname(fileName).substring(1)
+      extension:ext
       lifeCycleType:type
 
     i = 0
     next = =>
       if i < @types[type].length
         @_lifeCycleMethod type, @types[type][i++], options, cb
-    cb = (error) ->
-      if error
-        # log the error and move on
+      else
+        # finished naturally
+        @_finishedWithFile(options)
+
+    cb = (nextVal) =>
+      if _.isBoolean(nextVal) and nextVal is false
+        @_finishedWithFile(options)
+      else if _.isString(nextVal)
+        # TODO, increment i
+        next()
+        # fast forward
       else
         next()
+
     next()
 
   _lifeCycleMethod: (type, step, options, done) ->
@@ -99,10 +111,27 @@ module.exports = class LifeCycleManager
       if i < tasks.length
         tasks[i++](@config, options, cb)
       else
+        # natural finish to lifecycle step
         done()
-    cb = (error) ->
-      if error
-        # log the error and move on
+
+    cb = (nextVal) ->
+      if _.isObject(nextVal)
+        # is error, log the error and move on
+        # TODO log error
+        done(false)
+      else if _.isBoolean(nextVal) and nextVal is false
+        done(false)
+        # no error, natural stop to workflow
+      else if _.isString(nextVal)
+        done(nextVal)
+        # fast forward
       else
+        # go to the next one
         next()
+
     next()
+
+  _finishedWithFile: (options) ->
+    console.log "FINISHED WITH FILE: [[ #{options.inputFile} ]]"
+    @initialFilesHandled++
+    console.log @initialFileCount, @initialFilesHandled

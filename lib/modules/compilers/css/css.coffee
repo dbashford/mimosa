@@ -3,11 +3,9 @@ path =   require 'path'
 
 wrench = require 'wrench'
 _ =      require 'lodash'
-clean  = require 'clean-css'
 
 SingleFileCompiler = require '../single-file'
 logger =             require '../../../util/logger'
-Linter =             require '../../../util/lint/css'
 
 module.exports = class AbstractCSSCompiler extends SingleFileCompiler
 
@@ -18,10 +16,6 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
     super(config)
 
     @notifyOnSuccess = config.growl.onSuccess.css
-
-    if config.lint.compiled.css
-      @linter = new Linter(config.lint.rules.css)
-      @lintVendorCSS = config.lint.vendor.css
 
   created: (fileName) =>
     if @startupFinished then @process(fileName, (f) => super(f)) else @done()
@@ -99,7 +93,7 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
 
   processWatchedDirectories: =>
     @includeToBaseHash = {}
-    @allFiles = @getAllFiles()
+    @allFiles = @_getAllFiles()
 
     oldBaseFiles = @baseFiles ?= []
     @baseFiles = @_determineBaseFiles()
@@ -112,21 +106,7 @@ module.exports = class AbstractCSSCompiler extends SingleFileCompiler
 
     @_importsForFile(baseFile, baseFile) for baseFile in @baseFiles
 
-  afterCompile: (destFileName, source) =>
-    unless source?.length > 0
-      return logger.debug "Compiled output is empty for [[ #{destFileName} ]]"
-
-    if @linter? and (!@_isVendor(destFileName) or @lintVendorCSS)
-      logger.debug "Going to lint [[ #{destFileName} ]]"
-      @linter.lint(destFileName, source)
-
-    if @config.optimize
-      logger.debug "Cleaning/optimizing CSS [[ #{destFileName} ]]"
-      source = clean.process source
-
-    source
-
-  getAllFiles: =>
+  _getAllFiles: =>
     files = wrench.readdirSyncRecursive(@srcDir)
       .map (file) =>
         path.join(@srcDir, file)
