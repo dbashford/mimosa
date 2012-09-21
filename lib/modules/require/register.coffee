@@ -3,7 +3,7 @@ fs = require 'fs'
 
 _ = require 'lodash'
 
-logger = require '../logger'
+logger =  require '../../util/logger'
 
 module.exports = class RequireRegister
 

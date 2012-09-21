@@ -4,9 +4,9 @@ fs =   require 'fs'
 wrench = require 'wrench'
 _ =      require 'lodash'
 
+requireRegister =  require '../../require/register'
 fileUtils =        require '../../../util/file'
 logger =           require '../../../util/logger'
-requireRegister =  require '../../../util/require/register'
 AbstractCompiler = require '../compiler'
 
 module.exports = class AbstractTemplateCompiler extends AbstractCompiler

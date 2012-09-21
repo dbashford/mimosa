@@ -5,7 +5,6 @@ watch =     require 'chokidar'
 _ =         require 'lodash'
 
 logger =    require '../../util/logger'
-optimizer = require '../../util/require/optimize'
 compilerCentral = require '../../modules/compilers'
 
 LifeCycle = require '../../lifecycle'
@@ -79,7 +78,7 @@ class Watcher
   startupDone: (compiler) =>
     #if compiler.startupDone
     compiler.setFileDone(->) for compiler in @compilers
-    optimizer.optimize(@config)
+    #optimizer.optimize(@config)
     @initCallback(@config) if @initCallback?
 
   _findCompiler: (fileName) ->

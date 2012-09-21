@@ -1,7 +1,6 @@
 path = require 'path'
 
-AbstractCompiler = require '../compiler'
-requireRegister =    require '../../util/require/register'
+AbstractCompiler = require './compiler'
 logger = require '../../util/logger'
 
 module.exports = class CopyCompiler extends AbstractCompiler

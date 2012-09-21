@@ -15,7 +15,7 @@ module.exports = class LifeCycleManager
     add:         ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
     update:      ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
     remove:      ["init", "beforeRead", "read", "afterRead", "beforeDelete", "delete", "afterDelete", "complete"]
-    postStartup: ["compile", "afterCompile", "complete"]
+    postStartup: ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
 
   registration: {}
 
@@ -44,7 +44,7 @@ module.exports = class LifeCycleManager
   lifecycleRegistration: (module) ->
     modulesReg = module.lifecycleRegistration(@config)
     for moduleReg in modulesReg
-      continue if Object.keys(moduleReg).length is 0
+      continue if Object.keys(moduleReg).length is 0 # valid module registered no tasks
 
       for type in moduleReg.types
 
@@ -57,6 +57,8 @@ module.exports = class LifeCycleManager
           process.exit 1
 
         for extension in moduleReg.extensions
+          console.log "Registering extension [[ #{extension} ]], for step [[ #{moduleReg.step} ]] of type [[ #{type} ]]"
+          console.log moduleReg.callback
           @registration[type][moduleReg.step][extension] ?= []
           @registration[type][moduleReg.step][extension].push moduleReg.callback
 
@@ -132,6 +134,9 @@ module.exports = class LifeCycleManager
     next()
 
   _finishedWithFile: (options) ->
-    console.log "FINISHED WITH FILE: [[ #{options.inputFile} ]]"
+    logger.debug "Finished with file: [[ #{options.inputFile} ]]"
+    #console.log "Finsihed with file: [[ #{options.inputFile} ]]"
     @initialFilesHandled++
     console.log @initialFileCount, @initialFilesHandled
+    if  @initialFileCount is @initialFilesHandled
+      console.log "WOOP WOOP WOOP WOOP, WE'RE DONE FOLKS!"

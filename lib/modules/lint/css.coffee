@@ -1,8 +1,8 @@
 csslint = require("csslint").CSSLint
 
-logger =  require '../logger'
+logger =  require '../../util/logger'
 
-module.exports = class CSSLinter
+class CSSLinter
 
   rules:{}
 
@@ -18,28 +18,35 @@ module.exports = class CSSLinter
       _.filter config.extensions.css, (ext) -> ext isnt 'css'
     else
       logger.debug "CSS linting is entirely turned off"
-      return []
+      []
+
+    return [] if extensions.length is 0
+
 
     for rule in csslint.getRules()
       unless config.lint.rules.css[rule.id] is false
         @rules[rule.id] = 1
 
-    [{types:['add','update','startup']
+    [
+      {types:['startup','add','update']
       step:'afterCompile'
       callback: @_lint
-      extensions:[extensions]}]
+      extensions:[extensions...]}
+    ]
 
-  lint: (config, options, next) ->
+  _lint: (config, options, next) =>
     name = options.inputName
-    if !config.lint.vendor.css and fileUtils._isVendor(options.destinationFile)
+    if !config.lint.vendor.css and options.isVendor
       logger.debug "Not linting vendor script [[ #{name} ]]"
 
     result = csslint.verify options.fileContent, @rules
-    @writeMessage(name, message) for message in result.messages
+    @_writeMessage(name, message) for message in result.messages
     next()
 
-  writeMessage: (fileName, message) ->
+  _writeMessage: (fileName, message) ->
     output =  "CSSLint Warning: #{message.message} In #{fileName},"
     output += " on line #{message.line}, column #{message.col}," if message.line?
     output += " from CSSLint rule ID '#{message.rule.id}'."
     logger.warn output
+
+module.exports = new CSSLinter()

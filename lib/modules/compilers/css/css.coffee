@@ -4,10 +4,10 @@ path =   require 'path'
 wrench = require 'wrench'
 _ =      require 'lodash'
 
-SingleFileCompiler = require '../single-file'
-logger =             require '../../../util/logger'
+AbstractCompiler = require '../compiler'
+logger =           require '../../../util/logger'
 
-module.exports = class AbstractCSSCompiler extends SingleFileCompiler
+module.exports = class AbstractCSSCompiler extends AbstractCompiler
 
   css:true
   outExtension: 'css'

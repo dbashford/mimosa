@@ -1,9 +1,9 @@
 jslint = require('jshint').JSHINT
 _ =      require 'lodash'
 
-logger = require '../../logger'
+logger =  require '../../util/logger'
 
-module.exports = class JSLinter extends ScriptLinter
+class JSLinter
 
   lifecycleRegistration: (config) ->
     extensions = if config.lint.copied.javascript and config.lint.compiled.javascript
@@ -17,17 +17,21 @@ module.exports = class JSLinter extends ScriptLinter
       _.filter config.extensions.javascript, (ext) -> ext isnt 'js'
     else
       logger.debug "JavaScript linting is entirely turned off"
-      return []
+      []
+
+    return [] if extensions.length is 0
 
     @options = config.lint.rules.javascript
 
-    [{types:['add','update','startup']
+    [
+      {types:['startup','add','update']
       step:'afterCompile'
       callback: @_lint
-      extensions:[extensions]}]
+      extensions:[extensions...]}
+    ]
 
-  lint: (config, options, next) =>
-    if !config.lint.vendor.javascript and fileUtils._isVendor(options.destinationFile)
+  _lint: (config, options, next) =>
+    if !config.lint.vendor.javascript and options.isVendor
       logger.debug "Not linting vendor script [[ #{options.inputName} ]]"
     else
       lintok = jslint options.fileContent, @options
@@ -42,3 +46,5 @@ module.exports = class JSLinter extends ScriptLinter
     message = "JavaScript Lint Error: #{message}, in file [[ #{fileName} ]]"
     if lineNumber then message += ", at line number [[ #{lineNumber} ]]"
     logger.warn message
+
+module.exports = new JSLinter()

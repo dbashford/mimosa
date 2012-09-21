@@ -23,7 +23,7 @@ class MimosaMinifyModule
         callback: @_minifyJS
         extensions:[config.extensions.javascript...]
 
-    if config.optimize
+    if config.optimize or config.min
 
       lifecycle.push
         types:['add','update','startup']
@@ -44,21 +44,24 @@ class MimosaMinifyModule
       logger.debug "Not going to minify [[ #{fileName} ]], it has been excluded."
     else
       logger.debug "Running minification on [[ #{fileName} ]]"
-      try
-        ast = jsp.parse source
-        ast = pro.ast_mangle ast, {except:['require','requirejs','define']}
-        ast = pro.ast_squeeze ast
-        source = pro.gen_code ast
-        options.fileContent = source
-      catch err
-        logger.warn "Minification failed on [[ #{fileName} ]], writing unminified source\n#{err}"
+      options.fileContent = @performJSMinify(source)
 
     next()
 
   _minifyCSS: (config, options, next) ->
+    console.log "Cleaning/optimizing CSS [[ #{options.destinationFile} ]]"
     logger.debug "Cleaning/optimizing CSS [[ #{options.destinationFile} ]]"
     options.fileContent = clean.process options.fileContent
     next()
+
+  performJSMinify: (source) ->
+    try
+      ast = jsp.parse source
+      ast = pro.ast_mangle ast, {except:['require','requirejs','define']}
+      ast = pro.ast_squeeze ast
+      pro.gen_code ast
+    catch err
+      logger.warn "Minification failed on [[ #{fileName} ]], writing unminified source\n#{err}"
 
 
 module.exports = new MimosaMinifyModule()

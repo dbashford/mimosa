@@ -34,8 +34,6 @@ class MimosaFileModule
       callback:@_read
       extensions:[e.javascript..., e.css..., config.copy.extensions...] # just no templates
 
-    console.log [e.javascript..., e.css..., config.copy.extensions...]
-
     unless config.virgin
       lifecycle.push
         types:['remove']
@@ -51,26 +49,15 @@ class MimosaFileModule
 
     lifecycle
 
-  write: (config, options, next) =>
-    ###
-    DEAL WITH THIS CASE
-    if @config.virgin
-      logger.debug "Virgin is turned on, not writing [[ #{fileName} ]]"
-      @success "Compiled [[ #{fileName} ]]"
-      return @done()
-
-      virgin skip?
-
-    ###
-
-    fileName = options.inputFile
+  _write: (config, options, next) =>
+    destinationFile = options.destinationFile
     content = options.fileContent
 
-    logger.debug "Writing file [[ #{fileName} ]]"
-    fileUtils.writeFile fileName, content, (err) =>
+    logger.debug "Writing file [[ #{destinationFile} ]]"
+    fileUtils.writeFile destinationFile, content, (err) =>
       if err
         next({})
-        return @failed "Failed to write new file: #{fileName}"
+        return @failed "Failed to write new file: #{destinationFile}"
       # @success "Compiled/copied [[ #{fileName} ]]"
       next()
 

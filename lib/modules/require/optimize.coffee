@@ -4,16 +4,16 @@ fs =   require 'fs'
 _ = require 'lodash'
 requirejs = require 'requirejs'
 
-logger =    require '../logger'
+logger =  require '../../util/logger'
 requireRegister = require './register'
 minifier = require '../minify'
 
 class Optimizer
 
   constructor: ->
-    almondInPath  = path.join __dirname, "..", "assets", "almond.js"
+    almondInPath  = path.join __dirname, "assets", "almond.js"
     @almondText = fs.readFileSync almondInPath, "ascii"
-    @almondText = minifier.minify(almondInPath, @almondText)
+    @almondText = minifier.performJSMinify(almondInPath, @almondText)
 
   optimize: (config, fileName) =>
     return unless config.optimize
