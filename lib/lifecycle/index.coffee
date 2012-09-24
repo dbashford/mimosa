@@ -9,15 +9,14 @@ module.exports = class LifeCycleManager
 
   startup:true
   initialFilesHandled:0
+  registration: {}
 
   types:
     startup:     ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
     add:         ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
     update:      ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
-    remove:      ["init", "beforeRead", "read", "afterRead", "beforeDelete", "delete", "afterDelete", "complete"]
+    remove:      ["init", "beforeRead", "read", "afterRead", "beforeDelete",  "delete",  "afterDelete",  "complete"]
     postStartup: ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
-
-  registration: {}
 
   constructor: (@config, modules) ->
     for type, steps of @types
@@ -62,27 +61,27 @@ module.exports = class LifeCycleManager
           @registration[type][moduleReg.step][extension] ?= []
           @registration[type][moduleReg.step][extension].push moduleReg.callback
 
-  update: (fileName) => @_execute(fileName, 'update')
-  remove: (fileName) => @_execute(fileName, 'remove')
+  update: (fileName) => @_executeLifecycleStep(@_buildAssetOptions(fileName), 'update')
+  remove: (fileName) => @_executeLifecycleStep(@_buildAssetOptions(fileName), 'remove')
   add: (fileName) =>
     if @startup
-      @_execute(fileName, 'startup')
+      @_executeLifecycleStep(@_buildAssetOptions(fileName), 'startup')
     else
-      @_execute(fileName, 'add')
+      @_executeLifecycleStep(@_buildAssetOptions(fileName), 'add')
 
-  _execute: (fileName, type) ->
+
+  _buildAssetOptions: (fileName) ->
     ext = path.extname(fileName)
     ext = if ext.length > 1 then ext.substring(1) else ''
+    {inputFile:fileName, extension:ext}
 
-    options =
-      inputFile:fileName
-      extension:ext
-      lifeCycleType:type
+  _executeLifecycleStep: (options, type) ->
+    options.lifeCycleType = type
 
     i = 0
     next = =>
       if i < @types[type].length
-        @_lifeCycleMethod type, @types[type][i++], options, cb
+        @_lifecycleMethod type, @types[type][i++], options, cb
       else
         # finished naturally
         @_finishedWithFile(options)
@@ -99,7 +98,7 @@ module.exports = class LifeCycleManager
 
     next()
 
-  _lifeCycleMethod: (type, step, options, done) ->
+  _lifecycleMethod: (type, step, options, done) ->
     logger.debug "Calling lifecycle: [[ #{type} ]], [[ #{step} ]], with options [[ #{JSON.stringify(options)} ]]"
 
     tasks = []
@@ -136,7 +135,10 @@ module.exports = class LifeCycleManager
   _finishedWithFile: (options) ->
     logger.debug "Finished with file: [[ #{options.inputFile} ]]"
     #console.log "Finsihed with file: [[ #{options.inputFile} ]]"
-    @initialFilesHandled++
-    console.log @initialFileCount, @initialFilesHandled
-    if  @initialFileCount is @initialFilesHandled
-      console.log "WOOP WOOP WOOP WOOP, WE'RE DONE FOLKS!"
+    if @startup
+      @initialFilesHandled++
+      console.log @initialFileCount, @initialFilesHandled
+      if @initialFileCount is @initialFilesHandled
+        @startup = false
+        console.log "WOOP WOOP WOOP WOOP, WE'RE DONE FOLKS!"
+        @_execute({}, 'postStartup')

@@ -80,19 +80,8 @@ class MimosaFileModule
     inputFile = options.inputFile
     destinationFile = options.destinationFile
 
-    fs.exists destinationFile, (exists) ->
-      if !exists
-        logger.debug "File [[ #{inputFile} ]] NEEDS compiling/copying, doesn't exist in compiled directory"
-        next()
-      else
-        fs.stat destinationFile, (err, destStats) ->
-          fs.stat inputFile, (err, inputStats) ->
-            if inputStats.mtime > destStats.mtime
-              logger.debug "File [[ #{inputFile} ]] NEEDS compiling/copying"
-              next()
-            else
-              logger.debug "File [[ #{inputFile} ]] does NOT need compiling/copying"
-              next(false)
+    fileUtils.isFirstFileNewer destinationFile, inputFile, (isNewer) ->
+      if isNewer then next() else next(false)
 
   # for anything javascript related, force compile regardless
   _fileNeedsCompilingStartup: (config, options, next) =>

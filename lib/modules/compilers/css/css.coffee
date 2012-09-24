@@ -4,33 +4,16 @@ path =   require 'path'
 wrench = require 'wrench'
 _ =      require 'lodash'
 
-AbstractCompiler = require '../compiler'
 logger =           require '../../../util/logger'
 
-module.exports = class AbstractCSSCompiler extends AbstractCompiler
+module.exports = class AbstractCSSCompiler
 
-  css:true
-  outExtension: 'css'
-
-  constructor: (config) ->
-    super(config)
-
-    @notifyOnSuccess = config.growl.onSuccess.css
-
-  created: (fileName) =>
-    if @startupFinished then @process(fileName, (f) => super(f)) else @done()
-
-  updated: (fileName) =>
-    @process(fileName, (f) => super(f))
-
-  removed: (fileName) =>
-    @process(fileName, (f) => super(f))
+  constructor: (@config) ->
 
   process: (fileName, sooper) ->
     if @_isInclude(fileName)
       @_compileBasesForInclude(fileName)
     else
-      sooper(fileName)
       @processWatchedDirectories()
 
   _compileBasesForInclude: (fileName) ->
@@ -45,6 +28,8 @@ module.exports = class AbstractCSSCompiler extends AbstractCompiler
       @done()
 
   doneStartup: =>
+    @processWatchedDirectories()
+
     baseFilesToCompileNow = []
 
     # Determine if any includes necessitate a base file compile
@@ -88,9 +73,6 @@ module.exports = class AbstractCSSCompiler extends AbstractCompiler
         logger.debug "Compiling base file [[ #{base} ]]"
         @readAndCompile(base)
 
-  init: =>
-    @processWatchedDirectories()
-
   processWatchedDirectories: =>
     @includeToBaseHash = {}
     @allFiles = @_getAllFiles()
@@ -107,9 +89,9 @@ module.exports = class AbstractCSSCompiler extends AbstractCompiler
     @_importsForFile(baseFile, baseFile) for baseFile in @baseFiles
 
   _getAllFiles: =>
-    files = wrench.readdirSyncRecursive(@srcDir)
+    files = wrench.readdirSyncRecursive(@config.watch.srcDir)
       .map (file) =>
-        path.join(@srcDir, file)
+        path.join(@config.watch.srcDir, file)
       .filter (file) =>
         @extensions.some (ext) ->
           file.slice(-ext.length) is ext

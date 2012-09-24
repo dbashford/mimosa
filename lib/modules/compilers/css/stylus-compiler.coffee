@@ -30,7 +30,7 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
 
     stylus(text)
       .include(path.dirname(fileName))
-      .include(@srcDir)
+      .include(@config.watch.srcDir)
       .set('compress', false)
       .set('firebug', @config.optimize? and !@config.optimize)
       .set('filename', fileName)

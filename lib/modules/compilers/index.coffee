@@ -28,7 +28,7 @@ class CompilerCentral
 
     extensionReg = {}
     for compiler in compilers
-      for ext in compiler.extentions
+      for ext in compiler.extensions
         extensionReg[ext] = compiler.compile
 
     {compile:extensionReg}

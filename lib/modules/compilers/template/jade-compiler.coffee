@@ -16,15 +16,14 @@ module.exports = class JadeCompiler extends AbstractTemplateCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  compile: (fileNames, callback) ->
+  compile: (config, options, next) ->
     error = null
 
     output = "define(['#{@libraryPath()}'], function (jade){ var templates = {};\n"
-    for fileName in fileNames
+    for templateName, templateData of options.templateContentByName
+      fileName = templateData[0]
+      content = templateData[1]
       logger.debug "Compiling Jade template [[ #{fileName} ]]"
-
-      content = fs.readFileSync fileName, "ascii"
-      templateName = path.basename(fileName, path.extname(fileName))
 
       try
         compiledOutput = jade.compile content,
@@ -36,6 +35,9 @@ module.exports = class JadeCompiler extends AbstractTemplateCompiler
       catch err
         error ?= ''
         error += "#{fileName}, #{err}\n"
-    output += 'return templates; });'
 
-    callback(error, output)
+    if error
+      next({text:error})
+    else
+      options.output = output += 'return templates; });'
+      next()

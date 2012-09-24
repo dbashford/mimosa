@@ -1,17 +1,18 @@
-AbstractJavascriptCompiler = require './javascript'
 iced = require 'iced-coffee-script'
 
-module.exports = class IcedCompiler extends AbstractJavascriptCompiler
+JSCompiler = require "./javascript-compiler"
+
+module.exports = class IcedCompiler extends JSCompiler
 
   @prettyName        = "Iced CoffeeScript - http://maxtaco.github.com/coffee-script/"
   @defaultExtensions = ["iced"]
 
   constructor: (config, @extensions) ->
-    super(config)
 
-  compile: (fileName, text, destinationFile, callback) ->
+  compile: (config, options, next) ->
     try
-      output = iced.compile text
+      options.output = iced.compile options.fileContent
     catch err
-      error = "#{fileName}, #{err}"
-    callback(error, output, destinationFile)
+      error = {text:"#{options.inputFile}, #{err}"}
+      return next(error)
+    next()

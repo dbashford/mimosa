@@ -45,6 +45,13 @@ class FileUtils
       error = if err? then "Failed to write file: #{fileName}, #{err}"
       callback(error)
 
+  isFirstFileNewer: (file1, file2, cb) ->
+    fs.exists file2, (exists) ->
+      return cb(true) if !exists
+      fs.stat file2, (err, stats2) ->
+        fs.stat file1, (err, stats1) ->
+          if stats1.mtime > file2.mtime then cb(true) else cb(false)
+
   # node-glob doesn't work entirely on win32
   # node-glob-whatev works on windows, but is terribly inefficient
   # for now, just switching between the two

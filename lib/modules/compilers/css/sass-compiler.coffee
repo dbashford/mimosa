@@ -54,7 +54,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     logger.debug "Beginning compile of SASS file [[ #{fileName} ]]"
     result = ''
     error = null
-    options = ['--stdin', '--load-path', @srcDir, '--load-path', path.dirname(fileName), '--no-cache']
+    options = ['--stdin', '--load-path', @config.watch.srcDir, '--load-path', path.dirname(fileName), '--no-cache']
     options.push '--compass' if @hasCompass
     options.push '--scss' if /\.scss$/.test fileName
     sass = spawn runSass, options

@@ -16,7 +16,7 @@ module.exports = class HTMLCompiler extends AbstractTemplateCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  compile: (fileNames, callback) ->
+  compile: (config, options, next) ->
     error = null
 
     # we don't want underscore to actually work, just to wrap stuff
@@ -25,17 +25,24 @@ module.exports = class HTMLCompiler extends AbstractTemplateCompiler
       interpolate : /<%%%%%%%%=([\s\S]+?)%%%%%%%>/g
 
     output = "define(function () { var templates = {};\n"
-    for fileName in fileNames
+    for templateName, templateData of options.templateContentByName
+      fileName = templateData[0]
+      content = templateData[1]
       logger.debug "Compiling HTML template [[ #{fileName} ]]"
-      content = fs.readFileSync fileName, "ascii"
-      compiledOutput = _.template(content)
-      templateName = path.basename(fileName, path.extname(fileName))
-      output += @addTemplateToOutput fileName, templateName, compiledOutput.source + "()"
-    output += 'return templates; });'
+      try
+        compiledOutput = _.template(content)
+        output += @addTemplateToOutput fileName, templateName, compiledOutput.source + "()"
+      catch err
+        error ?= ''
+        error += "#{fileName}, #{err}\n"
 
     # set it back
     _.templateSettings =
       evaluate    : /<%([\s\S]+?)%>/g,
       interpolate : /<%=([\s\S]+?)%>/g
 
-    callback(error, output)
+    if error
+      next({text:error})
+    else
+      options.output = output += 'return templates; });'
+      next()

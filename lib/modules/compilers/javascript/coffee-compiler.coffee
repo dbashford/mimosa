@@ -1,18 +1,19 @@
-AbstractJavascriptCompiler = require './javascript'
 coffee = require 'coffee-script'
 
-module.exports = class CoffeeCompiler extends AbstractJavascriptCompiler
+JSCompiler = require "./javascript-compiler"
+
+module.exports = class CoffeeCompiler extends JSCompiler
 
   @prettyName        = "(*) CoffeeScript - http://coffeescript.org/"
   @defaultExtensions = ["coffee"]
   @isDefault         = true
 
   constructor: (config, @extensions) ->
-    super(config)
 
-  compile: (fileName, text, destinationFile, callback) ->
+  compile: (config, options, next) ->
     try
-      output = coffee.compile text
+      options.output = coffee.compile options.fileContent
     catch err
-      error = "#{fileName}, #{err}"
-    callback(error, output, destinationFile)
+      error = {text:"#{options.inputFile}, #{err}"}
+      return next(error)
+    next()

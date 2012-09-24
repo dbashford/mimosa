@@ -7,65 +7,109 @@ _ =      require 'lodash'
 requireRegister =  require '../../require/register'
 fileUtils =        require '../../../util/file'
 logger =           require '../../../util/logger'
-AbstractCompiler = require '../compiler'
 
-module.exports = class AbstractTemplateCompiler extends AbstractCompiler
+module.exports = class AbstractTemplateCompiler
 
-  template:true
-
-  constructor: (config) ->
-    super(config)
-    jsDir = path.join @compDir, config.watch.javascriptDir
-    @templateFileName = if config.template.outputFileName[@constructor.base]
-      path.join(jsDir, config.template.outputFileName[@constructor.base] + ".js")
+  constructor: (@config) ->
+    jsDir = path.join @config.watch.compiledDir, @config.watch.javascriptDir
+    @templateFileName = if @config.template.outputFileName[@constructor.base]
+      path.join(jsDir, @config.template.outputFileName[@constructor.base] + ".js")
     else
-      path.join(jsDir, config.template.outputFileName + ".js")
+      path.join(jsDir, @config.template.outputFileName + ".js")
 
     if @clientLibrary?
       @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
       @clientPath = path.join jsDir, 'vendor', "#{@clientLibrary}.js"
 
-    @notifyOnSuccess = config.growl.onSuccess.template
+  lifecycleRegistration: (config) ->
 
-  # OVERRIDE THIS
-  compile: (fileNames, callback) ->
-    throw new Error "Method compile(fileNames, callback) must be implemented"
+    lifecycle = []
 
-  created: (fileName) =>
-    if @startupFinished then @_gatherFiles() else @done()
+    lifecycle.push
+      types:['add','update','startupDone','delete']
+      step:'init'
+      callback: @_gatherFiles
+      extensions:[@extensions...]
 
-  updated: =>
-    @_gatherFiles()
+    lifecycle.push
+      types:['add','update','startupDone','delete']
+      step:'beforeRead'
+      callback: @_templateNeedsCompiling
+      extensions:[@extensions...]
 
-  removed: (fileName) =>
-    @_gatherFiles true
+    lifecycle.push
+      types:['add','update','startupDone','delete']
+      step:'read'
+      callback: @_readTemplateFiles
+      extensions:[@extensions...]
 
-  doneStartup: ->
-    @_gatherFiles()
+    lifecycle.push
+      types:['add','update','startupDone','delete']
+      step:'compile'
+      callback: @_compile
+      extensions:[@extensions...]
 
-  _gatherFiles: (isRemove = false) ->
+    unless config.virgin
+
+      lifecycle.push
+        types:['delete']
+        step:'beforeRead'
+        callback: @_testForRemoveClientLibrary
+        extensions:[@extensions...]
+
+      lifecycle.push
+        types:['add', 'update', 'startupDone']
+        step:'beforeWrite'
+        callback: @_writeClientLibrary
+        extensions:[@extensions...]
+
+    lifecycle
+
+  _gatherFiles: (config, options, next) ->
     logger.debug "Gathering files for templates"
-    fileNames = []
-    allFiles = wrench.readdirSyncRecursive(@srcDir)
-      .map (file) => path.join(@srcDir, file)
+    allFiles = wrench.readdirSyncRecursive(config.watch.srcDir)
+      .map (file) => path.join(config.watch.srcDir, file)
 
+    fileNames = []
     for file in allFiles
       extension = path.extname(file).substring(1)
       fileNames.push(file) if @extensions.indexOf(extension) >= 0
 
-    if fileNames.length is 0
-      if isRemove
-        logger.debug "No template files left, removing [[ #{@templateFileName} ]]"
-        @removeClientLibrary()
+    @_testForSameTemplateName(fileNames) unless fileNames.length <= 1
+
+    options.templatefileNames = fileNames
+
+    next()
+
+  _readTemplateFiles: (config, options, next) ->
+    options.templateContentByName = {}
+    numFiles = options.templatefileNames.length
+    done = ->
+      next() if ++numFiles is options.templatefileNames.length
+
+    for fileName in options.templatefileNames
+      fs.readFile fileName, "ascii", (err, content) ->
+        templateName = path.basename fileName, path.extname(fileName)
+        options.templateContentByName[templateName] = [fileName, content]
+        done()
+
+  _testForRemoveClientLibrary: (config, options, next) ->
+    if options.templatefileNames?.length is 0
+      logger.debug "No template files left, removing [[ #{@templateFileName} ]]"
+      @removeClientLibrary(next)
     else
-      @_testForSameTemplateName(fileNames)
-      @_writeClientLibrary =>
-        if @_templateNeedsCompiling fileNames
-          @constructor::done = =>
-            @_reportStartupDone() if !@startupFinished
-          @compile fileNames, @_write
+      next()
+
+  removeClientLibrary: (callback) ->
+    if @clientPath?
+      fs.exists @clientPath, (exists) ->
+        if exists
+          logger.debug "Removing client library [[ #{@clientPath} ]]"
+          fs.unlinkSync @clientPath, (err) -> callback()
         else
-          @_reportStartupDone()
+          callback()
+    else
+      callback()
 
   _testForSameTemplateName: (fileNames) ->
     templateHash = {}
@@ -77,39 +121,34 @@ module.exports = class AbstractTemplateCompiler extends AbstractCompiler
       else
         templateHash[templateName] = fileName
 
-  _templateNeedsCompiling: (fileNames) ->
-    for file in fileNames
-      if @fileNeedsCompiling(file, @templateFileName)
-        logger.debug "Template file [[ #{@templateFileName} ]] needs compiling"
-        return true
+  _templateNeedsCompiling: (config, options, next) ->
+    fileNames = options.templatefileNames
+    numFiles = fileNames.length
 
-    logger.debug "Template file [[ #{@templateFileName} ]] does not need compiling"
-    false
+    i = 0
+    processFile = =>
+      if i < numFiles
+        fileUtils.isFirstFileNewer fileNames[i], @templateFileName, cb
+      else
+        next(false)
 
-  _reportStartupDone: =>
-    unless @startupFinished
-      @startupDoneCallback()
-      @startupFinished = true
+    cb = (isNewer) =>
+      if isNewer then next() else processFile()
 
-  removeClientLibrary: ->
-    if @clientPath? and fs.existsSync @clientPath
-      logger.debug "Removing client library [[ #{@clientPath} ]]"
-      fs.unlink @clientPath
+    processFile()
 
-  _writeClientLibrary: (callback) ->
-    if @config.virgin or !@clientPath? or fs.existsSync @clientPath
+  _writeClientLibrary: (config, options, next) ->
+    if !@clientPath? or fs.existsSync @clientPath
       logger.debug "Not going to write template client library"
-      return callback()
+      return next()
 
     logger.debug "Writing template client library [[ #{@mimosaClientLibraryPath} ]]"
     fs.readFile @mimosaClientLibraryPath, "ascii", (err, data) =>
-      if err?
-        logger.error("Cannot read client library: #{@mimosaClientLibraryPath}") if err?
-        return callback()
+      return next({text:"Cannot read client library: #{@mimosaClientLibraryPath}"}) if err?
 
       fileUtils.writeFile @clientPath, data, (err) =>
-        @failed("Cannot write client library: #{err}") if err?
-        callback()
+        return next({text:"Cannot write client library: #{err}"}) if err?
+        next()
 
   libraryPath: ->
     libPath = "vendor/#{@clientLibrary}"

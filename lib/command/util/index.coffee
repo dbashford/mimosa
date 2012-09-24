@@ -106,8 +106,9 @@ _cleanFiles = (config, files, compilerExtensionHash) ->
     if extension?.length > 0
       extension = extension.substring(1)
       compiler = compilerExtensionHash[extension]
-      if compiler? and compiler.getOutExtension()
-        compiledPath = compiledPath.replace(/\.\w+$/, ".#{compiler.getOutExtension()}")
+      # TODO
+      #if compiler? and compiler.getOutExtension()
+      #  compiledPath = compiledPath.replace(/\.\w+$/, ".#{compiler.getOutExtension()}")
 
     if fs.existsSync compiledPath
       logger.debug "Deleting file [[ #{compiledPath} ]]"

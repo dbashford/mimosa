@@ -20,7 +20,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 
   _buildOutputStart: =>
     logger.debug "Building Handlebars template file wrapper"
-    jsDir = path.join @srcDir, @config.watch.javascriptDir
+    jsDir = path.join @config.watch.srcDir, @config.watch.javascriptDir
     possibleHelperPaths =
       for ext in @config.extensions.javascript
         path.join(jsDir, "#{helperFile}.#{ext}") for helperFile in @config.template.helperFiles
@@ -28,7 +28,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 
     defines = ["'#{@libraryPath()}'"]
     for helperPath in helperPaths
-      helperDefine = helperPath.replace(@srcDir, '').replace(/\\/g, '/').replace(/^\/?\w+\/|\.\w+$/g, '')
+      helperDefine = helperPath.replace(@config.watch.srcDir, '').replace(/\\/g, '/').replace(/^\/?\w+\/|\.\w+$/g, '')
       defines.push "'#{helperDefine}'"
     defineString = defines.join ','
 
@@ -57,15 +57,15 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
                var template = Handlebars.template, templates = {};\n
              """
 
-  compile: (fileNames, callback) ->
+  compile: (config, options, next) ->
     error = null
 
     output = @_buildOutputStart()
 
-    for fileName in fileNames
+    for templateName, templateData of options.templateContentByName
+      fileName = templateData[0]
+      content = templateData[1]
       logger.debug "Compiling Handlebars template [[ #{fileName} ]]"
-      content = fs.readFileSync fileName, "ascii"
-      templateName = path.basename fileName, path.extname(fileName)
       try
         compiledOutput = handlebars.precompile(content)
         compiledOutput = compiledOutput.replace("partials || Handlebars.partials;",
@@ -75,6 +75,8 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
         error ?= ''
         error += "#{fileName}, #{err} \n"
 
-    output += 'return templates; });'
-
-    callback(error, output)
+    if error
+      next({text:error})
+    else
+      options.output = output += 'return templates; });'
+      next()

@@ -27,6 +27,12 @@ class MimosaRequireModule
       callback: @_requireDelete
       extensions:[config.extensions.javascript...]
 
+    lifecycle.push
+      types:['postStartup']
+      step:'complete'
+      callback: @_startupDone
+      extensions:['*']
+
     if config.optimize
 
       lifecycle.push
@@ -55,5 +61,11 @@ class MimosaRequireModule
   _requireOptimize: (config, options, next) ->
     optimizer.optimize(config, fileName)
     next()
+
+  _startupDone: (config, options, next) ->
+    requireRegister.startupDone()
+    next()
+
+
 
 module.exports = new MimosaRequireModule()
