@@ -46,11 +46,15 @@ class FileUtils
       callback(error)
 
   isFirstFileNewer: (file1, file2, cb) ->
-    fs.exists file2, (exists) ->
+    console.log "-----------"
+    console.log file1
+    console.log file2
+    console.log "-----------"
+    fs.exists file1, (exists) ->
       return cb(true) if !exists
       fs.stat file2, (err, stats2) ->
         fs.stat file1, (err, stats1) ->
-          if stats1.mtime > file2.mtime then cb(true) else cb(false)
+          if stats1.mtime > stats2.mtime then cb(true) else cb(false)
 
   # node-glob doesn't work entirely on win32
   # node-glob-whatev works on windows, but is terribly inefficient

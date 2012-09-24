@@ -133,7 +133,9 @@ module.exports = class LifeCycleManager
     next()
 
   _finishedWithFile: (options) ->
-    logger.debug "Finished with file: [[ #{options.inputFile} ]]"
+    if options.inputFile
+      logger.debug "Finished with file: [[ #{options.inputFile} ]]"
+
     #console.log "Finsihed with file: [[ #{options.inputFile} ]]"
     if @startup
       @initialFilesHandled++
@@ -141,4 +143,4 @@ module.exports = class LifeCycleManager
       if @initialFileCount is @initialFilesHandled
         @startup = false
         console.log "WOOP WOOP WOOP WOOP, WE'RE DONE FOLKS!"
-        @_execute({}, 'postStartup')
+        @_executeLifecycleStep({}, 'postStartup')

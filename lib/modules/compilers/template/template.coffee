@@ -26,25 +26,25 @@ module.exports = class AbstractTemplateCompiler
     lifecycle = []
 
     lifecycle.push
-      types:['add','update','startupDone','delete']
+      types:['add','update','postStarup','delete']
       step:'init'
       callback: @_gatherFiles
       extensions:[@extensions...]
 
     lifecycle.push
-      types:['add','update','startupDone','delete']
+      types:['add','update','postStarup','delete']
       step:'beforeRead'
       callback: @_templateNeedsCompiling
       extensions:[@extensions...]
 
     lifecycle.push
-      types:['add','update','startupDone','delete']
+      types:['add','update','postStarup','delete']
       step:'read'
       callback: @_readTemplateFiles
       extensions:[@extensions...]
 
     lifecycle.push
-      types:['add','update','startupDone','delete']
+      types:['add','update','postStarup','delete']
       step:'compile'
       callback: @_compile
       extensions:[@extensions...]
@@ -58,7 +58,7 @@ module.exports = class AbstractTemplateCompiler
         extensions:[@extensions...]
 
       lifecycle.push
-        types:['add', 'update', 'startupDone']
+        types:['add', 'update', 'postStarup']
         step:'beforeWrite'
         callback: @_writeClientLibrary
         extensions:[@extensions...]
