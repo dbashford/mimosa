@@ -6,52 +6,22 @@ fileUtils = require '../../util/file'
 
 class MimosaFileModule
 
-  lifecycleRegistration: (config) ->
-    lifecycle = []
+  lifecycleRegistration: (config, register) ->
+    register ['add','update','remove','startup'], 'init',       ['*'], @_buildAssetMetaData
+    register ['add','update'],                    'beforeRead', ['*'], @_fileNeedsCompiling
+    register ['startup'],                         'beforeRead', ['*'], @_fileNeedsCompilingStartup
 
-    lifecycle.push
-      types:['add','update','remove','startup']
-      step:'init'
-      callback: @_buildAssetMetaData
-      extensions:['*']
-
-    lifecycle.push
-      types:['add','update']
-      step:'beforeRead'
-      callback: @_fileNeedsCompiling
-      extensions:['*']
-
-    lifecycle.push
-      types:['startup']
-      step:'beforeRead'
-      callback: @_fileNeedsCompilingStartup
-      extensions:['*']
-
+    # just no templates for read
     e = config.extensions
-    lifecycle.push
-      types:['startup','add','update']
-      step:'read'
-      callback:@_read
-      extensions:[e.javascript..., e.css..., config.copy.extensions...] # just no templates
+    register ['startup','add','update'], 'read', [e.javascript..., e.css..., config.copy.extensions...], @_read
 
     unless config.virgin
-      lifecycle.push
-        types:['remove']
-        step:'delete'
-        callback:@_delete
-        extensions:['*']
-
-      lifecycle.push
-        types:['add','update','startup']
-        step:'write'
-        callback:@_write
-        extensions:['*']
-
-    lifecycle
+      register ['remove'],                 'delete', ['*'], @_delete
+      register ['add','update','startup'], 'write',  ['*'], @_write
 
   _write: (config, options, next) =>
     destinationFile = options.destinationFile
-    content = options.fileContent
+    content = options.output
 
     logger.debug "Writing file [[ #{destinationFile} ]]"
     fileUtils.writeFile destinationFile, content, (err) =>

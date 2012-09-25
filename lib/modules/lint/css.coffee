@@ -6,7 +6,7 @@ class CSSLinter
 
   rules:{}
 
-  lifecycleRegistration: (config) ->
+  lifecycleRegistration: (config, register) ->
     extensions = if config.lint.copied.css and config.lint.compiled.css
       logger.debug "Linting compiled/copied CSS only"
       config.extensions.css
@@ -20,26 +20,21 @@ class CSSLinter
       logger.debug "CSS linting is entirely turned off"
       []
 
-    return [] if extensions.length is 0
-
+    return if extensions.length is 0
 
     for rule in csslint.getRules()
       unless config.lint.rules.css[rule.id] is false
         @rules[rule.id] = 1
 
-    [
-      {types:['startup','add','update']
-      step:'afterCompile'
-      callback: @_lint
-      extensions:[extensions...]}
-    ]
+    register ['startup','add','update'], 'afterCompile', [extensions...], @_lint
 
   _lint: (config, options, next) =>
+    return next() unless options.output? and options.output.length > 0
     name = options.inputName
     if !config.lint.vendor.css and options.isVendor
       logger.debug "Not linting vendor script [[ #{name} ]]"
 
-    result = csslint.verify options.fileContent, @rules
+    result = csslint.verify options.output, @rules
     @_writeMessage(name, message) for message in result.messages
     next()
 

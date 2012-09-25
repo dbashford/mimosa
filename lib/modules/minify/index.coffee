@@ -10,33 +10,18 @@ fileUtils = require '../../util/file'
 
 class MimosaMinifyModule
 
-  lifecycleRegistration: (config) ->
-
-    lifecycle = []
-
+  lifecycleRegistration: (config, register) ->
     if config.min
       @exclude = config.minify.exclude
-
-      lifecycle.push
-        types:['add','update','startup']
-        step:'afterCompile'
-        callback: @_minifyJS
-        extensions:[config.extensions.javascript...]
+      register ['add','update','startup'], 'afterCompile', [config.extensions.javascript...], @_minifyJS
 
     if config.optimize or config.min
-
-      lifecycle.push
-        types:['add','update','startup']
-        step:'afterCompile'
-        callback: @_minifyCSS
-        extensions:[config.extensions.css...]
-
-    lifecycle
+      register ['add','update','startup'], 'afterCompile', [config.extensions.css...],        @_minifyCSS
 
   _minifyJS: (config, options, next) ->
 
     inputFile = options.inputFile
-    source = options.fileContent
+    source = options.output
 
     excluded = @exclude?.some (path) -> fileName.match(path)
 
@@ -44,14 +29,14 @@ class MimosaMinifyModule
       logger.debug "Not going to minify [[ #{fileName} ]], it has been excluded."
     else
       logger.debug "Running minification on [[ #{fileName} ]]"
-      options.fileContent = @performJSMinify(source)
+      options.output = @performJSMinify(source)
 
     next()
 
   _minifyCSS: (config, options, next) ->
     console.log "Cleaning/optimizing CSS [[ #{options.destinationFile} ]]"
     logger.debug "Cleaning/optimizing CSS [[ #{options.destinationFile} ]]"
-    options.fileContent = clean.process options.fileContent
+    options.output = clean.process options.output
     next()
 
   performJSMinify: (source) ->

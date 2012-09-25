@@ -3,5 +3,9 @@ module.exports = class CopyCompiler
   constructor: (config) ->
     @extensions = config.copy.extensions
 
-  compile: (fileName, text, destinationFile, callback) ->
-    callback(null, text, destinationFile)
+  lifecycleRegistration: (config, register) ->
+    register ['add','update','startup'], 'compile', [@extensions...], @compile
+
+  compile: (config, options, next) ->
+    options.output = options.fileContent
+    next()

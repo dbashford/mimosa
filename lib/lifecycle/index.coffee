@@ -24,7 +24,9 @@ module.exports = class LifeCycleManager
       for step in steps
         @registration[type][step] = {}
 
-    @lifecycleRegistration(module) for module in modules
+    module.lifecycleRegistration(@config, @register) for module in modules
+
+    console.log @registration
 
     e = @config.extensions
     extensions = [e.javascript..., e.css..., e.template..., config.copy.extensions...]
@@ -40,26 +42,31 @@ module.exports = class LifeCycleManager
     # register logger
     # establish error object
 
-  lifecycleRegistration: (module) ->
-    modulesReg = module.lifecycleRegistration(@config)
-    for moduleReg in modulesReg
-      continue if Object.keys(moduleReg).length is 0 # valid module registered no tasks
+  register: (types, step, extensions, callback) =>
+    unless _.isArray(types)
+      return logger.warn "Lifecycle types not passed in as array: [[ #{types} ]], ending registration for plugin."
 
-      for type in moduleReg.types
+    unless _.isArray(extensions)
+      return logger.warn "Lifecycle extensions not passed in as array: [[ #{extensions} ]], ending registration for plugin."
 
-        if !@types[type]?
-          logger.fatal "Unrecognized lifecycle type [[ #{type} ]], valid types are [[ #{Object.keys(@types).join(',')} ]]"
-          process.exit 1
+    unless _.isString(step)
+      return logger.warn "Lifecycle step not passed in as string: [[ #{step} ]], ending registration for plugin."
 
-        if @types[type].indexOf(moduleReg.step) < 0
-          logger.fatal "Unrecognized lifecycle step [[ #{moduleReg.step} ]] for type [[ #{type} ]], valid steps are [[ #{@types[type]} ]]"
-          process.exit 1
+    unless _.isFunction(callback)
+      return logger.warn "Lifecycle callback not passed in as function: [[ #{callback} ]], ending registration for plugin."
 
-        for extension in moduleReg.extensions
-          console.log "Registering extension [[ #{extension} ]], for step [[ #{moduleReg.step} ]] of type [[ #{type} ]]"
-          console.log moduleReg.callback
-          @registration[type][moduleReg.step][extension] ?= []
-          @registration[type][moduleReg.step][extension].push moduleReg.callback
+    for type in types
+
+      unless @types[type]?
+        return logger.warn "Unrecognized lifecycle type [[ #{type} ]], valid types are [[ #{Object.keys(@types).join(',')} ]], ending registration for plugin."
+
+      if @types[type].indexOf(step) < 0
+        return logger.warn "Unrecognized lifecycle step [[ #{step} ]] for type [[ #{type} ]], valid steps are [[ #{@types[type]} ]]"
+
+      for extension in extensions
+        console.log "Registering extension [[ #{extension} ]], for step [[ #{step} ]] of type [[ #{type} ]]"
+        @registration[type][step][extension] ?= []
+        @registration[type][step][extension].push callback
 
   update: (fileName) => @_executeLifecycleStep(@_buildAssetOptions(fileName), 'update')
   remove: (fileName) => @_executeLifecycleStep(@_buildAssetOptions(fileName), 'remove')
@@ -68,7 +75,6 @@ module.exports = class LifeCycleManager
       @_executeLifecycleStep(@_buildAssetOptions(fileName), 'startup')
     else
       @_executeLifecycleStep(@_buildAssetOptions(fileName), 'add')
-
 
   _buildAssetOptions: (fileName) ->
     ext = path.extname(fileName)

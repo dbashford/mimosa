@@ -8,50 +8,23 @@ optimizer = require './optimize'
 
 class MimosaRequireModule
 
-  lifecycleRegistration: (config) ->
-    lifecycle = []
+  lifecycleRegistration: (config, register) ->
 
-    return lifecycle unless config.require.verify.enabled or config.optimize
+    return unless config.require.verify.enabled or config.optimize
+
+    register ['add','update','startup'], 'afterCompile', [config.extensions.javascript...], @_requireRegister
+    register ['remove'],                 'afterDelete',  [config.extensions.javascript...], @_requireDelete
+    register ['postStartup'],            'complete',     ['*'],                             @_startupDone
+
+    if config.optimize
+      register ['remove'],       'afterDelete', [config.extensions.javascript...], @_requireOptimize
+      register ['add','update'], 'afterWrite',  [config.extensions.javascript...], @_requireOptimize
 
     requireRegister.setConfig(config)
 
-    lifecycle.push
-      types:['add','update','startup']
-      step:'afterCompile'
-      callback: @_requireRegister
-      extensions:[config.extensions.javascript...]
-
-    lifecycle.push
-      types:['remove']
-      step:'afterDelete'
-      callback: @_requireDelete
-      extensions:[config.extensions.javascript...]
-
-    lifecycle.push
-      types:['postStartup']
-      step:'complete'
-      callback: @_startupDone
-      extensions:['*']
-
-    if config.optimize
-
-      lifecycle.push
-        types:['remove']
-        step:'afterDelete'
-        callback: @_requireOptimize
-        extensions:[config.extensions.javascript...]
-
-      lifecycle.push
-        types:['add','update']
-        step:'afterWrite'
-        callback: @_requireOptimize
-        extensions:[config.extensions.javascript...]
-
-    lifecycle
-
   _requireRegister: (config, options, next) ->
     return next() if options.isVendor
-    requireRegister.process(options.destinationFile, options.fileContent)
+    requireRegister.process(options.destinationFile, options.output)
     next()
 
   _requireDelete: (config, options, next) ->
@@ -65,7 +38,5 @@ class MimosaRequireModule
   _startupDone: (config, options, next) ->
     requireRegister.startupDone()
     next()
-
-
 
 module.exports = new MimosaRequireModule()

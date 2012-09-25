@@ -1,15 +1,5 @@
-
-
 module.exports = class JSCompiler
 
-  lifecycleRegistration: ->
-
-    lifecycle = []
-
-    lifecycle.push
-      types:['add','update','startup']
-      step:'compile'
-      callback: @compile
-      extensions:[@extensions...]
-
-    lifecycle
+  lifecycleRegistration: (config, register) ->
+    console.log "INSIDE JS COMPILER!!!!"
+    register ['add','update','startup'], 'compile', [@extensions...], @compile

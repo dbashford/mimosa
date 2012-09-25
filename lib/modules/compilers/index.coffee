@@ -23,15 +23,11 @@ class CompilerCentral
         Compiler.type = "copy"
       @all.push(Compiler)
 
-  lifecycleRegistration: (config) ->
-    compilers = @getCompilers(config)
-
-    extensionReg = {}
+  lifecycleRegistration: (config, register) ->
+    compilers = @getCompilers(config).compilers
     for compiler in compilers
-      for ext in compiler.extensions
-        extensionReg[ext] = compiler.compile
-
-    {compile:extensionReg}
+      if compiler.lifecycleRegistration?
+         compiler.lifecycleRegistration(config, register)
 
   _compilersWithoutCopy: ->
     @all.filter (comp) -> comp.base isnt "copy"

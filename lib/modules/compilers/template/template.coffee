@@ -21,49 +21,15 @@ module.exports = class AbstractTemplateCompiler
       @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
       @clientPath = path.join jsDir, 'vendor', "#{@clientLibrary}.js"
 
-  lifecycleRegistration: (config) ->
-
-    lifecycle = []
-
-    lifecycle.push
-      types:['add','update','postStarup','delete']
-      step:'init'
-      callback: @_gatherFiles
-      extensions:[@extensions...]
-
-    lifecycle.push
-      types:['add','update','postStarup','delete']
-      step:'beforeRead'
-      callback: @_templateNeedsCompiling
-      extensions:[@extensions...]
-
-    lifecycle.push
-      types:['add','update','postStarup','delete']
-      step:'read'
-      callback: @_readTemplateFiles
-      extensions:[@extensions...]
-
-    lifecycle.push
-      types:['add','update','postStarup','delete']
-      step:'compile'
-      callback: @_compile
-      extensions:[@extensions...]
+  lifecycleRegistration: (config, register) ->
+    register ['add','update','postStartup','delete'], 'init',       [@extensions...], @_gatherFiles
+    register ['add','update','postStartup','delete'], 'beforeRead', [@extensions...], @_templateNeedsCompiling
+    register ['add','update','postStartup','delete'], 'read',       [@extensions...], @_readTemplateFiles
+    register ['add','update','postStartup','delete'], 'compile',    [@extensions...], @_compile
 
     unless config.virgin
-
-      lifecycle.push
-        types:['delete']
-        step:'beforeRead'
-        callback: @_testForRemoveClientLibrary
-        extensions:[@extensions...]
-
-      lifecycle.push
-        types:['add', 'update', 'postStarup']
-        step:'beforeWrite'
-        callback: @_writeClientLibrary
-        extensions:[@extensions...]
-
-    lifecycle
+      register ['delete'],                       'beforeRead',  [@extensions...], @_testForRemoveClientLibrary
+      register ['add', 'update', 'postStartup'], 'beforeWrite', [@extensions...], @_writeClientLibrary
 
   _gatherFiles: (config, options, next) ->
     logger.debug "Gathering files for templates"

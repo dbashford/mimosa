@@ -5,7 +5,7 @@ logger =  require '../../util/logger'
 
 class JSLinter
 
-  lifecycleRegistration: (config) ->
+  lifecycleRegistration: (config, register) ->
     extensions = if config.lint.copied.javascript and config.lint.compiled.javascript
       logger.debug "Linting compiled/copied JavaScript only"
       config.extensions.javascript
@@ -19,22 +19,19 @@ class JSLinter
       logger.debug "JavaScript linting is entirely turned off"
       []
 
-    return [] if extensions.length is 0
+    return if extensions.length is 0
 
     @options = config.lint.rules.javascript
 
-    [
-      {types:['startup','add','update']
-      step:'afterCompile'
-      callback: @_lint
-      extensions:[extensions...]}
-    ]
+    register ['startup','add','update'], 'afterCompile', [extensions...], @_lint
 
   _lint: (config, options, next) =>
+    return next() unless options.output? and options.output.length > 0
+
     if !config.lint.vendor.javascript and options.isVendor
       logger.debug "Not linting vendor script [[ #{options.inputName} ]]"
     else
-      lintok = jslint options.fileContent, @options
+      lintok = jslint options.output, @options
       unless lintok
         for e in jslint.errors
           continue unless e?
