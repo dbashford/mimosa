@@ -89,9 +89,9 @@ module.exports = class AbstractCSSCompiler
     @_importsForFile(baseFile, baseFile) for baseFile in @baseFiles
 
   _getAllFiles: =>
-    files = wrench.readdirSyncRecursive(@config.watch.srcDir)
+    files = wrench.readdirSyncRecursive(@config.watch.sourceDir)
       .map (file) =>
-        path.join(@config.watch.srcDir, file)
+        path.join(@config.watch.sourceDir, file)
       .filter (file) =>
         @extensions.some (ext) ->
           file.slice(-ext.length) is ext

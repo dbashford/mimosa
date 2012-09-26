@@ -13,10 +13,12 @@ module.exports = class LifeCycleManager
 
   types:
     startup:     ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
+    postStartup: ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
+    startupDone: ["init"]
+
     add:         ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
     update:      ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
-    remove:      ["init", "beforeRead", "read", "afterRead", "beforeDelete",  "delete",  "afterDelete",  "complete"]
-    postStartup: ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
+    remove:      ["init", "beforeRead", "read", "afterRead", "beforeDelete",  "delete",  "afterDelete",  "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
 
   constructor: (@config, modules) ->
     for type, steps of @types
@@ -29,10 +31,10 @@ module.exports = class LifeCycleManager
     console.log @registration
 
     e = @config.extensions
-    extensions = [e.javascript..., e.css..., e.template..., config.copy.extensions...]
+    @allExtensions = [e.javascript..., e.css..., e.template..., config.copy.extensions...]
     files = wrench.readdirSyncRecursive(@config.watch.sourceDir).filter (f) =>
       ext = path.extname(f).substring(1)
-      ext.length >= 1 and extensions.indexOf(ext) >= 0
+      ext.length >= 1 and @allExtensions.indexOf(ext) >= 0
 
     @initialFileCount = files.length
 
@@ -81,7 +83,7 @@ module.exports = class LifeCycleManager
     ext = if ext.length > 1 then ext.substring(1) else ''
     {inputFile:fileName, extension:ext}
 
-  _executeLifecycleStep: (options, type) ->
+  _executeLifecycleStep: (options, type, done = @_finishedWithFile) ->
     options.lifeCycleType = type
 
     i = 0
@@ -90,11 +92,11 @@ module.exports = class LifeCycleManager
         @_lifecycleMethod type, @types[type][i++], options, cb
       else
         # finished naturally
-        @_finishedWithFile(options)
+        done(options)
 
     cb = (nextVal) =>
       if _.isBoolean(nextVal) and nextVal is false
-        @_finishedWithFile(options)
+        done(options)
       else if _.isString(nextVal)
         # TODO, increment i
         next()
@@ -138,15 +140,19 @@ module.exports = class LifeCycleManager
 
     next()
 
-  _finishedWithFile: (options) ->
+  _finishedWithFile: (options) =>
     if options.inputFile
       logger.debug "Finished with file: [[ #{options.inputFile} ]]"
 
-    #console.log "Finsihed with file: [[ #{options.inputFile} ]]"
+    console.log "Finsihed with file: [[ #{options.inputFile} ]]"
     if @startup
       @initialFilesHandled++
       console.log @initialFileCount, @initialFilesHandled
       if @initialFileCount is @initialFilesHandled
         @startup = false
         console.log "WOOP WOOP WOOP WOOP, WE'RE DONE FOLKS!"
-        @_executeLifecycleStep({}, 'postStartup')
+        for extension in @allExtensions
+          done = 0
+          @_executeLifecycleStep {extension:extension}, 'postStartup', =>
+            if ++done is @allExtensions.length
+              console.log "DONE WITH ALL EXTENSIONS"

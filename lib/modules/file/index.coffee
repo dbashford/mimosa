@@ -7,21 +7,29 @@ fileUtils = require '../../util/file'
 class MimosaFileModule
 
   lifecycleRegistration: (config, register) ->
-    register ['add','update','remove','startup'], 'init',       ['*'], @_buildAssetMetaData
-    register ['add','update'],                    'beforeRead', ['*'], @_fileNeedsCompiling
-    register ['startup'],                         'beforeRead', ['*'], @_fileNeedsCompilingStartup
-
-    # just no templates for read
     e = config.extensions
-    register ['startup','add','update'], 'read', [e.javascript..., e.css..., config.copy.extensions...], @_read
+    cExts = config.copy.extensions
+    register ['add','update','remove'], 'init',       ['*'],                       @_buildAssetMetaData
+    register ['startup'],               'init',       [e.javascript..., cExts...], @_buildAssetMetaData
+    register ['add','update'],          'beforeRead', ['*'],                       @_fileNeedsCompiling
+    register ['startup'],               'beforeRead', [e.javascript..., cExts...], @_fileNeedsCompilingStartup
+    register ['add','update'],          'read',       [e.javascript..., e.css..., cExts...], @_read
+    register ['startup'],               'read',       [e.javascript..., cExts...],           @_read
 
     unless config.virgin
-      register ['remove'],                 'delete', ['*'], @_delete
-      register ['add','update','startup'], 'write',  ['*'], @_write
+      register ['remove'],       'delete', ['*'],                       @_delete
+      register ['add','update'], 'write',  ['*'],                       @_write
+      register ['startup'],      'write',  [e.javascript..., cExts...], @_write
+      register ['postStartup'],  'write',  [e.template...],             @_write
 
   _write: (config, options, next) =>
     destinationFile = options.destinationFile
     content = options.output
+
+    console.log "FILE " , options.destinationFile
+
+
+    #return next() unless content?
 
     logger.debug "Writing file [[ #{destinationFile} ]]"
     fileUtils.writeFile destinationFile, content, (err) =>
@@ -50,7 +58,9 @@ class MimosaFileModule
     inputFile = options.inputFile
     destinationFile = options.destinationFile
 
-    fileUtils.isFirstFileNewer destinationFile, inputFile, (isNewer) ->
+    next(false) unless inputFile?
+
+    fileUtils.isFirstFileNewer inputFile, destinationFile, (isNewer) ->
       if isNewer then next() else next(false)
 
   # for anything javascript related, force compile regardless
@@ -72,8 +82,7 @@ class MimosaFileModule
     compiledDir = config.watch.compiledDir
     compiledJSDir = config.watch.compiledJavascriptDir
     exts = config.extensions
-
-    ext = path.extname(inputFile).substring(1)
+    ext = options.extension
 
     destinationFile = if exts.template.indexOf(ext) > -1
       options.isTemplate = true
@@ -95,7 +104,7 @@ class MimosaFileModule
         baseCompDir.substring(0, baseCompDir.lastIndexOf(".")) + ".css"
 
     if destinationFile?
-      logger.debug "Destination for file [[ #{inputFile} ]] is [[ #{destinationFile} ]]"
+      logger.debug "Destination for file [[ #{inputFile ? "template file"} ]] is [[ #{destinationFile} ]]"
 
       # add various asset metadata to options
       options.destinationFile = destinationFile

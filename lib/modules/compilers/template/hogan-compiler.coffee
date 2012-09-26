@@ -16,7 +16,7 @@ module.exports = class HoganCompiler extends AbstractTemplateCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  compile: (config, options, next) ->
+  compile: (config, options, next) =>
     error = null
 
     output = "define(['#{@libraryPath()}'], function (Hogan){ var templates = {};\n"

@@ -25,16 +25,16 @@ module.exports = class AbstractTemplateCompiler
     register ['add','update','postStartup','delete'], 'init',       [@extensions...], @_gatherFiles
     register ['add','update','postStartup','delete'], 'beforeRead', [@extensions...], @_templateNeedsCompiling
     register ['add','update','postStartup','delete'], 'read',       [@extensions...], @_readTemplateFiles
-    register ['add','update','postStartup','delete'], 'compile',    [@extensions...], @_compile
+    register ['add','update','postStartup','delete'], 'compile',    [@extensions...], @compile
 
     unless config.virgin
       register ['delete'],                       'beforeRead',  [@extensions...], @_testForRemoveClientLibrary
       register ['add', 'update', 'postStartup'], 'beforeWrite', [@extensions...], @_writeClientLibrary
 
-  _gatherFiles: (config, options, next) ->
-    logger.debug "Gathering files for templates"
-    allFiles = wrench.readdirSyncRecursive(config.watch.srcDir)
-      .map (file) => path.join(config.watch.srcDir, file)
+  _gatherFiles: (config, options, next) =>
+    options.destinationFile ?= @templateFileName # will set during startup
+    allFiles = wrench.readdirSyncRecursive(config.watch.sourceDir)
+      .map (file) => path.join(config.watch.sourceDir, file)
 
     fileNames = []
     for file in allFiles
@@ -43,24 +43,26 @@ module.exports = class AbstractTemplateCompiler
 
     @_testForSameTemplateName(fileNames) unless fileNames.length <= 1
 
-    options.templatefileNames = fileNames
+    options.templateFileNames = fileNames
 
     next()
 
   _readTemplateFiles: (config, options, next) ->
     options.templateContentByName = {}
-    numFiles = options.templatefileNames.length
+    numFiles = options.templateFileNames.length
+    filesDone = 0
     done = ->
-      next() if ++numFiles is options.templatefileNames.length
+      options.templateContentByName
+      next() if ++filesDone is options.templateFileNames.length
 
-    for fileName in options.templatefileNames
-      fs.readFile fileName, "ascii", (err, content) ->
+    options.templateFileNames.forEach (fileName) ->
+      fs.readFile fileName, "ascii", (err, data) ->
         templateName = path.basename fileName, path.extname(fileName)
-        options.templateContentByName[templateName] = [fileName, content]
+        options.templateContentByName[templateName] = [fileName, data]
         done()
 
-  _testForRemoveClientLibrary: (config, options, next) ->
-    if options.templatefileNames?.length is 0
+  _testForRemoveClientLibrary: (config, options, next) =>
+    if options.templateFileNames?.length is 0
       logger.debug "No template files left, removing [[ #{@templateFileName} ]]"
       @removeClientLibrary(next)
     else
@@ -87,14 +89,14 @@ module.exports = class AbstractTemplateCompiler
       else
         templateHash[templateName] = fileName
 
-  _templateNeedsCompiling: (config, options, next) ->
-    fileNames = options.templatefileNames
+  _templateNeedsCompiling: (config, options, next) =>
+    fileNames = options.templateFileNames
     numFiles = fileNames.length
 
     i = 0
     processFile = =>
       if i < numFiles
-        fileUtils.isFirstFileNewer fileNames[i], @templateFileName, cb
+        fileUtils.isFirstFileNewer fileNames[i++], @templateFileName, cb
       else
         next(false)
 
@@ -103,7 +105,7 @@ module.exports = class AbstractTemplateCompiler
 
     processFile()
 
-  _writeClientLibrary: (config, options, next) ->
+  _writeClientLibrary: (config, options, next) =>
     if !@clientPath? or fs.existsSync @clientPath
       logger.debug "Not going to write template client library"
       return next()

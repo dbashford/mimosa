@@ -22,7 +22,7 @@ module.exports = class LessCompiler extends AbstractCssCompiler
   compile: (fileName, text, destinationFile, callback) =>
     logger.debug "Compiling LESS file [[ #{fileName} ]], first parsing..."
     parser = new less.Parser
-      paths: [@config.watch.srcDir, path.dirname(fileName)],
+      paths: [@config.watch.sourceDir, path.dirname(fileName)],
       filename: fileName
     parser.parse text, (error, tree) =>
       @initBaseFilesToCompile--

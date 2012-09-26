@@ -20,7 +20,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 
   _buildOutputStart: =>
     logger.debug "Building Handlebars template file wrapper"
-    jsDir = path.join @config.watch.srcDir, @config.watch.javascriptDir
+    jsDir = path.join @config.watch.sourceDir, @config.watch.javascriptDir
     possibleHelperPaths =
       for ext in @config.extensions.javascript
         path.join(jsDir, "#{helperFile}.#{ext}") for helperFile in @config.template.helperFiles
@@ -28,7 +28,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 
     defines = ["'#{@libraryPath()}'"]
     for helperPath in helperPaths
-      helperDefine = helperPath.replace(@config.watch.srcDir, '').replace(/\\/g, '/').replace(/^\/?\w+\/|\.\w+$/g, '')
+      helperDefine = helperPath.replace(@config.watch.sourceDir, '').replace(/\\/g, '/').replace(/^\/?\w+\/|\.\w+$/g, '')
       defines.push "'#{helperDefine}'"
     defineString = defines.join ','
 
@@ -57,7 +57,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
                var template = Handlebars.template, templates = {};\n
              """
 
-  compile: (config, options, next) ->
+  compile: (config, options, next) =>
     error = null
 
     output = @_buildOutputStart()

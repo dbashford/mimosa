@@ -16,7 +16,7 @@ module.exports = class JadeCompiler extends AbstractTemplateCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  compile: (config, options, next) ->
+  compile: (config, options, next) =>
     error = null
 
     output = "define(['#{@libraryPath()}'], function (jade){ var templates = {};\n"

@@ -9,7 +9,7 @@ module.exports = class AbstractUnderscoreCompiler extends AbstractTemplateCompil
   constructor: (config) ->
     super(config)
 
-  compile: (config, options, next) ->
+  compile: (config, options, next) =>
     error = null
 
     output = "define(['#{@libraryPath()}'], function (_) { var templates = {};\n"

@@ -26,7 +26,7 @@ class CSSLinter
       unless config.lint.rules.css[rule.id] is false
         @rules[rule.id] = 1
 
-    register ['startup','add','update'], 'afterCompile', [extensions...], @_lint
+    register ['add','update','postStartup'], 'afterCompile', [extensions...], @_lint
 
   _lint: (config, options, next) =>
     return next() unless options.output? and options.output.length > 0

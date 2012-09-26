@@ -46,11 +46,7 @@ class FileUtils
       callback(error)
 
   isFirstFileNewer: (file1, file2, cb) ->
-    console.log "-----------"
-    console.log file1
-    console.log file2
-    console.log "-----------"
-    fs.exists file1, (exists) ->
+    fs.exists file2, (exists) ->
       return cb(true) if !exists
       fs.stat file2, (err, stats2) ->
         fs.stat file1, (err, stats1) ->

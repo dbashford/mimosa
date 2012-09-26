@@ -16,7 +16,7 @@ module.exports = class HTMLCompiler extends AbstractTemplateCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  compile: (config, options, next) ->
+  compile: (config, options, next) =>
     error = null
 
     # we don't want underscore to actually work, just to wrap stuff
