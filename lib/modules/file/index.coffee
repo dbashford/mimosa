@@ -9,27 +9,24 @@ class MimosaFileModule
   lifecycleRegistration: (config, register) ->
     e = config.extensions
     cExts = config.copy.extensions
-    register ['add','update','remove'], 'init',       ['*'],                       @_buildAssetMetaData
-    register ['startup'],               'init',       [e.javascript..., cExts...], @_buildAssetMetaData
-    register ['add','update'],          'beforeRead', ['*'],                       @_fileNeedsCompiling
-    register ['startup'],               'beforeRead', [e.javascript..., cExts...], @_fileNeedsCompilingStartup
-    register ['add','update'],          'read',       [e.javascript..., e.css..., cExts...], @_read
-    register ['startup'],               'read',       [e.javascript..., cExts...],           @_read
+    register ['add','update','remove'], 'init',       @_buildAssetMetaData
+    register ['startupFile'],           'init',       @_buildAssetMetaData,        [e.javascript..., cExts...]
+    register ['add','update'],          'beforeRead', @_fileNeedsCompiling
+    register ['startupFile'],           'beforeRead', @_fileNeedsCompilingStartup, [e.javascript..., cExts...]
+    register ['add','update'],          'read',       @_read,                      [e.javascript..., e.css..., cExts...]
+    register ['startupFile'],           'read',       @_read,                      [e.javascript..., cExts...]
 
     unless config.virgin
-      register ['remove'],       'delete', ['*'],                       @_delete
-      register ['add','update'], 'write',  ['*'],                       @_write
-      register ['startup'],      'write',  [e.javascript..., cExts...], @_write
-      register ['postStartup'],  'write',  [e.template...],             @_write
+      register ['remove'],           'delete', @_delete
+      register ['add','update'],     'write',  @_write
+      register ['startupFile'],      'write',  @_write,  [e.javascript..., cExts...]
+      register ['startupExtension'], 'write',  @_write,  [e.template...]
 
   _write: (config, options, next) =>
     destinationFile = options.destinationFile
     content = options.output
 
-    console.log "FILE " , options.destinationFile
-
-
-    #return next() unless content?
+    return next() unless content?
 
     logger.debug "Writing file [[ #{destinationFile} ]]"
     fileUtils.writeFile destinationFile, content, (err) =>

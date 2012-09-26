@@ -6,24 +6,18 @@ _ =         require 'lodash'
 
 logger =    require '../../util/logger'
 compilerCentral = require '../../modules/compilers'
-
 LifeCycle = require '../../lifecycle'
-
 modules = require '../../modules'
 
 class Watcher
 
-  totalStartupFiles:0
-  startupFilesDone:0
   adds:[]
 
   constructor: (@config, @persist, @initCallback) ->
     @throttle = @config.watch.throttle
-
-    @lifecycle = new LifeCycle(@config, modules)
-
+    @lifecycle = new LifeCycle(@config, modules, @_startupDoneCallback)
     {@compilerExtensionHash, @compilers} = compilerCentral.getCompilers(@config)
-    #compiler.setFileDone(@fileDone) for compiler in @compilers
+
     templateLibraryWithFiles = 0
     for compiler in @compilers
       files = wrench.readdirSyncRecursive(@config.watch.sourceDir).filter (f) =>
@@ -32,7 +26,6 @@ class Watcher
 
       logger.debug "File count for extension(s) [[ #{compiler.extensions} ]]: #{files.length}"
 
-      @totalStartupFiles += files.length
       if files.length > 0 and compiler.template
         templateLibraryWithFiles++
 
@@ -49,13 +42,18 @@ class Watcher
       @intervalId = setInterval(@_pullFiles, 100)
       @_pullFiles()
 
+  _startupDoneCallback: =>
+    clearInterval(@intervalId) if @intervalId? and !@persist
+    @initCallback(@config)
+
   _startWatcher:  ->
     watcher = watch.watch(@config.watch.sourceDir, {persistent:@persist})
     watcher.on "error", (error) -> logger.debug "File watching error: #{error}"
     watcher.on "change", (f) => #@_findCompiler(f)?.updated(f)
     watcher.on "unlink", (f) => #@_findCompiler(f)?.removed(f)
-    watcher.on "add", (f) => @lifecycle.add(f)
-      #if @throttle > 0 then @adds.push(f) else @_findCompiler(f)?.created(f)
+    watcher.on "add", (f) =>
+      unless @_ignored(f)
+        if @throttle > 0 then @adds.push(f) else @lifecycle.add(f)
 
   _pullFiles: =>
     return if @adds.length is 0
@@ -63,35 +61,13 @@ class Watcher
       @adds.splice(0, @adds.length)
     else
       @adds.splice(0, @throttle)
-    @_findCompiler(f)?.created(f) for f in filesToAdd
+    @lifecycle.add(f) for f in filesToAdd
 
-  fileDone: =>
-    if ++@startupFilesDone is @totalStartupFiles
-      clearInterval(@intervalId) if @intervalId? and !@persist
-      @_processFinishedCompilers()
-      postStartups = 0
-      postStartups++ for compiler in @compilers when compiler.postStartup?
-      if compiler.postStartup?
-        postStartups++
-        compiler.setFileDone(@startupDone(compiler))
-
-  startupDone: (compiler) =>
-    #if compiler.startupDone
-    compiler.setFileDone(->) for compiler in @compilers
-    #optimizer.optimize(@config)
-    @initCallback(@config) if @initCallback?
-
-  _findCompiler: (fileName) ->
+  _ignored: (fileName) ->
     if @config.watch.ignored.some((str) -> fileName.indexOf(str) >= 0 )
-      return logger.debug "Ignoring file, matches #{@config.watch.ignored}"
-
-    extension = path.extname(fileName).substring(1)
-    return unless extension?.length > 0
-
-    compiler = @compilerExtensionHash[extension]
-    return compiler if compiler
-
-    logger.warn "No compiler has been registered: #{extension}, #{fileName}"
-    null
+      logger.debug "Ignoring file, matches #{@config.watch.ignored}"
+      true
+    else
+      false
 
 module.exports = Watcher

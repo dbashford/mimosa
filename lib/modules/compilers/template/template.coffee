@@ -22,14 +22,19 @@ module.exports = class AbstractTemplateCompiler
       @clientPath = path.join jsDir, 'vendor', "#{@clientLibrary}.js"
 
   lifecycleRegistration: (config, register) ->
-    register ['add','update','postStartup','delete'], 'init',       [@extensions...], @_gatherFiles
-    register ['add','update','postStartup','delete'], 'beforeRead', [@extensions...], @_templateNeedsCompiling
-    register ['add','update','postStartup','delete'], 'read',       [@extensions...], @_readTemplateFiles
-    register ['add','update','postStartup','delete'], 'compile',    [@extensions...], @compile
+    register ['add','update','delete'], 'init',       @_gatherFiles,            [@extensions...]
+    register ['startupExtension'],      'init',       @_gatherFiles,            [@extensions[0]]
+    register ['add','update','delete'], 'beforeRead', @_templateNeedsCompiling, [@extensions...]
+    register ['startupExtension'],      'beforeRead', @_templateNeedsCompiling, [@extensions[0]]
+    register ['add','update','delete'], 'read',       @_readTemplateFiles,      [@extensions...]
+    register ['startupExtension'],      'read',       @_readTemplateFiles,      [@extensions[0]]
+    register ['add','update','delete'], 'compile',    @compile,                 [@extensions...]
+    register ['startupExtension'],      'compile',    @compile,                 [@extensions[0]]
 
     unless config.virgin
-      register ['delete'],                       'beforeRead',  [@extensions...], @_testForRemoveClientLibrary
-      register ['add', 'update', 'postStartup'], 'beforeWrite', [@extensions...], @_writeClientLibrary
+      register ['delete'],           'beforeRead',  @_testForRemoveClientLibrary, [@extensions...]
+      register ['add', 'update'],    'beforeWrite', @_writeClientLibrary,         [@extensions...]
+      register ['startupExtension'], 'beforeWrite', @_writeClientLibrary,         [@extensions[0]]
 
   _gatherFiles: (config, options, next) =>
     options.destinationFile ?= @templateFileName # will set during startup
@@ -41,10 +46,10 @@ module.exports = class AbstractTemplateCompiler
       extension = path.extname(file).substring(1)
       fileNames.push(file) if @extensions.indexOf(extension) >= 0
 
+    return next(false) if fileNames.length is 0
+
     @_testForSameTemplateName(fileNames) unless fileNames.length <= 1
-
     options.templateFileNames = fileNames
-
     next()
 
   _readTemplateFiles: (config, options, next) ->

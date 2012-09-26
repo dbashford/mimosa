@@ -17,9 +17,6 @@ module.exports = class DustCompiler extends AbstractTemplateCompiler
     super(config)
 
   compile: (config, options, next) =>
-    console.log "INSIDE DUST COMPILE"
-    console.log options.templateContentByName
-
     error = null
 
     output = "define(['#{@libraryPath()}'], function (dust){ "

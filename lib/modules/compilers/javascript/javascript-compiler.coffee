@@ -1,4 +1,4 @@
 module.exports = class JSCompiler
 
   lifecycleRegistration: (config, register) ->
-    register ['add','update','startup'], 'compile', [@extensions...], @compile
+    register ['add','update','startupFile'], 'compile', @compile, [@extensions...]

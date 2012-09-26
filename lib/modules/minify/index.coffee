@@ -13,10 +13,10 @@ class MimosaMinifyModule
   lifecycleRegistration: (config, register) ->
     if config.min
       @exclude = config.minify.exclude
-      register ['add','update','startup'], 'afterCompile', [config.extensions.javascript...], @_minifyJS
+      register ['add','update','startupFile'], 'afterCompile', @_minifyJS,  [config.extensions.javascript...]
 
     if config.optimize or config.min
-      register ['add','update','startup'], 'afterCompile', [config.extensions.css...],        @_minifyCSS
+      register ['add','update','startupFile'], 'afterCompile', @_minifyCSS, [config.extensions.css...]
 
   _minifyJS: (config, options, next) ->
 
@@ -34,7 +34,6 @@ class MimosaMinifyModule
     next()
 
   _minifyCSS: (config, options, next) ->
-    console.log "Cleaning/optimizing CSS [[ #{options.destinationFile} ]]"
     logger.debug "Cleaning/optimizing CSS [[ #{options.destinationFile} ]]"
     options.output = clean.process options.output
     next()
@@ -47,6 +46,5 @@ class MimosaMinifyModule
       pro.gen_code ast
     catch err
       logger.warn "Minification failed on [[ #{fileName} ]], writing unminified source\n#{err}"
-
 
 module.exports = new MimosaMinifyModule()

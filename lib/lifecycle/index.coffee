@@ -12,15 +12,15 @@ module.exports = class LifeCycleManager
   registration: {}
 
   types:
-    startup:     ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
-    postStartup: ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
-    startupDone: ["init"]
+    startupFile:      ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
+    startupExtension: ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
+    startupDone:      ["init"]
 
-    add:         ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
-    update:      ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
-    remove:      ["init", "beforeRead", "read", "afterRead", "beforeDelete",  "delete",  "afterDelete",  "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
+    add:    ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
+    update: ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
+    remove: ["init", "beforeRead", "read", "afterRead", "beforeDelete",  "delete",  "afterDelete",  "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
 
-  constructor: (@config, modules) ->
+  constructor: (@config, modules, @startupDoneCallback) ->
     for type, steps of @types
       @registration[type] = {}
       for step in steps
@@ -44,7 +44,7 @@ module.exports = class LifeCycleManager
     # register logger
     # establish error object
 
-  register: (types, step, extensions, callback) =>
+  register: (types, step, callback, extensions = ['*']) =>
     unless _.isArray(types)
       return logger.warn "Lifecycle types not passed in as array: [[ #{types} ]], ending registration for plugin."
 
@@ -74,7 +74,7 @@ module.exports = class LifeCycleManager
   remove: (fileName) => @_executeLifecycleStep(@_buildAssetOptions(fileName), 'remove')
   add: (fileName) =>
     if @startup
-      @_executeLifecycleStep(@_buildAssetOptions(fileName), 'startup')
+      @_executeLifecycleStep(@_buildAssetOptions(fileName), 'startupFile')
     else
       @_executeLifecycleStep(@_buildAssetOptions(fileName), 'add')
 
@@ -128,12 +128,9 @@ module.exports = class LifeCycleManager
         # is error, log the error and move on
         # TODO log error
         done(false)
-      else if _.isBoolean(nextVal) and nextVal is false
+      else if _.isBoolean(nextVal) and !nextVal
         done(false)
         # no error, natural stop to workflow
-      else if _.isString(nextVal)
-        done(nextVal)
-        # fast forward
       else
         # go to the next one
         next()
@@ -141,18 +138,20 @@ module.exports = class LifeCycleManager
     next()
 
   _finishedWithFile: (options) =>
-    if options.inputFile
-      logger.debug "Finished with file: [[ #{options.inputFile} ]]"
+    logger.debug "Finished with file: [[ #{options.inputFile} ]]"
+    #console.log "Finished with file: [[ #{options.inputFile} ]]"
+    @_startupExtensions() if @startup and ++@initialFilesHandled is @initialFileCount
 
-    console.log "Finsihed with file: [[ #{options.inputFile} ]]"
-    if @startup
-      @initialFilesHandled++
-      console.log @initialFileCount, @initialFilesHandled
-      if @initialFileCount is @initialFilesHandled
-        @startup = false
-        console.log "WOOP WOOP WOOP WOOP, WE'RE DONE FOLKS!"
-        for extension in @allExtensions
-          done = 0
-          @_executeLifecycleStep {extension:extension}, 'postStartup', =>
-            if ++done is @allExtensions.length
-              console.log "DONE WITH ALL EXTENSIONS"
+  _startupExtensions: =>
+    @startup = false
+    done = 0
+    # go through startup for each extension
+    @allExtensions.forEach (extension) =>
+      @_executeLifecycleStep {extension:extension}, 'startupExtension', =>
+        @_startupDone() if ++done is @allExtensions.length
+
+  _startupDone: =>
+    # wrap up, startupDone
+    @_executeLifecycleStep {}, 'startupDone', =>
+      console.log "INSIDE STARTUP DONE CALLBACK, ", @startupDoneCallback?
+      if @startupDoneCallback? then @startupDoneCallback()

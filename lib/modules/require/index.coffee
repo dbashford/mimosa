@@ -12,13 +12,14 @@ class MimosaRequireModule
 
     return unless config.require.verify.enabled or config.optimize
 
-    register ['add','update','startup'], 'afterCompile', [config.extensions.javascript...], @_requireRegister
-    register ['remove'],                 'afterDelete',  [config.extensions.javascript...], @_requireDelete
-    register ['postStartup'],            'complete',     ['*'],                             @_startupDone
+    register ['add','update','startupFile'], 'afterCompile', @_requireRegister, [config.extensions.javascript...]
+    register ['remove'],                     'afterDelete',  @_requireDelete,   [config.extensions.javascript...]
+    register ['startupDone'],                'init',         @_startupDone
 
     if config.optimize
-      register ['remove'],       'afterDelete', [config.extensions.javascript...], @_requireOptimize
-      register ['add','update'], 'afterWrite',  [config.extensions.javascript...], @_requireOptimize
+      register ['remove'],       'afterDelete', @_requireOptimize, [config.extensions.javascript...]
+      register ['add','update'], 'afterWrite',  @_requireOptimize, [config.extensions.javascript...]
+      register ['startupDone'],  'init',  @_requireOptimize
 
     requireRegister.setConfig(config)
 
