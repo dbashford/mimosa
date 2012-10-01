@@ -7,5 +7,6 @@ module.exports = class CopyCompiler
     register ['add','update','startupFile'], 'compile', @compile, [@extensions...]
 
   compile: (config, options, next) ->
-    options.output = options.fileContent
+    for file in options.files
+      file.outputFileText = file.inputFileText
     next()

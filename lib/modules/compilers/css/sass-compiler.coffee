@@ -28,7 +28,8 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     logger.debug "win32 detected, changing sass command to #{runSass}"
 
   constructor: (config, @extensions) ->
-    super(config)
+    super()
+
     SassCompiler.checkIfExists (exists) ->
       unless exists
         logger.error "SASS is configured as the CSS compiler, but you don't seem to have SASS installed"
@@ -40,24 +41,26 @@ module.exports = class SassCompiler extends AbstractCssCompiler
       @hasCompass = not error
       logger.debug "Compass available? #{@hasCompass}"
 
-  compile: (fileName, text, destinationFile, callback) =>
-    return @_compile(fileName, text, destinationFile, callback) if @hasCompass?
+  compile: (file, config, options, done) =>
+    return @_compile(file, config, options, done) if @hasCompass?
 
     compileOnDelay = =>
       if @hasCompass?
-        @_compile(fileName, text, destinationFile, callback)
+        @_compile(file, config, options, done)
       else
         setTimeout compileOnDelay, 100
     do compileOnDelay
 
-  _compile: (fileName, text, destinationFile, callback) =>
+  _compile: (file, config, options, done) =>
+    text = file.sourceFileText
+    fileName = file.sourceFileName
     logger.debug "Beginning compile of SASS file [[ #{fileName} ]]"
     result = ''
     error = null
-    options = ['--stdin', '--load-path', @config.watch.sourceDir, '--load-path', path.dirname(fileName), '--no-cache']
-    options.push '--compass' if @hasCompass
-    options.push '--scss' if /\.scss$/.test fileName
-    sass = spawn runSass, options
+    compilerOptions = ['--stdin', '--load-path', config.watch.sourceDir, '--load-path', path.dirname(fileName), '--no-cache']
+    compilerOptions.push '--compass' if @hasCompass
+    compilerOptions.push '--scss' if /\.scss$/.test fileName
+    sass = spawn runSass, compilerOptions
     sass.stdin.end text
     sass.stdout.on 'data', (buffer) -> result += buffer.toString()
     sass.stderr.on 'data', (buffer) ->
@@ -66,7 +69,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     sass.on 'exit', (code) =>
       logger.debug "Finished SASS compile for file [[ #{fileName} ]], errors? #{error?}"
       @initBaseFilesToCompile--
-      callback(error, result, destinationFile)
+      done(error, result)
 
   _isInclude: (fileName) ->
     path.basename(fileName).charAt(0) is '_'

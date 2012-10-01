@@ -5,6 +5,8 @@ _ =      require 'lodash'
 
 logger = require '../util/logger'
 
+compilers = require '../modules/compilers'
+
 module.exports = class LifeCycleManager
 
   startup:true
@@ -21,6 +23,8 @@ module.exports = class LifeCycleManager
     remove: ["init", "beforeRead", "read", "afterRead", "beforeDelete",  "delete",  "afterDelete",  "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
 
   constructor: (@config, modules, @startupDoneCallback) ->
+    compilers.setupCompilers(@config)
+
     for type, steps of @types
       @registration[type] = {}
       for step in steps
@@ -28,7 +32,7 @@ module.exports = class LifeCycleManager
 
     module.lifecycleRegistration(@config, @register) for module in modules
 
-    console.log @registration
+    #console.log @registration
 
     e = @config.extensions
     @allExtensions = [e.javascript..., e.css..., e.template..., config.copy.extensions...]
@@ -38,9 +42,6 @@ module.exports = class LifeCycleManager
 
     @initialFileCount = files.length
 
-    # compile, startup register for compilers css/template, just skip
-
-    # register compilers
     # register logger
     # establish error object
 

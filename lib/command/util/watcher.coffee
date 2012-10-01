@@ -5,7 +5,6 @@ watch =     require 'chokidar'
 _ =         require 'lodash'
 
 logger =    require '../../util/logger'
-compilerCentral = require '../../modules/compilers'
 LifeCycle = require '../../lifecycle'
 modules = require '../../modules'
 
@@ -16,25 +15,8 @@ class Watcher
   constructor: (@config, @persist, @initCallback) ->
     @throttle = @config.watch.throttle
     @lifecycle = new LifeCycle(@config, modules, @_startupDoneCallback)
-    {@compilerExtensionHash, @compilers} = compilerCentral.getCompilers(@config)
-
-    templateLibraryWithFiles = 0
-    for compiler in @compilers
-      files = wrench.readdirSyncRecursive(@config.watch.sourceDir).filter (f) =>
-        ext = path.extname(f)
-        ext.length > 1 and compiler.extensions.indexOf(ext.substring(1)) >= 0
-
-      logger.debug "File count for extension(s) [[ #{compiler.extensions} ]]: #{files.length}"
-
-      if files.length > 0 and compiler.template
-        templateLibraryWithFiles++
-
-    if templateLibraryWithFiles > 1 and _.isString(@config.template.outputFileName)
-      logger.error "More than one template library is being used, but multiple template.outputFileName entries not found." +
-        " You will want to configure a map of outfileFileName entries in your config, otherwise you will only get" +
-        " template output for one of the libraries."
-
     @_startWatcher()
+
     logger.info "Watching #{@config.watch.sourceDir}" if @persist
 
     if @throttle > 0
@@ -44,13 +26,13 @@ class Watcher
 
   _startupDoneCallback: =>
     clearInterval(@intervalId) if @intervalId? and !@persist
-    @initCallback(@config)
+    @initCallback(@config) if @initCallback?
 
   _startWatcher:  ->
     watcher = watch.watch(@config.watch.sourceDir, {persistent:@persist})
     watcher.on "error", (error) -> logger.debug "File watching error: #{error}"
-    watcher.on "change", (f) => #@_findCompiler(f)?.updated(f)
-    watcher.on "unlink", (f) => #@_findCompiler(f)?.removed(f)
+    watcher.on "change", (f) => @lifecycle.update(f) unless @_ignored(f)
+    watcher.on "unlink", (f) => @lifecycle.remove(f) unless @_ignored(f)
     watcher.on "add", (f) =>
       unless @_ignored(f)
         if @throttle > 0 then @adds.push(f) else @lifecycle.add(f)

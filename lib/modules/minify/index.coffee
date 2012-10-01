@@ -19,24 +19,25 @@ class MimosaMinifyModule
       register ['add','update','startupFile'], 'afterCompile', @_minifyCSS, [config.extensions.css...]
 
   _minifyJS: (config, options, next) ->
+    i = 0
+    options.files.forEach (file) =>
+      inputFile = file.sourceFileName
+      excluded = @exclude?.some (path) -> inputFile.match(path)
 
-    inputFile = options.inputFile
-    source = options.output
+      if excluded
+        logger.debug "Not going to minify [[ #{inputFile} ]], it has been excluded."
+      else
+        logger.debug "Running minification on [[ #{inputFile} ]]"
+        file.outputFileText = @performJSMinify(file.outputFileText)
 
-    excluded = @exclude?.some (path) -> fileName.match(path)
-
-    if excluded
-      logger.debug "Not going to minify [[ #{fileName} ]], it has been excluded."
-    else
-      logger.debug "Running minification on [[ #{fileName} ]]"
-      options.output = @performJSMinify(source)
-
-    next()
+      next() if ++i is options.files.length
 
   _minifyCSS: (config, options, next) ->
-    logger.debug "Cleaning/optimizing CSS [[ #{options.destinationFile} ]]"
-    options.output = clean.process options.output
-    next()
+    logger.debug "Cleaning/optimizing CSS [[ #{options.files} ]]"
+    i = 0
+    options.files.forEach (file) ->
+      file.outputFileText = clean.process options.outputFileText
+      next() if ++i is options.files.length
 
   performJSMinify: (source) ->
     try

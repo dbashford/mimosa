@@ -1,6 +1,6 @@
 coffee = require 'coffee-script'
 
-JSCompiler = require "./javascript-compiler"
+JSCompiler = require "./javascript"
 
 module.exports = class CoffeeCompiler extends JSCompiler
 
@@ -9,11 +9,11 @@ module.exports = class CoffeeCompiler extends JSCompiler
   @isDefault         = true
 
   constructor: (config, @extensions) ->
+    super()
 
-  compile: (config, options, next) ->
+  compile: (file, cb) ->
     try
-      options.output = coffee.compile options.fileContent
+      output = coffee.compile file.sourceFileText
     catch err
-      error = {text:"#{options.inputFile}, #{err}"}
-      return next(error)
-    next()
+      error = {text:"#{file.sourceFileName}, #{err}"}
+    cb(error, output)

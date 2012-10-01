@@ -4,40 +4,80 @@ path =   require 'path'
 wrench = require 'wrench'
 _ =      require 'lodash'
 
-logger =           require '../../../util/logger'
+logger =    require '../../../util/logger'
+fileUtils = require '../../../util/file'
 
 module.exports = class AbstractCSSCompiler
 
-  constructor: (@config) ->
+  constructor: ->
 
-  process: (fileName, sooper) ->
-    if @_isInclude(fileName)
-      @_compileBasesForInclude(fileName)
+  lifecycleRegistration: (config, register) ->
+    console.log @extensions[0]
+    register ['startupExtension'],      'init',    @_processWatchedDirectories, [@extensions[0]]
+    register ['startupExtension'],      'init',    @_findBasesToCompileStartup, [@extensions[0]]
+    register ['startupExtension'],      'compile', @_compile,                   [@extensions[0]]
+
+    register ['add','update','remove'], 'init',         @_findBasesToCompile,        [@extensions...]
+    register ['add','update','remove'], 'compile',      @_compile,                   [@extensions...]
+    register ['add','update','remove'], 'afterCompile', @_processWatchedDirectories, [@extensions...]
+
+  _findBasesToCompile: (config, options, next) =>
+    options.files = []
+    if @_isInclude(options.inputFile)
+      bases = @includeToBaseHash[options.inputFile]
+      if bases?
+        logger.debug "Bases files for [[ #{fileName} ]]\n#{bases.join('\n')}"
+        for base in bases
+          options.files.push @__baseOptionsObject(base, options)
+      else
+        logger.warn "Orphaned partial file: [[ #{options.inputFile} ]]"
+        return next(false)
     else
-      @processWatchedDirectories()
+      options.files.push @__baseOptionsObject(options.inputFile, options)
 
-  _compileBasesForInclude: (fileName) ->
-    bases = @includeToBaseHash[fileName]
-    if bases?
-      logger.debug "Bases files for [[ #{fileName} ]]\n#{bases.join('\n')}"
-      for base in bases
-        @readAndCompile(base)
-        @processWatchedDirectories()
+    next()
+
+  __baseOptionsObject: (base, options) ->
+    destFile = options.destinationFile(base)
+
+    sourceFileName:base
+    outputFileName:destFile
+    sourceFileText:null
+    outputFileText:null
+    isVendor:fileUtils.isVendor(destFile)
+
+  _compile: (config, options, next) =>
+    if not options.files?
+      next {text:"Mimosa Error: attempt to compile CSS but no base files provided"}
     else
-      logger.warn "Orphaned partial #{fileName}"
-      @done()
+      i = 0
+      newFiles = []
+      options.files.forEach (file) =>
+        @compile file, config, options, (err, result) =>
+          if err
+            logger.error err
+          else
+            file.outputFileText = result
+            newFiles.push file
 
-  doneStartup: =>
-    @processWatchedDirectories()
+          if ++i is options.files.length
+            if newFiles.length is 0
+              next(false)
+            else
+              options.files = newFiles
+              next()
+
+  _findBasesToCompileStartup: (config, options, next) =>
+    console.log "INSIDE _findBasesToCompileStartup"
 
     baseFilesToCompileNow = []
 
     # Determine if any includes necessitate a base file compile
     for include, bases of @includeToBaseHash
       for base in bases
-        basePath = @findCompiledPath(base)
+        basePath = options.destinationFile(base)
         if fs.existsSync basePath
-          includeTime = fs.statSync(path.join @config.root, include).mtime
+          includeTime = fs.statSync(path.join config.root, include).mtime
           baseTime = fs.statSync(basePath).mtime
           if includeTime > baseTime
             logger.debug "Base [[ #{base} ]] needs compiling because [[ #{include} ]] has been changed recently"
@@ -48,34 +88,31 @@ module.exports = class AbstractCSSCompiler
 
     # Determine if any bases need to be compiled based on their own merit
     for base in @baseFiles
-      baseCompiledPath = @findCompiledPath(base)
+      baseCompiledPath = options.destinationFile(base)
       if fs.existsSync baseCompiledPath
-        baseSrcPath = path.join @config.root, base
+        baseSrcPath = path.join config.root, base
         if fs.statSync(baseSrcPath).mtime > fs.statSync(baseCompiledPath).mtime
           logger.debug "Base file [[ #{baseSrcPath} ]] needs to be compiled, it has been changed recently"
           baseFilesToCompileNow.push(base)
       else
-        logger.debug "Base file [[ #{baseCompiledPath} ]] hasn't been compiled yet, needs compiling"
+        logger.debug "Base file [[ #{base} ]] hasn't been compiled yet, needs compiling"
         baseFilesToCompileNow.push(base)
 
-    baseFilesToCompileNow = _.uniq(baseFilesToCompileNow)
+    baseFilesToCompile = _.uniq(baseFilesToCompileNow)
 
-    @initBaseFilesToCompile = baseFilesToCompileNow.length
-    if @initBaseFilesToCompile is 0
-      logger.debug "No base files to compile, done with startup"
-      @_doneStartup()
-    else
-      @constructor::done = =>
-        if !@startupFinished and @initBaseFilesToCompile is 0
-          @_doneStartup()
+    console.log "BASE FILES TO COMPILE ", baseFilesToCompile
 
-      for base in baseFilesToCompileNow
-        logger.debug "Compiling base file [[ #{base} ]]"
-        @readAndCompile(base)
+    options.files = @__baseOptionsObject(base, options) for base in baseFilesToCompile
 
-  processWatchedDirectories: =>
+    console.log options.files
+
+    next()
+
+  _processWatchedDirectories: (config, options, next) =>
+    console.log "INSIDE PROCESS WATCHED DIRECTORIES"
+
     @includeToBaseHash = {}
-    @allFiles = @_getAllFiles()
+    @allFiles = @__getAllFiles(config)
 
     oldBaseFiles = @baseFiles ?= []
     @baseFiles = @_determineBaseFiles()
@@ -86,12 +123,14 @@ module.exports = class AbstractCSSCompiler
       logger.info "The list of CSS files that Mimosa will compile has changed. Mimosa will now compile the following root files to CSS:"
       logger.info baseFile for baseFile in @baseFiles
 
-    @_importsForFile(baseFile, baseFile) for baseFile in @baseFiles
+    @__importsForFile(baseFile, baseFile) for baseFile in @baseFiles
 
-  _getAllFiles: =>
-    files = wrench.readdirSyncRecursive(@config.watch.sourceDir)
+    next()
+
+  __getAllFiles: (config) =>
+    files = wrench.readdirSyncRecursive(config.watch.sourceDir)
       .map (file) =>
-        path.join(@config.watch.sourceDir, file)
+        path.join(config.watch.sourceDir, file)
       .filter (file) =>
         @extensions.some (ext) ->
           file.slice(-ext.length) is ext
@@ -102,7 +141,7 @@ module.exports = class AbstractCSSCompiler
 
   # get all imports for a given file, and recurse through
   # those imports until entire tree is built
-  _importsForFile: (baseFile, file) ->
+  __importsForFile: (baseFile, file) ->
     imports = fs.readFileSync(file, 'ascii').match(@importRegex)
     return unless imports?
 
@@ -125,4 +164,4 @@ module.exports = class AbstractCSSCompiler
         else
           logger.debug "Creating base file entry for include file [[ #{includeFile} ]], adding base file [[ #{baseFile} ]]"
           @includeToBaseHash[includeFile] = [baseFile]
-        @_importsForFile(baseFile, includeFile)
+        @__importsForFile(baseFile, includeFile)

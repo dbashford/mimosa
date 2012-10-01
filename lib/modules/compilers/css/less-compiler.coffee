@@ -17,17 +17,19 @@ module.exports = class LessCompiler extends AbstractCssCompiler
   @defaultExtensions = ["less"]
 
   constructor: (config, @extensions) ->
-    super(config)
+    super()
 
-  compile: (fileName, text, destinationFile, callback) =>
+  compile: (file, config, options, done) =>
+    text = file.sourceFileText
+    fileName = file.sourceFileName
     logger.debug "Compiling LESS file [[ #{fileName} ]], first parsing..."
     parser = new less.Parser
-      paths: [@config.watch.sourceDir, path.dirname(fileName)],
+      paths: [config.watch.sourceDir, path.dirname(fileName)],
       filename: fileName
     parser.parse text, (error, tree) =>
       @initBaseFilesToCompile--
 
-      return callback("#{fileName}, Error: #{error.message}") if error?
+      return done("#{fileName}, Error: #{error.message}") if error?
 
       try
         logger.debug "...then converting to CSS"
@@ -38,7 +40,7 @@ module.exports = class LessCompiler extends AbstractCssCompiler
 
       logger.debug "Finished LESS compile for file [[ #{fileName} ]], errors? #{err?}"
 
-      callback(err, result, destinationFile)
+      done(err, result)
 
   _isInclude: (fileName) -> @includeToBaseHash[fileName]?
 

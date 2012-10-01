@@ -25,15 +25,15 @@ class MimosaRequireModule
 
   _requireRegister: (config, options, next) ->
     return next() if options.isVendor
-    requireRegister.process(options.destinationFile, options.output)
+    requireRegister.process(options.files[0].outputFileName, options.files[0].outputFileText)
     next()
 
   _requireDelete: (config, options, next) ->
-    requireRegister.remove(options.inputFile)
+    requireRegister.remove(options.files[0].sourceFileName)
     next()
 
   _requireOptimize: (config, options, next) ->
-    optimizer.optimize(config, fileName)
+    optimizer.optimize(config, options.files[0].outputFileName)
     next()
 
   _startupDone: (config, options, next) ->

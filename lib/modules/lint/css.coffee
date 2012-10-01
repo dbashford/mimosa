@@ -29,14 +29,18 @@ class CSSLinter
     register ['add','update','startupExtension'], 'afterCompile', @_lint, [extensions...]
 
   _lint: (config, options, next) =>
-    return next() unless options.output? and options.output.length > 0
-    name = options.inputName
-    if !config.lint.vendor.css and options.isVendor
-      logger.debug "Not linting vendor script [[ #{name} ]]"
+    return next() unless options.files?.length > 0
 
-    result = csslint.verify options.output, @rules
-    @_writeMessage(name, message) for message in result.messages
-    next()
+    i = 0
+    options.files.forEach (file) =>
+      if file.outputFileText?.length > 0
+        if !config.lint.vendor.css and file.isVendor
+          logger.debug "Not linting vendor script [[ #{options.sourceFileName} ]]"
+
+        result = csslint.verify options.output, @rules
+        @_writeMessage(options.sourceFileName, message) for message in result.messages
+
+      next() if ++i is options.files.length
 
   _writeMessage: (fileName, message) ->
     output =  "CSSLint Warning: #{message.message} In #{fileName},"

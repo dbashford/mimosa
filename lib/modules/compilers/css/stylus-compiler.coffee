@@ -17,22 +17,24 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
   @isDefault         = true
 
   constructor: (config, @extensions) ->
-    super(config)
+    super()
 
-  compile: (fileName, text, destinationFile, callback) =>
+  compile: (file, config, options, done) =>
+    text = file.sourceFileText
+    fileName = file.sourceFileName
 
     cb = (err, css) =>
       logger.debug "Finished Stylus compile for file [[ #{fileName} ]], errors?  #{err?}"
       @initBaseFilesToCompile--
-      callback(err, css, destinationFile)
+      callback(err, css)
 
     logger.debug "Compiling Stylus file [[ #{fileName} ]]"
 
     stylus(text)
       .include(path.dirname(fileName))
-      .include(@config.watch.sourceDir)
+      .include(config.watch.sourceDir)
       .set('compress', false)
-      .set('firebug', @config.optimize? and !@config.optimize)
+      .set('firebug', config.optimize? and !config.optimize)
       .set('filename', fileName)
       .use(nib())
       .import('nib')

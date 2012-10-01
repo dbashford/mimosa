@@ -1,6 +1,6 @@
 iced = require 'iced-coffee-script'
 
-JSCompiler = require "./javascript-compiler"
+JSCompiler = require "./javascript"
 
 module.exports = class IcedCompiler extends JSCompiler
 
@@ -8,11 +8,11 @@ module.exports = class IcedCompiler extends JSCompiler
   @defaultExtensions = ["iced"]
 
   constructor: (config, @extensions) ->
+    super()
 
-  compile: (config, options, next) ->
+  compile: (config, options, cb) ->
     try
-      options.output = iced.compile options.fileContent
+      output = iced.compile file.sourceFileText
     catch err
-      error = {text:"#{options.inputFile}, #{err}"}
-      return next(error)
-    next()
+      error = {text:"#{file.sourceFileName}, #{err}"}
+    cb(error, output)

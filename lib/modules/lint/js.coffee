@@ -26,18 +26,21 @@ class JSLinter
     register ['startupFile','add','update'], 'afterCompile', @_lint, [extensions...]
 
   _lint: (config, options, next) =>
-    return next() unless options.output? and options.output.length > 0
+    return next() unless options.files?.length > 0
 
-    if !config.lint.vendor.javascript and options.isVendor
-      logger.debug "Not linting vendor script [[ #{options.inputName} ]]"
-    else
-      lintok = jslint options.output, @options
-      unless lintok
-        for e in jslint.errors
-          continue unless e?
-          @log options.inputFile, e.reason, e.line
+    i = 0
+    options.files.forEach (file) =>
+      if file.outputFileText?.length > 0
+        if !config.lint.vendor.javascript and file.isVendor
+          logger.debug "Not linting vendor script [[ #{file.sourceFileName} ]]"
+        else
+          lintok = jslint file.outputFileText, @options
+          unless lintok
+            for e in jslint.errors
+              continue unless e?
+              @log options.sourceFileName, e.reason, e.line
 
-    next()
+      next() if ++i is options.files.length
 
   log: (fileName, message, lineNumber) ->
     message = "JavaScript Lint Error: #{message}, in file [[ #{fileName} ]]"

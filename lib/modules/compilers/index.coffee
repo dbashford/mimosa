@@ -24,10 +24,28 @@ class CompilerCentral
       @all.push(Compiler)
 
   lifecycleRegistration: (config, register) ->
-    compilers = @getCompilers(config).compilers
+    for compiler in @configuredCompilers.compilers
+      compiler.lifecycleRegistration(config, register) if compiler.lifecycleRegistration?
+
+    register ['startupDone'], 'init', @_testDifferentTemplateLibraries
+
+  _testDifferentTemplateLibraries: (config, options, next) =>
+    compilers = @_templateCompilers()
+
+    templateLibraryWithFiles = 0
     for compiler in compilers
-      if compiler.lifecycleRegistration?
-         compiler.lifecycleRegistration(config, register)
+      continue unless compiler.template
+      files = wrench.readdirSyncRecursive(config.watch.sourceDir).filter (f) =>
+        ext = path.extname(f)
+        ext.length > 1 and compiler.extensions.indexOf(ext.substring(1)) >= 0
+      templateLibraryWithFiles++ if files.length > 0
+
+    if templateLibraryWithFiles > 1 and _.isString(@config.template.outputFileName)
+      logger.error "More than one template library is being used, but multiple template.outputFileName entries not found." +
+        " You will want to configure a map of outfileFileName entries in your config, otherwise you will only get" +
+        " template output for one of the libraries."
+
+    next()
 
   _compilersWithoutCopy: ->
     @all.filter (comp) -> comp.base isnt "copy"
@@ -35,13 +53,16 @@ class CompilerCentral
   _compilersWithoutNone: ->
     @all.filter (comp) -> comp.base isnt "none"
 
+  _templateCompilers: ->
+    @all.filter (comp) -> comp.type is "template"
+
   compilersByType: ->
     compilersByType = {css:[], javascript:[], template:[]}
     for comp in @_compilersWithoutCopy()
       compilersByType[comp.type].push(comp)
     compilersByType
 
-  getCompilers: (config) ->
+  setupCompilers: (config) ->
     allOverriddenExtensions = []
     for base, ext of config.compilers.extensionOverrides
       allOverriddenExtensions.push(ext...)
@@ -70,6 +91,9 @@ class CompilerCentral
 
     logger.debug("Compiler/Extension hash \n #{extHash}")
 
-    {compilerExtensionHash:extHash, compilers:allCompilers}
+    @configuredCompilers = {compilerExtensionHash:extHash, compilers:allCompilers}
+
+  getCompilers: ->
+    @configuredCompilers
 
 module.exports = new CompilerCentral()

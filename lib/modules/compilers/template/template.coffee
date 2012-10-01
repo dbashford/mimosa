@@ -10,34 +10,29 @@ logger =           require '../../../util/logger'
 
 module.exports = class AbstractTemplateCompiler
 
-  constructor: (@config) ->
-    jsDir = path.join @config.watch.compiledDir, @config.watch.javascriptDir
-    @templateFileName = if @config.template.outputFileName[@constructor.base]
-      path.join(jsDir, @config.template.outputFileName[@constructor.base] + ".js")
-    else
-      path.join(jsDir, @config.template.outputFileName + ".js")
-
+  constructor: (config) ->
     if @clientLibrary?
       @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
+      jsDir = path.join config.watch.compiledDir, config.watch.javascriptDir
       @clientPath = path.join jsDir, 'vendor', "#{@clientLibrary}.js"
 
   lifecycleRegistration: (config, register) ->
-    register ['add','update','delete'], 'init',       @_gatherFiles,            [@extensions...]
     register ['startupExtension'],      'init',       @_gatherFiles,            [@extensions[0]]
-    register ['add','update','delete'], 'beforeRead', @_templateNeedsCompiling, [@extensions...]
     register ['startupExtension'],      'beforeRead', @_templateNeedsCompiling, [@extensions[0]]
-    register ['add','update','delete'], 'read',       @_readTemplateFiles,      [@extensions...]
     register ['startupExtension'],      'read',       @_readTemplateFiles,      [@extensions[0]]
-    register ['add','update','delete'], 'compile',    @compile,                 [@extensions...]
     register ['startupExtension'],      'compile',    @compile,                 [@extensions[0]]
 
+    register ['add','update','remove'], 'init',       @_gatherFiles,            [@extensions...]
+    register ['add','update','remove'], 'beforeRead', @_templateNeedsCompiling, [@extensions...]
+    register ['add','update','remove'], 'read',       @_readTemplateFiles,      [@extensions...]
+    register ['add','update','remove'], 'compile',    @compile,                 [@extensions...]
+
     unless config.virgin
-      register ['delete'],           'beforeRead',  @_testForRemoveClientLibrary, [@extensions...]
-      register ['add', 'update'],    'beforeWrite', @_writeClientLibrary,         [@extensions...]
+      register ['remove'],           'beforeRead',  @_testForRemoveClientLibrary, [@extensions...]
+      register ['add','update'],    'beforeWrite', @_writeClientLibrary,         [@extensions...]
       register ['startupExtension'], 'beforeWrite', @_writeClientLibrary,         [@extensions[0]]
 
   _gatherFiles: (config, options, next) =>
-    options.destinationFile ?= @templateFileName # will set during startup
     allFiles = wrench.readdirSyncRecursive(config.watch.sourceDir)
       .map (file) => path.join(config.watch.sourceDir, file)
 
@@ -49,6 +44,12 @@ module.exports = class AbstractTemplateCompiler
     return next(false) if fileNames.length is 0
 
     @_testForSameTemplateName(fileNames) unless fileNames.length <= 1
+
+    ###
+    TODO, register multiple files on options.files, then read each, compile each, and
+    merge together after
+    ###
+
     options.templateFileNames = fileNames
     next()
 
@@ -68,7 +69,7 @@ module.exports = class AbstractTemplateCompiler
 
   _testForRemoveClientLibrary: (config, options, next) =>
     if options.templateFileNames?.length is 0
-      logger.debug "No template files left, removing [[ #{@templateFileName} ]]"
+      logger.debug "No template files left, removing [[ #{@clientPath} ]]"
       @removeClientLibrary(next)
     else
       next()
@@ -101,7 +102,7 @@ module.exports = class AbstractTemplateCompiler
     i = 0
     processFile = =>
       if i < numFiles
-        fileUtils.isFirstFileNewer fileNames[i++], @templateFileName, cb
+        fileUtils.isFirstFileNewer fileNames[i++], options.destinationFile(), cb
       else
         next(false)
 
