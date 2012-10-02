@@ -24,11 +24,11 @@ class MimosaFileInitModule
       destinationFile = options.destinationFile(inputFile)
 
       options.files = [{
-        sourceFileName:inputFile
+        inputFileName:inputFile
         outputFileName:destinationFile
         isVendor:fileUtils.isVendor(destinationFile)
         isJSNotVendor:fileUtils.isJSNotVendor(destinationFile)
-        sourceFileText:null
+        inputFileText:null
         outputFileText:null
       }]
 

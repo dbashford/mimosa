@@ -21,7 +21,7 @@ class MimosaMinifyModule
   _minifyJS: (config, options, next) ->
     i = 0
     options.files.forEach (file) =>
-      inputFile = file.sourceFileName
+      inputFile = file.inputFileName
       excluded = @exclude?.some (path) -> inputFile.match(path)
 
       if excluded

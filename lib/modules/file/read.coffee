@@ -15,10 +15,10 @@ class MimosaFileReadModule
 
     i = 0
     options.files.forEach (file) ->
-      fs.readFile file.sourceFileName, (err, text) =>
-        return logger.error "Failed to read file: #{file.sourceFileName}" if err?
+      fs.readFile file.inputFileName, (err, text) =>
+        return logger.error "Failed to read file: #{file.inputFileName}" if err?
         text = text.toString() if options.isJS or options.isCSS
-        file.sourceFileText = text
+        file.inputFileText = text
         next() if ++i is options.files.length
 
 module.exports = new MimosaFileReadModule()

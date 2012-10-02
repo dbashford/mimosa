@@ -29,7 +29,7 @@ class MimosaRequireModule
     next()
 
   _requireDelete: (config, options, next) ->
-    requireRegister.remove(options.files[0].sourceFileName)
+    requireRegister.remove(options.files[0].inputFileName)
     next()
 
   _requireOptimize: (config, options, next) ->

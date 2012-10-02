@@ -12,7 +12,7 @@ module.exports = class IcedCompiler extends JSCompiler
 
   compile: (config, options, cb) ->
     try
-      output = iced.compile file.sourceFileText
+      output = iced.compile file.inputFileText
     catch err
-      error = {text:"#{file.sourceFileName}, #{err}"}
+      error = {text:"#{file.inputFileName}, #{err}"}
     cb(error, output)

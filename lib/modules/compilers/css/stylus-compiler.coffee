@@ -20,8 +20,8 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
     super()
 
   compile: (file, config, options, done) =>
-    text = file.sourceFileText
-    fileName = file.sourceFileName
+    text = file.inputFileText
+    fileName = file.inputFileName
 
     cb = (err, css) =>
       logger.debug "Finished Stylus compile for file [[ #{fileName} ]], errors?  #{err?}"

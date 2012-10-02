@@ -39,9 +39,9 @@ module.exports = class AbstractCSSCompiler
   __baseOptionsObject: (base, options) ->
     destFile = options.destinationFile(base)
 
-    sourceFileName:base
+    inputFileName:base
     outputFileName:destFile
-    sourceFileText:null
+    inputFileText:null
     outputFileText:null
     isVendor:fileUtils.isVendor(destFile)
 

@@ -32,13 +32,13 @@ class JSLinter
     options.files.forEach (file) =>
       if file.outputFileText?.length > 0
         if !config.lint.vendor.javascript and file.isVendor
-          logger.debug "Not linting vendor script [[ #{file.sourceFileName} ]]"
+          logger.debug "Not linting vendor script [[ #{file.inputFileName} ]]"
         else
           lintok = jslint file.outputFileText, @options
           unless lintok
             for e in jslint.errors
               continue unless e?
-              @log options.sourceFileName, e.reason, e.line
+              @log file.inputFileName, e.reason, e.line
 
       next() if ++i is options.files.length
 

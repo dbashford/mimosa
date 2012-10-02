@@ -52,8 +52,8 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     do compileOnDelay
 
   _compile: (file, config, options, done) =>
-    text = file.sourceFileText
-    fileName = file.sourceFileName
+    text = file.inputFileText
+    fileName = file.inputFileName
     logger.debug "Beginning compile of SASS file [[ #{fileName} ]]"
     result = ''
     error = null
