@@ -12,7 +12,6 @@ module.exports = class AbstractCSSCompiler
   constructor: ->
 
   lifecycleRegistration: (config, register) ->
-    console.log @extensions[0]
     register ['startupExtension'],      'init',    @_processWatchedDirectories, [@extensions[0]]
     register ['startupExtension'],      'init',    @_findBasesToCompileStartup, [@extensions[0]]
     register ['startupExtension'],      'compile', @_compile,                   [@extensions[0]]
@@ -68,8 +67,6 @@ module.exports = class AbstractCSSCompiler
               next()
 
   _findBasesToCompileStartup: (config, options, next) =>
-    console.log "INSIDE _findBasesToCompileStartup"
-
     baseFilesToCompileNow = []
 
     # Determine if any includes necessitate a base file compile
@@ -100,17 +97,12 @@ module.exports = class AbstractCSSCompiler
 
     baseFilesToCompile = _.uniq(baseFilesToCompileNow)
 
-    console.log "BASE FILES TO COMPILE ", baseFilesToCompile
-
-    options.files = @__baseOptionsObject(base, options) for base in baseFilesToCompile
-
-    console.log options.files
+    options.files =  baseFilesToCompile.map (base) =>
+      @__baseOptionsObject(base, options)
 
     next()
 
   _processWatchedDirectories: (config, options, next) =>
-    console.log "INSIDE PROCESS WATCHED DIRECTORIES"
-
     @includeToBaseHash = {}
     @allFiles = @__getAllFiles(config)
 

@@ -154,5 +154,4 @@ module.exports = class LifeCycleManager
   _startupDone: =>
     # wrap up, startupDone
     @_executeLifecycleStep {}, 'startupDone', =>
-      console.log "INSIDE STARTUP DONE CALLBACK, ", @startupDoneCallback?
       if @startupDoneCallback? then @startupDoneCallback()

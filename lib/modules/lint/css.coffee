@@ -37,8 +37,8 @@ class CSSLinter
         if !config.lint.vendor.css and file.isVendor
           logger.debug "Not linting vendor script [[ #{options.sourceFileName} ]]"
 
-        result = csslint.verify options.output, @rules
-        @_writeMessage(options.sourceFileName, message) for message in result.messages
+        result = csslint.verify file.outputFileText, @rules
+        @_writeMessage(file.sourceFileName, message) for message in result.messages
 
       next() if ++i is options.files.length
 
