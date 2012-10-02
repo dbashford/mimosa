@@ -1,10 +1,6 @@
-fs = require 'fs'
-path = require 'path'
-
 jade = require 'jade'
 
 AbstractTemplateCompiler = require './template'
-logger = require '../../../util/logger'
 
 module.exports = class JadeCompiler extends AbstractTemplateCompiler
 
@@ -16,28 +12,19 @@ module.exports = class JadeCompiler extends AbstractTemplateCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  compile: (config, options, next) =>
-    error = null
+  filePrefix: ->
+    "define(['#{@libraryPath()}'], function (jade){ var templates = {};\n"
 
-    output = "define(['#{@libraryPath()}'], function (jade){ var templates = {};\n"
-    for templateName, templateData of options.templateContentByName
-      fileName = templateData[0]
-      content = templateData[1]
-      logger.debug "Compiling Jade template [[ #{fileName} ]]"
+  fileSuffix: ->
+    'return templates; });'
 
-      try
-        compiledOutput = jade.compile content,
-          compileDebug: false,
-          client: true,
-          filename: fileName
+  compile: (file, templateName, cb) =>
+    try
+      output = jade.compile file.intputFileText,
+        compileDebug: false,
+        client: true,
+        filename: file.inputFileName
+    catch err
+      error = "#{file.inputFileName}, #{err}\n"
 
-        output += @addTemplateToOutput fileName, templateName, compiledOutput
-      catch err
-        error ?= ''
-        error += "#{fileName}, #{err}\n"
-
-    if error
-      next({text:error})
-    else
-      options.output = output += 'return templates; });'
-      next()
+    cb(error, output)

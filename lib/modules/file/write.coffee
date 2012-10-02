@@ -19,11 +19,14 @@ class MimosaFileWriteModule
     return next(false) unless options.files?.length > 0
 
     i = 0
+    done = =>
+      next() if ++i is options.files.length
+
     options.files.forEach (file) =>
-      return next() unless file.outputFileText? and file.outputFileName?
+      return done() unless file.outputFileText? and file.outputFileName?
       logger.debug "Writing file [[ #{file.outputFileText} ]]"
       fileUtils.writeFile file.outputFileName, file.outputFileText, (err) =>
         logger.error "Failed to write new file: #{file.outputFileName}" if err?
-        next() if ++i is options.files.length
+        done()
 
 module.exports = new MimosaFileWriteModule()

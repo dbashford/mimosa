@@ -19,20 +19,23 @@ class MimosaRequireModule
     if config.optimize
       register ['remove'],       'afterDelete', @_requireOptimize, [config.extensions.javascript...]
       register ['add','update'], 'afterWrite',  @_requireOptimize, [config.extensions.javascript...]
-      register ['startupDone'],  'init',  @_requireOptimize
+      register ['startupDone'],  'init',        @_requireOptimize
 
     requireRegister.setConfig(config)
 
   _requireRegister: (config, options, next) ->
-    return next() if options.isVendor
+    return next() unless options.files?.length > 0
+    return next() if options.files[0].isVendor
     requireRegister.process(options.files[0].outputFileName, options.files[0].outputFileText)
     next()
 
   _requireDelete: (config, options, next) ->
+    return next() unless options.files?.length > 0
     requireRegister.remove(options.files[0].inputFileName)
     next()
 
   _requireOptimize: (config, options, next) ->
+    return next() unless options.files?.length > 0
     optimizer.optimize(config, options.files[0].outputFileName)
     next()
 

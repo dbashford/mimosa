@@ -1,14 +1,11 @@
-fs = require 'fs'
-path = require 'path'
-
 dust = require 'dustjs-linkedin'
 
 AbstractTemplateCompiler = require './template'
-logger = require '../../../util/logger'
 
 module.exports = class DustCompiler extends AbstractTemplateCompiler
 
   clientLibrary: "dust"
+  handlesNamespacing: true
 
   @prettyName        = "(*) Dust - https://github.com/linkedin/dustjs/"
   @defaultExtensions = ["dust"]
@@ -16,24 +13,15 @@ module.exports = class DustCompiler extends AbstractTemplateCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  compile: (config, options, next) =>
-    error = null
+  filePrefix: ->
+    "define(['#{@libraryPath()}'], function (dust){ "
 
-    output = "define(['#{@libraryPath()}'], function (dust){ "
-    for templateName, templateData of options.templateContentByName
+  fileSuffix: ->
+    'return dust; });'
 
-      fileName = templateData[0]
-      content = templateData[1]
-      logger.debug "Compiling Dust template [[ #{fileName} ]]"
-      try
-        output += @templatePreamble fileName, templateName
-        output += dust.compile content, templateName
-      catch err
-        error ?= ''
-        error += "#{fileName}, #{err}\n"
-
-    if error
-      next({text:error})
-    else
-      options.output = output += 'return dust; });'
-      next()
+  compile: (file, templateName, cb) ->
+    try
+      output = dust.compile file.inputFileText, templateName
+    catch err
+      error = "#{file.inputFileName}, #{err}\n"
+    cb(error, output)

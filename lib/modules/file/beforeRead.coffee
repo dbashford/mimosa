@@ -13,12 +13,11 @@ class MimosaFileBeforeReadModule
     return next(false) unless options.files?.length > 0
 
     i = 0
-    numFiles = options.files.length
     newFiles = []
     options.files.forEach (file) ->
       fileUtils.isFirstFileNewer file.inputFileName, file.outputFileName, (isNewer) ->
         newFiles.push file if isNewer
-        if ++i is numFiles
+        if ++i is options.files.length
           if newFiles.length > 0
             options.files = newFiles
             next()

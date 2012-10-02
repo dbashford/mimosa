@@ -17,19 +17,19 @@ module.exports = class AbstractTemplateCompiler
       @clientPath = path.join jsDir, 'vendor', "#{@clientLibrary}.js"
 
   lifecycleRegistration: (config, register) ->
-    register ['startupExtension'],      'init',       @_gatherFiles,            [@extensions[0]]
-    register ['startupExtension'],      'beforeRead', @_templateNeedsCompiling, [@extensions[0]]
-    register ['startupExtension'],      'read',       @_readTemplateFiles,      [@extensions[0]]
-    register ['startupExtension'],      'compile',    @compile,                 [@extensions[0]]
+    register ['startupExtension'], 'init',         @_gatherFiles,            [@extensions[0]]
+    register ['startupExtension'], 'beforeRead',   @_templateNeedsCompiling, [@extensions[0]]
+    register ['startupExtension'], 'compile',      @_compile,                [@extensions[0]]
+    register ['startupExtension'], 'afterCompile', @_merge,                  [@extensions[0]]
 
-    register ['add','update','remove'], 'init',       @_gatherFiles,            [@extensions...]
-    register ['add','update','remove'], 'beforeRead', @_templateNeedsCompiling, [@extensions...]
-    register ['add','update','remove'], 'read',       @_readTemplateFiles,      [@extensions...]
-    register ['add','update','remove'], 'compile',    @compile,                 [@extensions...]
+    register ['add','update','remove'], 'init',         @_gatherFiles,            [@extensions...]
+    register ['add','update','remove'], 'beforeRead',   @_templateNeedsCompiling, [@extensions...]
+    register ['add','update','remove'], 'compile',      @_compile,                 [@extensions...]
+    register ['add','update','remove'], 'afterCompile', @_merge,                 [@extensions...]
 
     unless config.virgin
       register ['remove'],           'beforeRead',  @_testForRemoveClientLibrary, [@extensions...]
-      register ['add','update'],    'beforeWrite', @_writeClientLibrary,         [@extensions...]
+      register ['add','update'],     'beforeWrite', @_writeClientLibrary,         [@extensions...]
       register ['startupExtension'], 'beforeWrite', @_writeClientLibrary,         [@extensions[0]]
 
   _gatherFiles: (config, options, next) =>
@@ -45,27 +45,52 @@ module.exports = class AbstractTemplateCompiler
 
     @_testForSameTemplateName(fileNames) unless fileNames.length <= 1
 
-    ###
-    TODO, register multiple files on options.files, then read each, compile each, and
-    merge together after
-    ###
+    options.files = fileNames.map (file) ->
+      inputFileName:file
+      inputFileText:null
+      outputFileText:null
 
-    options.templateFileNames = fileNames
     next()
 
-  _readTemplateFiles: (config, options, next) ->
-    options.templateContentByName = {}
-    numFiles = options.templateFileNames.length
-    filesDone = 0
-    done = ->
-      options.templateContentByName
-      next() if ++filesDone is options.templateFileNames.length
+  _compile: (config, options, next) =>
+    if not options.files?
+      next {text:"Mimosa Error: attempt to compile JavaScript but template files"}
+    else
+      i = 0
+      newFiles = []
+      options.files.forEach (file) =>
+        logger.debug "Compiling HTML template [[ #{file.inputFileName} ]]"
+        @compile file, @__generateTemplateName(file.inputFileName), (err, result) =>
+          if err
+            logger.error err
+          else
+            result = "templates['#{templateName}'] = #{result};\n" unless @handlesNamespacing
+            file.outputFileText = result
+            newFiles.push file
 
-    options.templateFileNames.forEach (fileName) ->
-      fs.readFile fileName, "ascii", (err, data) ->
-        templateName = path.basename fileName, path.extname(fileName)
-        options.templateContentByName[templateName] = [fileName, data]
-        done()
+          if ++i is options.files.length
+            if newFiles.length is 0
+              next(false)
+            else
+              options.files = newFiles
+              next()
+
+  _merge: (config, options, next) =>
+    mergedText = @filePrefix()
+    options.files.forEach (file) =>
+      mergedText += @templatePreamble file.inputFileName
+      mergedText += file.outputFileText
+
+    mergedText += @fileSuffix()
+
+    options.files.push
+      outputFileText: mergedText
+      outputFileName: options.destinationFile()
+
+    next()
+
+  __generateTemplateName: (fileName) ->
+    path.basename fileName, path.extname(fileName)
 
   _testForRemoveClientLibrary: (config, options, next) =>
     if options.templateFileNames?.length is 0
@@ -96,7 +121,7 @@ module.exports = class AbstractTemplateCompiler
         templateHash[templateName] = fileName
 
   _templateNeedsCompiling: (config, options, next) =>
-    fileNames = options.templateFileNames
+    fileNames = _.pluck(options.files, 'inputFileName')
     numFiles = fileNames.length
 
     i = 0
@@ -132,12 +157,6 @@ module.exports = class AbstractTemplateCompiler
     """
     \n//
     // Source file: [#{fileName}]
-    // Template name: [#{templateName}]
+    // Template name: [#{@__generateTemplateName(fileName)}]
     //\n
-    """
-
-  addTemplateToOutput: (fileName, templateName, source) =>
-    """
-    #{@templatePreamble(fileName, templateName)}
-    templates['#{templateName}'] = #{source};\n
     """

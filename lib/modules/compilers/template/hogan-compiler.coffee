@@ -1,10 +1,6 @@
-fs = require 'fs'
-path = require 'path'
-
 hogan = require "hogan.js"
 
 AbstractTemplateCompiler = require './template'
-logger = require '../../../util/logger'
 
 module.exports = class HoganCompiler extends AbstractTemplateCompiler
 
@@ -16,23 +12,17 @@ module.exports = class HoganCompiler extends AbstractTemplateCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  compile: (config, options, next) =>
-    error = null
+  filePrefix: ->
+    "define(['#{@libraryPath()}'], function (Hogan){ var templates = {};\n"
 
-    output = "define(['#{@libraryPath()}'], function (Hogan){ var templates = {};\n"
-    for templateName, templateData of options.templateContentByName
-      fileName = templateData[0]
-      content = templateData[1]
-      logger.debug "Compiling Hogan template [[ #{fileName} ]]"
-      try
-        compiledOutput = hogan.compile(content, {asString:true})
-        output += @addTemplateToOutput fileName, templateName, "new Hogan.Template(#{compiledOutput})"
-      catch err
-        error ?= ''
-        error += "#{fileName}, #{err}\n"
+  fileSuffix: ->
+    'return templates; });'
 
-    if error
-      next({text:error})
-    else
-      options.output = output += 'return templates; });'
-      next()
+  compile: (file, templateName, cb) ->
+    try
+      compiledOutput = hogan.compile(file.inputFileText, {asString:true})
+      output = "templates['#{templateName}'] = new Hogan.Template(#{compiledOutput});\n"
+    catch err
+      error = "#{file.inputFileName}, #{err}\n"
+
+    cb(error, output)
