@@ -1,3 +1,8 @@
+# 0.1.1beta - October 2 2012
+
+### Minor Changes
+* #72, the SASS compiler was complaining about not being installed even if no SASS was being used or compiled.  Now mimosa will only report SASS not being installed if SASS compilation is attempted.
+
 # 0.1.0beta - September 19 2012
 
 Beta entered! Going to be working on some bigger things for beta2 over the next few weeks and only releasing any necessary bug fixes and non-breaking features. So releases will slow down quite a bit, but that doesn't mean I'm not busy. =)
