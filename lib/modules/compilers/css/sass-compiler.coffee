@@ -38,11 +38,14 @@ module.exports = class SassCompiler extends AbstractCssCompiler
       logger.debug "Compass available? #{@hasCompass}"
 
   compile: (file, config, options, done) =>
-    return @_noSASS() unless @hasSASS
-    return @_compile(file, config, options, done) if @hasCompass? and @hasSass?
+    if @hasCompass and @hasSASS? and @hasSASS
+      return @_compile(file, config, options, done) if @hasCompass? and @hasSASS?
+
+    return @_noSASS() if @hasSASS? and !@hasSASS
 
     compileOnDelay = =>
-      if @hasCompass? and @hasSass?
+      if @hasCompass? and @hasSASS?
+        return @_noSASS() unless @hasSASS
         @_compile(file, config, options, done)
       else
         setTimeout compileOnDelay, 100
