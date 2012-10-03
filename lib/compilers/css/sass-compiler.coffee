@@ -29,11 +29,8 @@ module.exports = class SassCompiler extends AbstractCssCompiler
 
   constructor: (config, @extensions) ->
     super(config)
-    SassCompiler.checkIfExists (exists) ->
-      unless exists
-        logger.error "SASS is configured as the CSS compiler, but you don't seem to have SASS installed"
-        logger.error "SASS is a Ruby gem, information can be found here: http://sass-lang.com/tutorial.html"
-        logger.error "SASS can be installed by executing this command: gem install sass"
+    SassCompiler.checkIfExists (exists) =>
+      @hasSASS = exists
 
     logger.debug "Checking if Compass is available"
     exec 'compass --version', (error, stdout, stderr) =>
@@ -41,10 +38,14 @@ module.exports = class SassCompiler extends AbstractCssCompiler
       logger.debug "Compass available? #{@hasCompass}"
 
   compile: (fileName, text, destinationFile, callback) =>
-    return @_compile(fileName, text, destinationFile, callback) if @hasCompass?
+    if @hasCompass and @hasSASS? and @hasSASS
+      return @_compile(fileName, text, destinationFile, callback)
+
+    return @_noSASS() if @hasSASS? and !@hasSASS
 
     compileOnDelay = =>
-      if @hasCompass?
+      if @hasCompass? and @hasSASS?
+        return @_noSASS() unless @hasSASS
         @_compile(fileName, text, destinationFile, callback)
       else
         setTimeout compileOnDelay, 100
@@ -79,3 +80,9 @@ module.exports = class SassCompiler extends AbstractCssCompiler
 
   _getImportFilePath: (baseFile, importPath) ->
     path.join path.dirname(baseFile), importPath.replace(/(\w+\.|[\w-]+$)/, '_$1')
+
+  _noSASS: ->
+    logger.error "You have SASS code and Mimosa is attempting to compile it, but you don't seem to have SASS installed. " +
+                 "SASS is a Ruby gem, information can be found here: http://sass-lang.com/tutorial.html. " +
+                 "SASS can be installed by executing this command: gem install sass. After installing SASS " +
+                 "you will need to restart Mimosa."
