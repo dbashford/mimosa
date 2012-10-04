@@ -20,7 +20,6 @@ module.exports = class LessCompiler extends AbstractCssCompiler
     super()
 
   compile: (file, config, options, done) =>
-    text =
     fileName = file.inputFileName
     logger.debug "Compiling LESS file [[ #{fileName} ]], first parsing..."
     parser = new less.Parser
