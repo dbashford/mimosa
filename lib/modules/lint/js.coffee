@@ -37,7 +37,8 @@ class JSLinter
           lintok = jslint file.outputFileText, @options
           unless lintok
             jslint.errors.forEach (e) =>
-              @log file.inputFileName, e.reason, e.line
+              if e?
+                @log file.inputFileName, e.reason, e.line
 
       next() if ++i is options.files.length
 

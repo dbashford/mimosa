@@ -59,7 +59,8 @@ module.exports = class AbstractTemplateCompiler
     newFiles = []
     options.files.forEach (file) =>
       logger.debug "Compiling HTML template [[ #{file.inputFileName} ]]"
-      @compile file, @__generateTemplateName(file.inputFileName), (err, result) =>
+      templateName = @__generateTemplateName(file.inputFileName)
+      @compile file, templateName, (err, result) =>
         if err
           logger.error "Template [[ #{file.inputFileName} ]] failed to compile. Reason: #{err}"
         else

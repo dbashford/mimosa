@@ -24,7 +24,7 @@ startDefaultServer = (config) ->
 
   app = express()
   server = app.listen config.server.port, ->
-    logger.success "Mimosa's bundled Express started at http://localhost:#{config.server.port}#{config.server.base}", true
+    logger.success "Mimosa's bundled Express started at http://localhost:#{config.server.port}#{config.server.base}"
 
   app.configure =>
     app.set 'port', config.server.port
@@ -73,7 +73,7 @@ startProvidedServer = (config) ->
     if exists
       server = require config.server.path
       if server.startServer
-        logger.success "Mimosa is starting your server: #{config.server.path}", true
+        logger.success "Mimosa is starting your server: #{config.server.path}"
         conf = _.extend({}, config)
         server.startServer(conf)
       else

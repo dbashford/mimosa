@@ -72,14 +72,19 @@ class CompilerCentral
     allCompilers = []
     extHash = {}
     for Compiler in @_compilersWithoutNone()
-      extensions = if config.compilers.extensionOverrides[Compiler.base]?
-        config.compilers.extensionOverrides[Compiler.base]
+      extensions = if Compiler.base is "copy"
+        # config.copy.extensions
+        []
       else
-        # check and see if an overridden extension conflicts with an existing one
-        _.difference Compiler.defaultExtensions, allOverriddenExtensions
+        if config.compilers.extensionOverrides[Compiler.base]?
+          config.compilers.extensionOverrides[Compiler.base]
+        else
+          # check and see if an overridden extension conflicts with an existing one
+          _.difference Compiler.defaultExtensions, allOverriddenExtensions
 
       # compiler left without extensions, don't register
-      continue if extensions.length is 0 and Compiler.base isnt "copy"
+
+      #continue if extensions.length is 0
 
       compiler = new Compiler(config, extensions)
       allCompilers.push compiler

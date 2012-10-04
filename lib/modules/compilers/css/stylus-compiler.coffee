@@ -26,7 +26,7 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
     cb = (err, css) =>
       logger.debug "Finished Stylus compile for file [[ #{fileName} ]], errors?  #{err?}"
       @initBaseFilesToCompile--
-      callback(err, css)
+      done(err, css)
 
     logger.debug "Compiling Stylus file [[ #{fileName} ]]"
 

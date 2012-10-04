@@ -29,7 +29,7 @@ class MimosaFileWriteModule
         if err?
           logger.error "Failed to write new file [[ #{file.outputFileName} ]], Error: #{err}"
         else
-          logger.success "Compiled/copied [[ #{file.outputFileName} ]]"
+          logger.success "Compiled/copied [[ #{file.outputFileName} ]]", options
         done()
 
 module.exports = new MimosaFileWriteModule()
