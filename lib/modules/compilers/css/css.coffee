@@ -12,9 +12,9 @@ module.exports = class AbstractCSSCompiler
   constructor: ->
 
   lifecycleRegistration: (config, register) ->
-    register ['startupExtension'],      'init',    @_processWatchedDirectories, [@extensions[0]]
-    register ['startupExtension'],      'init',    @_findBasesToCompileStartup, [@extensions[0]]
-    register ['startupExtension'],      'compile', @_compile,                   [@extensions[0]]
+    register ['startupExtension'], 'init',    @_processWatchedDirectories, [@extensions[0]]
+    register ['startupExtension'], 'init',    @_findBasesToCompileStartup, [@extensions[0]]
+    register ['startupExtension'], 'compile', @_compile,                   [@extensions[0]]
 
     register ['add','update','remove'], 'init',         @_findBasesToCompile,        [@extensions...]
     register ['add','update','remove'], 'compile',      @_compile,                   [@extensions...]
@@ -30,9 +30,9 @@ module.exports = class AbstractCSSCompiler
           options.files.push @__baseOptionsObject(base, options)
       else
         logger.warn "Orphaned partial file: [[ #{options.inputFile} ]]"
-        return next(false)
     else
-      options.files.push @__baseOptionsObject(options.inputFile, options)
+      unless options.lifeCycleType is 'remove'
+        options.files.push @__baseOptionsObject(options.inputFile, options)
 
     next()
 
@@ -46,25 +46,20 @@ module.exports = class AbstractCSSCompiler
     isVendor:fileUtils.isVendor(destFile)
 
   _compile: (config, options, next) =>
-    if not options.files?
-      next {text:"Mimosa Error: attempt to compile CSS but no base files provided"}
-    else
-      i = 0
-      newFiles = []
-      options.files.forEach (file) =>
-        @compile file, config, options, (err, result) =>
-          if err
-            logger.error err
-          else
-            file.outputFileText = result
-            newFiles.push file
+    return next() if options.files?.length is 0
+    i = 0
+    newFiles = []
+    options.files.forEach (file) =>
+      @compile file, config, options, (err, result) =>
+        if err
+          logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}"
+        else
+          file.outputFileText = result
+          newFiles.push file
 
-          if ++i is options.files.length
-            if newFiles.length is 0
-              next(false)
-            else
-              options.files = newFiles
-              next()
+        if ++i is options.files.length
+          options.files = newFiles
+          next()
 
   _findBasesToCompileStartup: (config, options, next) =>
     baseFilesToCompileNow = []

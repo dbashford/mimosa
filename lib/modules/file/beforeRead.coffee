@@ -22,9 +22,9 @@ class MimosaFileBeforeReadModule
             options.files = newFiles
             next()
           else
+            logger.debug "No files need compiling, exiting lifecycle"
             next(false)
 
-  # for anything javascript related, force compile regardless
   _fileNeedsCompilingStartup: (config, options, next) =>
     # force compiling on startup to build require dependency tree
     # but not for vendor javascript

@@ -35,7 +35,7 @@ class MimosaFileInitModule
       next()
     else
       # no error, just unrecognized extension, warn and do not continue
-      logger.warn "No compiler has been registered: #{options.extension}, #{inputFile}"
+      logger.warn "No compiler has been registered: [[ #{options.extension} ]], [[ #{inputFile} ]]"
       next(false)
 
   _initMultiAsset: (config, options, next) =>
@@ -63,7 +63,7 @@ class MimosaFileInitModule
           (fileName) =>
             fileName.replace(watchDir, compiledDir)
       else if exts.javascript.indexOf(ext) > -1
-        options.isJS = true
+        options.isJavascript = true
         destFunct = (watchDir, compiledDir) ->
           (fileName) =>
             baseCompDir = fileName.replace(watchDir, compiledDir)

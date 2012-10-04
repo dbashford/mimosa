@@ -1,3 +1,5 @@
+logger =    require '../../../util/logger'
+
 module.exports = class JSCompiler
 
   lifecycleRegistration: (config, register) ->
@@ -9,15 +11,11 @@ module.exports = class JSCompiler
     options.files.forEach (file) =>
       @compile file, (err, output) =>
         if err
-          console.log err
-          # TODO handle logging
+          logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}"
         else
           file.outputFileText = output
           newFiles.push file
 
         if ++i is options.files.length
-          if newFiles.length is 0
-            next(false)
-          else
-            options.files = newFiles
-            next()
+          options.files = newFiles
+          next()

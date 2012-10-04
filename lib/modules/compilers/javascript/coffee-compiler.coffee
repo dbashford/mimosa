@@ -15,5 +15,5 @@ module.exports = class CoffeeCompiler extends JSCompiler
     try
       output = coffee.compile file.inputFileText
     catch err
-      error = {text:"#{file.inputFileName}, #{err}"}
+      error = err
     cb(error, output)

@@ -36,15 +36,14 @@ class JSLinter
         else
           lintok = jslint file.outputFileText, @options
           unless lintok
-            for e in jslint.errors
-              continue unless e?
+            jslint.errors.forEach (e) =>
               @log file.inputFileName, e.reason, e.line
 
       next() if ++i is options.files.length
 
   log: (fileName, message, lineNumber) ->
     message = "JavaScript Lint Error: #{message}, in file [[ #{fileName} ]]"
-    if lineNumber then message += ", at line number [[ #{lineNumber} ]]"
+    message += ", at line number [[ #{lineNumber} ]]" if lineNumber
     logger.warn message
 
 module.exports = new JSLinter()

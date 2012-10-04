@@ -68,11 +68,6 @@ exports.config = {
                                           # as newparamters inside the overrides ojbect. To unset Mimosa's defaults, set a property
                                           # to null
 
-  # minify:                               # Configuration for non-require minification/compression via uglify using the --minify flag.
-    # exclude:["\.min\."]                 # List of regexes to exclude files when running minification.  Any path with ".min." in its
-                                          # name, like jquery.min.js, is assumed to already be minified and is ignored by default.
-                                          # Override this property if you have other files that you'd like to exempt from minification
-
   # growl:
     # onStartup: false                    # Controls whether or not to Growl when assets successfully compile/copy on startup,
                                           # If you've got 100 CoffeeScript files, and you do a clean and then start watching,
@@ -82,6 +77,11 @@ exports.config = {
       # css: true                         # send growl notification on successful compilation? will always send on failure
       # template: true                    # send growl notification on successful compilation? will always send on failure
       # copy: true                        # send growl notification on successful copy?
+
+  # minify:                               # Configuration for non-require minification/compression via uglify using the --minify flag.
+    # exclude:["\.min\."]                 # List of regexes to exclude files when running minification.  Any path with ".min." in its
+                                          # name, like jquery.min.js, is assumed to already be minified and is ignored by default.
+                                          # Override this property if you have other files that you'd like to exempt from minification
 
   # lint:                                 # settings for js, css linting/hinting
     # compiled:                           # settings for compiled files

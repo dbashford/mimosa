@@ -73,16 +73,19 @@ class NewCommand
   _prompting: (compilers, name) =>
     logger.debug "Compilers :\n#{JSON.stringify(compilers, null, 2)}"
 
-    logger.green "\n  Mimosa will guide you through project creation. You will be prompted to pick the JavaScript"
-    logger.green "  meta-language, CSS meta-language, and micro-templating library you would like to use. For more"
-    logger.green "  about those choices, see http://mimosajs.com/compilers.html. You will also be prompted to pick"
-    logger.green "  the server and server-side view technologies you would like to use. If you pick no server,"
-    logger.green "  Mimosa will serve your assets for you.\n"
-    logger.green "  For all of the technologies, if your favorite is not an option, you can add a GitHub issue"
-    logger.green "  and we'll look into adding it. (https://github.com/dbashford/mimosa/issues)\n"
+    logger.green "\n  Mimosa will guide you through project creation. You will be prompted to"
+    logger.green "  pick the JavaScript meta-language, CSS meta-language, and micro-templating"
+    logger.green "   library you would like to use. For more about those choices, see "
+    logger.green "  http://mimosajs.com/compilers.html. You will also be prompted to pick the"
+    logger.green "  server and server-side view technologies you would like to use. If you pick"
+    logger.green "  no server, Mimosa will serve your assets for you.\n"
 
-    logger.green "  If you are unsure which options to pick, the ones with asterisks are Mimosa favorites. Feel free"
-    logger.green "  to hit the web to research your selections, Mimosa will be here when you get back."
+    logger.green "  For all of the technologies, if your favorite is not an option, you can add"
+    logger.green "  a GitHub issue and we'll look into adding it.\n"
+
+    logger.green "  If you are unsure which options to pick, the ones with asterisks are Mimosa"
+    logger.green "  favorites. Feel free to hit the web to research your selections, Mimosa will"
+    logger.green "  be here when you get back."
 
     logger.green "\n  To start, please choose your JavaScript meta-language: \n"
     @program.choose _.pluck(compilers.javascript, 'prettyName'), (i) =>
@@ -294,17 +297,18 @@ class NewCommand
     process.stdin.destroy()
 
   _printHelp: ->
-    logger.green('  The new command will take you through a series of questions regarding what JavaScript meta-language, CSS')
-    logger.green('  meta-language, micro-templating library, server and server view technology you would like to use to build')
-    logger.green('  your project. Once you have answered the questions, Mimosa will create a directory using the name you')
-    logger.green('  provided, and place a project skeleton inside of it.  That project skeleton will by default include a')
-    logger.green('  basic application using the technologies you selected.')
+    logger.green('  The new command will take you through a series of questions regarding what')
+    logger.green('  JavaScript meta-language, CSS meta-language, micro-templating library, server')
+    logger.green('  and server view technology you would like to use to build your project. Once')
+    logger.green('  you have answered the questions, Mimosa will create a directory using the name')
+    logger.green('  you provided, and place a project skeleton inside of it.  That project skeleton')
+    logger.green('  will by default include a basic application using the technologies you selected.')
     logger.blue( '\n    $ mimosa new [nameOfProject]\n')
-    logger.green('  If you wish to copy the project skeleton into your current directory instead of into a new one leave off the')
-    logger.green('  then leave off name.')
+    logger.green('  If you wish to copy the project skeleton into your current directory instead of')
+    logger.green('  into a new one leave off the then leave off name.')
     logger.blue( '\n    $ mimosa new\n')
-    logger.green('  If you are happy with the defaults (CoffeeScript, SASS, Handlebars, Express, Jade), you can bypass the')
-    logger.green('  prompts by providing a \'defaults\' flag.')
+    logger.green('  If you are happy with the defaults (CoffeeScript, SASS, Handlebars, Express, Jade),')
+    logger.green('  you can bypass the prompts by providing a \'defaults\' flag.')
     logger.blue( '\n    $ mimosa new [name] --defaults')
     logger.blue( '    $ mimosa new [name] -d\n')
 

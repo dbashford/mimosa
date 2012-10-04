@@ -18,7 +18,7 @@ class Optimizer
   optimize: (config, fileName) =>
     return unless config.optimize
     if fileName?
-      logger.debug "Going to optimize for #{fileName}"
+      logger.debug "Going to optimize for [[ #{fileName} ]]"
 
     if @currentlyRunning
       return logger.debug "...but nevermind, optmization is already running."
@@ -64,7 +64,7 @@ class Optimizer
     baseUrl = path.join config.watch.compiledDir, config.watch.javascriptDir
     name = config.require.optimize.overrides.name
     if (name? and name isnt 'almond') or name is null
-      logger.info "r.js name changed from default of 'almond', no not using almond.js"
+      logger.info "r.js name changed from default of 'almond', so not using almond.js"
     else
       almondOutPath = path.join baseUrl, "almond.js"
       fs.writeFileSync almondOutPath, @almondText, 'ascii'
@@ -72,7 +72,7 @@ class Optimizer
     numProcessed = 0
     done = => @_done(almondOutPath) if ++numProcessed >= numFiles
 
-    for file in files
+    files.forEach (file) =>
       runConfig = @_setupConfigForModule(config, file, baseUrl)
       logger.info "Beginning requirejs optimization for module [[ #{runConfig.include[0]} ]]"
       @_executeOptimize(runConfig, done)

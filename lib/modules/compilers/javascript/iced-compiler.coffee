@@ -10,9 +10,9 @@ module.exports = class IcedCompiler extends JSCompiler
   constructor: (config, @extensions) ->
     super()
 
-  compile: (config, options, cb) ->
+  compile: (file, cb) ->
     try
       output = iced.compile file.inputFileText
     catch err
-      error = {text:"#{file.inputFileName}, #{err}"}
+      error = err
     cb(error, output)

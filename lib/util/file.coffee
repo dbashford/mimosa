@@ -9,14 +9,14 @@ class FileUtils
   isCSS: (fileName) ->
     path.extname(fileName) is ".css"
 
-  isJS: (fileName) ->
+  isJavascript: (fileName) ->
     path.extname(fileName) is ".js"
 
   isVendor: (fileName) ->
     fileName.split(path.sep).indexOf('vendor') > -1
 
   isJSNotVendor: (fileName) ->
-    @isJS(fileName) and !@isVendor(fileName)
+    @isJavascript(fileName) and !@isVendor(fileName)
 
   mkdirRecursive: (p, made) ->
     if !made then made = null

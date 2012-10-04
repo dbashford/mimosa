@@ -16,7 +16,7 @@ class MimosaFileWriteModule
       register ['add','update'],          'write',  @_write, [e.javascript..., cExts...]
 
   _write: (config, options, next) =>
-    return next(false) unless options.files?.length > 0
+    return next() unless options.files?.length > 0
 
     i = 0
     done = =>
@@ -26,7 +26,10 @@ class MimosaFileWriteModule
       return done() unless file.outputFileText? and file.outputFileName?
       logger.debug "Writing file [[ #{file.outputFileText} ]]"
       fileUtils.writeFile file.outputFileName, file.outputFileText, (err) =>
-        logger.error "Failed to write new file: #{file.outputFileName}" if err?
+        if err?
+          logger.error "Failed to write new file [[ #{file.outputFileName} ]], Error: #{err}"
+        else
+          logger.success "Compiled/copied [[ #{file.outputFileName} ]]"
         done()
 
 module.exports = new MimosaFileWriteModule()

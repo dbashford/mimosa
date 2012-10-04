@@ -39,19 +39,19 @@ module.exports = class SassCompiler extends AbstractCssCompiler
 
   compile: (file, config, options, done) =>
     if @hasCompass and @hasSASS? and @hasSASS
-      return @_compile(file, config, options, done) if @hasCompass? and @hasSASS?
+      return @__compile(file, config, options, done) if @hasCompass? and @hasSASS?
 
     return @_noSASS() if @hasSASS? and !@hasSASS
 
     compileOnDelay = =>
       if @hasCompass? and @hasSASS?
         return @_noSASS() unless @hasSASS
-        @_compile(file, config, options, done)
+        @__compile(file, config, options, done)
       else
         setTimeout compileOnDelay, 100
     do compileOnDelay
 
-  _compile: (file, config, options, done) =>
+  __compile: (file, config, options, done) =>
     text = file.inputFileText
     fileName = file.inputFileName
     logger.debug "Beginning compile of SASS file [[ #{fileName} ]]"

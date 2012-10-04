@@ -46,6 +46,7 @@ exports.processConfig = (opts, callback) ->
       logger.fatal "Unable to start Mimosa, #{err} configuration(s) problems listed above."
       process.exit 1
     else
+      logger.setConfig(newConfig)
       callback(newConfig)
 
 exports.cleanCompiledDirectories = (config) ->

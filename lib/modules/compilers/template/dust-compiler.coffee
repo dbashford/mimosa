@@ -23,5 +23,5 @@ module.exports = class DustCompiler extends AbstractTemplateCompiler
     try
       output = dust.compile file.inputFileText, templateName
     catch err
-      error = "#{file.inputFileName}, #{err}\n"
+      error = err
     cb(error, output)

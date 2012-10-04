@@ -25,6 +25,7 @@ class Watcher
       @_pullFiles()
 
   _startupDoneCallback: =>
+    logger.startupDone()
     clearInterval(@intervalId) if @intervalId? and !@persist
     @initCallback(@config) if @initCallback?
 

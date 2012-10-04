@@ -25,6 +25,6 @@ module.exports = class JadeCompiler extends AbstractTemplateCompiler
         client: true,
         filename: file.inputFileName
     catch err
-      error = "#{file.inputFileName}, #{err}\n"
+      error = err
 
     cb(error, output)

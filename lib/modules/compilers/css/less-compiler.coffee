@@ -20,16 +20,16 @@ module.exports = class LessCompiler extends AbstractCssCompiler
     super()
 
   compile: (file, config, options, done) =>
-    text = file.inputFileText
+    text =
     fileName = file.inputFileName
     logger.debug "Compiling LESS file [[ #{fileName} ]], first parsing..."
     parser = new less.Parser
       paths: [config.watch.sourceDir, path.dirname(fileName)],
       filename: fileName
-    parser.parse text, (error, tree) =>
+    parser.parse file.inputFileText, (error, tree) =>
       @initBaseFilesToCompile--
 
-      return done("#{fileName}, Error: #{error.message}") if error?
+      return done(error, null) if error?
 
       try
         logger.debug "...then converting to CSS"

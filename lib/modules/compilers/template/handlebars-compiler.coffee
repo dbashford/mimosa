@@ -67,6 +67,5 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
         "partials || Handlebars.partials; if (Object.keys(partials).length == 0) {partials = templates;}")
       output = "template(#{compiledOutput})"
     catch err
-      error = "#{file.inputFileName}, #{err} \n"
-
+      error = err
     cb(error, output)

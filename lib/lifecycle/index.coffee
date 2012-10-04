@@ -96,12 +96,8 @@ module.exports = class LifeCycleManager
         done(options)
 
     cb = (nextVal) =>
-      if _.isBoolean(nextVal) and nextVal is false
+      if _.isBoolean(nextVal) and not nextVal
         done(options)
-      else if _.isString(nextVal)
-        # TODO, increment i
-        next()
-        # fast forward
       else
         next()
 
@@ -125,11 +121,7 @@ module.exports = class LifeCycleManager
         done()
 
     cb = (nextVal) ->
-      if _.isObject(nextVal)
-        # is error, log the error and move on
-        # TODO log error
-        done(false)
-      else if _.isBoolean(nextVal) and !nextVal
+      if _.isBoolean(nextVal) and not nextVal
         done(false)
         # no error, natural stop to workflow
       else

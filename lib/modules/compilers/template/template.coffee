@@ -41,41 +41,39 @@ module.exports = class AbstractTemplateCompiler
       extension = path.extname(file).substring(1)
       fileNames.push(file) if @extensions.indexOf(extension) >= 0
 
-    return next(false) if fileNames.length is 0
-
-    @_testForSameTemplateName(fileNames) unless fileNames.length <= 1
-
-    options.files = fileNames.map (file) ->
-      inputFileName:file
-      inputFileText:null
-      outputFileText:null
+    if fileNames.length is 0
+      options.files = []
+    else
+      @_testForSameTemplateName(fileNames) unless fileNames.length is 1
+      options.files = fileNames.map (file) ->
+        inputFileName:file
+        inputFileText:null
+        outputFileText:null
 
     next()
 
   _compile: (config, options, next) =>
-    if not options.files?
-      next {text:"Mimosa Error: attempt to compile JavaScript but template files"}
-    else
-      i = 0
-      newFiles = []
-      options.files.forEach (file) =>
-        logger.debug "Compiling HTML template [[ #{file.inputFileName} ]]"
-        @compile file, @__generateTemplateName(file.inputFileName), (err, result) =>
-          if err
-            logger.error err
-          else
-            result = "templates['#{templateName}'] = #{result};\n" unless @handlesNamespacing
-            file.outputFileText = result
-            newFiles.push file
+    return next() if options.files?.length is 0
 
-          if ++i is options.files.length
-            if newFiles.length is 0
-              next(false)
-            else
-              options.files = newFiles
-              next()
+    i = 0
+    newFiles = []
+    options.files.forEach (file) =>
+      logger.debug "Compiling HTML template [[ #{file.inputFileName} ]]"
+      @compile file, @__generateTemplateName(file.inputFileName), (err, result) =>
+        if err
+          logger.error "Template [[ #{file.inputFileName} ]] failed to compile. Reason: #{err}"
+        else
+          result = "templates['#{templateName}'] = #{result};\n" unless @handlesNamespacing
+          file.outputFileText = result
+          newFiles.push file
+
+        if ++i is options.files.length
+          options.files = newFiles
+          next()
 
   _merge: (config, options, next) =>
+    return next() unless options.files?.length > 0
+
     mergedText = @filePrefix()
     options.files.forEach (file) =>
       mergedText += @templatePreamble file.inputFileName
@@ -93,26 +91,26 @@ module.exports = class AbstractTemplateCompiler
     path.basename fileName, path.extname(fileName)
 
   _testForRemoveClientLibrary: (config, options, next) =>
-    if options.templateFileNames?.length is 0
+    if options.files?.length is 0
       logger.debug "No template files left, removing [[ #{@clientPath} ]]"
       @removeClientLibrary(next)
     else
       next()
 
-  removeClientLibrary: (callback) ->
+  removeClientLibrary: (cb) ->
     if @clientPath?
       fs.exists @clientPath, (exists) ->
         if exists
           logger.debug "Removing client library [[ #{@clientPath} ]]"
-          fs.unlinkSync @clientPath, (err) -> callback()
+          fs.unlinkSync @clientPath, (err) -> cb()
         else
-          callback()
+          cb()
     else
-      callback()
+      cb()
 
   _testForSameTemplateName: (fileNames) ->
     templateHash = {}
-    for fileName in fileNames
+    fileNames.forEach (fileName) ->
       templateName = path.basename(fileName, path.extname(fileName))
       if templateHash[templateName]?
         logger.error "Files [[ #{templateHash[templateName]} ]] and [[ #{fileName} ]] result in templates of the same name " +
@@ -143,17 +141,17 @@ module.exports = class AbstractTemplateCompiler
 
     logger.debug "Writing template client library [[ #{@mimosaClientLibraryPath} ]]"
     fs.readFile @mimosaClientLibraryPath, "ascii", (err, data) =>
-      return next({text:"Cannot read client library: #{@mimosaClientLibraryPath}"}) if err?
-
+      logger.error("Cannot read client library [[ #{@mimosaClientLibraryPath} ]]") if err
+      return next()
       fileUtils.writeFile @clientPath, data, (err) =>
-        return next({text:"Cannot write client library: #{err}"}) if err?
+        logger.error("Cannot write client library: #{err}") if err
         next()
 
   libraryPath: ->
     libPath = "vendor/#{@clientLibrary}"
     requireRegister.aliasForPath(libPath) ? libPath
 
-  templatePreamble: (fileName, templateName) ->
+  templatePreamble: (fileName) ->
     """
     \n//
     // Source file: [#{fileName}]

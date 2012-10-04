@@ -16,6 +16,6 @@ module.exports = class AbstractUnderscoreCompiler extends AbstractTemplateCompil
       compiledOutput = @getLibrary().template(file.inputFileText)
       output = compiledOutput.source
     catch err
-      error = "#{file.inputFileName}, #{err}\n"
+      error = err
 
     cb(error, output)

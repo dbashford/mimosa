@@ -11,7 +11,7 @@ class MimosaFileReadModule
     register ['add','update','remove','startupExtension'], 'read', @_read, [e.css..., e.template...]
 
   _read: (config, options, next) ->
-    return next(false) unless options.files?.length > 0
+    return next() unless options.files?.length > 0
 
     i = 0
     done = =>
@@ -20,9 +20,11 @@ class MimosaFileReadModule
     options.files.forEach (file) ->
       return done() unless file.inputFileName?
       fs.readFile file.inputFileName, (err, text) =>
-        return logger.error "Failed to read file: #{file.inputFileName}" if err?
-        text = text.toString() if options.isJS or options.isCSS or options.isTemplate
-        file.inputFileText = text
+        if err?
+          logger.error "Failed to read file [[ #{file.inputFileName} ]], Error: #{err}"
+        else
+          text = text.toString() if options.isJavascript or options.isCSS or options.isTemplate
+          file.inputFileText = text
         done()
 
 module.exports = new MimosaFileReadModule()
