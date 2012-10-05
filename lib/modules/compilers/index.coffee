@@ -73,8 +73,7 @@ class CompilerCentral
     extHash = {}
     for Compiler in @_compilersWithoutNone()
       extensions = if Compiler.base is "copy"
-        # config.copy.extensions
-        []
+        config.copy.extensions
       else
         if config.compilers.extensionOverrides[Compiler.base]?
           config.compilers.extensionOverrides[Compiler.base]

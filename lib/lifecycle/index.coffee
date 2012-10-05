@@ -41,6 +41,7 @@ module.exports = class LifeCycleManager
       ext.length >= 1 and @allExtensions.indexOf(ext) >= 0
 
     @initialFileCount = files.length
+    @initialFiles = files
 
     # register logger
     # establish error object
@@ -87,6 +88,10 @@ module.exports = class LifeCycleManager
   _executeLifecycleStep: (options, type, done = @_finishedWithFile) ->
     options.lifeCycleType = type
 
+    # if processing a file, and the file's extension isn't in the list, boot it
+    if options.inputFile? and @allExtensions.indexOf(options.extension) is -1
+      return logger.warn "No compiler has been registered for extension: [[ #{options.extension} ]], file: [[ #{options.inputFile} ]]"
+
     i = 0
     next = =>
       if i < @types[type].length
@@ -104,7 +109,7 @@ module.exports = class LifeCycleManager
     next()
 
   _lifecycleMethod: (type, step, options, done) ->
-    logger.debug "Calling lifecycle: [[ #{type} ]], [[ #{step} ]], with options [[ #{JSON.stringify(options)} ]]"
+    logger.debug "Calling lifecycle: [[ #{type} ]], [[ #{step} ]], [[ #{options.extension} ]]"
 
     tasks = []
     ext = options.extension
@@ -130,10 +135,12 @@ module.exports = class LifeCycleManager
 
     next()
 
+  hash:{}
+
   _finishedWithFile: (options) =>
     logger.debug "Finished with file: [[ #{options.inputFile} ]]"
-    #console.log "Finished with file: [[ #{options.inputFile} ]]"
-    @_startupExtensions() if @startup and ++@initialFilesHandled is @initialFileCount
+    if @startup and ++@initialFilesHandled is @initialFileCount
+      @_startupExtensions()
 
   _startupExtensions: =>
     @startup = false

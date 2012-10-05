@@ -39,7 +39,7 @@ module.exports = class AbstractTemplateCompiler
     fileNames = []
     for file in allFiles
       extension = path.extname(file).substring(1)
-      fileNames.push(file) if @extensions.indexOf(extension) >= 0
+      fileNames.push(file) if _.any(@extensions, (ext) -> ext is extension)
 
     if fileNames.length is 0
       options.files = []
@@ -64,7 +64,7 @@ module.exports = class AbstractTemplateCompiler
         if err
           logger.error "Template [[ #{file.inputFileName} ]] failed to compile. Reason: #{err}"
         else
-          result = "templates['#{templateName}'] = #{result};\n" unless @handlesNamespacing
+          result = "templates['#{templateName}'] = #{result}\n" unless @handlesNamespacing
           file.outputFileText = result
           newFiles.push file
 
@@ -142,10 +142,15 @@ module.exports = class AbstractTemplateCompiler
 
     logger.debug "Writing template client library [[ #{@mimosaClientLibraryPath} ]]"
     fs.readFile @mimosaClientLibraryPath, "ascii", (err, data) =>
-      logger.error("Cannot read client library [[ #{@mimosaClientLibraryPath} ]]") if err
-      return next()
+      if err
+        logger.error("Cannot read client library [[ #{@mimosaClientLibraryPath} ]]")
+        return next()
+
       fileUtils.writeFile @clientPath, data, (err) =>
-        logger.error("Cannot write client library: #{err}") if err
+        if err
+          logger.error("Cannot write client library: #{err}")
+        else
+          logger.info "Wrote templating client library [[ #{@clientPath} ]]"
         next()
 
   libraryPath: ->

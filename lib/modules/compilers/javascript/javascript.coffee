@@ -3,8 +3,6 @@ logger =    require '../../../util/logger'
 module.exports = class JSCompiler
 
   lifecycleRegistration: (config, register) ->
-    console.log "JAVASCRIPT EXTENSIONS ", @extensions...
-
     register ['add','update','startupFile'], 'compile', @_compile, [@extensions...]
 
   _compile: (config, options, next) =>

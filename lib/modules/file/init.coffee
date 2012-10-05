@@ -18,25 +18,20 @@ class MimosaFileInitModule
 
     options.destinationFile = @__determineDestinationFile config, options
 
-    if options.destinationFile?
-      logger.debug "Destination for file [[ #{inputFile ? "template file"} ]] is [[ #{destinationFile} ]]"
+    logger.debug "Destination for file [[ #{inputFile ? "template file"} ]] is [[ #{destinationFile} ]]"
 
-      destinationFile = options.destinationFile(inputFile)
+    destinationFile = options.destinationFile(inputFile)
 
-      options.files = [{
-        inputFileName:inputFile
-        outputFileName:destinationFile
-        isVendor:fileUtils.isVendor(destinationFile)
-        isJSNotVendor:fileUtils.isJSNotVendor(destinationFile)
-        inputFileText:null
-        outputFileText:null
-      }]
+    options.files = [{
+      inputFileName:inputFile
+      outputFileName:destinationFile
+      isVendor:fileUtils.isVendor(destinationFile)
+      isJSNotVendor:fileUtils.isJSNotVendor(destinationFile)
+      inputFileText:null
+      outputFileText:null
+    }]
 
-      next()
-    else
-      # no error, just unrecognized extension, warn and do not continue
-      logger.warn "No compiler has been registered: [[ #{options.extension} ]], [[ #{inputFile} ]]"
-      next(false)
+    next()
 
   _initMultiAsset: (config, options, next) =>
     options.destinationFile = @__determineDestinationFile config, options
