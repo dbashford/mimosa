@@ -17,20 +17,21 @@ module.exports = class AbstractTemplateCompiler
       @clientPath = path.join jsDir, 'vendor', "#{@clientLibrary}.js"
 
   lifecycleRegistration: (config, register) ->
-    register ['startupExtension'], 'init',         @_gatherFiles,            [@extensions[0]]
-    register ['startupExtension'], 'beforeRead',   @_templateNeedsCompiling, [@extensions[0]]
-    register ['startupExtension'], 'compile',      @_compile,                [@extensions[0]]
-    register ['startupExtension'], 'afterCompile', @_merge,                  [@extensions[0]]
+    register ['startupExtension'], 'init',       @_gatherFiles,            [@extensions[0]]
+    register ['startupExtension'], 'beforeRead', @_templateNeedsCompiling, [@extensions[0]]
+    register ['startupExtension'], 'compile',    @_compile,                [@extensions[0]]
 
-    register ['add','update','remove'], 'init',         @_gatherFiles,            [@extensions...]
-    register ['add','update','remove'], 'beforeRead',   @_templateNeedsCompiling, [@extensions...]
-    register ['add','update','remove'], 'compile',      @_compile,                 [@extensions...]
-    register ['add','update','remove'], 'afterCompile', @_merge,                 [@extensions...]
+    register ['add','update','remove'], 'init',       @_gatherFiles,            [@extensions...]
+    register ['add','update','remove'], 'beforeRead', @_templateNeedsCompiling, [@extensions...]
+    register ['add','update','remove'], 'compile',    @_compile,                [@extensions...]
 
     unless config.virgin
-      register ['remove'],           'beforeRead',  @_testForRemoveClientLibrary, [@extensions...]
-      register ['add','update'],     'beforeWrite', @_writeClientLibrary,         [@extensions...]
-      register ['startupExtension'], 'beforeWrite', @_writeClientLibrary,         [@extensions[0]]
+      register ['startupExtension'],      'afterCompile', @_merge, [@extensions[0]]
+      register ['add','update','remove'], 'afterCompile', @_merge, [@extensions...]
+
+      register ['remove'],           'beforeRead',   @_testForRemoveClientLibrary, [@extensions...]
+      register ['add','update'],     'afterCompile', @_readInClientLibrary,        [@extensions...]
+      register ['startupExtension'], 'afterCompile', @_readInClientLibrary,        [@extensions[0]]
 
   _gatherFiles: (config, options, next) =>
     allFiles = wrench.readdirSyncRecursive(config.watch.sourceDir)
@@ -120,6 +121,8 @@ module.exports = class AbstractTemplateCompiler
         templateHash[templateName] = fileName
 
   _templateNeedsCompiling: (config, options, next) =>
+    return next(false) if options.files?.length is 0
+
     fileNames = _.pluck(options.files, 'inputFileName')
     numFiles = fileNames.length
 
@@ -128,30 +131,32 @@ module.exports = class AbstractTemplateCompiler
       if i < numFiles
         fileUtils.isFirstFileNewer fileNames[i++], options.destinationFile(), cb
       else
-        next(false)
+        # no need to compile, remove files, but let continue
+        options.files = []
+        next()
 
     cb = (isNewer) =>
       if isNewer then next() else processFile()
 
     processFile()
 
-  _writeClientLibrary: (config, options, next) =>
+  _readInClientLibrary: (config, options, next) =>
     if !@clientPath? or fs.existsSync @clientPath
       logger.debug "Not going to write template client library"
       return next()
 
-    logger.debug "Writing template client library [[ #{@mimosaClientLibraryPath} ]]"
+    logger.debug "Adding template client library [[ #{@mimosaClientLibraryPath} ]] to list of files to write"
+
     fs.readFile @mimosaClientLibraryPath, "ascii", (err, data) =>
       if err
         logger.error("Cannot read client library [[ #{@mimosaClientLibraryPath} ]]")
         return next()
 
-      fileUtils.writeFile @clientPath, data, (err) =>
-        if err
-          logger.error("Cannot write client library: #{err}")
-        else
-          logger.info "Wrote templating client library [[ #{@clientPath} ]]"
-        next()
+      options.files.push
+        outputFileName: @clientPath
+        outputFileText: data
+
+      next()
 
   libraryPath: ->
     libPath = "vendor/#{@clientLibrary}"

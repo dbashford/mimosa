@@ -67,7 +67,8 @@ module.exports = class LifeCycleManager
       if @types[type].indexOf(step) < 0
         return logger.warn "Unrecognized lifecycle step [[ #{step} ]] for type [[ #{type} ]], valid steps are [[ #{@types[type]} ]]"
 
-      for extension in extensions
+      # no registering the same extension twice
+      for extension in _.uniq(extensions)
         #console.log "Registering extension [[ #{extension} ]], for step [[ #{step} ]] of type [[ #{type} ]]"
         @registration[type][step][extension] ?= []
         @registration[type][step][extension].push callback
@@ -109,7 +110,7 @@ module.exports = class LifeCycleManager
     next()
 
   _lifecycleMethod: (type, step, options, done) ->
-    logger.debug "Calling lifecycle: [[ #{type} ]], [[ #{step} ]], [[ #{options.extension} ]]"
+    logger.debug "Calling lifecycle: [[ #{type} ]], [[ #{step} ]], [[ #{options.extension} ]], [[ #{options.inputFile} ]]"
 
     tasks = []
     ext = options.extension

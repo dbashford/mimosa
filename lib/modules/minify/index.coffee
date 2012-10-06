@@ -1,22 +1,25 @@
 path = require 'path'
 fs =   require 'fs'
 
-jsp = require("uglify-js").parser
-pro = require("uglify-js").uglify
+jsp =   require("uglify-js").parser
+pro =   require("uglify-js").uglify
 clean  = require 'clean-css'
 
-logger = require '../../util/logger'
+logger =    require '../../util/logger'
 fileUtils = require '../../util/file'
 
 class MimosaMinifyModule
 
   lifecycleRegistration: (config, register) ->
+    e = config.extensions
+
     if config.min
       @exclude = config.minify.exclude
-      register ['add','update','startupFile'], 'afterCompile', @_minifyJS,  [config.extensions.javascript...]
+      register ['add','update','startupFile'],      'afterCompile', @_minifyJS, [e.javascript...]
+      register ['add','update','startupExtension'], 'beforeWrite',  @_minifyJS, [e.template...]
 
     if config.optimize or config.min
-      register ['add','update','startupFile'], 'afterCompile', @_minifyCSS, [config.extensions.css...]
+      register ['add','update','startupFile'], 'afterCompile', @_minifyCSS, [e.css...]
 
   _minifyJS: (config, options, next) ->
     i = 0

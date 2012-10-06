@@ -14,27 +14,24 @@ class MimosaFileBeforeReadModule
 
     i = 0
     newFiles = []
+    done = ->
+      if ++i is options.files.length
+        if newFiles.length > 0
+          options.files = newFiles
+          next()
+        else
+          logger.debug "No files need compiling, exiting lifecycle"
+          next(false)
+
     options.files.forEach (file) =>
       # if using require verification, forcing compile to assemble require information
       if file.isJavascript and (config.require.verify.enabled or config.optimize)
         newFiles.push file
-        if ++i is options.files.length
-          if newFiles.length > 0
-            options.files = newFiles
-            next()
-          else
-            logger.debug "No files need compiling, exiting lifecycle"
-            next(false)
+        done()
       else
         fileUtils.isFirstFileNewer file.inputFileName, file.outputFileName, (isNewer) =>
           newFiles.push file if isNewer
-          if ++i is options.files.length
-            if newFiles.length > 0
-              options.files = newFiles
-              next()
-            else
-              logger.debug "No files need compiling, exiting lifecycle"
-              next(false)
+          done()
 
   _fileNeedsCompilingStartup: (config, options, next) =>
     # force compiling on startup to build require dependency tree
