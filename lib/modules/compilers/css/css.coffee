@@ -25,7 +25,7 @@ module.exports = class AbstractCSSCompiler
     if @_isInclude(options.inputFile)
       bases = @includeToBaseHash[options.inputFile]
       if bases?
-        logger.debug "Bases files for [[ #{fileName} ]]\n#{bases.join('\n')}"
+        logger.debug "Bases files for [[ #{options.inputFile} ]]\n#{bases.join('\n')}"
         for base in bases
           options.files.push @__baseOptionsObject(base, options)
       else

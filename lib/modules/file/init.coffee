@@ -27,6 +27,7 @@ class MimosaFileInitModule
       outputFileName:destinationFile
       isVendor:fileUtils.isVendor(destinationFile)
       isJSNotVendor:fileUtils.isJSNotVendor(destinationFile)
+      isJavascript:fileUtils.isJavascript(destinationFile)
       inputFileText:null
       outputFileText:null
     }]
