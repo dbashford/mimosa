@@ -70,6 +70,10 @@ module.exports = class AbstractTemplateCompiler
           newFiles.push file
 
         if ++i is options.files.length
+          # end of the road for virgin, log it
+          if config.virgin and options.files.length is newFiles.length
+            logger.success "All templates compiled successfully.", options
+
           options.files = newFiles
           next()
 

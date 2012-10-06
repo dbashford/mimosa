@@ -26,7 +26,7 @@ module.exports = class HTMLCompiler extends AbstractTemplateCompiler
 
     try
       compiledOutput = _.template(file.inputFileText)
-      output = "#{compiledOutput}()"
+      output = "#{compiledOutput.source}()"
     catch err
       error = err
 

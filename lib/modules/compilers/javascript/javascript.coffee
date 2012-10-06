@@ -13,6 +13,8 @@ module.exports = class JSCompiler
         if err
           logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}"
         else
+          if config.virgin
+            logger.success "Compiled/copied [[ #{file.outputFileName} ]]", options
           file.outputFileText = output
           newFiles.push file
 
