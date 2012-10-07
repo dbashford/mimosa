@@ -41,17 +41,20 @@ class Logger
   debug: (message) => @log 'debug', "#{message}", 'blue' if @isDebug
 
   success: (message, options) =>
-    s = @config.onSuccess
-    title = if @isStartup and not @config.onStartup
-      null
-    else if  not options or
-      (options.isJavascript and s.javascript) or
-      (options.isCSS and s.css) or
-      (options.isTemplate and s.template) or
-      (options.isCopy and s.copy)
-        "Success"
+    title = if @config
+      s = @config.onSuccess
+      if @isStartup and not @config.onStartup
+        null
+      else if not options or
+        (options.isJavascript and s.javascript) or
+        (options.isCSS and s.css) or
+        (options.isTemplate and s.template) or
+        (options.isCopy and s.copy)
+          "Success"
+      else
+        null
     else
-      null
+      "Success"
 
     @log 'success', message, 'green+bold', title
 

@@ -16,7 +16,7 @@ class MimosaFileInitModule
   _initSingleAsset: (config, options, next) =>
     inputFile = options.inputFile
 
-    options.destinationFile = @__determineDestinationFile config, options
+    @__determineDestinationFile config, options
 
     logger.debug "Destination for file [[ #{inputFile ? "template file"} ]] is [[ #{destinationFile} ]]"
 
@@ -25,9 +25,6 @@ class MimosaFileInitModule
     options.files = [{
       inputFileName:inputFile
       outputFileName:destinationFile
-      isVendor:fileUtils.isVendor(destinationFile)
-      isJSNotVendor:fileUtils.isJSNotVendor(destinationFile)
-      isJavascript:fileUtils.isJavascript(destinationFile)
       inputFileText:null
       outputFileText:null
     }]
@@ -35,14 +32,14 @@ class MimosaFileInitModule
     next()
 
   _initMultiAsset: (config, options, next) =>
-    options.destinationFile = @__determineDestinationFile config, options
+    @__determineDestinationFile config, options
     next()
 
   __determineDestinationFile: (config, options) =>
     exts = config.extensions
     ext = options.extension
 
-    if exts.template.indexOf(ext) > -1
+    options.destinationFile = if exts.template.indexOf(ext) > -1
       options.isTemplate = true
       destFunct = (compiledJSDir) ->
         ->
@@ -72,5 +69,12 @@ class MimosaFileInitModule
             baseCompDir.substring(0, baseCompDir.lastIndexOf(".")) + ".css"
 
       destFunct(config.watch.sourceDir, config.watch.compiledDir) if destFunct
+
+    if options.inputFile
+      destinationFile = options.destinationFile(options.inputFile)
+      options.isJavascript = fileUtils.isJavascript(destinationFile) unless options.isJavascript?
+      options.isCSS = fileUtils.isCSS(destinationFile) unless options.isCSS?
+      options.isVendor = fileUtils.isVendor(destinationFile)
+      options.isJSNotVendor = options.isJavascript and not options.isVendor
 
 module.exports = new MimosaFileInitModule()

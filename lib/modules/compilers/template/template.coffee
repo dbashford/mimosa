@@ -80,7 +80,7 @@ module.exports = class AbstractTemplateCompiler
   _merge: (config, options, next) =>
     return next() unless options.files?.length > 0
 
-    mergedText = @filePrefix()
+    mergedText = @filePrefix(config)
     options.files.forEach (file) =>
       mergedText += @templatePreamble file.inputFileName
       mergedText += file.outputFileText
@@ -90,6 +90,7 @@ module.exports = class AbstractTemplateCompiler
     options.files.push
       outputFileText: mergedText
       outputFileName: options.destinationFile()
+      isTemplate:true
 
     next()
 

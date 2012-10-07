@@ -43,7 +43,6 @@ module.exports = class AbstractCSSCompiler
     outputFileName:destFile
     inputFileText:null
     outputFileText:null
-    isVendor:fileUtils.isVendor(destFile)
 
   _compile: (config, options, next) =>
     return next() if options.files?.length is 0

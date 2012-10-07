@@ -23,7 +23,8 @@ class MimosaFileReadModule
         if err?
           logger.error "Failed to read file [[ #{file.inputFileName} ]], Error: #{err}"
         else
-          text = text.toString() if options.isJavascript or options.isCSS or options.isTemplate
+          if options.isJavascript or options.isCSS or options.isTemplate
+            text = text.toString()
           file.inputFileText = text
         done()
 

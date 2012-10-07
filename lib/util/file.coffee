@@ -15,9 +15,6 @@ class FileUtils
   isVendor: (fileName) ->
     fileName.split(path.sep).indexOf('vendor') > -1
 
-  isJSNotVendor: (fileName) ->
-    @isJavascript(fileName) and !@isVendor(fileName)
-
   mkdirRecursive: (p, made) ->
     if !made then made = null
     p = path.resolve(p)

@@ -25,7 +25,7 @@ class MimosaFileBeforeReadModule
 
     options.files.forEach (file) =>
       # if using require verification, forcing compile to assemble require information
-      if file.isJavascript and (config.require.verify.enabled or config.optimize)
+      if options.isJavascript and (config.require.verify.enabled or config.optimize)
         newFiles.push file
         done()
       else

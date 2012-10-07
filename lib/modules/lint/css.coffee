@@ -34,7 +34,7 @@ class CSSLinter
     i = 0
     options.files.forEach (file) =>
       if file.outputFileText?.length > 0
-        if not config.lint.vendor.css and file.isVendor
+        if not config.lint.vendor.css and options.isVendor
           logger.debug "Not linting vendor script [[ #{options.inputFileName} ]]"
 
         result = csslint.verify file.outputFileText, @rules

@@ -25,7 +25,7 @@ class MimosaRequireModule
 
   _requireRegister: (config, options, next) ->
     return next() unless options.files?.length > 0
-    return next() if options.files[0].isVendor
+    return next() if options.isVendor
     requireRegister.process(options.files[0].outputFileName, options.files[0].outputFileText)
     next()
 
