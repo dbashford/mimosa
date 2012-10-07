@@ -20,7 +20,7 @@ module.exports = class JadeCompiler extends AbstractTemplateCompiler
 
   compile: (file, templateName, cb) =>
     try
-      output = jade.compile file.intputFileText,
+      output = jade.compile file.inputFileText,
         compileDebug: false,
         client: true,
         filename: file.inputFileName
