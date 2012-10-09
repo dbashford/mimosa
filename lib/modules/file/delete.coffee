@@ -14,11 +14,11 @@ class MimosaFileDeleteModule
     fs.exists fileName, (exists) ->
       return next() unless exists
       logger.debug "Removing file [[ #{fileName} ]]"
-      fs.unlink fileName, (err) =>
+      fs.unlink fileName, (err) ->
         if err
           logger.error "Failed to delete file [[ #{fileName} ]]"
         else
-          logger.success "Deleted compiled file [[ #{fileName} ]]", options
+          logger.success "Deleted copied/compiled file [[ #{fileName} ]]", options
         next()
 
 module.exports = new MimosaFileDeleteModule()
