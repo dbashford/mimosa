@@ -75,7 +75,7 @@ class NewCommand
 
     logger.green "\n  Mimosa will guide you through project creation. You will be prompted to"
     logger.green "  pick the JavaScript meta-language, CSS meta-language, and micro-templating"
-    logger.green "   library you would like to use. For more about those choices, see "
+    logger.green "  library you would like to use. For more about those choices, see"
     logger.green "  http://mimosajs.com/compilers.html. You will also be prompted to pick the"
     logger.green "  server and server-side view technologies you would like to use. If you pick"
     logger.green "  no server, Mimosa will serve your assets for you.\n"
@@ -233,7 +233,7 @@ class NewCommand
     if templateView?
       data = fs.readFileSync templateView, "ascii"
       fs.unlink templateView
-      cssFramework = if comps.css.fileName is "none" then "pure CSS" else comps.css.fileName
+      cssFramework = if comps.css.base is "none" then "pure CSS" else comps.css.base
       data = data.replace "CSSHERE", cssFramework
       templateView = templateView.replace /-\w+\./, "."
       fs.writeFile templateView, data
@@ -271,7 +271,7 @@ class NewCommand
     packageJson = require(jPath)
     packageJson.name = name if name?
     packageJson.dependencies[chosen.views.library] = chosen.views.version
-    unless chosen.javascript.fileName is "iced"
+    unless chosen.javascript.base is "iced"
       logger.debug "removing iced coffee from package.json"
       delete packageJson.dependencies["iced-coffee-script"]
 
@@ -306,7 +306,7 @@ class NewCommand
     logger.green('  If you wish to copy the project skeleton into your current directory instead of')
     logger.green('  into a new one leave off the then leave off name.')
     logger.blue( '\n    $ mimosa new\n')
-    logger.green('  If you are happy with the defaults (CoffeeScript, SASS, Handlebars, Express, Jade),')
+    logger.green('  If you are happy with the defaults (CoffeeScript, Stylus, Handlebars, Express, Jade),')
     logger.green('  you can bypass the prompts by providing a \'defaults\' flag.')
     logger.blue( '\n    $ mimosa new [name] --defaults')
     logger.blue( '    $ mimosa new [name] -d\n')

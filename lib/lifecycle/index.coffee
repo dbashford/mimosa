@@ -69,8 +69,13 @@ module.exports = class LifeCycleManager
 
       # no registering the same extension twice
       for extension in _.uniq(extensions)
-        #console.log "Registering extension [[ #{extension} ]], for step [[ #{step} ]] of type [[ #{type} ]]"
-        @registration[type][step][extension] ?= []
+        if @registration[type][step][extension]?
+          if @registration[type][step][extension].indexOf(callback) >= 0
+            logger.debug "Callback already registered for this extension, ignoring:", type, step, extension
+            continue
+        else
+          @registration[type][step][extension] ?= []
+
         @registration[type][step][extension].push callback
 
   update: (fileName) => @_executeLifecycleStep(@_buildAssetOptions(fileName), 'update')
