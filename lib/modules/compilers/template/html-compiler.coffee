@@ -12,10 +12,10 @@ module.exports = class HTMLCompiler extends AbstractTemplateCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  filePrefix: ->
+  amdPrefix: ->
     "define(function () { var templates = {};\n"
 
-  fileSuffix: ->
+  amdSuffix: ->
     'return templates; });'
 
   compile: (file, templateName, cb) =>

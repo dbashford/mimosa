@@ -18,7 +18,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  filePrefix: (config) =>
+  amdPrefix: (config) =>
     logger.debug "Building Handlebars template file wrapper"
     jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
     possibleHelperPaths =
@@ -57,7 +57,7 @@ module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
       var template = Handlebars.template, templates = {};\n
     """
 
-  fileSuffix: =>
+  amdSuffix: =>
     'return templates; });'
 
   compile: (file, templateName, cb) =>

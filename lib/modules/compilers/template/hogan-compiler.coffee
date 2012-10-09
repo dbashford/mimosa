@@ -12,10 +12,10 @@ module.exports = class HoganCompiler extends AbstractTemplateCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  filePrefix: ->
+  amdPrefix: ->
     "define(['#{@libraryPath()}'], function (Hogan){ var templates = {};\n"
 
-  fileSuffix: ->
+  amdSuffix: ->
     'return templates; });'
 
   compile: (file, templateName, cb) ->

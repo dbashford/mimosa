@@ -13,10 +13,10 @@ module.exports = class DustCompiler extends AbstractTemplateCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  filePrefix: ->
+  amdPrefix: ->
     "define(['#{@libraryPath()}'], function (dust){ "
 
-  fileSuffix: ->
+  amdSuffix: ->
     'return dust; });'
 
   compile: (file, templateName, cb) ->

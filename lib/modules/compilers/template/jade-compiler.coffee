@@ -12,10 +12,10 @@ module.exports = class JadeCompiler extends AbstractTemplateCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  filePrefix: ->
+  amdPrefix: ->
     "define(['#{@libraryPath()}'], function (jade){ var templates = {};\n"
 
-  fileSuffix: ->
+  amdSuffix: ->
     'return templates; });'
 
   compile: (file, templateName, cb) =>
@@ -26,5 +26,4 @@ module.exports = class JadeCompiler extends AbstractTemplateCompiler
         filename: file.inputFileName
     catch err
       error = err
-
     cb(error, output)

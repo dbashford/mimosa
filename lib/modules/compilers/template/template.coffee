@@ -22,14 +22,14 @@ module.exports = class AbstractTemplateCompiler
     register ['startupExtension'], 'compile',    @_compile,                [@extensions[0]]
 
     register ['add','update','remove'], 'init',       @_gatherFiles,            [@extensions...]
-    register ['add','update','remove'], 'beforeRead', @_templateNeedsCompiling, [@extensions...]
+    register ['add','update'],          'beforeRead', @_templateNeedsCompiling, [@extensions...]
     register ['add','update','remove'], 'compile',    @_compile,                [@extensions...]
 
     unless config.virgin
       register ['startupExtension'],      'afterCompile', @_merge, [@extensions[0]]
       register ['add','update','remove'], 'afterCompile', @_merge, [@extensions...]
 
-      register ['remove'],           'beforeRead',   @_testForRemoveClientLibrary, [@extensions...]
+      register ['remove'],           'init',         @_testForRemoveClientLibrary, [@extensions...]
       register ['add','update'],     'afterCompile', @_readInClientLibrary,        [@extensions...]
       register ['startupExtension'], 'afterCompile', @_readInClientLibrary,        [@extensions[0]]
 
@@ -80,12 +80,12 @@ module.exports = class AbstractTemplateCompiler
   _merge: (config, options, next) =>
     return next() unless options.files?.length > 0
 
-    mergedText = @filePrefix(config)
+    mergedText = @amdPrefix(config)
     options.files.forEach (file) =>
       mergedText += @templatePreamble file.inputFileName
       mergedText += file.outputFileText
 
-    mergedText += @fileSuffix()
+    mergedText += @amdSuffix()
 
     options.files.push
       outputFileText: mergedText
@@ -99,17 +99,25 @@ module.exports = class AbstractTemplateCompiler
 
   _testForRemoveClientLibrary: (config, options, next) =>
     if options.files?.length is 0
-      logger.debug "No template files left, removing [[ #{@clientPath} ]]"
-      @removeClientLibrary(next)
+      logger.info "No template files left, removing [[ #{@clientPath} ]] and [[ #{options.destinationFile()} ]]"
+
+      i = 0
+      done = ->
+        next() if ++i is 2
+
+      @removeClientLibrary(@clientPath, done)
+      @removeClientLibrary(options.destinationFile(), done)
     else
       next()
 
-  removeClientLibrary: (cb) ->
-    if @clientPath?
-      fs.exists @clientPath, (exists) ->
+  removeClientLibrary: (clientPath, cb) ->
+    if clientPath?
+      fs.exists clientPath, (exists) =>
         if exists
-          logger.debug "Removing client library [[ #{@clientPath} ]]"
-          fs.unlinkSync @clientPath, (err) -> cb()
+          logger.debug "Removing client library [[ #{clientPath} ]]"
+          fs.unlink clientPath, (err) ->
+            logger.success "Successfully removed [[ #{clientPath} ]]"
+            cb()
         else
           cb()
     else

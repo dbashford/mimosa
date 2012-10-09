@@ -5,10 +5,10 @@ module.exports = class AbstractUnderscoreCompiler extends AbstractTemplateCompil
   constructor: (config) ->
     super(config)
 
-  filePrefix: ->
+  amdPrefix: ->
     "define(['#{@libraryPath()}'], function (_) { var templates = {};\n"
 
-  fileSuffix: ->
+  amdSuffix: ->
     'return templates; });'
 
   compile: (file, templateName, cb) =>
@@ -17,5 +17,4 @@ module.exports = class AbstractUnderscoreCompiler extends AbstractTemplateCompil
       output = compiledOutput.source
     catch err
       error = err
-
     cb(error, output)
