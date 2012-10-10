@@ -46,7 +46,7 @@ module.exports = class LessCompiler extends AbstractCssCompiler
   _determineBaseFiles: =>
     imported = []
     for file in @allFiles
-      imports = fs.readFileSync(file, 'ascii').match(@importRegex)
+      imports = fs.readFileSync(file, 'utf8').match(@importRegex)
       continue unless imports?
 
       for anImport in imports

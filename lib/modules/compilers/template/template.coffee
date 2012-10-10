@@ -160,7 +160,7 @@ module.exports = class AbstractTemplateCompiler
 
     logger.debug "Adding template client library [[ #{@mimosaClientLibraryPath} ]] to list of files to write"
 
-    fs.readFile @mimosaClientLibraryPath, "ascii", (err, data) =>
+    fs.readFile @mimosaClientLibraryPath, "utf8", (err, data) =>
       if err
         logger.error("Cannot read client library [[ #{@mimosaClientLibraryPath} ]]")
         return next()

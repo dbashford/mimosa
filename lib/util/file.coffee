@@ -38,7 +38,7 @@ class FileUtils
   writeFile: (fileName, content, callback) =>
     dirname = path.dirname(fileName)
     @mkdirRecursive dirname unless fs.existsSync dirname
-    fs.writeFile fileName, content, "ascii", (err) =>
+    fs.writeFile fileName, content, "utf8", (err) =>
       error = if err? then "Failed to write file: #{fileName}, #{err}"
       callback(error)
 

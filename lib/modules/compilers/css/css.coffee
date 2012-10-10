@@ -131,7 +131,7 @@ module.exports = class AbstractCSSCompiler
   # get all imports for a given file, and recurse through
   # those imports until entire tree is built
   __importsForFile: (baseFile, file) ->
-    imports = fs.readFileSync(file, 'ascii').match(@importRegex)
+    imports = fs.readFileSync(file, 'utf8').match(@importRegex)
     return unless imports?
 
     logger.debug "Imports for file [[ #{file} ]]: #{imports}"

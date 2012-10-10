@@ -12,7 +12,7 @@ class Optimizer
 
   constructor: ->
     almondInPath  = path.join __dirname, "assets", "almond.js"
-    @almondText = fs.readFileSync almondInPath, "ascii"
+    @almondText = fs.readFileSync almondInPath, "utf8"
     @almondText = minifier.performJSMinify(almondInPath, @almondText)
 
   optimize: (config, fileName) =>
@@ -67,7 +67,7 @@ class Optimizer
       logger.info "r.js name changed from default of 'almond', so not using almond.js"
     else
       almondOutPath = path.join baseUrl, "almond.js"
-      fs.writeFileSync almondOutPath, @almondText, 'ascii'
+      fs.writeFileSync almondOutPath, @almondText, 'utf8'
 
     numProcessed = 0
     done = => @_done(almondOutPath) if ++numProcessed >= numFiles
