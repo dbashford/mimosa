@@ -46,6 +46,7 @@ module.exports = class AbstractCSSCompiler
     inputFileText:null
     outputFileText:null
 
+
   _compile: (config, options, next) =>
     return next() if options.files?.length is 0
     i = 0
@@ -97,6 +98,11 @@ module.exports = class AbstractCSSCompiler
 
     options.files =  baseFilesToCompile.map (base) =>
       @__baseOptionsObject(base, options)
+
+    if options.files.length > 0
+      options.isVendor = fileUtils.isVendor(options.files[0].outputFileName)
+
+    options.isCSS = true
 
     next()
 
