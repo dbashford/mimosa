@@ -97,6 +97,8 @@ class CompilerCentral
 
     @configuredCompilers = {compilerExtensionHash:extHash, compilers:allCompilers}
 
+    @
+
   getCompilers: ->
     @configuredCompilers
 

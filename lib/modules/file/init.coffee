@@ -18,9 +18,9 @@ class MimosaFileInitModule
 
     @__determineDestinationFile config, options
 
-    logger.debug "Destination for file [[ #{inputFile ? "template file"} ]] is [[ #{destinationFile} ]]"
-
     destinationFile = options.destinationFile(inputFile)
+
+    logger.debug "Destination for file [[ #{inputFile ? "template file"} ]] is [[ #{destinationFile} ]]"
 
     options.files = [{
       inputFileName:inputFile

@@ -1,8 +1,4 @@
-path =      require 'path'
-
-wrench =    require 'wrench'
 watch =     require 'chokidar'
-_ =         require 'lodash'
 
 logger =    require '../../util/logger'
 LifeCycle = require '../../lifecycle'
@@ -14,7 +10,7 @@ class Watcher
 
   constructor: (@config, @persist, @initCallback) ->
     @throttle = @config.watch.throttle
-    @lifecycle = new LifeCycle(@config, modules, @_startupDoneCallback)
+    @lifecycle = new LifeCycle(@config, modules.all, @_startupDoneCallback)
     @_startWatcher()
 
     logger.info "Watching #{@config.watch.sourceDir}" if @persist

@@ -9,6 +9,7 @@ logger = require '../../util/logger'
 fileUtils = require '../../util/file'
 defaults = require './defaults'
 compilerCentral = require '../../modules/compilers'
+Cleaner = require './cleaner'
 
 exports.projectPossibilities = (callback) ->
   compilers = compilerCentral.compilersByType()
@@ -40,6 +41,7 @@ exports.processConfig = (opts, callback) ->
   config.optimize =     opts?.optimize
   config.min =          opts?.minify
   config.isForceClean = opts?.force
+  config.isClean =      opts?.clean
 
   defaults.applyAndValidateDefaults config, configPath, (err, newConfig) =>
     if err
@@ -49,19 +51,44 @@ exports.processConfig = (opts, callback) ->
       logger.setConfig(newConfig)
       callback(newConfig)
 
-exports.cleanCompiledDirectories = (config) ->
-  items = wrench.readdirSyncRecursive(config.watch.sourceDir)
-  files = items.filter (f) -> fs.statSync(path.join(config.watch.sourceDir, f)).isFile()
-  directories = items.filter (f) -> fs.statSync(path.join(config.watch.sourceDir, f)).isDirectory()
-  directories = _.sortBy(directories, 'length').reverse()
+exports.cleanCompiledDirectories = (config, cb) ->
+  new Cleaner config, ->
+    _cleanMisc config
+    _cleanUp config, cb
 
-  {compilerExtensionHash, compilers} = compilerCentral.getCompilers(config)
+_cleanMisc = (config) ->
+  jsDir = path.join config.watch.compiledDir, config.watch.javascriptDir
+  files = fileUtils.glob "#{jsDir}/**/*-built.js"
+  for file in files
+    logger.debug("Deleting '-built' file, [[ #{file} ]]")
+    fs.unlinkSync file
 
-  _cleanMisc(config, compilers)
-  _cleanFiles(config, files, compilerExtensionHash)
-  _cleanDirectories(config, directories)
+  compiledJadeFile = path.join config.watch.compiledDir, 'index.html'
+  if fs.existsSync compiledJadeFile
+    logger.debug("Deleting compiledJadeFile [[ #{compiledJadeFile} ]]")
+    fs.unlinkSync compiledJadeFile
 
-  logger.success "[[ #{config.watch.compiledDir} ]] has been cleaned."
+_cleanUp = (config, cb) ->
+  dir = config.watch.sourceDir
+  directories = wrench.readdirSyncRecursive(dir).filter (f) -> fs.statSync(path.join(dir, f)).isDirectory()
+
+  return cb() if directories.length is 0
+
+  i = 0
+  done = ->
+    cb() if ++i is directories.length
+
+  for dir in _.sortBy(directories, 'length').reverse()
+    dirPath = path.join(config.watch.compiledDir, dir)
+    if fs.existsSync dirPath
+      logger.debug "Deleting directory [[ #{dirPath} ]]"
+      fs.rmdir dirPath, (err) ->
+        if err?.code is not "ENOTEMPTY"
+          logger.error "Unable to delete directory, #{dirPath}"
+          logger.error err
+        done()
+    else
+      done()
 
 _findConfigPath = (configPath = path.resolve('mimosa-config.coffee')) ->
   if fs.existsSync configPath
@@ -74,53 +101,3 @@ _findConfigPath = (configPath = path.resolve('mimosa-config.coffee')) ->
       logger.debug "Unable to find mimosa-config"
       return null
     _findConfigPath(configPath)
-
-_cleanMisc = (config, compilers) ->
-  jsDir = path.join config.watch.compiledDir, config.watch.javascriptDir
-  files = fileUtils.glob "#{jsDir}/**/*-built.js"
-  for file in files
-    logger.debug("Deleting '-built' file, [[ #{file} ]]")
-    fs.unlinkSync file
-
-  compiledJadeFile = path.join config.watch.compiledDir, 'index.html'
-  if fs.existsSync compiledJadeFile
-    logger.debug("Deleting compiledJadeFile [[ #{compiledJadeFile} ]]")
-    fs.unlinkSync compiledJadeFile
-
-  logger.debug("Cleaning up templates")
-  outputFileName = config.template.outputFileName
-  if _.isString(outputFileName)
-    filePath = path.join config.watch.compiledJavascriptDir, outputFileName + ".js"
-    fs.unlinkSync filePath if fs.existsSync filePath
-  else
-    for ext, fileName of outputFileName
-      filePath = path.join config.watch.compiledJavascriptDir, fileName + ".js"
-      fs.unlinkSync filePath if fs.existsSync filePath
-
-  compiler.removeClientLibrary() for compiler in compilers when compiler.removeClientLibrary?
-
-_cleanFiles = (config, files, compilerExtensionHash) ->
-  for file in files
-    compiledPath = path.join config.watch.compiledDir, file
-
-    extension = path.extname(file)
-    if extension?.length > 0
-      extension = extension.substring(1)
-      compiler = compilerExtensionHash[extension]
-      # TODO
-      #if compiler? and compiler.getOutExtension()
-      #  compiledPath = compiledPath.replace(/\.\w+$/, ".#{compiler.getOutExtension()}")
-
-    if fs.existsSync compiledPath
-      logger.debug "Deleting file [[ #{compiledPath} ]]"
-      fs.unlinkSync compiledPath
-
-_cleanDirectories = (config, directories) ->
-  for dir in directories
-    dirPath = path.join(config.watch.compiledDir, dir)
-    if fs.existsSync dirPath
-      logger.debug "Deleting directory [[ #{dirPath} ]]"
-      fs.rmdir dirPath, (err) ->
-        if err?.code is not "ENOTEMPTY"
-          logger.error "Unable to delete directory, #{dirPath}"
-          logger.error err

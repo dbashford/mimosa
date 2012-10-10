@@ -1,9 +1,11 @@
-fs =     require 'fs'
+fs =      require 'fs'
+path   =  require 'path'
 
-wrench = require 'wrench'
+wrench =  require 'wrench'
+_      =  require 'lodash'
 
-util =   require './util'
-logger = require '../util/logger'
+util =    require './util'
+logger =  require '../util/logger'
 
 clean = (opts) ->
   if opts.debug then logger.setDebug()
@@ -17,7 +19,9 @@ clean = (opts) ->
       else
         logger.success "Compiled directory already deleted"
     else
-      util.cleanCompiledDirectories(config)
+      config.isClean = true
+      util.cleanCompiledDirectories config, ->
+        logger.success "[[ #{config.watch.compiledDir} ]] has been cleaned."
 
 register = (program, callback) =>
   program

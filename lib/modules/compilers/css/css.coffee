@@ -12,14 +12,27 @@ module.exports = class AbstractCSSCompiler
   constructor: ->
 
   lifecycleRegistration: (config, register) ->
+    if config.isClean
+      register ['remove'], 'init', @_checkState,         [@extensions...]
+      register ['remove'], 'init', @_findBasesToCompile, [@extensions...]
+      return
+
     register ['startupExtension'], 'init',    @_processWatchedDirectories, [@extensions[0]]
     register ['startupExtension'], 'init',    @_findBasesToCompileStartup, [@extensions[0]]
     register ['startupExtension'], 'compile', @_compile,                   [@extensions[0]]
 
     register ['add'],                   'init',         @_processWatchedDirectories, [@extensions...]
+    register ['remove'],                'init',         @_checkState,                [@extensions...]
     register ['add','update','remove'], 'init',         @_findBasesToCompile,        [@extensions...]
     register ['add','update','remove'], 'compile',      @_compile,                   [@extensions...]
     register ['update','remove'],       'afterCompile', @_processWatchedDirectories, [@extensions...]
+
+  # for clean
+  _checkState: (config, options, next) =>
+    if @includeToBaseHash?
+      next()
+    else
+      @_processWatchedDirectories(config, options, -> next())
 
   _findBasesToCompile: (config, options, next) =>
     options.files = []

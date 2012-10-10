@@ -13,8 +13,15 @@ Watcher =  require './util/watcher'
 watch = (opts) =>
   if opts.debug then logger.setDebug()
   util.processConfig opts, (config) =>
-    util.cleanCompiledDirectories(config) if opts.clean
-    new Watcher(config, true, startServer if opts?.server)
+    instWatcher = ->
+      config.isClean = false
+      new Watcher(config, true, startServer if opts?.server)
+
+    if opts.clean
+      config.isClean = true
+      util.cleanCompiledDirectories(config, instWatcher)
+    else
+      instWatcher()
 
 startServer = (config) =>
   if (config.server.useDefaultServer) then startDefaultServer(config) else startProvidedServer(config)

@@ -17,6 +17,9 @@ module.exports = class AbstractTemplateCompiler
       @clientPath = path.join jsDir, 'vendor', "#{@clientLibrary}.js"
 
   lifecycleRegistration: (config, register) ->
+    if config.isClean
+      return register ['remove'], 'init', @_removeFiles, [@extensions...]
+
     register ['startupExtension'], 'init',       @_gatherFiles,            [@extensions[0]]
     register ['startupExtension'], 'beforeRead', @_templateNeedsCompiling, [@extensions[0]]
     register ['startupExtension'], 'compile',    @_compile,                [@extensions[0]]
@@ -97,16 +100,18 @@ module.exports = class AbstractTemplateCompiler
   __generateTemplateName: (fileName) ->
     path.basename fileName, path.extname(fileName)
 
+  _removeFiles: (config, options, next) =>
+    i = 0
+    done = ->
+      next() if ++i is 2
+
+    @removeClientLibrary(@clientPath, done)
+    @removeClientLibrary(options.destinationFile(), done)
+
   _testForRemoveClientLibrary: (config, options, next) =>
     if options.files?.length is 0
-      logger.info "No template files left, removing [[ #{@clientPath} ]] and [[ #{options.destinationFile()} ]]"
-
-      i = 0
-      done = ->
-        next() if ++i is 2
-
-      @removeClientLibrary(@clientPath, done)
-      @removeClientLibrary(options.destinationFile(), done)
+      logger.info "No template files left, removing template based assets"
+      @_removeFiles(config, options, next)
     else
       next()
 
@@ -116,7 +121,7 @@ module.exports = class AbstractTemplateCompiler
         if exists
           logger.debug "Removing client library [[ #{clientPath} ]]"
           fs.unlink clientPath, (err) ->
-            logger.success "Successfully removed [[ #{clientPath} ]]"
+            logger.success "Deleted file [[ #{clientPath} ]]" unless err
             cb()
         else
           cb()

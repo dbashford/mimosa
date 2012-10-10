@@ -13,7 +13,7 @@ module.exports = class LifeCycleManager
   initialFilesHandled:0
   registration: {}
 
-  types:
+  masterTypes:
     startupFile:      ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
     startupExtension: ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
     startupDone:      ["init"]
@@ -25,6 +25,7 @@ module.exports = class LifeCycleManager
   constructor: (@config, modules, @startupDoneCallback) ->
     compilers.setupCompilers(@config)
 
+    @types = _.clone(@masterTypes, true)
     for type, steps of @types
       @registration[type] = {}
       for step in steps
@@ -44,7 +45,6 @@ module.exports = class LifeCycleManager
 
     @initialFileCount = files.length
     @initialFiles = files
-
 
   cleanUpRegistration: =>
     logger.debug "Cleaning up unused lifecycle steps"
@@ -160,7 +160,10 @@ module.exports = class LifeCycleManager
   _finishedWithFile: (options) =>
     logger.debug "Finished with file: [[ #{options.inputFile} ]]"
     if @startup and ++@initialFilesHandled is @initialFileCount
-      @_startupExtensions()
+      if @config.isClean
+        if @startupDoneCallback? then @startupDoneCallback()
+      else
+        @_startupExtensions()
 
   _startupExtensions: =>
     @startup = false

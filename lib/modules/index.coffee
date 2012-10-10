@@ -7,4 +7,7 @@ linters = require './lint'
 minify = require './minify'
 req = require './require'
 
-module.exports = [file, compilers, linters.js, linters.css, req]
+module.exports =
+  all:      [file, compilers, linters.js, linters.css, req]
+  builtIns: [file, compilers, linters.js, linters.css, req]
+  basic:    [file, compilers]

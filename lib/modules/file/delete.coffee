@@ -18,7 +18,7 @@ class MimosaFileDeleteModule
         if err
           logger.error "Failed to delete file [[ #{fileName} ]]"
         else
-          logger.success "Deleted copied/compiled file [[ #{fileName} ]]", options
+          logger.success "Deleted file [[ #{fileName} ]]", options
         next()
 
 module.exports = new MimosaFileDeleteModule()
