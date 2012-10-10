@@ -32,6 +32,8 @@ module.exports = class LifeCycleManager
 
     module.lifecycleRegistration(@config, @register) for module in modules
 
+    @cleanUpRegistration()
+
     #console.log @registration
 
     e = @config.extensions
@@ -43,8 +45,20 @@ module.exports = class LifeCycleManager
     @initialFileCount = files.length
     @initialFiles = files
 
-    # register logger
-    # establish error object
+
+  cleanUpRegistration: =>
+    logger.debug "Cleaning up unused lifecycle steps"
+
+    for type, typeReg of @registration
+      for step, stepReg of typeReg
+        if Object.keys(stepReg).length is 0
+          i = 0
+          for st in @types[type]
+            if st is step
+              @types[type].splice(i,1)
+              break
+            i++
+          delete typeReg[step]
 
   register: (types, step, callback, extensions = ['*']) =>
     unless _.isArray(types)
