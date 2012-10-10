@@ -31,7 +31,8 @@ module.exports = class AbstractCSSCompiler
           options.files.push @__baseOptionsObject(base, options)
       else
         # valid only for SASS which has naming convension for partials
-        logger.warn "Orphaned partial file: [[ #{options.inputFile} ]]"
+        unless options.lifeCycleType is 'remove'
+          logger.warn "Orphaned partial file: [[ #{options.inputFile} ]]"
     else
       unless options.lifeCycleType is 'remove'
         options.files.push @__baseOptionsObject(options.inputFile, options)
@@ -45,7 +46,6 @@ module.exports = class AbstractCSSCompiler
     outputFileName:destFile
     inputFileText:null
     outputFileText:null
-
 
   _compile: (config, options, next) =>
     return next() if options.files?.length is 0
