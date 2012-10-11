@@ -54,7 +54,7 @@ class NewCommand
     @program
       .command('new [name]')
       .description("create a skeleton matching Mimosa's defaults, which includes a basic Express setup")
-      .option("-d, --defaults",  "bypass prompts and go with Mimosa defaults (CoffeeScript, SASS, Handlebars)")
+      .option("-d, --defaults",  "bypass prompts and go with Mimosa defaults (CoffeeScript, Stylus, Handlebars)")
       .option("-D, --debug", "run in debug mode")
       .action(@new)
       .on '--help', @_printHelp

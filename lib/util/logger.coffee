@@ -41,7 +41,9 @@ class Logger
   debug: (message) => @log 'debug', "#{message}", 'blue' if @isDebug
 
   success: (message, options) =>
-    title = if @config
+    title = if options is true
+      "Success"
+    else if @config
       s = @config.onSuccess
       if @isStartup and not @config.onStartup
         null
