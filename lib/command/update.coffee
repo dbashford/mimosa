@@ -26,8 +26,12 @@ update = (opts) ->
     process.chdir currentDir
     logger.success "Finished.  You are all up to date!"
 
+  if !clientPackageJson.dependencies['iced-coffee-script']? and mimosaPackageJson.dependencies['iced-coffee-script']?
+    logger.debug "Removing iced-coffee-script from list of dependencies to install."
+    delete mimosaPackageJson.dependencies['iced-coffee-script']
+
   _uninstallDependencies mimosaPackageJson.dependencies, clientPackageJson.dependencies, ->
-    _installDependencies(mimosaPackageJson.dependencies, done)
+    _installDependencies(mimosaPackageJson.dependencies, clientPackageJson.dependencies, done)
 
 _uninstallDependencies = (deps, clientDeps, callback) ->
   present = []
@@ -41,12 +45,12 @@ _uninstallDependencies = (deps, clientDeps, callback) ->
       if err
         logger.info(err) if err
       else
-        logger.success "Uninstalling successful"
+        logger.success "Uninstall successful"
         callback(deps)
   else
     callback(deps)
 
-_installDependencies = (deps, done) ->
+_installDependencies = (deps, origClientDeps, done) ->
   names = for name, version of deps
     logger.info "Installing node package: #{name}:#{version}"
     if version.indexOf("github.com") > -1
@@ -57,7 +61,7 @@ _installDependencies = (deps, done) ->
   installString = "npm install #{names.join(' ')} --save"
   logger.debug "Installing, npm command is '#{installString}'"
   exec installString, (err, sout, serr) =>
-    if err then logger.info(err) else logger.success "Installs successful"
+    if err then logger.info(err) else logger.success "Install successful"
     logger.debug "NPM INSTALL standard out\n#{sout}"
     logger.debug "NPM INSTALL standard err\n#{serr}"
     done()
