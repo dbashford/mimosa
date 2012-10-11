@@ -20,21 +20,21 @@ module.exports = class AbstractTemplateCompiler
     if config.isClean
       return register ['remove'], 'init', @_removeFiles, [@extensions...]
 
-    register ['startupExtension'], 'init',       @_gatherFiles,            [@extensions[0]]
-    register ['startupExtension'], 'beforeRead', @_templateNeedsCompiling, [@extensions[0]]
-    register ['startupExtension'], 'compile',    @_compile,                [@extensions[0]]
+    register ['buildExtension'], 'init',       @_gatherFiles,            [@extensions[0]]
+    register ['buildExtension'], 'beforeRead', @_templateNeedsCompiling, [@extensions[0]]
+    register ['buildExtension'], 'compile',    @_compile,                [@extensions[0]]
 
     register ['add','update','remove'], 'init',       @_gatherFiles,            [@extensions...]
     register ['add','update'],          'beforeRead', @_templateNeedsCompiling, [@extensions...]
     register ['add','update','remove'], 'compile',    @_compile,                [@extensions...]
 
     unless config.virgin
-      register ['startupExtension'],      'afterCompile', @_merge, [@extensions[0]]
+      register ['buildExtension'],        'afterCompile', @_merge, [@extensions[0]]
       register ['add','update','remove'], 'afterCompile', @_merge, [@extensions...]
 
-      register ['remove'],           'init',         @_testForRemoveClientLibrary, [@extensions...]
-      register ['add','update'],     'afterCompile', @_readInClientLibrary,        [@extensions...]
-      register ['startupExtension'], 'afterCompile', @_readInClientLibrary,        [@extensions[0]]
+      register ['remove'],         'init',         @_testForRemoveClientLibrary, [@extensions...]
+      register ['add','update'],   'afterCompile', @_readInClientLibrary,        [@extensions...]
+      register ['buildExtension'], 'afterCompile', @_readInClientLibrary,        [@extensions[0]]
 
   _gatherFiles: (config, options, next) =>
     allFiles = wrench.readdirSyncRecursive(config.watch.sourceDir)

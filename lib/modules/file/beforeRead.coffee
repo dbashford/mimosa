@@ -6,7 +6,7 @@ class MimosaFileBeforeReadModule
   lifecycleRegistration: (config, register) ->
     e = config.extensions
     cExts = config.copy.extensions
-    register ['startupFile'],  'beforeRead', @_fileNeedsCompilingStartup, [e.javascript..., cExts...]
+    register ['buildFile'],    'beforeRead', @_fileNeedsCompilingStartup, [e.javascript..., cExts...]
     register ['add','update'], 'beforeRead', @_fileNeedsCompiling,        [e.javascript..., cExts...]
 
   _fileNeedsCompiling: (config, options, next) ->

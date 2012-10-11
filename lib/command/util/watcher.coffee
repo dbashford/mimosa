@@ -10,7 +10,7 @@ class Watcher
 
   constructor: (@config, @persist, @initCallback) ->
     @throttle = @config.watch.throttle
-    @lifecycle = new LifeCycle(@config, modules.all, @_startupDoneCallback)
+    @lifecycle = new LifeCycle(@config, modules.all, @_buildDoneCallback)
     @_startWatcher()
 
     logger.info "Watching #{@config.watch.sourceDir}" if @persist
@@ -20,8 +20,8 @@ class Watcher
       @intervalId = setInterval(@_pullFiles, 100)
       @_pullFiles()
 
-  _startupDoneCallback: =>
-    logger.startupDone()
+  _buildDoneCallback: =>
+    logger.buildDone()
     clearInterval(@intervalId) if @intervalId? and !@persist
     @initCallback(@config) if @initCallback?
 

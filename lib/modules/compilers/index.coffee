@@ -27,7 +27,7 @@ class CompilerCentral
     for compiler in @configuredCompilers.compilers
       compiler.lifecycleRegistration(config, register) if compiler.lifecycleRegistration?
 
-    register ['startupDone'], 'init', @_testDifferentTemplateLibraries
+    register ['buildDone'], 'init', @_testDifferentTemplateLibraries
 
   _testDifferentTemplateLibraries: (config, options, next) =>
     compilers = @_templateCompilers()

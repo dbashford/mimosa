@@ -9,9 +9,9 @@ class MimosaFileInitModule
   lifecycleRegistration: (config, register) ->
     e = config.extensions
     cExts = config.copy.extensions
-    register ['startupFile'],                              'init', @_initSingleAsset, [e.javascript..., cExts...]
-    register ['add','update','remove'],                    'init', @_initSingleAsset, [e.javascript..., cExts...]
-    register ['add','update','remove','startupExtension'], 'init', @_initMultiAsset,  [e.template..., e.css...]
+    register ['buildFile'],                              'init', @_initSingleAsset, [e.javascript..., cExts...]
+    register ['add','update','remove'],                  'init', @_initSingleAsset, [e.javascript..., cExts...]
+    register ['add','update','remove','buildExtension'], 'init', @_initMultiAsset,  [e.template..., e.css...]
 
   _initSingleAsset: (config, options, next) =>
     inputFile = options.inputFile

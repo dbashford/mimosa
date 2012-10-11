@@ -49,7 +49,7 @@ module.exports = class RequireRegister
     @_deleteForFileName(fileName, @aliasDirectories)
     @_verifyAll()
 
-  startupDone: (@startupComplete = true) ->
+  buildDone: (@startupComplete = true) ->
     return if @startupAlreadyDone
     logger.debug "***Require registration has learned that startup has completed, verifying require registrations***"
     @startupAlreadyDone = true

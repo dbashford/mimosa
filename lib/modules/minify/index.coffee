@@ -15,11 +15,11 @@ class MimosaMinifyModule
 
     if config.min
       @exclude = config.minify.exclude
-      register ['add','update','startupFile'],      'afterCompile', @_minifyJS, [e.javascript...]
-      register ['add','update','startupExtension'], 'beforeWrite',  @_minifyJS, [e.template...]
+      register ['add','update','buildFile'],      'afterCompile', @_minifyJS, [e.javascript...]
+      register ['add','update','buildExtension'], 'beforeWrite',  @_minifyJS, [e.template...]
 
     if config.optimize or config.min
-      register ['add','update','startupFile'], 'afterCompile', @_minifyCSS, [e.css...]
+      register ['add','update','buildFile'], 'afterCompile', @_minifyCSS, [e.css...]
 
   _minifyJS: (config, options, next) ->
     i = 0

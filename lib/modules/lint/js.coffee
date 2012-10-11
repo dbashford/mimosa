@@ -23,7 +23,7 @@ class JSLinter
 
     @options = config.lint.rules.javascript
 
-    register ['startupFile','add','update'], 'afterCompile', @_lint, [extensions...]
+    register ['buildFile','add','update'], 'afterCompile', @_lint, [extensions...]
 
   _lint: (config, options, next) =>
     return next() unless options.files?.length > 0

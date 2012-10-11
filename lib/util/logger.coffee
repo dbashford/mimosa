@@ -9,7 +9,7 @@ class Logger
 
   setDebug: (@isDebug = true) ->
   setConfig: (config) -> @config = config.growl
-  startupDone: (@isStartup = false) =>
+  buildDone: (@isStartup = false) =>
 
   log: (logLevel, message, color, growlTitle = null) ->
     if growlTitle?

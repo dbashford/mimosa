@@ -3,7 +3,7 @@ module.exports = class CopyCompiler
   constructor: (config, @extensions) ->
 
   lifecycleRegistration: (config, register) ->
-    register ['add','update','startupFile'], 'compile', @compile, [@extensions...]
+    register ['add','update','buildFile'], 'compile', @compile, [@extensions...]
 
   compile: (config, options, next) ->
     return next() unless options.files?.length > 0

@@ -17,9 +17,9 @@ module.exports = class AbstractCSSCompiler
       register ['remove'], 'init', @_findBasesToCompile, [@extensions...]
       return
 
-    register ['startupExtension'], 'init',    @_processWatchedDirectories, [@extensions[0]]
-    register ['startupExtension'], 'init',    @_findBasesToCompileStartup, [@extensions[0]]
-    register ['startupExtension'], 'compile', @_compile,                   [@extensions[0]]
+    register ['buildExtension'], 'init',    @_processWatchedDirectories, [@extensions[0]]
+    register ['buildExtension'], 'init',    @_findBasesToCompileStartup, [@extensions[0]]
+    register ['buildExtension'], 'compile', @_compile,                   [@extensions[0]]
 
     register ['add'],                   'init',         @_processWatchedDirectories, [@extensions...]
     register ['remove'],                'init',         @_checkState,                [@extensions...]

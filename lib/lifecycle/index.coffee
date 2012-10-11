@@ -14,15 +14,15 @@ module.exports = class LifeCycleManager
   registration: {}
 
   masterTypes:
-    startupFile:      ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
-    startupExtension: ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
-    startupDone:      ["init"]
+    buildFile:      ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
+    buildExtension: ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
+    buildDone:      ["init"]
 
     add:    ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
     update: ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
     remove: ["init", "beforeRead", "read", "afterRead", "beforeDelete",  "delete",  "afterDelete",  "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
 
-  constructor: (@config, modules, @startupDoneCallback) ->
+  constructor: (@config, modules, @buildDoneCallback) ->
     compilers.setupCompilers(@config)
 
     @types = _.clone(@masterTypes, true)
@@ -96,7 +96,7 @@ module.exports = class LifeCycleManager
   remove: (fileName) => @_executeLifecycleStep(@_buildAssetOptions(fileName), 'remove')
   add: (fileName) =>
     if @startup
-      @_executeLifecycleStep(@_buildAssetOptions(fileName), 'startupFile')
+      @_executeLifecycleStep(@_buildAssetOptions(fileName), 'buildFile')
     else
       @_executeLifecycleStep(@_buildAssetOptions(fileName), 'add')
 
@@ -161,19 +161,19 @@ module.exports = class LifeCycleManager
     logger.debug "Finished with file: [[ #{options.inputFile} ]]"
     if @startup and ++@initialFilesHandled is @initialFileCount
       if @config.isClean
-        if @startupDoneCallback? then @startupDoneCallback()
+        if @buildDoneCallback? then @buildDoneCallback()
       else
-        @_startupExtensions()
+        @_buildExtensions()
 
-  _startupExtensions: =>
+  _buildExtensions: =>
     @startup = false
     done = 0
     # go through startup for each extension
     @allExtensions.forEach (extension) =>
-      @_executeLifecycleStep {extension:extension}, 'startupExtension', =>
-        @_startupDone() if ++done is @allExtensions.length
+      @_executeLifecycleStep {extension:extension}, 'buildExtension', =>
+        @_buildDone() if ++done is @allExtensions.length
 
-  _startupDone: =>
-    # wrap up, startupDone
-    @_executeLifecycleStep {}, 'startupDone', =>
-      if @startupDoneCallback? then @startupDoneCallback()
+  _buildDone: =>
+    # wrap up, buildDone
+    @_executeLifecycleStep {}, 'buildDone', =>
+      if @buildDoneCallback? then @buildDoneCallback()

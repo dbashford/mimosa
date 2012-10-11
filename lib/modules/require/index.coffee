@@ -12,14 +12,14 @@ class MimosaRequireModule
 
     return unless config.require.verify.enabled or config.optimize
 
-    register ['add','update','startupFile'], 'afterCompile', @_requireRegister, [config.extensions.javascript...]
-    register ['remove'],                     'afterDelete',  @_requireDelete,   [config.extensions.javascript...]
-    register ['startupDone'],                'init',         @_startupDone
+    register ['add','update','buildFile'], 'afterCompile', @_requireRegister, [config.extensions.javascript...]
+    register ['remove'],                   'afterDelete',  @_requireDelete,   [config.extensions.javascript...]
+    register ['buildDone'],                'init',         @_buildDone
 
     if config.optimize
       register ['remove'],       'afterDelete', @_requireOptimize, [config.extensions.javascript...]
       register ['add','update'], 'afterWrite',  @_requireOptimize, [config.extensions.javascript...]
-      register ['startupDone'],  'init',        @_requireOptimize
+      register ['buildDone'],    'init',        @_requireOptimize
 
     requireRegister.setConfig(config)
 
@@ -39,8 +39,8 @@ class MimosaRequireModule
     optimizer.optimize(config, options.files[0].outputFileName)
     next()
 
-  _startupDone: (config, options, next) ->
-    requireRegister.startupDone()
+  _buildDone: (config, options, next) ->
+    requireRegister.buildDone()
     next()
 
 module.exports = new MimosaRequireModule()
