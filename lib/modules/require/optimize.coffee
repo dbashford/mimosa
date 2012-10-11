@@ -13,7 +13,7 @@ class Optimizer
   constructor: ->
     almondInPath  = path.join __dirname, "assets", "almond.js"
     @almondText = fs.readFileSync almondInPath, "utf8"
-    @almondText = minifier.performJSMinify(almondInPath, @almondText)
+    @almondText = minifier.performJSMinify(@almondText, almondInPath)
 
   optimize: (config, fileName) =>
     return unless config.optimize

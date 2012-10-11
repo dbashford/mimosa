@@ -52,21 +52,37 @@ exports.processConfig = (opts, callback) ->
       callback(newConfig)
 
 exports.cleanCompiledDirectories = (config, cb) ->
-  new Cleaner config, ->
-    _cleanMisc config
-    _cleanUp config, cb
+  i = 0
+  done = ->
+    cb() if ++i is 2
 
-_cleanMisc = (config) ->
+  new Cleaner config, ->
+    _cleanMisc config, done
+    _cleanUp config, done
+
+_cleanMisc = (config, cb) ->
   jsDir = path.join config.watch.compiledDir, config.watch.javascriptDir
   files = fileUtils.glob "#{jsDir}/**/*-built.js"
+
+  i = 0
+  done = ->
+    cb() if ++i is files.length + 1
+
   for file in files
     logger.debug("Deleting '-built' file, [[ #{file} ]]")
-    fs.unlinkSync file
+    fs.unlink file, (err) ->
+      logger.success "Deleted file [[ #{file} ]]"
+      done()
 
   compiledJadeFile = path.join config.watch.compiledDir, 'index.html'
-  if fs.existsSync compiledJadeFile
-    logger.debug("Deleting compiledJadeFile [[ #{compiledJadeFile} ]]")
-    fs.unlinkSync compiledJadeFile
+  fs.exists compiledJadeFile, (exists) ->
+    if exists
+      logger.debug("Deleting compiledJadeFile [[ #{compiledJadeFile} ]]")
+      fs.unlink compiledJadeFile, (err) ->
+        logger.success "Deleted file [[ #{compiledJadeFile} ]]"
+        done()
+    else
+      done()
 
 _cleanUp = (config, cb) ->
   dir = config.watch.sourceDir
@@ -78,7 +94,7 @@ _cleanUp = (config, cb) ->
   done = ->
     cb() if ++i is directories.length
 
-  for dir in _.sortBy(directories, 'length').reverse()
+  _.sortBy(directories, 'length').reverse().forEach (dir) ->
     dirPath = path.join(config.watch.compiledDir, dir)
     if fs.existsSync dirPath
       logger.debug "Deleting directory [[ #{dirPath} ]]"
@@ -86,6 +102,8 @@ _cleanUp = (config, cb) ->
         if err?.code is not "ENOTEMPTY"
           logger.error "Unable to delete directory, #{dirPath}"
           logger.error err
+        else
+          logger.success "Deleted empty directory [[ #{dirPath} ]]"
         done()
     else
       done()
