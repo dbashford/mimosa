@@ -21,7 +21,7 @@ module.exports = class RequireRegister
   setConfig: (@config) ->
     @verify = @config.require.verify.enabled
     unless @rootJavaScriptDir?
-      @rootJavaScriptDir = if config.virgin
+      @rootJavaScriptDir = if @config.virgin
         path.join @config.watch.sourceDir, @config.watch.javascriptDir
       else
         path.join @config.watch.compiledDir, @config.watch.javascriptDir
@@ -146,7 +146,7 @@ module.exports = class RequireRegister
 
     for name, config of shims
       logger.debug "Processing shim [[ #{name} ]] with config of [[ #{JSON.stringify(config)} ]]"
-      unless @_fileExists(@_resolvePath(fileName, name))
+      unless @_fileExists(@_resolvePath(fileName, name))[0]
         alias = @_findAlias(name, @aliasFiles)
         unless alias
           @_logger "Shim path [[ #{name} ]] inside file [[ #{fileName} ]] cannot be found."
@@ -155,7 +155,7 @@ module.exports = class RequireRegister
       if deps?
         for dep in deps
           logger.debug "Resolving shim dependency [[ #{dep} ]]"
-          unless @_fileExists(@_resolvePath(fileName, dep))
+          unless @_fileExists(@_resolvePath(fileName, dep))[0]
             alias = @_findAlias(dep, @aliasFiles)
             unless alias
               @_logger "Shim [[ #{name} ]] inside file [[ #{fileName} ]] refers to a dependency that cannot be found [[ #{dep} ]]."
@@ -174,7 +174,7 @@ module.exports = class RequireRegister
       return logger.debug "Dependency registry has no depedencies for [[ #{dep} ]]"
 
     for aDep in @depsRegistry[dep]
-      exists = @_fileExists aDep
+      exists = @_fileExists(aDep)[0]
 
       unless exists
         logger.debug "Cannot find dependency [[ #{aDep} ]] for file [[ #{dep} ]], checking aliases/paths/maps"
@@ -242,7 +242,7 @@ module.exports = class RequireRegister
     for module, mappings of maps
       if module isnt '*'
         fullDepPath = @_resolvePath(fileName, module)
-        exists = @_fileExists fullDepPath
+        [exists, fullDepPath] = @_fileExists fullDepPath
         if exists
           logger.debug "Verified path for module [[ #{module} ]] at [[ #{fullDepPath} ]]"
           delete maps[module]
@@ -261,7 +261,7 @@ module.exports = class RequireRegister
           @aliasFiles[fileName][alias] = "MAPPED!#{alias}"
           continue
 
-        exists = @_fileExists fullDepPath
+        [exists, fullDepPath] = @_fileExists fullDepPath
         unless exists
           alias = @_findAlias(aliasPath, @aliasFiles)
           if alias then exists = true
@@ -291,8 +291,8 @@ module.exports = class RequireRegister
       return @aliasFiles[fileName][alias] = aliasPath
 
     fullDepPath = @_resolvePath(fileName, aliasPath)
+    [exists, fullDepPath] = @_fileExists fullDepPath
 
-    exists = @_fileExists fullDepPath
     if exists
       if fs.statSync(fullDepPath).isDirectory()
         logger.debug "Path found at [[ #{fullDepPath}]], is a directory, adding to list of alias directories"
@@ -302,7 +302,8 @@ module.exports = class RequireRegister
         @aliasFiles[fileName][alias] = fullDepPath
     else
       pathAsDirectory = fullDepPath.replace(/.js$/, '')
-      if @_fileExists pathAsDirectory
+      [pathAsDirExists, pathAsDirectory] = @_fileExists pathAsDirectory
+      if pathAsDirExists
         logger.debug "Path exists as directory, [[ #{pathAsDirectory} ]], adding to list of alias directories"
         @aliasDirectories[fileName] ?= {}
         @aliasDirectories[fileName][alias] = pathAsDirectory
@@ -339,7 +340,7 @@ module.exports = class RequireRegister
     else
       @_resolvePath(fileName, dep, plugin)
 
-    exists = @_fileExists fullDepPath
+    [exists, fullDepPath]  = @_fileExists fullDepPath
     if exists
       # file exists, register it
       @_registerDependency(fileName, fullDepPath)
@@ -352,9 +353,11 @@ module.exports = class RequireRegister
       else
         logger.debug "Cannot find dependency as path alias..."
         pathWithDirReplaced = @_findPathWhenAliasDiectory(dep)
-        if pathWithDirReplaced? and @_fileExists pathWithDirReplaced
+        if pathWithDirReplaced?
+          [pathExists, pathAsDirReplaced] = @_fileExists pathWithDirReplaced
           # file does not exist, but can be found by following directory alias
-          @_registerDependency(fileName, pathWithDirReplaced)
+          if pathExists
+            @_registerDependency(fileName, pathWithDirReplaced)
         else
           @_logger "Dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
           logger.debug "Used this as full dependency path [[ #{fullDepPath} ]]"
@@ -402,7 +405,7 @@ module.exports = class RequireRegister
       path.join @rootJavaScriptDir, dep
 
     if fullPath.match(/\.\w+$/) and plugin
-      logger.debug "Encountered plugin file with extension, letting that pass as is [[ fullPath ]]"
+      logger.debug "Encountered plugin file with extension, letting that pass as is [[ #{fullPath} ]]"
       fullPath
     else
       "#{fullPath}.js"
@@ -452,16 +455,16 @@ module.exports = class RequireRegister
     [deps, config]
 
   _fileExists: (filePath) ->
-    return true if fs.existsSync filePath
+    return [true, filePath] if fs.existsSync filePath
     if @config.virgin
       # templates is fine, will never be written, doesn't actually exist unless it is written
-      return true if filePath is path.join(@rootJavaScriptDir, "templates.js")
+      return [true, filePath] if filePath is path.join(@rootJavaScriptDir, "templates.js")
 
       logger.debug "Is virgin, need to try a bit harder to find file in source directories using extensions [[ #{@config.extensions.javascript} ]]"
       for extension in @config.extensions.javascript
-        filePath = filePath.replace(/\.[^.]+$/, ".#{extension}")
-        return true if fs.existsSync filePath
+        newExtensionfilePath = filePath.replace(/\.[^.]+$/, ".#{extension}")
+        return [true, newExtensionfilePath] if fs.existsSync newExtensionfilePath
 
-    false
+    [false,filePath]
 
 module.exports = new RequireRegister()

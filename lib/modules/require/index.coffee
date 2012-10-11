@@ -33,7 +33,11 @@ class MimosaRequireModule
     return next() if options.isVendor
     options.files.forEach (file) ->
       if file.outputFileName and file.outputFileText
-        requireRegister.process(file.outputFileName, file.outputFileText)
+        if config.virgin
+          requireRegister.process(file.inputFileName, file.outputFileText)
+        else
+          requireRegister.process(file.outputFileName, file.outputFileText)
+
     next()
 
   _requireOptimizeFile: (config, options, next) ->
