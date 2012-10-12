@@ -14,7 +14,7 @@ deps =      require('../../package.json').dependencies
 class NewCommand
 
   servers: [
-      {name:"none", prettyName:"None - Mimosa will serve your application for you"}
+      {name:"none", prettyName:"None - You don't need a server, or you'd like Mimosa to serve your application for you."}
       {name:"express", prettyName:"(*) Express - http://expressjs.com/", isDefault:true}
     ]
 
