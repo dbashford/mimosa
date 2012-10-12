@@ -2,7 +2,7 @@
 
 ### Major Changes
 * templateFileName, extension rather than library name
-* Removed gzippo as a dependency and use express.compress in its place.  Way more stable and fewer dependencies is goodness.
+* Removed gzippo as a dependency and use express.compress in its place.  Way more stable and fewer dependencies is goodness. If you were using gzippo in your server, it is recommended you remove it.  See this commit: https://github.com/dbashford/mimosa/commit/172c2c89190bfa3b50249bfe4036cdb7f05bee1b#L3L1 to get an idea of the very simple changes you'll need to make which include removing the require for gzippo and therefore allow you to remove gzippo from your package.json as well.
 
 # 0.1.2beta - October 11 2012
 
