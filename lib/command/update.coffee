@@ -26,13 +26,12 @@ update = (opts) ->
     process.chdir currentDir
     logger.success "Finished.  You are all up to date!"
 
-  if !clientPackageJson.dependencies['iced-coffee-script']? and mimosaPackageJson.dependencies['iced-coffee-script']?
-    logger.debug "Removing iced-coffee-script from list of dependencies to install."
-    delete mimosaPackageJson.dependencies['iced-coffee-script']
+  jspacks = ['iced-coffee-script', 'LiveScript']
 
-  if !clientPackageJson.dependencies['LiveScript']? and mimosaPackageJson.dependencies['LiveScript']?
-    logger.debug "Removing LiveScript from list of dependencies to install."
-    delete mimosaPackageJson.dependencies['LiveScript']
+  for pack in jspacks
+    if !clientPackageJson.dependencies[pack]? and mimosaPackageJson.dependencies[pack]?
+      logger.debug "Removing #{pack} from list of dependencies to install."
+      delete mimosaPackageJson.dependencies[pack]
 
   _uninstallDependencies mimosaPackageJson.dependencies, clientPackageJson.dependencies, ->
     _installDependencies(mimosaPackageJson.dependencies, clientPackageJson.dependencies, done)

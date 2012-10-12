@@ -273,11 +273,11 @@ class NewCommand
     packageJson.dependencies[chosen.views.library] = chosen.views.version
     switch chosen.javascript.base
       when "iced"
-        logger.debug "removing iced coffee from package.json"
-        delete packageJson.dependencies["iced-coffee-script"]
-      when "ls"
         logger.debug "removing LiveScript from package.json"
         delete packageJson.dependencies["LiveScript"]
+      when "livescript"
+        logger.debug "removing iced-coffee-script from package.json"
+        delete packageJson.dependencies["iced-coffee-script"]
 
     fs.writeFileSync jPath, JSON.stringify(packageJson, null, 2)
 

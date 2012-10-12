@@ -1,8 +1,13 @@
 # 0.2.0beta - October ?? 2012
 
 ### Major Changes
-* templateFileName, extension rather than library name
-* Removed gzippo as a dependency and use express.compress in its place.  Way more stable and fewer dependencies is goodness. If you were using gzippo in your server, it is recommended you remove it.  See this commit: https://github.com/dbashford/mimosa/commit/172c2c89190bfa3b50249bfe4036cdb7f05bee1b#L3L1 to get an idea of the very simple changes you'll need to make which include removing the require for gzippo and therefore allow you to remove gzippo from your package.json as well.
+* `template.outputFileName` has changed.  Multiple template libraries are now configured by mapping extension to output file name instead of library name to output file name.
+* Removed gzippo as a dependency and use express.compress in its place.  Way more stable and fewer dependencies is goodness.
+* New LiveScript compiler courtesy of @semperos
+
+### You'll need to...
+* If you were configuring multiple template libraries, you'll need to modify your `template.outputFileName` config to use extensions instead of library name.
+* If you were using gzippo in your server, it is recommended you remove it.  See this commit: https://github.com/dbashford/mimosa/commit/172c2c89190bfa3b50249bfe4036cdb7f05bee1b#L3L1 to get an idea of the very simple changes you'll need to make which include removing the require for gzippo and therefore allow you to remove gzippo from your `package.json` as well.
 
 # 0.1.2beta - October 11 2012
 
@@ -17,7 +22,6 @@ Still pushing forward on beta2 which, now that Mimosa is baseline feature comple
 ### Minor Changes
 
 * #72, the SASS compiler was complaining about not being installed even if no SASS was being used or compiled.  Now mimosa will only report SASS not being installed if SASS compilation is attempted.
-
 
 # 0.1.0beta - September 19 2012
 
