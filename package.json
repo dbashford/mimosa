@@ -58,7 +58,7 @@
     "requirejs": "2.0.6",
     "csslint": "0.9.9",
     "jshint": "0.9.0",
-    "gzippo": "0.1.7",
+    "gzippo": "git://github.com/dbashford/gzippo.git",
     "commander": "1.0.4",
     "watch-connect": "0.3.4",
     "date-utils": "1.2.11",
