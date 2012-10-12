@@ -30,6 +30,10 @@ update = (opts) ->
     logger.debug "Removing iced-coffee-script from list of dependencies to install."
     delete mimosaPackageJson.dependencies['iced-coffee-script']
 
+  if !clientPackageJson.dependencies['LiveScript']? and mimosaPackageJson.dependencies['LiveScript']?
+    logger.debug "Removing LiveScript from list of dependencies to install."
+    delete mimosaPackageJson.dependencies['LiveScript']
+
   _uninstallDependencies mimosaPackageJson.dependencies, clientPackageJson.dependencies, ->
     _installDependencies(mimosaPackageJson.dependencies, clientPackageJson.dependencies, done)
 
