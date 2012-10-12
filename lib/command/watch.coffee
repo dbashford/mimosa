@@ -1,7 +1,6 @@
 path =     require 'path'
 fs =       require 'fs'
 
-gzip =     require 'gzippo'
 express =  require 'express'
 _ =        require 'lodash'
 engines =  require 'consolidate'
@@ -40,7 +39,6 @@ startDefaultServer = (config) ->
     app.set 'view engine', config.server.views.extension
     app.use express.bodyParser()
     app.use express.methodOverride()
-    app.use config.server.base, app.router
     app.use (req, res, next) ->
       res.header 'Cache-Control', 'no-cache'
       next()
@@ -56,7 +54,9 @@ startDefaultServer = (config) ->
 
       app.use (require 'watch-connect')(opts)
 
-    app.use config.server.base, gzip.staticGzip(config.watch.compiledDir)
+    app.use express.compress()
+    app.use config.server.base, app.router
+    app.use express.static(config.watch.compiledDir)
 
   if config.server.views.html
     name = if config.optimize

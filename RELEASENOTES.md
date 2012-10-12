@@ -1,7 +1,23 @@
-# 0.2.0beta-rc1 - October ?? 2012
+# 0.2.0beta - October ?? 2012
 
 ### Major Changes
 * templateFileName, extension rather than library name
+* Removed gzippo as a dependency and use express.compress in its place.  Way more stable and fewer dependencies is goodness.
+
+# 0.1.2beta - October 11 2012
+
+### Minor Changes
+
+* #73, gzippo not pointing at fixed fork, would have caused mimosa hosted server to fail in many cases
+
+# 0.1.1beta - October 2 2012
+
+Still pushing forward on beta2 which, now that Mimosa is baseline feature complete, includes a massive re-write of Mimosa's internals.  Still likely a few weeks away on that.  But meanwhile...
+
+### Minor Changes
+
+* #72, the SASS compiler was complaining about not being installed even if no SASS was being used or compiled.  Now mimosa will only report SASS not being installed if SASS compilation is attempted.
+
 
 # 0.1.0beta - September 19 2012
 

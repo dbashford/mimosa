@@ -1,6 +1,5 @@
 express =        require 'express'
 reloadOnChange = require 'watch-connect'
-gzip =           require 'gzippo'
 engines =        require 'consolidate'
 
 routes  =        require './routes'
@@ -32,8 +31,9 @@ exports.startServer = (config) ->
         exclude:["almond\.js"]
         additionaldirs:[config.server.views.path]
       app.use reloadOnChange(options)
+    app.use express.compress()
     app.use config.server.base, app.router
-    app.use gzip.staticGzip(publicPath)
+    app.use express.static(publicPath)
 
   app.configure 'development', ->
     app.use express.errorHandler()
