@@ -271,9 +271,13 @@ class NewCommand
     packageJson = require(jPath)
     packageJson.name = name if name?
     packageJson.dependencies[chosen.views.library] = chosen.views.version
-    unless chosen.javascript.base is "iced"
-      logger.debug "removing iced coffee from package.json"
-      delete packageJson.dependencies["iced-coffee-script"]
+    switch chosen.javascript.base
+      when "iced"
+        logger.debug "removing iced coffee from package.json"
+        delete packageJson.dependencies["iced-coffee-script"]
+      when "ls"
+        logger.debug "removing LiveScript from package.json"
+        delete packageJson.dependencies["LiveScript"]
 
     fs.writeFileSync jPath, JSON.stringify(packageJson, null, 2)
 
