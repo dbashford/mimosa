@@ -1,3 +1,9 @@
+# 0.1.2beta - October 11 2012
+
+### Minor Changes
+
+* #73, gzippo not pointing at fixed fork, would have caused mimosa hosted server to fail in many cases
+
 # 0.1.1beta - October 2 2012
 
 Still pushing forward on beta2 which, now that Mimosa is baseline feature complete, includes a massive re-write of Mimosa's internals.  Still likely a few weeks away on that.  But meanwhile...
