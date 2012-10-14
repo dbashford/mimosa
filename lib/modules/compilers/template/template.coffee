@@ -92,7 +92,7 @@ module.exports = class AbstractTemplateCompiler
 
     options.files.push
       outputFileText: mergedText
-      outputFileName: options.destinationFile()
+      outputFileName: options.destinationFile(@extensions)
       isTemplate:true
 
     next()
@@ -106,7 +106,7 @@ module.exports = class AbstractTemplateCompiler
       next() if ++i is 2
 
     @removeClientLibrary(@clientPath, done)
-    @removeClientLibrary(options.destinationFile(), done)
+    @removeClientLibrary(options.destinationFile(@extensions), done)
 
   _testForRemoveClientLibrary: (config, options, next) =>
     if options.files?.length is 0
@@ -147,7 +147,7 @@ module.exports = class AbstractTemplateCompiler
     i = 0
     processFile = =>
       if i < numFiles
-        fileUtils.isFirstFileNewer fileNames[i++], options.destinationFile(), cb
+        fileUtils.isFirstFileNewer fileNames[i++], options.destinationFile(@extensions), cb
       else
         # no need to compile, remove files, but let continue
         options.files = []

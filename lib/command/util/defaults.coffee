@@ -45,6 +45,8 @@ class MimosaDefaults
     newConfig.compilers = config.compilers ?= {}
     newConfig.compilers.extensionOverrides = config.compilers.extensionOverrides ?= {}
 
+    # TODO, validate extensionOverride compiler names
+
     template = newConfig.template = config.template ?= {}
     template.outputFileName = config.template.outputFileName  ?= "templates"
     template.helperFiles =   config.template.helperFiles ?= ["app/template/handlebars-helpers"]
