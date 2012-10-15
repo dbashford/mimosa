@@ -353,11 +353,11 @@ module.exports = class RequireRegister
       else
         logger.debug "Cannot find dependency as path alias..."
         pathWithDirReplaced = @_findPathWhenAliasDiectory(dep)
-        if pathWithDirReplaced?
-          [pathExists, pathAsDirReplaced] = @_fileExists pathWithDirReplaced
-          # file does not exist, but can be found by following directory alias
-          if pathExists
-            @_registerDependency(fileName, pathWithDirReplaced)
+        [pathExists, pathAsDirReplaced] = @_fileExists pathWithDirReplaced if pathWithDirReplaced?
+
+        if pathWithDirReplaced and pathExists
+          # exact path does not exist, but can be found by following directory alias
+          @_registerDependency(fileName, pathWithDirReplaced)
         else
           @_logger "Dependency [[ #{dep} ]], inside file [[ #{fileName} ]], cannot be found."
           logger.debug "Used this as full dependency path [[ #{fullDepPath} ]]"
