@@ -1,5 +1,5 @@
 
-# ==> http://www.mimosajs.com <==
+# Go here ==> http://www.mimosajs.com <==
 
 The content below is out of date and will only fall further out of date.  For the short-term I'll be keeping it here for search engine purposes.
 
