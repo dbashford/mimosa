@@ -6,7 +6,10 @@ logger =  require '../../util/logger'
 class JSLinter
 
   lifecycleRegistration: (config, register) ->
-    extensions = if config.lint.copied.javascript and config.lint.compiled.javascript
+    extensions = if config.lint.vendor.javascript
+      logger.debug "vendor being linted, so everything needs to pass through linting"
+      config.extensions.javascript
+    else if config.lint.copied.javascript and config.lint.compiled.javascript
       logger.debug "Linting compiled/copied JavaScript only"
       config.extensions.javascript
     else if config.lint.copied.javascript
@@ -31,15 +34,18 @@ class JSLinter
     i = 0
     options.files.forEach (file) =>
       if file.outputFileText?.length > 0
-        if !config.lint.vendor.javascript and options.isVendor
+        if options.isCopy and not options.isVendor and not config.lint.copied.javascript
+          logger.debug "Not linting copied script [[ #{file.inputFileName} ]]"
+        else if options.isVendor and not config.lint.vendor.javascript
           logger.debug "Not linting vendor script [[ #{file.inputFileName} ]]"
+        else if options.isJavascript and not options.isCopy and not config.lint.compiled.javascript
+          logger.debug "Not linting compiled script [[ #{file.inputFileName} ]]"
         else
           lintok = jslint file.outputFileText, @options
           unless lintok
             jslint.errors.forEach (e) =>
               if e?
                 @log file.inputFileName, e.reason, e.line
-
       next() if ++i is options.files.length
 
   log: (fileName, message, lineNumber) ->

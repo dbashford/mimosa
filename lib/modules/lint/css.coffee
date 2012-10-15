@@ -1,4 +1,5 @@
 csslint = require("csslint").CSSLint
+_ =       require "lodash"
 
 logger =  require '../../util/logger'
 
@@ -7,8 +8,11 @@ class CSSLinter
   rules:{}
 
   lifecycleRegistration: (config, register) ->
-    extensions = if config.lint.copied.css and config.lint.compiled.css
-      logger.debug "Linting compiled/copied CSS only"
+    extensions = if config.lint.vendor.css
+      logger.debug "vendor being linted, so everything needs to pass through linting"
+      config.extensions.css
+    else if config.lint.copied.css and config.lint.compiled.css
+      logger.debug "Linting compiled and copied CSS"
       config.extensions.css
     else if config.lint.copied.css
       logger.debug "Linting copied CSS only"
@@ -26,7 +30,8 @@ class CSSLinter
       unless config.lint.rules.css[rule.id] is false
         @rules[rule.id] = 1
 
-    register ['add','update','buildExtension'], 'afterCompile', @_lint, [extensions...]
+    # buildExtension for compiled assets, buildFile for copied/vendor
+    register ['add','update','buildExtension','buildFile'], 'afterCompile', @_lint, [extensions...]
 
   _lint: (config, options, next) =>
     return next() unless options.files?.length > 0
@@ -34,8 +39,15 @@ class CSSLinter
     i = 0
     options.files.forEach (file) =>
       if file.outputFileText?.length > 0
-        if not config.lint.vendor.css and options.isVendor
-          logger.debug "Not linting vendor script [[ #{options.inputFileName} ]]"
+        # if is copy, and not a vendor copy, and copy is turned off
+        if options.isCopy and not options.isVendor and not config.lint.copied.css
+          logger.debug "Not linting copied script [[ #{file.inputFileName} ]]"
+        # if is vendor and vendor is not turned off
+        else if options.isVendor and not config.lint.vendor.css
+          logger.debug "Not linting vendor script [[ #{file.inputFileName} ]]"
+        # if is css, but not copied css and compiled css is not turned off
+        else if options.isCSS and not options.isCopy and not config.lint.compiled.css
+          logger.debug "Not linting compiled script [[ #{file.inputFileName} ]]"
         else
           result = csslint.verify file.outputFileText, @rules
           @_writeMessage(file.inputFileName, message) for message in result.messages

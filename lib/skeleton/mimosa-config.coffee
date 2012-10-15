@@ -45,15 +45,13 @@ exports.config = {
   # server:                               # configuration for server when server option is enabled via CLI
     # useDefaultServer: false             # whether or not mimosa starts a default server for you, when true, mimosa starts its
                                           # own on the port below, when false, mimosa will use server provided by path below
-    # useReload: true                     # valid for both default and custom server, when true, browser will be reloaded when
-                                          # asset is compiled.  This adds a few javascript files to the layout of the dev
-                                          # version of the app
+    # useReload: true                     # when true, browser will be reloaded when asset is compiled.
     # path: 'server.coffee'               # valid when useDefaultServer: false, path to file for provided server which must contain
                                           # export startServer method that takes an enriched mimosa-config object
     # port: 3000                          # port to start server on
-    # base: ''                            # base of the app in default mode
+    # base: ''                            # base of url for the app, if altered should start with a slash
     # views:                              # configuration for the view layer of your application
-      # compileWith: 'jade'               # Other valid options: "hogan", "html". The compiler for your views.
+      # compileWith: 'jade'               # Other valid options: "hogan", "html", "ejs". The compiler for your views.
       # extension: 'jade'                 # extension of your server views
       # path: 'views'                     # path from the root of your project to your views
 
@@ -73,7 +71,8 @@ exports.config = {
   # growl:
     # onStartup: false                    # Controls whether or not to Growl when assets successfully compile/copy on startup,
                                           # If you've got 100 CoffeeScript files, and you do a clean and then start watching,
-                                          # you'll get 100 Growl notifications.  This is set to false be default to prevent that.
+                                          # you'll get 100 Growl notifications.  This is set to false by default to prevent that.
+                                          # Growling for every successful file on startup can also cause EMFILE issues. See watch.throttle
     # onSuccess:                          # Controls whether or not to Growl when assets successfully compile/copy
       # javascript: true                  # send growl notification on successful compilation? will always send on failure
       # css: true                         # send growl notification on successful compilation? will always send on failure
