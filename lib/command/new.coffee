@@ -271,13 +271,14 @@ class NewCommand
     packageJson = require(jPath)
     packageJson.name = name if name?
     packageJson.dependencies[chosen.views.library] = chosen.views.version
-    switch chosen.javascript.base
-      when "iced"
-        logger.debug "removing LiveScript from package.json"
-        delete packageJson.dependencies["LiveScript"]
-      when "livescript"
-        logger.debug "removing iced-coffee-script from package.json"
-        delete packageJson.dependencies["iced-coffee-script"]
+
+    unless chosen.javascript.base is "livescript"
+      logger.debug "removing iced-coffee-script from package.json"
+      delete packageJson.dependencies["LiveScript"]
+
+    unless chosen.javascript.base is "iced"
+      logger.debug "removing iced-coffee-script from package.json"
+      delete packageJson.dependencies["iced-coffee-script"]
 
     fs.writeFileSync jPath, JSON.stringify(packageJson, null, 2)
 
@@ -308,7 +309,7 @@ class NewCommand
     logger.green('  will by default include a basic application using the technologies you selected.')
     logger.blue( '\n    $ mimosa new [nameOfProject]\n')
     logger.green('  If you wish to copy the project skeleton into your current directory instead of')
-    logger.green('  into a new one leave off the then leave off name.')
+    logger.green('  into a new one leave off the name.')
     logger.blue( '\n    $ mimosa new\n')
     logger.green('  If you are happy with the defaults (CoffeeScript, Stylus, Handlebars, Express, Jade),')
     logger.green('  you can bypass the prompts by providing a \'defaults\' flag.')
