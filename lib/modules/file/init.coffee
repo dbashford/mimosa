@@ -44,14 +44,12 @@ class MimosaFileInitModule
       destFunct = (compiledJSDir) ->
         # take a list of the compilers extensions and figure out what the
         # output file is
-        (compilerExtensions) =>
+        (compilerName) =>
           outputFileName = config.template.outputFileName
-          compiledName = path.join(compiledJSDir, outputFileName + ".js")
-          for x in compilerExtensions
-            if outputFileName[x]
-              compiledName = path.join(compiledJSDir, outputFileName[x] + ".js")
-              break
-          compiledName
+          if outputFileName[compilerName]
+            path.join(compiledJSDir, outputFileName[compilerName] + ".js")
+          else
+            path.join(compiledJSDir, outputFileName + ".js")
       destFunct(config.watch.compiledJavascriptDir)
     else
       destFunct = if exts.copy.indexOf(ext) > -1

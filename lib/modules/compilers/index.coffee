@@ -27,22 +27,18 @@ class CompilerCentral
     for compiler in @configuredCompilers.compilers
       compiler.lifecycleRegistration(config, register) if compiler.lifecycleRegistration?
 
-    register ['buildDone'], 'init', @_testDifferentTemplateLibraries
+    register ['buildExtension'], 'complete', @_testDifferentTemplateLibraries, [config.extensions.template...]
 
   _testDifferentTemplateLibraries: (config, options, next) =>
-    compilers = @_templateCompilers()
+    return next() unless options.files?.length > 0
+    return next() unless _.isString(config.template.outputFileName)
 
-    templateLibraryWithFiles = 0
-    for compiler in compilers
-      continue unless compiler.template
-      files = wrench.readdirSyncRecursive(config.watch.sourceDir).filter (f) =>
-        ext = path.extname(f)
-        ext.length > 1 and compiler.extensions.indexOf(ext.substring(1)) >= 0
-      templateLibraryWithFiles++ if files.length > 0
+    unless @templateLibrariesBeingUsed
+      @templateLibrariesBeingUsed = 0
 
-    if templateLibraryWithFiles > 1 and _.isString(@config.template.outputFileName)
+    if ++@templateLibrariesBeingUsed is 2
       logger.error "More than one template library is being used, but multiple template.outputFileName entries not found." +
-        " You will want to configure a map of outfileFileName entries in your config, otherwise you will only get" +
+        " You will want to configure a map of template.outfileFileName entries in your config, otherwise you will only get" +
         " template output for one of the libraries."
 
     next()
@@ -52,9 +48,6 @@ class CompilerCentral
 
   _compilersWithoutNone: ->
     @all.filter (comp) -> comp.base isnt "none"
-
-  _templateCompilers: ->
-    @all.filter (comp) -> comp.type is "template"
 
   compilersByType: ->
     compilersByType = {css:[], javascript:[], template:[]}

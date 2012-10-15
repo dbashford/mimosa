@@ -1,13 +1,21 @@
-# 0.2.0beta - October ?? 2012
+# 0.2.0beta - October 15 2012
+
+### Colossal Change & Roadmap
+* Beta 1 to 2 was an entire refactor of the guts of Mimosa.  Pre beta2, an asset's workflow was tied tightly to compilers.  Calls to lint, calls to minify, calls to deal with amd/requirejs, etc, were all contained in the compilers.  It was a bit messy and with beta 1 decently featureful, I wanted to take the time to pull all of that apart.  What this will allow, and you'll see in beta3, is the detaching of some of that code from Mimosa entirely, putting it instead is separate npm modules to version, maintain, and eventually test apart from the larger Mimosa codebase.  Also in the next few betas one will be able to write their own modules that will be able perform tasks at certain points of an asset's lifecycle.
+
+Despite many urges to the contrary, I tried not to add any new features as I wanted this refactor to be as seamless an experience from an Mimosa interface perspective as possible.  So, in all cases except for the gzippo case below, you should need to do nothing to upgrade from beta1 to 2 other than reinstall Mimosa.  beta3 should largely be the same.  I'll be pulling code out of Mimosa, and moving some things around, but there should be very few breaking changes.  beta4 will likely be a return to feature development and I've got quite the backlog of stuff building up.
+
+Please do eagerly report any bugs you find with this release.
 
 ### Major Changes
-* `template.outputFileName` has changed.  Multiple template libraries are now configured by mapping extension to output file name instead of library name to output file name.
 * Removed gzippo as a dependency and use express.compress in its place.  Way more stable and fewer dependencies is goodness.
 * New LiveScript compiler courtesy of @semperos
 
+### Minor Changes
+* Various messaging updates for consistency.
+
 ### You'll need to...
-* If you were configuring multiple template libraries, you'll need to modify your `template.outputFileName` config to use extensions instead of library name.
-* If you were using gzippo in your server, it is recommended you remove it.  See this commit: https://github.com/dbashford/mimosa/commit/172c2c89190bfa3b50249bfe4036cdb7f05bee1b#L3L1 to get an idea of the very simple changes you'll need to make which include removing the require for gzippo and therefore allow you to remove gzippo from your `package.json` as well.
+* If you were using gzippo in your server, it is recommended you remove it. I'll be deleting my fork sometime soon. See this commit: https://github.com/dbashford/mimosa/commit/172c2c89190bfa3b50249bfe4036cdb7f05bee1b#L3L1 to get an idea of the very simple changes you'll need to make which include removing the require for gzippo and therefore allow you to remove gzippo from your `package.json` as well.
 
 # 0.1.2beta - October 11 2012
 
