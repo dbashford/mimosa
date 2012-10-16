@@ -6,7 +6,7 @@ requirejs = require 'requirejs'
 
 logger =  require '../../util/logger'
 requireRegister = require './register'
-minifier = require '../minify'
+minifier = require 'mimosa-minify'
 
 class Optimizer
 

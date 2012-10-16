@@ -3,8 +3,8 @@
 
 compilers = require './compilers'
 file = require './file'
-linters = require './lint'
-minify = require './minify'
+linters = require 'mimosa-lint'
+minify = require 'mimosa-minify'
 req = require './require'
 server = require './server'
 
