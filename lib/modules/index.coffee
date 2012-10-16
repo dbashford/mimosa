@@ -5,8 +5,8 @@ compilers = require './compilers'
 file = require './file'
 linters = require 'mimosa-lint'
 minify = require 'mimosa-minify'
-req = require './require'
-server = require './server'
+req = require 'mimosa-require'
+server = require 'mimosa-server'
 
 module.exports =
   all:      [file, compilers, linters.js, linters.css, minify, req, server]

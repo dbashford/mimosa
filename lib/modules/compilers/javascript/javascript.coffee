@@ -1,4 +1,4 @@
-logger =    require '../../../util/logger'
+logger =    require 'mimosa-logger'
 
 module.exports = class JSCompiler
 

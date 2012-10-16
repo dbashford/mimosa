@@ -2,8 +2,7 @@ path = require 'path'
 fs =   require 'fs'
 
 wrench = require 'wrench'
-
-logger =   require '../../util/logger'
+logger =   require 'mimosa-logger'
 
 class MimosaDefaults
 

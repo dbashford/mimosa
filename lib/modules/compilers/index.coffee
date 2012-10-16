@@ -1,9 +1,9 @@
 path = require 'path'
 
 _ = require 'lodash'
+logger = require 'mimosa-logger'
 
 fileUtils =  require '../../util/file'
-logger = require '../../util/logger'
 
 baseDirRegex = /([^[\/\\\\]*]*)$/
 

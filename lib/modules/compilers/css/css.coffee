@@ -3,8 +3,8 @@ path =   require 'path'
 
 wrench = require 'wrench'
 _ =      require 'lodash'
+logger =    require 'mimosa-logger'
 
-logger =    require '../../../util/logger'
 fileUtils = require '../../../util/file'
 
 module.exports = class AbstractCSSCompiler

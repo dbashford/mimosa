@@ -4,9 +4,9 @@ path = require 'path'
 nib = require 'nib'
 stylus = require 'stylus'
 _ = require 'lodash'
+logger = require 'mimosa-logger'
 
 AbstractCssCompiler = require './css'
-logger = require '../../../util/logger'
 
 module.exports = class StylusCompiler extends AbstractCssCompiler
 

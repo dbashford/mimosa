@@ -4,8 +4,8 @@ fs     = require 'fs'
 color  = require('ansi-color').set
 _      = require 'lodash'
 wrench = require 'wrench'
+logger = require 'mimosa-logger'
 
-logger = require '../../util/logger'
 fileUtils = require '../../util/file'
 defaults = require './defaults'
 compilerCentral = require '../../modules/compilers'

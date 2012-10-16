@@ -2,8 +2,7 @@ path =   require 'path'
 
 wrench = require 'wrench'
 _ =      require 'lodash'
-
-logger = require '../util/logger'
+logger = require 'mimosa-logger'
 
 compilers = require '../modules/compilers'
 
@@ -31,7 +30,7 @@ module.exports = class LifeCycleManager
       for step in steps
         @registration[type][step] = {}
 
-    module.lifecycleRegistration(@config, @register, logger) for module in modules
+    module.lifecycleRegistration(@config, @register) for module in modules
 
     @cleanUpRegistration()
 

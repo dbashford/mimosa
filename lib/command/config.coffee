@@ -1,7 +1,7 @@
 path =   require 'path'
 fs =     require 'fs'
 
-logger = require '../util/logger'
+logger = require 'mimosa-logger'
 
 copyConfig = (opts) ->
   if opts.debug then logger.setDebug()

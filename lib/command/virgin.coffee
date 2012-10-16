@@ -1,5 +1,6 @@
+logger =   require 'mimosa-logger'
+
 util =     require './util'
-logger =   require '../util/logger'
 Watcher =  require './util/watcher'
 
 virgin = (opts) =>

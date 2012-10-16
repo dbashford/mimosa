@@ -1,6 +1,6 @@
 watch =     require 'chokidar'
+logger =    require 'mimosa-logger'
 
-logger =    require '../../util/logger'
 LifeCycle = require '../../lifecycle'
 modules = require '../../modules'
 

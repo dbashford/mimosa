@@ -3,10 +3,10 @@ fs =   require 'fs'
 
 wrench = require 'wrench'
 _ =      require 'lodash'
+logger =           require 'mimosa-logger'
+requireRegister =  require 'mimosa-require'
 
-requireRegister =  require '../../require/register'
 fileUtils =        require '../../../util/file'
-logger =           require '../../../util/logger'
 
 module.exports = class AbstractTemplateCompiler
 

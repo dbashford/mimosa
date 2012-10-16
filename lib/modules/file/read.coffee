@@ -1,6 +1,6 @@
 fs =   require 'fs'
 
-logger = require '../../util/logger'
+logger = require 'mimosa-logger'
 
 class MimosaFileReadModule
 

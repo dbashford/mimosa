@@ -4,9 +4,9 @@ fs =     require 'fs'
 
 wrench = require 'wrench'
 _ =      require 'lodash'
+logger =    require 'mimosa-logger'
 
 fileUtils = require '../util/file'
-logger =    require '../util/logger'
 util =      require './util'
 defaults =  require './util/defaults'
 deps =      require('../../package.json').dependencies

@@ -2,8 +2,9 @@ path =   require 'path'
 fs =     require 'fs'
 {exec} = require 'child_process'
 
+logger = require 'mimosa-logger'
+
 util =   require 'util'
-logger = require '../util/logger'
 
 update = (opts) ->
   if opts.debug then logger.setDebug()

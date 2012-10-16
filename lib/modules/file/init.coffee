@@ -1,7 +1,8 @@
 path = require 'path'
 fs =   require 'fs'
 
-logger = require '../../util/logger'
+logger = require 'mimosa-logger'
+
 fileUtils = require '../../util/file'
 
 class MimosaFileInitModule
