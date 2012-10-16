@@ -6,8 +6,9 @@ file = require './file'
 linters = require './lint'
 minify = require './minify'
 req = require './require'
+server = require './server'
 
 module.exports =
-  all:      [file, compilers, linters.js, linters.css, minify, req]
-  builtIns: [file, compilers, linters.js, linters.css, minify, req]
+  all:      [file, compilers, linters.js, linters.css, minify, req, server]
+  builtIns: [file, compilers, linters.js, linters.css, minify, req, server]
   basic:    [file, compilers]

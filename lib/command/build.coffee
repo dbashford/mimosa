@@ -17,7 +17,7 @@ build = (opts) =>
 
   util.processConfig opts, (config) =>
     if opts.removeCombined then config.require.optimize.overrides.removeCombined = true
-    new Watcher config, false, _buildFinished
+    new Watcher config, false, -> logger.success "Finished build"
 
     _writeJade(config) if opts.jade
 
@@ -53,9 +53,6 @@ _writeJade = (config) ->
             logger.success "Successfully compiled and wrote compiled index.html file."
   else
     logger.warn "Cannot find #{viewsPath}, cannot compile the jade template."
-
-_buildFinished = ->
-  logger.success "Finished build"
 
 register = (program, callback) =>
   program
@@ -96,7 +93,6 @@ register = (program, callback) =>
       logger.green('  can break them) but you still want everything together in a single file.')
       logger.blue( '\n    $ mimosa watch --minify')
       logger.blue( '    $ mimosa watch -m\n')
-
 
 module.exports = (program) ->
   register(program, build)

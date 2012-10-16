@@ -1,3 +1,8 @@
+# 0.2.1beta - October ?? 2012
+
+### Minor Changes
+* Moved server code into buildDone lifecycle
+
 # 0.2.0beta - October 15 2012
 
 ### Colossal Change & Roadmap
