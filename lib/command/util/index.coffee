@@ -36,10 +36,10 @@ exports.processConfig = (opts, callback) ->
 
   logger.debug "Your mimosa config:\n#{JSON.stringify(config, null, 2)}"
 
-  config.virgin =       opts?.virgin
+  config.isVirgin =     opts?.virgin
   config.isServer =     opts?.server
-  config.optimize =     opts?.optimize
-  config.min =          opts?.minify
+  config.isOptimize =   opts?.optimize
+  config.isMinify =     opts?.minify
   config.isForceClean = opts?.force
   config.isClean =      opts?.clean
 

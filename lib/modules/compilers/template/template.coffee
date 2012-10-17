@@ -28,7 +28,7 @@ module.exports = class AbstractTemplateCompiler
     register ['add','update'],          'beforeRead', @_templateNeedsCompiling, [@extensions...]
     register ['add','update','remove'], 'compile',    @_compile,                [@extensions...]
 
-    unless config.virgin
+    unless config.isVirgin
       register ['buildExtension'],        'afterCompile', @_merge, [@extensions[0]]
       register ['add','update','remove'], 'afterCompile', @_merge, [@extensions...]
 
@@ -74,7 +74,7 @@ module.exports = class AbstractTemplateCompiler
 
         if ++i is options.files.length
           # end of the road for virgin, log it
-          if config.virgin and options.files.length is newFiles.length
+          if config.isVirgin and options.files.length is newFiles.length
             logger.success "All templates compiled successfully.", options
 
           options.files = newFiles

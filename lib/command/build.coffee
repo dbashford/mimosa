@@ -31,7 +31,7 @@ _writeJade = (config) ->
     opts =
       title:     "Mimosa"
       reload:    false
-      optimize:  config.optimize
+      optimize:  config.isOptimize
       cachebust: ''
 
     logger.debug("Compiling jade file at [[ #{viewsPath} ]]")

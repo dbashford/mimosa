@@ -30,7 +30,8 @@ module.exports = class LifeCycleManager
       for step in steps
         @registration[type][step] = {}
 
-    module.lifecycleRegistration(@config, @register) for module in modules
+    for module in modules
+      module.lifecycleRegistration(@config, @register) if module.lifecycleRegistration?
 
     @cleanUpRegistration()
 

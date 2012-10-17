@@ -99,12 +99,12 @@ class MimosaDefaults
     config.server.views.path =         path.join @root, config.server.views.path
 
     # need to set some requirejs stuf
-    if config.optimize and config.min
+    if config.isOptimize and config.isMinify
       logger.info "Optimize and minify both selected, setting r.js optimize property to 'none'"
       config.require.optimize.overrides.optimize = "none"
 
     # helpful shortcuts
-    config.requireRegister = config.require.verify.enabled or config.optimize
+    config.requireRegister = config.require.verify.enabled or config.isOptimize
 
     logger.debug "Full mimosa config:\n#{JSON.stringify(config, null, 2)}"
 
@@ -112,7 +112,7 @@ class MimosaDefaults
 
   _validateSettings: (config) ->
     @_testPathExists(config.watch.sourceDir, "watch.sourceDir", true)
-    unless config.virgin
+    unless config.isVirgin
       if !fs.existsSync(config.watch.compiledDir) and !config.isForceClean
         logger.info "Did not find compiled directory [[ #{config.watch.compiledDir} ]], so making it for you"
         wrench.mkdirSyncRecursive config.watch.compiledDir, 0o0777
@@ -122,7 +122,7 @@ class MimosaDefaults
     # TODO, compilers: overrides paths
 
     jsDir = path.join(config.watch.sourceDir, config.watch.javascriptDir)
-    @_testPathExists(jsDir,"watch.javascriptDir", true) unless config.virgin
+    @_testPathExists(jsDir,"watch.javascriptDir", true) unless config.isVirgin
 
   _testPathExists: (filePath, name, isDirectory) ->
     unless fs.existsSync filePath

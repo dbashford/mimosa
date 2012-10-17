@@ -8,7 +8,7 @@ class MimosaFileWriteModule
 
   lifecycleRegistration: (config, register) ->
 
-    unless config.virgin
+    unless config.isVirgin
       e = config.extensions
       cExts = config.copy.extensions
       register ['buildFile'],             'write',  @_write, [e.javascript..., cExts...]
