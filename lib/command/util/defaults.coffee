@@ -2,11 +2,65 @@ path = require 'path'
 fs =   require 'fs'
 
 wrench = require 'wrench'
-logger =   require 'mimosa-logger'
+logger = require 'mimosa-logger'
+_      = require 'lodash'
 
 class MimosaDefaults
 
   fatalErrors: 0
+
+  moduleDefaults:
+    watch:
+      sourceDir: "assets"
+      compiledDir: "public"
+      javascriptDir: "javascripts"
+      ignored: [".sass-cache"]
+      throttle: 0
+    compilers:
+      extensionOverrides: {}
+    template:
+      outputFileName: "templates"
+      helperFiles:["app/template/handlebars-helpers"]
+    copy:
+      extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
+    server:
+      useDefaultServer: false
+      useReload: true
+      path: 'server.coffee'
+      port: 3000
+      base: ''
+      views:
+        compileWith: 'jade'
+        extension: 'jade'
+        path: 'views'
+    require:
+      verify:
+        enabled: true
+      optimize :
+        inferConfig:true
+        overrides:{}
+    growl:
+      onStartup: false
+      onSuccess:
+        javascript: true
+        css: true
+        template: true
+        copy: true
+    minify:
+      exclude:["\.min\."]
+    lint:
+      compiled:
+        javascript:true
+        css:true
+      copied:
+        javascript: true
+        css: true
+      vendor:
+        javascript: false
+        css: false
+      rules:
+        javascript: {}
+        css: {}
 
   applyAndValidateDefaults: (config, configPath, callback) =>
     @root = path.dirname(configPath)
@@ -19,107 +73,42 @@ class MimosaDefaults
       @fatalErrors
     callback(err, config)
 
+  _extend: (obj, props) ->
+    Object.keys(props).forEach (k) =>
+      val = props[k]
+      if val? and _.isObject(val)
+        @_extend obj[k], val
+      else
+        obj[k] = val
+    obj
+
   _applyDefaults: (config) ->
-    newConfig = {}
+    config = @_extend @moduleDefaults, config
 
-    newConfig.virgin =       config.virgin
-    newConfig.isServer =     config.isServer
-    newConfig.optimize =     config.optimize
-    newConfig.min =          config.min
-    newConfig.isForceClean = config.isForceClean
-    newConfig.extensions = {}
-    newConfig.extensions.javascript = ['js']
-    newConfig.extensions.css =        ['css']
-    newConfig.extensions.template =   []
-    newConfig.extensions.copy =       []
-
-    newConfig.watch =                       config.watch ?= {}
-    newConfig.watch.sourceDir =             path.join(@root, config.watch.sourceDir   ? "assets")
-    newConfig.watch.compiledDir =           path.join(@root, config.watch.compiledDir ? "public")
-    newConfig.watch.javascriptDir =         config.watch.javascriptDir ?= "javascripts"
-    newConfig.watch.compiledJavascriptDir = path.join(newConfig.watch.compiledDir, newConfig.watch.javascriptDir)
-    newConfig.watch.ignored =               config.watch.ignored ?= [".sass-cache"]
-    newConfig.watch.throttle =              config.watch.throttle ?= 0
-
-    newConfig.compilers = config.compilers ?= {}
-    newConfig.compilers.extensionOverrides = config.compilers.extensionOverrides ?= {}
+    config.extensions = {javascript: ['js'], css: ['css'], template: [], copy: []}
+    config.watch.sourceDir =             path.join @root, config.watch.sourceDir
+    config.watch.compiledDir =           path.join @root, config.watch.compiledDir
+    config.watch.compiledJavascriptDir = path.join config.watch.compiledDir, config.watch.javascriptDir
 
     # TODO, validate extensionOverride compiler names
 
-    template = newConfig.template = config.template ?= {}
-    template.outputFileName = config.template.outputFileName  ?= "templates"
-    template.helperFiles =   config.template.helperFiles ?= ["app/template/handlebars-helpers"]
-
-    copy = newConfig.copy = config.copy                        ?= {}
-    copy.extensions =       config.copy.extensions             ?= ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
-
-    requirejs = newConfig.require = config.require             ?= {}
-
-    unless config.virgin
-      server = newConfig.server = config.server                   ?= {}
-      server.useDefaultServer =   config.server.useDefaultServer  ?= false
-      server.port =               config.server.port              ?= 3000
-      server.base =               config.server.base              ?= ''
-      server.useReload =          config.server.useReload         ?= true
-      server.path =               config.server.path              ?= 'server.coffee'
-      server.path =               path.join(@root, server.path)
-      server.views =              config.server.views             ?= {}
-      server.views.compileWith =  config.server.views.compileWith ?= "jade"
-      if server.views.compileWith is "html"
-        server.views.compileWith = "ejs"
-        server.views.html = true
-      server.views.extension =    config.server.views.extension   ?= "jade"
-      server.views.path =         config.server.views.path        ?= "views"
-      server.views.path =         path.join(@root, server.views.path)
-
-      requirejs.optimize = newConfig.require.optimize = config.require.optimize     ?= {}
-      requirejs.optimize.inferConfig = config.require.optimize.inferConfig ?= true
-      requirejs.optimize.overrides = config.require.optimize.overrides ?= {}
-
-    requirejs.verify = newConfig.require.verify = config.require.verify ?= {}
-    requirejs.verify.enabled = config.require.verify.enabled            ?= true
-
-    minify = newConfig.minify =       config.minify             ?= {}
-    minify.exclude = config.minify.exclude                ?= ["\.min\."]
+    config.server.path = path.join @root, config.server.path
+    if config.server.views.compileWith is "html"
+      config.server.views.compileWith = "ejs"
+      config.server.views.html = true
+    config.server.views.path =         path.join @root, config.server.views.path
 
     # need to set some requirejs stuf
     if config.optimize and config.min
       logger.info "Optimize and minify both selected, setting r.js optimize property to 'none'"
-      requirejs.optimize.overrides.optimize = "none"
-
-    growl = newConfig.growl =       config.growl                ?= {}
-    growl.onStartup =               config.growl.onStartup            ?= false
-    growl.onSuccess =               config.growl.onSuccess            ?= {}
-    growl.onSuccess.javascript =    config.growl.onSuccess.javascript ?= true
-    growl.onSuccess.css =           config.growl.onSuccess.css        ?= true
-    growl.onSuccess.template =      config.growl.onSuccess.template   ?= true
-    growl.onSuccess.copy =          config.growl.onSuccess.copy       ?= true
-
-    lint = newConfig.lint =    config.lint                     ?= {}
-    lint.compiled =            config.lint.compiled            ?= {}
-    lint.compiled.coffee =     config.lint.compiled.coffee     ?= true
-    lint.compiled.javascript = config.lint.compiled.javascript ?= true
-    lint.compiled.css =        config.lint.compiled.css        ?= true
-
-    lint.copied =              config.lint.copied              ?= {}
-    lint.copied.javascript =   config.lint.copied.javascript   ?= true
-    lint.copied.css =          config.lint.copied.css          ?= true
-
-    lint.vendor =              config.lint.vendor              ?= {}
-    lint.vendor.javascript =   config.lint.vendor.javascript   ?= false
-    lint.vendor.css =          config.lint.vendor.css          ?= false
-
-    lint.rules =               config.lint.rules               ?= {}
-    lint.rules.coffee =        config.lint.rules.coffee        ?= {}
-    lint.rules.javascript =    config.lint.rules.javascript    ?= {}
-    lint.rules.css =           config.lint.rules.css           ?= {}
+      config.require.optimize.overrides.optimize = "none"
 
     # helpful shortcuts
     config.requireRegister = config.require.verify.enabled or config.optimize
 
-    logger.debug "Full mimosa config:\n#{JSON.stringify(newConfig, null, 2)}"
+    logger.debug "Full mimosa config:\n#{JSON.stringify(config, null, 2)}"
 
-    newConfig
+    config
 
   _validateSettings: (config) ->
     @_testPathExists(config.watch.sourceDir, "watch.sourceDir", true)
