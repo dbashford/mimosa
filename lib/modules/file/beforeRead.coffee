@@ -4,7 +4,7 @@ fileUtils = require '../../util/file'
 
 class MimosaFileBeforeReadModule
 
-  lifecycleRegistration: (config, register) ->
+  registration: (config, register) ->
     e = config.extensions
     cExts = config.copy.extensions
     register ['buildFile'],    'beforeRead', @_fileNeedsCompilingStartup, [e.javascript..., cExts...]

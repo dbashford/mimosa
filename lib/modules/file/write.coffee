@@ -6,7 +6,7 @@ fileUtils = require '../../util/file'
 
 class MimosaFileWriteModule
 
-  lifecycleRegistration: (config, register) ->
+  registration: (config, register) ->
 
     unless config.isVirgin
       e = config.extensions

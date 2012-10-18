@@ -7,8 +7,8 @@ modules = [init, beforeRead, read, write, del]
 
 class MimosaFileModule
 
-  lifecycleRegistration: (config, register) ->
+  registration: (config, register) ->
     modules.forEach (module) ->
-      module.lifecycleRegistration(config, register)
+      module.registration(config, register)
 
 module.exports = new MimosaFileModule()

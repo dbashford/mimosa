@@ -16,7 +16,7 @@ module.exports = class AbstractTemplateCompiler
       jsDir = path.join config.watch.compiledDir, config.watch.javascriptDir
       @clientPath = path.join jsDir, 'vendor', "#{@clientLibrary}.js"
 
-  lifecycleRegistration: (config, register) ->
+  registration: (config, register) ->
     if config.isClean
       return register ['remove'], 'init', @_removeFiles, [@extensions...]
 

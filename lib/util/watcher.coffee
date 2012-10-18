@@ -1,8 +1,8 @@
 watch =     require 'chokidar'
 logger =    require 'mimosa-logger'
 
-LifeCycle = require '../../lifecycle'
-modules = require '../../modules'
+LifeCycle = require '../lifecycle'
+modules = require '../modules'
 
 class Watcher
 
@@ -27,7 +27,7 @@ class Watcher
 
   _startWatcher:  ->
     watcher = watch.watch(@config.watch.sourceDir, {persistent:@persist})
-    watcher.on "error", (error) -> logger.debug "File watching error: #{error}"
+    watcher.on "error", (error) -> logger.warn "File watching error: #{error}"
     watcher.on "change", (f) => @lifecycle.update(f) unless @_ignored(f)
     watcher.on "unlink", (f) => @lifecycle.remove(f) unless @_ignored(f)
     watcher.on "add", (f) =>

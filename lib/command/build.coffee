@@ -4,8 +4,8 @@ path = require 'path'
 jade = require 'jade'
 logger = require 'mimosa-logger'
 
-util = require './util'
-Watcher =  require './util/watcher'
+util = require '../util/util'
+Watcher =  require '../util/watcher'
 
 build = (opts) =>
   if !opts.optimize and opts.removeCombined

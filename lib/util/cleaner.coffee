@@ -1,8 +1,8 @@
-watch =     require 'chokidar'
-logger =    require 'mimosa-logger'
+watch =  require 'chokidar'
+logger = require 'mimosa-logger'
 
-LifeCycle = require '../../lifecycle'
-modules = require '../../modules'
+LifeCycle = require '../lifecycle'
+modules =   require '../modules'
 
 class Cleaner
 

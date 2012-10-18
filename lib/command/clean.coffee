@@ -5,7 +5,7 @@ wrench =  require 'wrench'
 _      =  require 'lodash'
 logger =  require 'mimosa-logger'
 
-util =    require './util'
+util =    require '../util/util'
 
 clean = (opts) ->
   if opts.debug then logger.setDebug()

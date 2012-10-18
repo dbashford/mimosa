@@ -2,7 +2,7 @@ logger =    require 'mimosa-logger'
 
 module.exports = class JSCompiler
 
-  lifecycleRegistration: (config, register) ->
+  registration: (config, register) ->
     register ['add','update','buildFile'], 'compile', @_compile, [@extensions...]
 
   _compile: (config, options, next) =>

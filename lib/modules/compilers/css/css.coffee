@@ -11,7 +11,7 @@ module.exports = class AbstractCSSCompiler
 
   constructor: ->
 
-  lifecycleRegistration: (config, register) ->
+  registration: (config, register) ->
     if config.isClean
       register ['remove'], 'init', @_checkState,         [@extensions...]
       register ['remove'], 'init', @_findBasesToCompile, [@extensions...]

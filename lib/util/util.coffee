@@ -6,10 +6,10 @@ _      = require 'lodash'
 wrench = require 'wrench'
 logger = require 'mimosa-logger'
 
-fileUtils = require '../../util/file'
-defaults = require './defaults'
-compilerCentral = require '../../modules/compilers'
+fileUtils = require './file'
+configurer = require './configurer'
 Cleaner = require './cleaner'
+compilerCentral = require '../modules/compilers'
 
 exports.projectPossibilities = (callback) ->
   compilers = compilerCentral.compilersByType()
@@ -43,7 +43,7 @@ exports.processConfig = (opts, callback) ->
   config.isForceClean = opts?.force
   config.isClean =      opts?.clean
 
-  defaults.applyAndValidateDefaults config, configPath, (err, newConfig) =>
+  configurer.applyAndValidateDefaults config, configPath, (err, newConfig) =>
     if err
       logger.fatal "Unable to start Mimosa, #{err} configuration(s) problems listed above."
       process.exit 1

@@ -3,9 +3,9 @@ fs = require 'fs'
 
 volo = require 'volo'
 wrench = require 'wrench'
-logger =   require 'mimosa-logger'
+logger = require 'mimosa-logger'
 
-util =   require './util'
+util = require '../util/util'
 
 class InstallCommand
 

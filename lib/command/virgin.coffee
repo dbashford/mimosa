@@ -1,7 +1,7 @@
 logger =   require 'mimosa-logger'
 
-util =     require './util'
-Watcher =  require './util/watcher'
+util =     require '../util/util'
+Watcher =  require '../util/watcher'
 
 virgin = (opts) =>
   if opts.debug then logger.setDebug()

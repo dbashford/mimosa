@@ -7,7 +7,7 @@ fileUtils =  require '../../util/file'
 
 baseDirRegex = /([^[\/\\\\]*]*)$/
 
-class CompilerCentral
+class MimosaCompilerModule
 
   all: []
 
@@ -23,9 +23,9 @@ class CompilerCentral
         Compiler.type = "copy"
       @all.push(Compiler)
 
-  lifecycleRegistration: (config, register) ->
+  registration: (config, register) ->
     for compiler in @configuredCompilers.compilers
-      compiler.lifecycleRegistration(config, register) if compiler.lifecycleRegistration?
+      compiler.registration(config, register) if compiler.registration?
 
     register ['buildExtension'], 'complete', @_testDifferentTemplateLibraries, [config.extensions.template...]
 
@@ -95,4 +95,42 @@ class CompilerCentral
   getCompilers: ->
     @configuredCompilers
 
-module.exports = new CompilerCentral()
+  defaults: ->
+    compilers:
+      extensionOverrides: {}
+    template:
+      outputFileName: "templates"
+      helperFiles:["app/template/handlebars-helpers"]
+    copy:
+      extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
+
+  placeholder: ->
+    """
+    \t
+      # compilers:
+        # extensionOverrides:             # A list of extension overrides, format is compilerName:[arrayOfExtensions]
+                                          # see http://mimosajs.com/compilers.html for a list of compiler names
+          # coffee: ["coff"]              # This is an example override, this is not a default, it must take the form of an array
+
+      # template:
+        # outputFileName: "templates"                      # the file all templates are compiled into, is relative to watch.javascriptDir
+                                                           # Optionally outputFileName can be provided a hash of file extension
+                                                           # to file name in the event you are using multiple templating
+                                                           # libraries. The file extension must match one of the default compiler extensions
+                                                           # or one of the extensions configure for a compiler in the
+                                                           # compilers.extensionOverrides section above. Ex: {hogan:"js/hogans", jade:"js/jades"}
+        # helperFiles:["app/template/handlebars-helpers"]  # relevant to handlebars only, the paths from watch.javascriptDir to
+                                                           # the files containing handlebars helper/partial registrations,
+                                                           # does not need to exist
+
+      ###
+      # the extensions of files to simply copy from sourceDir to compiledDir.  vendor js/css, images, etc.
+      ###
+      # copy:
+        # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
+    """
+
+  validate: ->
+
+
+module.exports = new MimosaCompilerModule()
