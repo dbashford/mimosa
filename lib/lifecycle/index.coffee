@@ -41,7 +41,9 @@ module.exports = class LifeCycleManager
     @allExtensions = [e.javascript..., e.css..., e.template..., config.copy.extensions...]
     files = wrench.readdirSyncRecursive(@config.watch.sourceDir).filter (f) =>
       ext = path.extname(f).substring(1)
-      ext.length >= 1 and @allExtensions.indexOf(ext) >= 0
+      isValidExtension = ext.length >= 1 and @allExtensions.indexOf(ext) >= 0
+      isIgnored = @config.watch.ignored.some((str) -> f.indexOf(str) >= 0 )
+      isValidExtension and not isIgnored
 
     @initialFileCount = files.length
     @initialFiles = files

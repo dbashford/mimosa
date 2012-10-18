@@ -36,6 +36,7 @@ module.exports = class RequireRegister
     requirejs.config = require
     # pretend this isn't node
     exports = undefined
+    window = {}
     @_requirejs(requirejs)
     try
       eval(source)
@@ -200,7 +201,6 @@ module.exports = class RequireRegister
         @_addDepsToTree(f, aDep, dep)
       else
         logger.debug "[[ #{aDep} ]] may introduce a circular dependency"
-
 
   _handleConfigPaths: (fileName, maps, paths) ->
     if @startupComplete
