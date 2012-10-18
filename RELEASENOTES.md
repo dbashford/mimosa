@@ -1,4 +1,7 @@
-# 0.2.1beta - October ?? 2012
+# 0.2.1beta - October 18 2012
+
+### Major Changes
+* #75, addressed LiveScript problem
 
 ### Minor Changes
 * Moved server code into buildDone lifecycle
