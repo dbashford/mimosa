@@ -1,4 +1,4 @@
-liveScript = require 'livescript'
+liveScript = require 'LiveScript'
 
 JSCompiler = require "./javascript"
 
