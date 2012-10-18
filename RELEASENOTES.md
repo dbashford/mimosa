@@ -1,3 +1,8 @@
+# 0.2.2beta - October 18 2012
+
+### Major Change
+* #76, fixes fairly critical issue involving excluded files.
+
 # 0.2.1beta - October 18 2012
 
 ### Major Changes
