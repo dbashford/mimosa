@@ -9,8 +9,6 @@ modules = require('../modules').all
 
 class MimosaConfigurer
 
-  fatalErrors: 0
-
   # watch defaults, other defaults reside in modules
   watchDefaults:
     watch:
@@ -23,24 +21,19 @@ class MimosaConfigurer
   applyAndValidateDefaults: (config, configPath, callback) =>
     @root = path.dirname(configPath)
     config = @_applyDefaults(config)
-    @_validateSettings(config)
-    err = if @fatalErrors is 0
+    errors = @_validateSettings(config)
+    err = if errors.length is 0
       logger.debug "No mimosa config errors"
       null
     else
-      @fatalErrors
+      errors
     callback(err, config)
 
   _moduleDefaults: ->
     defs = {}
     for mod in modules when mod.defaults?
-      modDefs = mod.defaults()
-      console.log modDefs
-      _.extend(defs, modDefs)
-
+      _.extend(defs, mod.defaults())
     _.extend(defs, @watchDefaults)
-
-    console.log defs
     defs
 
   _extend: (obj, props) ->
@@ -81,32 +74,34 @@ class MimosaConfigurer
     config
 
   _validateSettings: (config) ->
-    @_testPathExists(config.watch.sourceDir, "watch.sourceDir", true)
+    errors = []
+    for mod in modules when mod.validate?
+      moduleErrors = mod.validate(config)
+      errors.push moduleErrors... if moduleErrors
+
+    @_testPathExists(config.watch.sourceDir, "watch.sourceDir", true, errors)
     unless config.isVirgin
       if !fs.existsSync(config.watch.compiledDir) and !config.isForceClean
         logger.info "Did not find compiled directory [[ #{config.watch.compiledDir} ]], so making it for you"
         wrench.mkdirSyncRecursive config.watch.compiledDir, 0o0777
 
-      @_testPathExists(config.server.path, "server.path", false) if config.isServer and not config.server.useDefaultServer
-
-    # TODO, compilers: overrides paths
+      @_testPathExists(config.server.path, "server.path", false, errors) if config.isServer and not config.server.useDefaultServer
 
     jsDir = path.join(config.watch.sourceDir, config.watch.javascriptDir)
-    @_testPathExists(jsDir,"watch.javascriptDir", true) unless config.isVirgin
+    @_testPathExists(jsDir,"watch.javascriptDir", true, errors) unless config.isVirgin
 
-  _testPathExists: (filePath, name, isDirectory) ->
+    errors
+
+  _testPathExists: (filePath, name, isDirectory, errors) ->
     unless fs.existsSync filePath
-      logger.fatal "#{name} (#{filePath}) cannot be found"
-      return @fatalErrors++
+      return errors.push "#{name} (#{filePath}) cannot be found"
 
     stats = fs.statSync filePath
     if (isDirectory and stats.isFile())
-      logger.fatal "#{name} (#{filePath}) cannot be found, expecting a directory and is a file"
-      return @fatalErrors++
+      return errors.push "#{name} (#{filePath}) cannot be found, expecting a directory and is a file"
 
     if (!isDirectory and stats.isDirectory())
-      logger.fatal "#{name} (#{filePath}) cannot be found, expecting a file and is a directory"
-      return @fatalErrors++
+      return errors.push "#{name} (#{filePath}) cannot be found, expecting a file and is a directory"
 
   _configTop: ->
     """
