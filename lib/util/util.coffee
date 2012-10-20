@@ -45,9 +45,10 @@ exports.processConfig = (opts, callback) ->
 
   configurer.applyAndValidateDefaults config, configPath, (err, newConfig) =>
     if err
-      logger.error "Unable to start Mimosa for following reasons:\n#{err.join('\n')} "
+      logger.error "Unable to start Mimosa for the following reason(s):\n * #{err.join('\n * ')} "
       process.exit 1
     else
+      logger.debug "Full mimosa config:\n#{JSON.stringify(newConfig, null, 2)}"
       logger.setConfig(newConfig)
       callback(newConfig)
 

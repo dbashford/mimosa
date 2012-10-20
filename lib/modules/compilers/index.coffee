@@ -130,7 +130,61 @@ class MimosaCompilerModule
         # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
     """
 
-  validate: ->
+  validate: (config) ->
+    errors = []
+    if config.compilers?
+      if typeof config.compilers is "object" and not Array.isArray(config.compilers)
+        if config.compilers.extensionOverrides?
+          if typeof config.compilers.extensionOverrides is "object" and not Array.isArray(config.compilers.extensionOverrides)
+            for configComp in Object.keys(config.compilers.extensionOverrides)
+              found = false
+              for comp in @all
+                if configComp is comp.base
+                  found = true
+                  break
+              unless found
+                errors.push "compilers.extensionOverrides, [[ #{configComp} ]] is invalid compiler."
 
+              if Array.isArray(config.compilers.extensionOverrides[configComp])
+                for ext in config.compilers.extensionOverrides[configComp]
+                  unless typeof ext is "string"
+                    errors.push "compilers.extensionOverrides.#{configComp} must be an array of strings."
+              else
+                errors.push "compilers.extensionOverrides must be an array."
+          else
+            errors.push "compilers.extensionOverrides must be an object."
+      else
+        errors.push "compilers config must be an object."
+
+    if config.template?
+      if typeof config.template is "object" and not Array.isArray(config.template)
+        if config.template.outputFileName?
+          fName = config.template.outputFileName
+          unless ((typeof fName is "object") or (typeof fName is "string")) and not Array.isArray(fName)
+            errors.push "template.outputFileName must be an object or a string."
+        if config.template.helperFiles?
+          if Array.isArray(config.template.helperFiles)
+            for hFile in config.template.helperFiles
+              unless typeof hFile is 'string'
+                errors.push "template.helperFiles config must be an array of strings."
+                break
+          else
+            errors.push "template.helperFiles config must be an array."
+      else
+        errors.push "template config must be an object."
+
+    if config.copy?
+      if typeof config.copy is "object" and not Array.isArray(config.copy)
+        if Array.isArray(config.copy.extensions)
+          for hFile in config.copy.extensions
+            unless typeof hFile is 'string'
+              errors.push "copy.extensions must be an array of strings."
+              break
+        else
+          errors.push "copy.extensions must be an array."
+      else
+        errors.push "copy config must be an object."
+
+    errors
 
 module.exports = new MimosaCompilerModule()

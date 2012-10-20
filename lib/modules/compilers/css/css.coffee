@@ -86,7 +86,7 @@ module.exports = class AbstractCSSCompiler
       for base in bases
         basePath = options.destinationFile(base)
         if fs.existsSync basePath
-          includeTime = fs.statSync(path.join config.root, include).mtime
+          includeTime = fs.statSync(include).mtime
           baseTime = fs.statSync(basePath).mtime
           if includeTime > baseTime
             logger.debug "Base [[ #{base} ]] needs compiling because [[ #{include} ]] has been changed recently"
@@ -99,9 +99,8 @@ module.exports = class AbstractCSSCompiler
     for base in @baseFiles
       baseCompiledPath = options.destinationFile(base)
       if fs.existsSync baseCompiledPath
-        baseSrcPath = path.join config.root, base
-        if fs.statSync(baseSrcPath).mtime > fs.statSync(baseCompiledPath).mtime
-          logger.debug "Base file [[ #{baseSrcPath} ]] needs to be compiled, it has been changed recently"
+        if fs.statSync(base).mtime > fs.statSync(baseCompiledPath).mtime
+          logger.debug "Base file [[ #{base} ]] needs to be compiled, it has been changed recently"
           baseFilesToCompileNow.push(base)
       else
         logger.debug "Base file [[ #{base} ]] hasn't been compiled yet, needs compiling"

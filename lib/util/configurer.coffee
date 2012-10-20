@@ -19,7 +19,7 @@ class MimosaConfigurer
       throttle: 0
 
   applyAndValidateDefaults: (config, configPath, callback) =>
-    @root = path.dirname(configPath)
+    config.root = path.dirname(configPath)
     config = @_applyDefaults(config)
     errors = @_validateSettings(config)
     err = if errors.length is 0
@@ -27,6 +27,7 @@ class MimosaConfigurer
       null
     else
       errors
+
     callback(err, config)
 
   _moduleDefaults: ->
@@ -39,7 +40,7 @@ class MimosaConfigurer
   _extend: (obj, props) ->
     Object.keys(props).forEach (k) =>
       val = props[k]
-      if val? and _.isObject(val)
+      if val? and typeof val is 'object' and not Array.isArray(val)
         @_extend obj[k], val
       else
         obj[k] = val
@@ -49,27 +50,9 @@ class MimosaConfigurer
     config = @_extend @_moduleDefaults(), config
 
     config.extensions = {javascript: ['js'], css: ['css'], template: [], copy: []}
-    config.watch.sourceDir =             path.join @root, config.watch.sourceDir
-    config.watch.compiledDir =           path.join @root, config.watch.compiledDir
+    config.watch.sourceDir =             path.join config.root, config.watch.sourceDir
+    config.watch.compiledDir =           path.join config.root, config.watch.compiledDir
     config.watch.compiledJavascriptDir = path.join config.watch.compiledDir, config.watch.javascriptDir
-
-    # TODO, validate extensionOverride compiler names
-
-    config.server.path = path.join @root, config.server.path
-    if config.server.views.compileWith is "html"
-      config.server.views.compileWith = "ejs"
-      config.server.views.html = true
-    config.server.views.path =         path.join @root, config.server.views.path
-
-    # need to set some requirejs stuf
-    if config.isOptimize and config.isMinify
-      logger.info "Optimize and minify both selected, setting r.js optimize property to 'none'"
-      config.require.optimize.overrides.optimize = "none"
-
-    # helpful shortcuts
-    config.requireRegister = config.require.verify.enabled or config.isOptimize
-
-    logger.debug "Full mimosa config:\n#{JSON.stringify(config, null, 2)}"
 
     config
 
@@ -97,10 +80,10 @@ class MimosaConfigurer
       return errors.push "#{name} (#{filePath}) cannot be found"
 
     stats = fs.statSync filePath
-    if (isDirectory and stats.isFile())
+    if isDirectory and stats.isFile()
       return errors.push "#{name} (#{filePath}) cannot be found, expecting a directory and is a file"
 
-    if (!isDirectory and stats.isDirectory())
+    if not isDirectory and stats.isDirectory()
       return errors.push "#{name} (#{filePath}) cannot be found, expecting a file and is a directory"
 
   _configTop: ->
