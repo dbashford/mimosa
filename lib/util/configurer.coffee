@@ -105,7 +105,7 @@ class MimosaConfigurer
         # compiledDir: "public"           # directory location of compiled web assets
         # javascriptDir: "javascripts"    # Location of precompiled javascript (coffeescript for instance), and therefore
                                           # also the location of the compiled javascript.
-        # exclude: ["[/\\\\]\\.\\w+$"]    # regexes matching the files to be entirely ignored by mimosa, the default matches
+        # exclude: ["[/\\\\\\\\]\\\\.\\\\w+$"]    # regexes matching the files to be entirely ignored by mimosa, the default matches
                                           # files that start with a period.  Be sure to double escape.
         # throttle: 0                     # number of file adds the watcher handles before taking a 100 millisecond pause to let
                                           # those files finish their processing. This helps avoid EMFILE issues for projects
