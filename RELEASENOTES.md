@@ -2,14 +2,19 @@
 
 Another step towards pluggability.  Much code yanked out of mimosa core and placed into separate npm modules (all prefixed with `mimosa-`, and easily searchable in npm by searching for `mmodule`, for 'mimosa module').  The work to do that paves the way for external modules/plugins which will be the subject of beta4.
 
-### Major Change
+### Major Changes
 * linting, logging, serving, minifying and require/amd support have been pulled out into separate modules/plugins that are now their own npm modules. These are included as dependencies by default with mimosa. But now they can be versioned on their own, tested on their own, and so on. Each of those modules defines its own defaults, its own config placeholder (the commented out version of the config, with description, etc), and its own validation. Validation has been beefed up significantly as has feedback regarding an invalid config.
 * The default config is now built on the fly based on the installed modules.  For now it'll resemble if not match what it would have been previously, but as new modules or external plugins are added, this'll allow the config to adapt.
 * `watch.ignored` is now called `watch.exclude` and now takes regexes. The default has changed from `[".sass_cache"]` to `["[/\\\\]\\.\\w+$"]`.  The new default omits any files starting with a slash + a dot, like `.gitignore` or `.DS_Store`.
 
+### Minor Changes
+* Mimosa takes some of your command line flags and places them into the mimosa-config.  Two of those changed names.  `min`, a boolean that indicates whether or not the `--minify` flag was ticked, is now named `isMinify`.  `optimize`, a boolean that indicates whether or not the `--optimize` flag was ticked, is now named `isOptimize`.
+
 ### You'll need to...
 * If you were overriding the `watch.ignored` property, you'll need to change it to `watch.exclude` and then address the value based on the new default.  If all you were doing with `watch.ignored` was excluding dotFiles, like `.gitignore`, then you can simply comment out the config setting as that is the new default.  If you were ignoring other things, take care to address the fact that the property now takes an array of regex strings.
 * If you were not overriding the `watch.ignored` property, you will still probably want to change the placeholder text to keep from future misunderstandings should you need to exclude files.  Run `mimosa config` someplace outside your project and copy paste the updated, commented out property placeholder.
+* The skeleton app delivered to you might have references to `config.optimize`
+ in it that need to be changed to `config.isOptimize`.  Likewise, if for some reason you were taking advantage of `config.min`, you'll need to switch it to `config.isMinify`
 
 # 0.2.2beta - October 18 2012
 
