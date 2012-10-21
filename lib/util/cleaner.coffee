@@ -1,7 +1,7 @@
 watch =  require 'chokidar'
 logger = require 'mimosa-logger'
 
-LifeCycle = require '../lifecycle'
+LifeCycle = require './lifecycle'
 modules =   require '../modules'
 
 class Cleaner
@@ -15,8 +15,9 @@ class Cleaner
     watcher.on "add", (f) => @lifecycle.remove(f) unless @_ignored(f)
 
   _ignored: (fileName) ->
-    if @config.watch.ignored.some((str) -> fileName.indexOf(str) >= 0 )
-      logger.debug "Ignoring file, matches #{@config.watch.ignored}"
+    if @config.watch.exclude and fileName.match @config.watch.exclude
+      console.log "IGNORING #{fileName}"
+      logger.debug "Ignoring file, matches exclude"
       true
     else
       false

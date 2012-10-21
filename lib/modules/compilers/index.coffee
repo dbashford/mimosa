@@ -110,7 +110,7 @@ class MimosaCompilerModule
       # compilers:
         # extensionOverrides:             # A list of extension overrides, format is compilerName:[arrayOfExtensions]
                                           # see http://mimosajs.com/compilers.html for a list of compiler names
-          # coffee: ["coff"]              # This is an example override, this is not a default, it must take the form of an array
+          # coffee: ["coff"]              # This is an example override, this is not a default, must be array of strings
 
       # template:
         # outputFileName: "templates"                      # the file all templates are compiled into, is relative to watch.javascriptDir

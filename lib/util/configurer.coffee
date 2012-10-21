@@ -15,7 +15,7 @@ class MimosaConfigurer
       sourceDir: "assets"
       compiledDir: "public"
       javascriptDir: "javascripts"
-      ignored: [".sass-cache"]
+      exclude: ["[/\\\\]\\.\\w+$"]
       throttle: 0
 
   applyAndValidateDefaults: (config, configPath, callback) =>
@@ -53,6 +53,9 @@ class MimosaConfigurer
     config.watch.sourceDir =             path.join config.root, config.watch.sourceDir
     config.watch.compiledDir =           path.join config.root, config.watch.compiledDir
     config.watch.compiledJavascriptDir = path.join config.watch.compiledDir, config.watch.javascriptDir
+
+    if config.watch.exclude?.length > 0
+      config.watch.exclude = new RegExp config.watch.exclude.join("|"), "i"
 
     config
 
@@ -102,8 +105,8 @@ class MimosaConfigurer
         # compiledDir: "public"           # directory location of compiled web assets
         # javascriptDir: "javascripts"    # Location of precompiled javascript (coffeescript for instance), and therefore
                                           # also the location of the compiled javascript.
-        # ignored: [".sass-cache"]        # files to not watch on file system, any file containing one of the strings listed here
-                                          # will be skipped
+        # exclude: ["[/\\\\]\\.\\w+$"]    # regexes matching the files to be entirely ignored by mimosa, the default matches
+                                          # files that start with a period.  Be sure to double escape.
         # throttle: 0                     # number of file adds the watcher handles before taking a 100 millisecond pause to let
                                           # those files finish their processing. This helps avoid EMFILE issues for projects
                                           # containing large numbers of files that all get copied at once. If the throttle is
