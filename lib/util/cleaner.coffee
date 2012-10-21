@@ -16,8 +16,7 @@ class Cleaner
 
   _ignored: (fileName) ->
     if @config.watch.exclude and fileName.match @config.watch.exclude
-      console.log "IGNORING #{fileName}"
-      logger.debug "Ignoring file, matches exclude"
+      logger.debug "Ignoring file [[ #{fileName} ]], matches exclude"
       true
     else
       false

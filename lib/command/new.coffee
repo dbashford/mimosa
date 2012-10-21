@@ -9,6 +9,7 @@ logger = require 'mimosa-logger'
 fileUtils = require '../util/file'
 util =      require '../util/util'
 deps =      require('../../package.json').dependencies
+configurer = require '../util/configurer'
 
 class NewCommand
 
@@ -119,6 +120,8 @@ class NewCommand
     @_create(name, chosen)
 
   _create: (name, chosen) =>
+    @config = configurer.buildConfigText()
+
     skeletonPath = path.join __dirname, '..', 'skeleton'
 
     # if name provided, simply copy directory into directory by that name
@@ -186,13 +189,8 @@ class NewCommand
       replacements["# compileWith: 'jade'"] = "compileWith: '#{comps.views.name}'"
       replacements["# extension: 'jade'"] = "extension: '#{comps.views.extension}'"
 
-    configPath = path.join @currPath, "mimosa-config.coffee"
-    config = fs.readFileSync configPath, "ascii"
-
     for thiz, that of replacements
-      config = config.replace thiz, that
-
-    fs.writeFileSync configPath, config
+      @config = @config.replace thiz, that
 
   _copyCompilerSpecificExampleFiles: (comps) ->
     safePaths = _.flatten([comps.javascript.defaultExtensions, comps.css.defaultExtensions, comps.template.defaultExtensions]).map (path) ->
@@ -258,11 +256,9 @@ class NewCommand
     wrench.rmdirSyncRecursive path.join(@currPath, "servers")
 
     logger.debug "Altering configuration to not use server"
-    configPath = path.join @currPath, "mimosa-config.coffee"
-    fs.readFile configPath, "ascii", (err, data) =>
-      data = data.replace "# server:", "server:"
-      data = data.replace "# useDefaultServer: false", "useDefaultServer: true"
-      fs.writeFile configPath, data, @_done
+    @config = @config.replace "# server:", "server:"
+    @config = @config.replace "# useDefaultServer: false", "useDefaultServer: true"
+    @_done()
 
   _usingOwnServer: (name, chosen) ->
     logger.debug "Making package.json edits"
@@ -295,9 +291,11 @@ class NewCommand
       process.chdir currentDir
       @_done()
 
-  _done: ->
-    logger.success "New project creation complete!  Execute 'mimosa watch --server' from inside your project to monitor the file system. Then start coding!"
-    process.stdin.destroy()
+  _done: =>
+    configPath = path.join @currPath, "mimosa-config.coffee"
+    fs.writeFile configPath, @config, (err) ->
+      logger.success "New project creation complete!  Execute 'mimosa watch --server' from inside your project to monitor the file system. Then start coding!"
+      process.stdin.destroy()
 
   _printHelp: ->
     logger.green('  The new command will take you through a series of questions regarding what')
