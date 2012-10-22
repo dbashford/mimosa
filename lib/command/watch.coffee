@@ -1,6 +1,7 @@
-util =     require './util'
-logger =   require '../util/logger'
-Watcher =  require './util/watcher'
+logger =  require 'mimosa-logger'
+
+util =    require '../util/util'
+Watcher = require '../util/watcher'
 
 watch = (opts) =>
   if opts.debug then logger.setDebug()

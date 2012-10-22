@@ -3,9 +3,9 @@ path = require 'path'
 {spawn, exec} = require 'child_process'
 
 _ = require 'lodash'
+logger = require 'mimosa-logger'
 
 AbstractCssCompiler = require './css'
-logger = require '../../../util/logger'
 
 module.exports = class SassCompiler extends AbstractCssCompiler
 

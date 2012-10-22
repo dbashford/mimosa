@@ -2,8 +2,7 @@ path =   require 'path'
 
 wrench = require 'wrench'
 _ =      require 'lodash'
-
-logger = require '../util/logger'
+logger = require 'mimosa-logger'
 
 compilers = require '../modules/compilers'
 
@@ -31,7 +30,8 @@ module.exports = class LifeCycleManager
       for step in steps
         @registration[type][step] = {}
 
-    module.lifecycleRegistration(@config, @register) for module in modules
+    for module in modules
+      module.registration(@config, @register) if module.registration?
 
     @cleanUpRegistration()
 
@@ -42,7 +42,7 @@ module.exports = class LifeCycleManager
     files = wrench.readdirSyncRecursive(@config.watch.sourceDir).filter (f) =>
       ext = path.extname(f).substring(1)
       isValidExtension = ext.length >= 1 and @allExtensions.indexOf(ext) >= 0
-      isIgnored = @config.watch.ignored.some((str) -> f.indexOf(str) >= 0 )
+      isIgnored = if @config.watch.exclude? then f.match @config.watch.exclude else false
       isValidExtension and not isIgnored
 
     @initialFileCount = files.length

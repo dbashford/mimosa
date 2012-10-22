@@ -1,8 +1,8 @@
-logger =    require '../../../util/logger'
+logger =    require 'mimosa-logger'
 
 module.exports = class JSCompiler
 
-  lifecycleRegistration: (config, register) ->
+  registration: (config, register) ->
     register ['add','update','buildFile'], 'compile', @_compile, [@extensions...]
 
   _compile: (config, options, next) =>
@@ -13,7 +13,7 @@ module.exports = class JSCompiler
         if err
           logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}"
         else
-          if config.virgin
+          if config.isVirgin
             logger.success "Compiled/copied [[ #{file.outputFileName} ]]", options
           file.outputFileText = output
           newFiles.push file

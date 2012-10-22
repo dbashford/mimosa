@@ -1,9 +1,10 @@
-logger = require '../../util/logger'
+logger = require 'mimosa-logger'
+
 fileUtils = require '../../util/file'
 
 class MimosaFileBeforeReadModule
 
-  lifecycleRegistration: (config, register) ->
+  registration: (config, register) ->
     e = config.extensions
     cExts = config.copy.extensions
     register ['buildFile'],    'beforeRead', @_fileNeedsCompilingStartup, [e.javascript..., cExts...]
@@ -25,7 +26,7 @@ class MimosaFileBeforeReadModule
 
     options.files.forEach (file) =>
       # if using require verification, forcing compile to assemble require information
-      if options.isJavascript and (config.require.verify.enabled or config.optimize)
+      if options.isJavascript and config.requireRegister
         newFiles.push file
         done()
       else

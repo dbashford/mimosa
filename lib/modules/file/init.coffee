@@ -1,12 +1,13 @@
 path = require 'path'
 fs =   require 'fs'
 
-logger = require '../../util/logger'
+logger = require 'mimosa-logger'
+
 fileUtils = require '../../util/file'
 
 class MimosaFileInitModule
 
-  lifecycleRegistration: (config, register) ->
+  registration: (config, register) ->
     e = config.extensions
     cExts = config.copy.extensions
     register ['buildFile'],                              'init', @_initSingleAsset, [e.javascript..., cExts...]

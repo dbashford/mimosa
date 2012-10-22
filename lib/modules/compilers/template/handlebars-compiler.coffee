@@ -3,9 +3,9 @@ path =       require 'path'
 
 handlebars = require 'handlebars'
 _ =          require 'lodash'
+logger =     require 'mimosa-logger'
 
 AbstractTemplateCompiler = require './template'
-logger = require '../../../util/logger'
 
 module.exports = class HandlebarsCompiler extends AbstractTemplateCompiler
 

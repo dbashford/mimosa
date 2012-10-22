@@ -1,7 +1,7 @@
 program =  require 'commander'
+logger =   require 'mimosa-logger'
 
 version =  require('../package.json').version
-logger =   require './util/logger'
 
 class Mimosa
 

@@ -1,13 +1,13 @@
 path = require 'path'
 
 _ = require 'lodash'
+logger = require 'mimosa-logger'
 
 fileUtils =  require '../../util/file'
-logger = require '../../util/logger'
 
 baseDirRegex = /([^[\/\\\\]*]*)$/
 
-class CompilerCentral
+class MimosaCompilerModule
 
   all: []
 
@@ -23,9 +23,9 @@ class CompilerCentral
         Compiler.type = "copy"
       @all.push(Compiler)
 
-  lifecycleRegistration: (config, register) ->
+  registration: (config, register) ->
     for compiler in @configuredCompilers.compilers
-      compiler.lifecycleRegistration(config, register) if compiler.lifecycleRegistration?
+      compiler.registration(config, register) if compiler.registration?
 
     register ['buildExtension'], 'complete', @_testDifferentTemplateLibraries, [config.extensions.template...]
 
@@ -95,4 +95,96 @@ class CompilerCentral
   getCompilers: ->
     @configuredCompilers
 
-module.exports = new CompilerCentral()
+  defaults: ->
+    compilers:
+      extensionOverrides: {}
+    template:
+      outputFileName: "templates"
+      helperFiles:["app/template/handlebars-helpers"]
+    copy:
+      extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
+
+  placeholder: ->
+    """
+    \t
+      # compilers:
+        # extensionOverrides:             # A list of extension overrides, format is compilerName:[arrayOfExtensions]
+                                          # see http://mimosajs.com/compilers.html for a list of compiler names
+          # coffee: ["coff"]              # This is an example override, this is not a default, must be array of strings
+
+      # template:
+        # outputFileName: "templates"                      # the file all templates are compiled into, is relative to watch.javascriptDir
+                                                           # Optionally outputFileName can be provided a hash of file extension
+                                                           # to file name in the event you are using multiple templating
+                                                           # libraries. The file extension must match one of the default compiler extensions
+                                                           # or one of the extensions configure for a compiler in the
+                                                           # compilers.extensionOverrides section above. Ex: {hogan:"js/hogans", jade:"js/jades"}
+        # helperFiles:["app/template/handlebars-helpers"]  # relevant to handlebars only, the paths from watch.javascriptDir to
+                                                           # the files containing handlebars helper/partial registrations,
+                                                           # does not need to exist
+
+      ###
+      # the extensions of files to simply copy from sourceDir to compiledDir.  vendor js/css, images, etc.
+      ###
+      # copy:
+        # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
+    """
+
+  validate: (config) ->
+    errors = []
+    if config.compilers?
+      if typeof config.compilers is "object" and not Array.isArray(config.compilers)
+        if config.compilers.extensionOverrides?
+          if typeof config.compilers.extensionOverrides is "object" and not Array.isArray(config.compilers.extensionOverrides)
+            for configComp in Object.keys(config.compilers.extensionOverrides)
+              found = false
+              for comp in @all
+                if configComp is comp.base
+                  found = true
+                  break
+              unless found
+                errors.push "compilers.extensionOverrides, [[ #{configComp} ]] is invalid compiler."
+
+              if Array.isArray(config.compilers.extensionOverrides[configComp])
+                for ext in config.compilers.extensionOverrides[configComp]
+                  unless typeof ext is "string"
+                    errors.push "compilers.extensionOverrides.#{configComp} must be an array of strings."
+              else
+                errors.push "compilers.extensionOverrides must be an array."
+          else
+            errors.push "compilers.extensionOverrides must be an object."
+      else
+        errors.push "compilers config must be an object."
+
+    if config.template?
+      if typeof config.template is "object" and not Array.isArray(config.template)
+        if config.template.outputFileName?
+          fName = config.template.outputFileName
+          unless ((typeof fName is "object") or (typeof fName is "string")) and not Array.isArray(fName)
+            errors.push "template.outputFileName must be an object or a string."
+        if config.template.helperFiles?
+          if Array.isArray(config.template.helperFiles)
+            for hFile in config.template.helperFiles
+              unless typeof hFile is 'string'
+                errors.push "template.helperFiles config must be an array of strings."
+                break
+          else
+            errors.push "template.helperFiles config must be an array."
+      else
+        errors.push "template config must be an object."
+
+    if config.copy?
+      if typeof config.copy is "object" and not Array.isArray(config.copy)
+        if Array.isArray(config.copy.extensions)
+          for hFile in config.copy.extensions
+            unless typeof hFile is 'string'
+              errors.push "copy.extensions must be an array of strings."
+              break
+        else
+          errors.push "copy.extensions must be an array."
+      else
+        errors.push "copy config must be an object."
+
+    errors
+
+module.exports = new MimosaCompilerModule()

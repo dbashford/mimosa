@@ -1,10 +1,10 @@
 fs =   require 'fs'
 
-logger = require '../../util/logger'
+logger = require 'mimosa-logger'
 
 class MimosaFileReadModule
 
-  lifecycleRegistration: (config, register) =>
+  registration: (config, register) =>
     e = config.extensions
     cExts = config.copy.extensions
     register ['add','update','buildFile'],               'read', @_read, [e.javascript..., cExts...]

@@ -3,10 +3,9 @@ path = require 'path'
 
 less = require 'less'
 _ = require 'lodash'
+logger = require 'mimosa-logger'
 
 AbstractCssCompiler = require './css'
-logger = require '../../../util/logger'
-
 
 module.exports = class LessCompiler extends AbstractCssCompiler
 

@@ -2,7 +2,7 @@ module.exports = class CopyCompiler
 
   constructor: (config, @extensions) ->
 
-  lifecycleRegistration: (config, register) ->
+  registration: (config, register) ->
     register ['add','update','buildFile'], 'compile', @compile, [@extensions...]
 
   compile: (config, options, next) ->

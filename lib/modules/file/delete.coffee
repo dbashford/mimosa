@@ -1,10 +1,10 @@
 fs = require 'fs'
 
-logger =    require '../../util/logger'
+logger = require 'mimosa-logger'
 
 class MimosaFileDeleteModule
 
-  lifecycleRegistration: (config, register) =>
+  registration: (config, register) =>
     e = config.extensions
     cExts = config.copy.extensions
     register ['remove'], 'delete', @_delete, [e.javascript..., e.css..., cExts...]

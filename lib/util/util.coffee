@@ -4,12 +4,12 @@ fs     = require 'fs'
 color  = require('ansi-color').set
 _      = require 'lodash'
 wrench = require 'wrench'
+logger = require 'mimosa-logger'
 
-logger = require '../../util/logger'
-fileUtils = require '../../util/file'
-defaults = require './defaults'
-compilerCentral = require '../../modules/compilers'
+fileUtils = require './file'
+configurer = require './configurer'
 Cleaner = require './cleaner'
+compilerCentral = require '../modules/compilers'
 
 exports.projectPossibilities = (callback) ->
   compilers = compilerCentral.compilersByType()
@@ -36,18 +36,19 @@ exports.processConfig = (opts, callback) ->
 
   logger.debug "Your mimosa config:\n#{JSON.stringify(config, null, 2)}"
 
-  config.virgin =       opts?.virgin
+  config.isVirgin =     opts?.virgin
   config.isServer =     opts?.server
-  config.optimize =     opts?.optimize
-  config.min =          opts?.minify
+  config.isOptimize =   opts?.optimize
+  config.isMinify =     opts?.minify
   config.isForceClean = opts?.force
   config.isClean =      opts?.clean
 
-  defaults.applyAndValidateDefaults config, configPath, (err, newConfig) =>
+  configurer.applyAndValidateDefaults config, configPath, (err, newConfig) =>
     if err
-      logger.fatal "Unable to start Mimosa, #{err} configuration(s) problems listed above."
+      logger.error "Unable to start Mimosa for the following reason(s):\n * #{err.join('\n * ')} "
       process.exit 1
     else
+      logger.debug "Full mimosa config:\n#{JSON.stringify(newConfig, null, 2)}"
       logger.setConfig(newConfig)
       callback(newConfig)
 

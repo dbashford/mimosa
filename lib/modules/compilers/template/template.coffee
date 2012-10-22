@@ -3,10 +3,10 @@ fs =   require 'fs'
 
 wrench = require 'wrench'
 _ =      require 'lodash'
+logger =           require 'mimosa-logger'
+requireRegister =  require 'mimosa-require'
 
-requireRegister =  require '../../require/register'
 fileUtils =        require '../../../util/file'
-logger =           require '../../../util/logger'
 
 module.exports = class AbstractTemplateCompiler
 
@@ -16,7 +16,7 @@ module.exports = class AbstractTemplateCompiler
       jsDir = path.join config.watch.compiledDir, config.watch.javascriptDir
       @clientPath = path.join jsDir, 'vendor', "#{@clientLibrary}.js"
 
-  lifecycleRegistration: (config, register) ->
+  registration: (config, register) ->
     if config.isClean
       return register ['remove'], 'init', @_removeFiles, [@extensions...]
 
@@ -28,7 +28,7 @@ module.exports = class AbstractTemplateCompiler
     register ['add','update'],          'beforeRead', @_templateNeedsCompiling, [@extensions...]
     register ['add','update','remove'], 'compile',    @_compile,                [@extensions...]
 
-    unless config.virgin
+    unless config.isVirgin
       register ['buildExtension'],        'afterCompile', @_merge, [@extensions[0]]
       register ['add','update','remove'], 'afterCompile', @_merge, [@extensions...]
 
@@ -74,7 +74,7 @@ module.exports = class AbstractTemplateCompiler
 
         if ++i is options.files.length
           # end of the road for virgin, log it
-          if config.virgin and options.files.length is newFiles.length
+          if config.isVirgin and options.files.length is newFiles.length
             logger.success "All templates compiled successfully.", options
 
           options.files = newFiles

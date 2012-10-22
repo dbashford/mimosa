@@ -2,10 +2,10 @@ fs = require 'fs'
 path = require 'path'
 
 jade = require 'jade'
+logger = require 'mimosa-logger'
 
-util = require './util'
-logger = require '../util/logger'
-Watcher =  require './util/watcher'
+util = require '../util/util'
+Watcher =  require '../util/watcher'
 
 build = (opts) =>
   if !opts.optimize and opts.removeCombined
@@ -31,7 +31,7 @@ _writeJade = (config) ->
     opts =
       title:     "Mimosa"
       reload:    false
-      optimize:  config.optimize
+      optimize:  config.isOptimize
       cachebust: ''
 
     logger.debug("Compiling jade file at [[ #{viewsPath} ]]")

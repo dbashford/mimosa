@@ -4,9 +4,9 @@ path = require 'path'
 nib = require 'nib'
 stylus = require 'stylus'
 _ = require 'lodash'
+logger = require 'mimosa-logger'
 
 AbstractCssCompiler = require './css'
-logger = require '../../../util/logger'
 
 module.exports = class StylusCompiler extends AbstractCssCompiler
 
@@ -34,7 +34,7 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
       .include(path.dirname(fileName))
       .include(config.watch.sourceDir)
       .set('compress', false)
-      .set('firebug', config.optimize? and !config.optimize)
+      .set('firebug', config.isOptimize? and !config.isOptimize)
       .set('filename', fileName)
       .use(nib())
       .import('nib')

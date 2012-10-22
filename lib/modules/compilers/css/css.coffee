@@ -3,15 +3,15 @@ path =   require 'path'
 
 wrench = require 'wrench'
 _ =      require 'lodash'
+logger =    require 'mimosa-logger'
 
-logger =    require '../../../util/logger'
 fileUtils = require '../../../util/file'
 
 module.exports = class AbstractCSSCompiler
 
   constructor: ->
 
-  lifecycleRegistration: (config, register) ->
+  registration: (config, register) ->
     if config.isClean
       register ['remove'], 'init', @_checkState,         [@extensions...]
       register ['remove'], 'init', @_findBasesToCompile, [@extensions...]
@@ -69,7 +69,7 @@ module.exports = class AbstractCSSCompiler
         if err
           logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}"
         else
-          if config.virgin
+          if config.isVirgin
             logger.success "Compiled/copied [[ #{file.outputFileName} ]]", options
           file.outputFileText = result
           newFiles.push file
@@ -86,7 +86,7 @@ module.exports = class AbstractCSSCompiler
       for base in bases
         basePath = options.destinationFile(base)
         if fs.existsSync basePath
-          includeTime = fs.statSync(path.join config.root, include).mtime
+          includeTime = fs.statSync(include).mtime
           baseTime = fs.statSync(basePath).mtime
           if includeTime > baseTime
             logger.debug "Base [[ #{base} ]] needs compiling because [[ #{include} ]] has been changed recently"
@@ -99,9 +99,8 @@ module.exports = class AbstractCSSCompiler
     for base in @baseFiles
       baseCompiledPath = options.destinationFile(base)
       if fs.existsSync baseCompiledPath
-        baseSrcPath = path.join config.root, base
-        if fs.statSync(baseSrcPath).mtime > fs.statSync(baseCompiledPath).mtime
-          logger.debug "Base file [[ #{baseSrcPath} ]] needs to be compiled, it has been changed recently"
+        if fs.statSync(base).mtime > fs.statSync(baseCompiledPath).mtime
+          logger.debug "Base file [[ #{base} ]] needs to be compiled, it has been changed recently"
           baseFilesToCompileNow.push(base)
       else
         logger.debug "Base file [[ #{base} ]] hasn't been compiled yet, needs compiling"

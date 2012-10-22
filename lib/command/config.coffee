@@ -1,15 +1,16 @@
 path =   require 'path'
 fs =     require 'fs'
 
-logger = require '../util/logger'
+logger = require 'mimosa-logger'
+configurer = require '../util/configurer'
 
 copyConfig = (opts) ->
   if opts.debug then logger.setDebug()
-  configPath = path.join __dirname, '..', 'skeleton', "mimosa-config.coffee"
-  configFileContents = fs.readFileSync(configPath)
+
+  configText = configurer.buildConfigText()
   currPath = path.join path.resolve(''), "mimosa-config.coffee"
   logger.debug "Writing config file to #{currPath}"
-  fs.writeFile currPath, configFileContents, 'ascii'
+  fs.writeFile currPath, configText, 'ascii'
   logger.success "Copied default config file into current directory."
 
 register = (program, callback) ->
