@@ -1,10 +1,10 @@
 {
   "name": "mimosa",
   "preferGlobal": "true",
-  "version": "0.2.0beta",
+  "version": "0.3.0beta",
   "homepage": "http://www.mimosajs.com",
   "author": "David Bashford",
-  "description": "A modern browser stack boilerplate. Watch, compile, lint, optimize, serve.",
+  "description": "A modern browser stack workflow and toolkit. Compile, lint, optimize, serve and more.",
   "contributors": [
     {
       "name": "David Bashford",

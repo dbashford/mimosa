@@ -1,4 +1,4 @@
-# 0.3.0beta - October ?? 2012
+# 0.3.0beta - October 22 2012
 
 Another step towards pluggability.  Much code yanked out of mimosa core and placed into separate npm modules (all prefixed with `mimosa-`, and easily searchable in npm by searching for `mmodule`, for 'mimosa module').  The work to do that paves the way for external modules/plugins which will be the subject of beta4.
 
