@@ -7,8 +7,8 @@ class Mimosa
 
   constructor: ->
     process.argv[2] = '--help' if process.argv.length is 2
-
     program.version(version)
+
     require('./command/new')(program)
     require('./command/config')(program)
     require('./command/build')(program)
@@ -17,6 +17,13 @@ class Mimosa
     require('./command/virgin')(program)
     require('./command/update')(program)
     require('./command/install')(program)
+
+    require('./command/module/install')(program)
+    require('./command/module/init')(program)
+    require('./command/module/delete')(program)
+    require('./command/module/list')(program)
+    require('./command/module/all')(program)
+
     program.command('*').action (arg) ->
       if arg then logger.red "  #{arg} is not a valid command."
       process.argv[2] = '--help'
