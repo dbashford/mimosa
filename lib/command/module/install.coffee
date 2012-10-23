@@ -29,7 +29,7 @@ register = (program, callback) ->
   program
     .command('mod:install [name]')
     .option("-D, --debug", "run in debug mode")
-    .description("install a Mimosa module")
+    .description("install a Mimosa module into your Mimosa")
     .action(callback)
     .on '--help', =>
       logger.green('  The \'mod:install\' command will install a Mimosa module from NPM into Mimosa. This does')
