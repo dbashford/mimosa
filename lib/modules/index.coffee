@@ -31,4 +31,4 @@ discoverModules()
 module.exports =
   all: all
   basic: [file, compilers]
-  metadata: meta
+  installedMetadata: meta
