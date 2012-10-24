@@ -22,7 +22,7 @@ class Mimosa
     require('./command/module/init')(program)
     require('./command/module/uninstall')(program)
     require('./command/module/list')(program)
-    require('./command/module/all')(program)
+    require('./command/module/search')(program)
 
     program.command('*').action (arg) ->
       if arg then logger.red "  #{arg} is not a valid command."

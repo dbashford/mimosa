@@ -21,7 +21,7 @@ discoverModules = ->
       version: modPack.version
       site:    modPack.homepage
       desc:    modPack.description
-      default: builtIns.indexOf(dep) > -1
+      default: if builtIns.indexOf(dep) > -1 then "yes" else "no"
       dependencies: modPack.dependencies
     all.push(require dep)
 

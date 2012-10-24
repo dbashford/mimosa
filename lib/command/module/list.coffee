@@ -35,7 +35,8 @@ list = (opts) ->
         console.log "  Dependencies: #{asArray.join(', ')}"
       console.log ""
 
-   console.log ""
+  unless opts.verbose
+    logger.green "\n  To view more module details, execute \'mimosa mod:search -v\' for \'verbose\' logging. \n"
 
 register = (program, callback) ->
   program
@@ -52,7 +53,6 @@ register = (program, callback) ->
       logger.green('  Pass a \'verbose\' flag to get additional information about each module')
       logger.blue( '\n    $ mimosa mod:list --verbose\n')
       logger.blue( '\n    $ mimosa mod:list -v\n')
-
 
 module.exports = (program) ->
   register program, list
