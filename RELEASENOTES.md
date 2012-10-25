@@ -1,3 +1,41 @@
+# 0.4.0beta - October ?? 2012
+
+Pluggability has arrived.  Documentation for it may lag a little, but will eventually be up on the website.
+
+Obviously as Mimosa is new and therefore its use isn't widespread, there aren't modules besides the core set that come with Mimosa for you to use. But as time passes, I'll be building more, and hopefully the community will as well, and the work done in this release will enable all of that.
+
+### Major
+* A new top level configuration property `modules` has been introduced.  It defaults to ['lint', 'server', 'require', 'minify']. This is what it needs to be for Mimosa to keep on doing what it always has for you, so you can leave it at its default. The modules property is how you tell Mimosa what modules to use. The default modules are external to Mimosa, but are installed with Mimosa by default.
+* You can choose to remove `modules` from your project if you feel you don't need them.  For instance, if you don't want to lint your code, remove the `lint` module from the list and remove the `lint` config. This saves you having to turn if off using the lint config itself.  (In this example, if it is all commented out, you don't have to remove the lint config, but if you aren't using it, may as well clean it up!)
+* You can also add new modules, modules outside the core set of Mimosa modules.  As of this writing none exist, but the point of making Mimosa pluggable was to allow for them to exist and be used.  If someone coded a `mimosa-foo` module and installed it in NPM, you can add `foo` to the list of modules. Mimosa assumes the required `mimosa-` prefix.
+* An entire set of commands around modules have been introduced.  They are all underneath a `mod:` prefix.
+
+  * `mod:init [name]` - if you are interested in creating a module, this creates a module skeleton for you to use complete with heavily commented code and including docco'd docs for that code.
+  * `mod:search` - This command scans npm for any `mimosa-` modules in the registry and gives you some information about them.  Use a `--verbose` flag to get more information.
+  * `mod:list` - This lists all the modules installed within your Mimosa. Use a `--verbose` flag to get more information.
+  * `mod:install` - This will install a Mimosa module into your Mimosa.
+  * `mod:uninstall` - This will uninstall a Mimosa module from your Mimosa.
+
+### You'll need to...
+* At the very least, add the commented out lines of config for modules so should you want to update modules later, its there and easy to update.
+```
+# modules: ['lint', 'server', 'require', 'minify']   # The list of Mimosa modules to use for this application. The defaults
+                                                     # (lint, server, require, minify) come bundled with Mimosa and do not
+                                                     # need to be installed.  The 'mimosa-' that preceeds all Mimosa module
+                                                     # names is assumed, however you can use it if you want.  If a module
+                                                     # is listed here that Mimosa is unaware of, Mimosa will attempt to
+                                                     # install it.
+```
+
+* If you want to take advantage of the new modules, then uncomment and make some changes.
+* Make modules of your own!  `mimosa mod:init mimosa-[nameOfModule]` and get crackin'!
+
+
+# 0.3.1beta - October 22 2012
+
+### Minor Changes
+* Hot fix for #78.  0.3.0beta introduced an issue with user config overriding default config.
+
 # 0.3.0beta - October 22 2012
 
 Another step towards pluggability.  Much code yanked out of mimosa core and placed into separate npm modules (all prefixed with `mimosa-`, and easily searchable in npm by searching for `mmodule`, for 'mimosa module').  The work to do that paves the way for external modules/plugins which will be the subject of beta4.
