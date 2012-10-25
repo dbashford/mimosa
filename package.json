@@ -67,10 +67,11 @@
     "glob-whatev": "0.1.8",
     "glob": "3.1.12",
     "logmimosa": "0.1.0",
-    "mimosa-server":"0.2.1",
-    "mimosa-require":"0.2.0",
-    "mimosa-minify":"0.2.0",
-    "mimosa-lint":"0.2.0"
+    "mimosa-server": "0.2.1",
+    "mimosa-require": "0.2.0",
+    "mimosa-minify": "0.2.0",
+    "mimosa-lint": "0.2.0",
+    "npm": "1.1.65"
   },
   "license": "MIT",
   "engines": {
