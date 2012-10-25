@@ -5,12 +5,13 @@ wrench = require 'wrench'
 logger = require 'logmimosa'
 _      = require 'lodash'
 
-modules = require('../modules').all
+moduleManager = require('../modules')
 
 class MimosaConfigurer
 
   # watch defaults, other defaults reside in modules
-  watchDefaults:
+  baseDefaults:
+    modules: ['lint', 'server', 'require', 'minify']
     watch:
       sourceDir: "assets"
       compiledDir: "public"
@@ -19,6 +20,9 @@ class MimosaConfigurer
       throttle: 0
 
   applyAndValidateDefaults: (config, configPath, callback) =>
+    moduleNames = config.modules ? @baseDefaults.modules
+    @modules = moduleManager.getConfiguredModules(moduleNames)
+
     config.root = path.dirname(configPath)
     config = @_applyDefaults(config)
     errors = @_validateSettings(config)
@@ -32,9 +36,9 @@ class MimosaConfigurer
 
   _moduleDefaults: ->
     defs = {}
-    for mod in modules when mod.defaults?
+    for mod in @modules when mod.defaults?
       _.extend(defs, mod.defaults())
-    _.extend(defs, @watchDefaults)
+    _.extend(defs, @baseDefaults)
     defs
 
   _extend: (obj, props) ->
@@ -61,33 +65,28 @@ class MimosaConfigurer
 
   _validateSettings: (config) ->
     errors = []
-    for mod in modules when mod.validate?
+    for mod in @modules when mod.validate?
       moduleErrors = mod.validate(config)
       errors.push moduleErrors... if moduleErrors
 
-    @_testPathExists(config.watch.sourceDir, "watch.sourceDir", true, errors)
+    @_testPathExists(config.watch.sourceDir, "watch.sourceDir", errors)
     unless config.isVirgin
-      if !fs.existsSync(config.watch.compiledDir) and !config.isForceClean
+      if not fs.existsSync(config.watch.compiledDir) and not config.isForceClean
         logger.info "Did not find compiled directory [[ #{config.watch.compiledDir} ]], so making it for you"
         wrench.mkdirSyncRecursive config.watch.compiledDir, 0o0777
 
-      @_testPathExists(config.server.path, "server.path", false, errors) if config.isServer and not config.server.useDefaultServer
-
-    jsDir = path.join(config.watch.sourceDir, config.watch.javascriptDir)
-    @_testPathExists(jsDir,"watch.javascriptDir", true, errors) unless config.isVirgin
+    jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
+    unless config.isVirgin
+      @_testPathExists(jsDir,"watch.javascriptDir", errors)
 
     errors
 
-  _testPathExists: (filePath, name, isDirectory, errors) ->
+  _testPathExists: (filePath, name, errors) ->
     unless fs.existsSync filePath
       return errors.push "#{name} (#{filePath}) cannot be found"
 
-    stats = fs.statSync filePath
-    if isDirectory and stats.isFile()
+    if fs.statSync(filePath).isFile()
       return errors.push "#{name} (#{filePath}) cannot be found, expecting a directory and is a file"
-
-    if not isDirectory and stats.isDirectory()
-      return errors.push "#{name} (#{filePath}) cannot be found, expecting a file and is a directory"
 
   _configTop: ->
     """
@@ -100,6 +99,13 @@ class MimosaConfigurer
     # coffeescript indentation rules.  2 spaces per level please!
 
     exports.config = {
+      # modules: ['lint', 'server', 'require', 'minify']   # The list of Mimosa modules to use for this application. The defaults
+                                                           # (lint, server, require, minify) come bundled with Mimosa and do not
+                                                           # need to be installed.  The 'mimosa-' that preceeds all Mimosa module
+                                                           # names is assumed, however you can use it if you want.  If a module
+                                                           # is listed here that Mimosa is unaware of, Mimosa will attempt to
+                                                           # install it.
+
       # watch:
         # sourceDir: "assets"             # directory location of web assets
         # compiledDir: "public"           # directory location of compiled web assets
@@ -118,6 +124,7 @@ class MimosaConfigurer
   _configBottom: -> "\n}"
 
   buildConfigText: =>
+    modules = moduleManager.all
     configText = @_configTop()
     for mod in modules
       if mod.placeholder?

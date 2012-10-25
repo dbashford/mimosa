@@ -2,7 +2,7 @@ watch =     require 'chokidar'
 logger =    require 'logmimosa'
 
 LifeCycle = require './lifecycle'
-modules = require '../modules'
+moduleManager = require '../modules'
 
 class Watcher
 
@@ -10,7 +10,8 @@ class Watcher
 
   constructor: (@config, @persist, @initCallback) ->
     @throttle = @config.watch.throttle
-    @lifecycle = new LifeCycle(@config, modules.all, @_buildDoneCallback)
+    modules = moduleManager.getConfiguredModules(@config)
+    @lifecycle = new LifeCycle(@config, modules, @_buildDoneCallback)
     @_startWatcher()
 
     logger.info "Watching #{@config.watch.sourceDir}" if @persist
