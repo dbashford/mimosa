@@ -3,7 +3,7 @@ fs = require 'fs'
 
 volo = require 'volo'
 wrench = require 'wrench'
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 
 util = require '../util/util'
 

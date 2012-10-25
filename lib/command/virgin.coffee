@@ -1,4 +1,4 @@
-logger =   require 'mimosa-logger'
+logger =   require 'logmimosa'
 
 util =     require '../util/util'
 Watcher =  require '../util/watcher'

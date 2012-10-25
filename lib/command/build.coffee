@@ -2,7 +2,7 @@ fs = require 'fs'
 path = require 'path'
 
 jade = require 'jade'
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 
 util = require '../util/util'
 Watcher =  require '../util/watcher'

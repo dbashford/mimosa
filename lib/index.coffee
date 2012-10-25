@@ -1,5 +1,5 @@
 program =  require 'commander'
-logger =   require 'mimosa-logger'
+logger =   require 'logmimosa'
 
 version =  require('../package.json').version
 

@@ -2,7 +2,7 @@ path = require 'path'
 fs =   require 'fs'
 
 wrench = require 'wrench'
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 _      = require 'lodash'
 
 modules = require('../modules').all

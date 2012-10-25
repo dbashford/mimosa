@@ -3,7 +3,7 @@ path =   require 'path'
 
 wrench = require 'wrench'
 _ =      require 'lodash'
-logger =    require 'mimosa-logger'
+logger =    require 'logmimosa'
 
 fileUtils = require '../../../util/file'
 

@@ -2,7 +2,7 @@ path =   require 'path'
 fs =     require 'fs'
 {exec} = require 'child_process'
 
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 
 util =   require 'util'
 

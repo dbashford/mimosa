@@ -2,13 +2,13 @@ path =   require 'path'
 fs =     require 'fs'
 {exec} = require 'child_process'
 
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 moduleMetadata = require('../../modules').installedMetadata
 
 deleteMod = (name, opts) ->
   if opts.debug then logger.setDebug()
 
-  unless name.indexOf('mimosa-') is 0 and name isnt "mimosa-logger"
+  unless name.indexOf('mimosa-') is 0
     return logger.error "Can only delete 'mimosa-' prefixed modules with mod:delete (ex: mimosa-server)."
 
   found = false

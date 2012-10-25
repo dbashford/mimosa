@@ -3,7 +3,7 @@ fs =   require 'fs'
 
 wrench = require 'wrench'
 _ =      require 'lodash'
-logger =           require 'mimosa-logger'
+logger =           require 'logmimosa'
 requireRegister =  require 'mimosa-require'
 
 fileUtils =        require '../../../util/file'

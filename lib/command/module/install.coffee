@@ -1,7 +1,7 @@
 path =   require 'path'
 fs =     require 'fs'
 
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 {exec} = require 'child_process'
 
 install = (name, opts) ->

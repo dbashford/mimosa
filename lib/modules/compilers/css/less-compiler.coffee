@@ -3,7 +3,7 @@ path = require 'path'
 
 less = require 'less'
 _ = require 'lodash'
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 
 AbstractCssCompiler = require './css'
 

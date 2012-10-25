@@ -1,7 +1,7 @@
 path =   require 'path'
 fs =     require 'fs'
 
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 configurer = require '../util/configurer'
 
 copyConfig = (opts) ->

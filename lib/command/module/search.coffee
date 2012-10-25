@@ -2,7 +2,7 @@ path =   require 'path'
 fs =     require 'fs'
 
 color  = require('ansi-color').set
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 npm = require 'npm'
 
 moduleMetadata = require('../../modules').installedMetadata

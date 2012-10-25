@@ -4,7 +4,7 @@ path = require 'path'
 nib = require 'nib'
 stylus = require 'stylus'
 _ = require 'lodash'
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 
 AbstractCssCompiler = require './css'
 

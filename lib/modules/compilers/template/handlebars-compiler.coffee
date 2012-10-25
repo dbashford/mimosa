@@ -3,7 +3,7 @@ path =       require 'path'
 
 handlebars = require 'handlebars'
 _ =          require 'lodash'
-logger =     require 'mimosa-logger'
+logger =     require 'logmimosa'
 
 AbstractTemplateCompiler = require './template'
 
