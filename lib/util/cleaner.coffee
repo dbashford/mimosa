@@ -1,18 +1,18 @@
 watch =  require 'chokidar'
 logger = require 'logmimosa'
 
-LifeCycle = require './lifecycle'
+Workflow = require './workflow'
 modules =   require '../modules'
 
 class Cleaner
 
   constructor: (@config, initCallback) ->
-    @lifecycle = new LifeCycle(@config, modules.basic, initCallback)
+    @workflow = new Workflow(@config, modules.basic, initCallback)
     @_startWatcher()
 
   _startWatcher:  ->
     watcher = watch.watch(@config.watch.sourceDir, {persistent:false})
-    watcher.on "add", (f) => @lifecycle.remove(f) unless @_ignored(f)
+    watcher.on "add", (f) => @workflow.remove(f) unless @_ignored(f)
 
   _ignored: (fileName) ->
     if @config.watch.exclude and fileName.match @config.watch.exclude

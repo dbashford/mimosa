@@ -65,13 +65,13 @@ Another step towards pluggability.  Much code yanked out of mimosa core and plac
 * #75, addressed LiveScript problem
 
 ### Minor Changes
-* Moved server code into buildDone lifecycle
+* Moved server code into buildDone workflow
 
 # 0.2.0beta - October 15 2012
 
 ### Colossal Change & Roadmap
 
-Beta 1 to 2 was an entire refactor of the guts of Mimosa.  Pre beta2, an asset's workflow was tied tightly to compilers.  Calls to lint, calls to minify, calls to deal with amd/requirejs, etc, were all contained in the compilers.  It was a bit messy and with beta 1 decently featureful, I wanted to take the time to pull all of that apart.  What this will allow, and you'll see in beta3, is the detaching of some of that code from Mimosa entirely, putting it instead is separate npm modules to version, maintain, and eventually test apart from the larger Mimosa codebase.  Also in the next few betas one will be able to write their own modules that will be able perform tasks at certain points of an asset's lifecycle.
+Beta 1 to 2 was an entire refactor of the guts of Mimosa.  Pre beta2, an asset's workflow was tied tightly to compilers.  Calls to lint, calls to minify, calls to deal with amd/requirejs, etc, were all contained in the compilers.  It was a bit messy and with beta 1 decently featureful, I wanted to take the time to pull all of that apart.  What this will allow, and you'll see in beta3, is the detaching of some of that code from Mimosa entirely, putting it instead is separate npm modules to version, maintain, and eventually test apart from the larger Mimosa codebase.  Also in the next few betas one will be able to write their own modules that will be able perform tasks at certain points of an asset's workflow.
 
 Despite many urges to the contrary, I tried not to add any new features as I wanted this refactor to be as seamless an experience from an Mimosa interface perspective as possible.  So, in all cases except for the gzippo case below, you should need to do nothing to upgrade from beta1 to 2 other than reinstall Mimosa.  beta3 should largely be the same.  I'll be pulling code out of Mimosa, and moving some things around, but there should be very few breaking changes.  beta4 will likely be a return to feature development and I've got quite the backlog of stuff building up.
 

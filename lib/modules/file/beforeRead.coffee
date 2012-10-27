@@ -21,7 +21,7 @@ class MimosaFileBeforeReadModule
           options.files = newFiles
           next()
         else
-          logger.debug "No files need compiling, exiting lifecycle"
+          logger.debug "No files need compiling, exiting workflow"
           next(false)
 
     options.files.forEach (file) =>

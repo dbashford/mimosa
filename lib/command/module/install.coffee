@@ -19,7 +19,8 @@ install = (name, opts) ->
     if err
       logger.error err
     else
-      logger.success "Install of '#{name}' successful"
+      console.log ""
+      logger.success "Install of '#{name}' successful\n"
 
     logger.debug "NPM INSTALL standard out\n#{sout}"
     logger.debug "NPM INSTALL standard err\n#{serr}"

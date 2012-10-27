@@ -31,7 +31,8 @@ deleteMod = (name, opts) ->
     else if serr
       logger.error serr
     else
-      logger.success "Uninstall of '#{name}' successful"
+      console.log ""
+      logger.success "Uninstall of '#{name}' successful\n"
 
     logger.debug "NPM UNINSTALL standard out\n#{sout}"
     logger.debug "NPM UNINSTALL standard err\n#{serr}"

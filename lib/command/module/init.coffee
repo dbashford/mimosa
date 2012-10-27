@@ -37,8 +37,9 @@ copySkeleton = (name, moduleDirPath) ->
   fs.readFile packageJson, 'ascii', (err, text) ->
     text = text.replace '???', name
     fs.writeFile packageJson, text, (err) ->
+      console.log ""
       logger.success "Module skeleton successfully placed in #{name} directory. The first thing you'll" +
-                     " want to do is go into #{name}#{path.sep}package.json and replace the placeholders."
+                     " want to do is go into #{name}#{path.sep}package.json and replace the placeholders.\n"
 
 register = (program, callback) ->
   program

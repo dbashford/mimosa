@@ -15,7 +15,7 @@ module.exports = class LifeCycleManager
   masterTypes:
     buildFile:      ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
     buildExtension: ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
-    buildDone:      ["init", "beforeOptimize", "optimize", "afterOptimize", "beforeServer", "server", "afterServer", "beforePackage", "package", "afterPackage", "complete"]
+    buildDone:      ["init", "beforeOptimize", "optimize", "afterOptimize", "beforeServer", "server", "afterServer", "beforePackage", "package", "afterPackage", "beforeInstall", "install", "afterInstall", "complete"]
 
     add:    ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
     update: ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
@@ -49,7 +49,7 @@ module.exports = class LifeCycleManager
     @initialFiles = files
 
   cleanUpRegistration: =>
-    logger.debug "Cleaning up unused lifecycle steps"
+    logger.debug "Cleaning up unused workflow steps"
 
     for type, typeReg of @registration
       for step, stepReg of typeReg
@@ -78,10 +78,10 @@ module.exports = class LifeCycleManager
     for type in types
 
       unless @types[type]?
-        return logger.warn "Unrecognized lifecycle type [[ #{type} ]], valid types are [[ #{Object.keys(@types).join(',')} ]], ending registration for plugin."
+        return logger.warn "Unrecognized workflow type [[ #{type} ]], valid types are [[ #{Object.keys(@types).join(',')} ]], ending registration for plugin."
 
       if @types[type].indexOf(step) < 0
-        return logger.warn "Unrecognized lifecycle step [[ #{step} ]] for type [[ #{type} ]], valid steps are [[ #{@types[type]} ]]"
+        return logger.warn "Unrecognized workflow step [[ #{step} ]] for type [[ #{type} ]], valid steps are [[ #{@types[type]} ]]"
 
       # no registering the same extension twice
       for extension in _.uniq(extensions)
@@ -117,7 +117,7 @@ module.exports = class LifeCycleManager
     i = 0
     next = =>
       if i < @types[type].length
-        @_lifecycleMethod type, @types[type][i++], options, cb
+        @_workflowMethod type, @types[type][i++], options, cb
       else
         # finished naturally
         done(options)
@@ -130,8 +130,8 @@ module.exports = class LifeCycleManager
 
     next()
 
-  _lifecycleMethod: (type, step, options, done) ->
-    logger.debug "Calling lifecycle: [[ #{type} ]], [[ #{step} ]], [[ #{options.extension} ]], [[ #{options.inputFile} ]]"
+  _workflowMethod: (type, step, options, done) ->
+    logger.debug "Calling workflow: [[ #{type} ]], [[ #{step} ]], [[ #{options.extension} ]], [[ #{options.inputFile} ]]"
 
     tasks = []
     ext = options.extension
@@ -144,7 +144,7 @@ module.exports = class LifeCycleManager
       if i < tasks.length
         tasks[i++](@config, options, cb)
       else
-        # natural finish to lifecycle step
+        # natural finish to workflow step
         done()
 
     cb = (nextVal) ->

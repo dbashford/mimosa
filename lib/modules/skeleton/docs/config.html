@@ -16,9 +16,9 @@ when Mimosa is creating an initial mimosa-config using 'mimosa new' or
 <span class="s">    # minify:                   # Configuration for non-require minification/compression via uglify</span>
 <span class="s">                                # using the --minify flag.</span>
 <span class="s">      # exclude:[&quot;\\.min\\.&quot;]     # List of regexes to exclude files when running minification.</span>
-<span class="s">                                 # Any path with &quot;.min.&quot; in its name, like jquery.min.js, is assumed to</span>
-<span class="s">                                 # already be minified and is ignored by default. Override this property</span>
-<span class="s">                                 # if you have other files that you&#39;d like to exempt from minification.</span>
+<span class="s">                                # Any path with &quot;.min.&quot; in its name, like jquery.min.js, is assumed to</span>
+<span class="s">                                # already be minified and is ignored by default. Override this property</span>
+<span class="s">                                # if you have other files that you&#39;d like to exempt from minification.</span>
 <span class="s">  &quot;&quot;&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>The validate function should take a config object (which is the entire
 mimosa-config), find the module specific config, validate the settings
 and return a list of strings that are validation error messages. If
