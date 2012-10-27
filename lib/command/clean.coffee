@@ -10,6 +10,8 @@ util =    require '../util/util'
 clean = (opts) ->
   if opts.debug then logger.setDebug()
 
+  opts.clean = true
+
   util.processConfig opts, (config) =>
     if opts.force
       if fs.existsSync config.watch.compiledDir

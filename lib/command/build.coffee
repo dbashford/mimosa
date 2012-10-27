@@ -14,6 +14,7 @@ build = (opts) =>
 
   if opts.debug then logger.setDebug()
   logger.info "Beginning build"
+  opts.build = true
 
   util.processConfig opts, (config) =>
     if opts.removeCombined then config.require.optimize.overrides.removeCombined = true

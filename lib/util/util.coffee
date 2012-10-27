@@ -42,6 +42,8 @@ exports.processConfig = (opts, callback) ->
   config.isMinify =     opts?.minify
   config.isForceClean = opts?.force
   config.isClean =      opts?.clean
+  config.isBuild =      opts?.build
+  config.isWatch =      opts?.watch
 
   configurer.applyAndValidateDefaults config, configPath, (err, newConfig) =>
     if err
