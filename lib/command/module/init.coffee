@@ -19,7 +19,7 @@ init = (name, opts) ->
       fs.stat moduleDirPath, (err, stats) ->
         if stats.isDirectory()
           logger.info "Directory/file already exists at [[ #{moduleDirPath} ]], placing skeleton inside that directory."
-          copySkeleton(name, moduleDirPath)
+          copySkeleton(name, opts.javascript, moduleDirPath)
         else
           logger.error "File already exists at [[ #{moduleDirPath} ]]"
     else
@@ -27,10 +27,11 @@ init = (name, opts) ->
         if err
           return logger.error "Error creating directory: #{err}"
         else
-          copySkeleton(name, moduleDirPath)
+          copySkeleton(name, opts.javascript, moduleDirPath)
 
-copySkeleton = (name, moduleDirPath) ->
-  skeletonPath = path.join __dirname, '..', '..', 'modules','skeleton'
+copySkeleton = (name, isJavascript, moduleDirPath) ->
+  lang = if isJavascript then "js" else 'coffee'
+  skeletonPath = path.join __dirname, '..', '..', 'modules', 'skeleton', lang
   wrench.copyDirSyncRecursive skeletonPath, moduleDirPath
 
   packageJson = path.join(moduleDirPath, 'package.json')
@@ -45,6 +46,7 @@ register = (program, callback) ->
   program
     .command('mod:init [name]')
     .option("-D, --debug", "run in debug mode")
+    .option("-j, --javascript", "get a javascript version of the skeleton")
     .description("create a Mimosa module skeleton in the named directory")
     .action(callback)
     .on '--help', =>
@@ -52,6 +54,9 @@ register = (program, callback) ->
       logger.green('  module skeleton into the directory.  If a directory for the name given already exists')
       logger.green('  Mimosa will place the module skeleton inside of it.')
       logger.blue( '\n    $ mimosa mod:init [nameOfModule]\n')
+      logger.green('  The default skeleton is written in CoffeeScript.  If you want a skeleton delivered')
+      logger.green('  in JavaScipt add a \'javascript\' flag.')
+
 
 module.exports = (program) ->
   register program, init
