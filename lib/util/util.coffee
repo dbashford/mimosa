@@ -27,12 +27,21 @@ exports.projectPossibilities = (callback) ->
 
 exports.processConfig = (opts, callback) ->
   configPath = _findConfigPath()
-  {config} = require configPath if configPath?
+  unless configPath?
+    logger.debug "Didn't find mimosa-config.coffee, going to try mimosa-config.js"
+    configPath = _findConfigPath(path.resolve('mimosa-config.js'))
+
+  try
+    {config} = require configPath if configPath?
+  catch err
+    return logger.fatal "Improperly formatted configuration file: #{err}"
+    config = null
+
   unless config?
-    logger.warn "No configuration file found (mimosa-config.coffee), running from current directory using Mimosa's defaults."
+    logger.warn "No configuration file found (mimosa-config.coffee/mimosa-config.js), running from current directory using Mimosa's defaults."
     logger.warn "Run 'mimosa config' to copy the default Mimosa configuration to the current directory."
     config = {}
-    configPath = path.dirname path.resolve('right-here.foo')
+    configPath = path.resolve('right-here.foo')
 
   logger.debug "Your mimosa config:\n#{JSON.stringify(config, null, 2)}"
 
