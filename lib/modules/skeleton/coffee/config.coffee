@@ -54,7 +54,7 @@ exports.validate = (config) ->
       errors.push "minify configuration must be an object."
 
   # The validate function is also an opportunity to do configuration massaging,
-  # for instance, turning a list of strings into a single RegEx.  Changes
+  # for instance, turning a list of strings into a single RegExp.  Changes
   # made to the config inside validate are permament and carried throughout
   # the currently running Mimosa process.
 

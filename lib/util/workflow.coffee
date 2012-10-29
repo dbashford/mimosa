@@ -64,16 +64,16 @@ module.exports = class LifeCycleManager
 
   register: (types, step, callback, extensions = ['*']) =>
     unless _.isArray(types)
-      return logger.warn "Lifecycle types not passed in as array: [[ #{types} ]], ending registration for plugin."
+      return logger.warn "Workflow types not passed in as array: [[ #{types} ]], ending registration for plugin."
 
     unless _.isArray(extensions)
-      return logger.warn "Lifecycle extensions not passed in as array: [[ #{extensions} ]], ending registration for plugin."
+      return logger.warn "Workflow extensions not passed in as array: [[ #{extensions} ]], ending registration for plugin."
 
     unless _.isString(step)
-      return logger.warn "Lifecycle step not passed in as string: [[ #{step} ]], ending registration for plugin."
+      return logger.warn "Workflow step not passed in as string: [[ #{step} ]], ending registration for plugin."
 
     unless _.isFunction(callback)
-      return logger.warn "Lifecycle callback not passed in as function: [[ #{callback} ]], ending registration for plugin."
+      return logger.warn "Workflow callback not passed in as function: [[ #{callback} ]], ending registration for plugin."
 
     for type in types
 
@@ -94,20 +94,20 @@ module.exports = class LifeCycleManager
 
         @registration[type][step][extension].push callback
 
-  update: (fileName) => @_executeLifecycleStep(@_buildAssetOptions(fileName), 'update')
-  remove: (fileName) => @_executeLifecycleStep(@_buildAssetOptions(fileName), 'remove')
+  update: (fileName) => @_executeWorkflowStep(@_buildAssetOptions(fileName), 'update')
+  remove: (fileName) => @_executeWorkflowStep(@_buildAssetOptions(fileName), 'remove')
   add: (fileName) =>
     if @startup
-      @_executeLifecycleStep(@_buildAssetOptions(fileName), 'buildFile')
+      @_executeWorkflowStep(@_buildAssetOptions(fileName), 'buildFile')
     else
-      @_executeLifecycleStep(@_buildAssetOptions(fileName), 'add')
+      @_executeWorkflowStep(@_buildAssetOptions(fileName), 'add')
 
   _buildAssetOptions: (fileName) ->
     ext = path.extname(fileName)
     ext = if ext.length > 1 then ext.substring(1) else ''
     {inputFile:fileName, extension:ext}
 
-  _executeLifecycleStep: (options, type, done = @_finishedWithFile) ->
+  _executeWorkflowStep: (options, type, done = @_finishedWithFile) ->
     options.lifeCycleType = type
 
     # if processing a file, and the file's extension isn't in the list, boot it
@@ -172,10 +172,10 @@ module.exports = class LifeCycleManager
     done = 0
     # go through startup for each extension
     @allExtensions.forEach (extension) =>
-      @_executeLifecycleStep {extension:extension}, 'buildExtension', =>
+      @_executeWorkflowStep {extension:extension}, 'buildExtension', =>
         @_buildDone() if ++done is @allExtensions.length
 
   _buildDone: =>
     # wrap up, buildDone
-    @_executeLifecycleStep {}, 'buildDone', =>
+    @_executeWorkflowStep {}, 'buildDone', =>
       if @buildDoneCallback? then @buildDoneCallback()

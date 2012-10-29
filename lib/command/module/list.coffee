@@ -36,7 +36,7 @@ list = (opts) ->
       console.log ""
 
   unless opts.verbose
-    logger.green "\n  To view more module details, execute \'mimosa mod:search -v\' for \'verbose\' logging. \n"
+    logger.green "\n  To view more module details, execute \'mimosa mod:list -v\' for \'verbose\' logging. \n"
 
 register = (program, callback) ->
   program
