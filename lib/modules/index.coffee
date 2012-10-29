@@ -30,8 +30,23 @@ configured = (moduleNames) ->
     unless modName.indexOf('mimosa-') is 0
       modName = "mimosa-#{modName}"
 
-    for installed in meta when installed.name is modName
-      configuredModules.push(require modName)
+    found = false
+    for installed in meta
+      if installed.name is modName
+        found = true
+        configuredModules.push(require modName)
+        break
+
+    unless found
+      logger.debug "Did not find module [[ #{modName} ]] among those installed in Mimosa"
+
+      try
+        logger.debug "Check if installed globally, as if developer of module"
+        globalMod = require modName
+        console.log "Found [[ #{modName} ]] installed as global dependency"
+        configuredModules.push globalMod
+      catch err
+        console.log "TODO: Did not find [[ #{modName} ]] as global install, now check NPM, if found, install"
 
   configuredModules
 

@@ -28,6 +28,7 @@ class MimosaConfigurer
     errors = @_validateSettings(config)
     err = if errors.length is 0
       logger.debug "No mimosa config errors"
+      config = @_manipulateConfig(config)
       null
     else
       errors
@@ -51,8 +52,9 @@ class MimosaConfigurer
     obj
 
   _applyDefaults: (config) ->
-    config = @_extend @_moduleDefaults(), config
+    @_extend @_moduleDefaults(), config
 
+  _manipulateConfig: (config) ->
     config.extensions = {javascript: ['js'], css: ['css'], template: [], copy: []}
     config.watch.sourceDir =             path.join config.root, config.watch.sourceDir
     config.watch.compiledDir =           path.join config.root, config.watch.compiledDir
@@ -69,15 +71,36 @@ class MimosaConfigurer
       moduleErrors = mod.validate(config)
       errors.push moduleErrors... if moduleErrors
 
-    @_testPathExists(config.watch.sourceDir, "watch.sourceDir", errors)
-    unless config.isVirgin
-      if not fs.existsSync(config.watch.compiledDir) and not config.isForceClean
-        logger.info "Did not find compiled directory [[ #{config.watch.compiledDir} ]], so making it for you"
-        wrench.mkdirSyncRecursive config.watch.compiledDir, 0o0777
+    if typeof config.watch.sourceDir is "string"
+      @_testPathExists(config.watch.sourceDir, "watch.sourceDir", errors)
+    else
+      errors.push "watch.sourceDir must be a string"
 
-    jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
     unless config.isVirgin
-      @_testPathExists(jsDir,"watch.javascriptDir", errors)
+      if typeof config.watch.compiledDir is "string"
+        if not fs.existsSync(config.watch.compiledDir) and not config.isForceClean
+          logger.info "Did not find compiled directory [[ #{config.watch.compiledDir} ]], so making it for you"
+          wrench.mkdirSyncRecursive config.watch.compiledDir, 0o0777
+      else
+        errors.push "watch.compiledDir must be a string"
+
+    if typeof config.watch.javascriptDir is "string"
+      jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
+      unless config.isVirgin
+        @_testPathExists(jsDir,"watch.javascriptDir", errors)
+    else
+      errors.push "watch.javascriptDir must be a string"
+
+    if Array.isArray(config.watch.exclude)
+      for ex in config.watch.exclude
+        unless typeof ex is "string"
+          errors.push "watch.exclude must be an array of strings"
+          break
+    else
+      errors.push "watch.exclude must be an array"
+
+    unless typeof config.watch.throttle is "number"
+      errors.push "watch.throttle must be a number"
 
     errors
 

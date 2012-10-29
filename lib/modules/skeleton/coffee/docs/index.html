@@ -40,7 +40,7 @@ mimosaConfig.extensions.javascript so that your module would apply to all possib
 JavaScript variations. If no extensions are provided, Mimosa will send all files
 through the module.</li>
 </ol>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">registration = </span><span class="nf">(mimosaConfig, register) -&gt;</span>
-  <span class="k">if</span> <span class="nx">config</span><span class="p">.</span><span class="nx">isMinify</span>
+  <span class="k">if</span> <span class="nx">mimosaConfig</span><span class="p">.</span><span class="nx">isMinify</span>
     <span class="nv">e = </span><span class="nx">mimosaConfig</span><span class="p">.</span><span class="nx">extensions</span>
     <span class="nx">register</span> <span class="p">[</span><span class="s">&#39;add&#39;</span><span class="p">,</span><span class="s">&#39;update&#39;</span><span class="p">,</span><span class="s">&#39;buildFile&#39;</span><span class="p">],</span>      <span class="s">&#39;afterCompile&#39;</span><span class="p">,</span> <span class="nx">_minifyJS</span><span class="p">,</span>  <span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">javascript</span><span class="p">...]</span>
     <span class="nx">register</span> <span class="p">[</span><span class="s">&#39;add&#39;</span><span class="p">,</span><span class="s">&#39;update&#39;</span><span class="p">,</span><span class="s">&#39;buildExtension&#39;</span><span class="p">],</span> <span class="s">&#39;beforeWrite&#39;</span><span class="p">,</span>  <span class="nx">_minifyJS</span><span class="p">,</span>  <span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">template</span><span class="p">...]</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>The _minifyJS function here represents your workflow callback function.  This function will be called
@@ -90,4 +90,4 @@ multiple modules that need to talk to one another.</p>             </td>        
   <span class="nv">placeholder: </span> <span class="nx">config</span><span class="p">.</span><span class="nx">placeholder</span>
   <span class="nv">validate: </span>    <span class="nx">config</span><span class="p">.</span><span class="nx">validate</span>
 
-</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html>

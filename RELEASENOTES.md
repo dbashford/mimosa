@@ -1,8 +1,6 @@
 # 0.4.0beta - October ?? 2012
 
-Pluggability has arrived.  Documentation for it may lag a little, but will eventually be up on the website.
-
-Obviously as Mimosa is new and therefore its use isn't widespread, there aren't modules besides the core set that come with Mimosa for you to use. But as time passes, I'll be building more, and hopefully the community will as well, and the work done in this release will enable all of that.
+Pluggability has arrived.  Obviously as Mimosa is new and therefore its use isn't widespread, so there aren't modules besides the core set that come with Mimosa for you to use. But as time passes, I'll be building more, and in a perfect world a community of sorts develops and chips stuff in too. This enables that.
 
 ### Major
 * A new top level configuration property `modules` has been introduced.  It defaults to ['lint', 'server', 'require', 'minify']. This is what it needs to be for Mimosa to keep on doing what it always has for you, so you can leave it at its default. The modules property is how you tell Mimosa what modules to use. The default modules are external to Mimosa, but are installed with Mimosa by default.
@@ -16,6 +14,9 @@ Obviously as Mimosa is new and therefore its use isn't widespread, there aren't 
   * `mod:install` - This will install a Mimosa module into your Mimosa.
   * `mod:uninstall` - This will uninstall a Mimosa module from your Mimosa.
 
+### Minor Changes
+* You can now use a `mimosa-config.js` if you want. Mimosa will not give you one of those, but you can make the minor necessary charges.
+
 ### You'll need to...
 * At the very least, add the commented out lines of config for modules so should you want to update modules later, its there and easy to update.
 ```
@@ -28,7 +29,7 @@ Obviously as Mimosa is new and therefore its use isn't widespread, there aren't 
 ```
 
 * If you want to take advantage of the new modules, then uncomment and make some changes.
-* Make modules of your own!  `mimosa mod:init mimosa-[nameOfModule]` and get crackin'!
+* Make modules of your own!  `mimosa mod:init mimosa-[nameOfModule]` and get crackin'!  Check out http://mimosajs.com/modules.html for details.
 
 
 # 0.3.1beta - October 22 2012

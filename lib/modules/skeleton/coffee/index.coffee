@@ -46,7 +46,7 @@ config = require './config'
 # through the module.
 
 registration = (mimosaConfig, register) ->
-  if config.isMinify
+  if mimosaConfig.isMinify
     e = mimosaConfig.extensions
     register ['add','update','buildFile'],      'afterCompile', _minifyJS,  [e.javascript...]
     register ['add','update','buildExtension'], 'beforeWrite',  _minifyJS,  [e.template...]
