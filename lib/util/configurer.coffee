@@ -24,7 +24,7 @@ class MimosaConfigurer
     moduleManager.getConfiguredModules moduleNames, (modules) =>
 
       @modules = modules
-      config.root = path.dirname(configPath)
+      config.root = configPath
       config = @_applyDefaults(config)
       errors = @_validateSettings(config)
       err = if errors.length is 0
@@ -73,7 +73,7 @@ class MimosaConfigurer
       errors.push moduleErrors... if moduleErrors
 
     if typeof config.watch.sourceDir is "string"
-      @_testPathExists(config.watch.sourceDir, "watch.sourceDir", errors)
+      @_testPathExists(config.watch.sourceDir, "watch.sourceDir", config.root, errors)
     else
       errors.push "watch.sourceDir must be a string"
 
@@ -88,7 +88,7 @@ class MimosaConfigurer
     if typeof config.watch.javascriptDir is "string"
       jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
       unless config.isVirgin
-        @_testPathExists(jsDir,"watch.javascriptDir", errors)
+        @_testPathExists(jsDir,"watch.javascriptDir", config.root, errors)
     else
       errors.push "watch.javascriptDir must be a string"
 
@@ -105,12 +105,13 @@ class MimosaConfigurer
 
     errors
 
-  _testPathExists: (filePath, name, errors) ->
-    unless fs.existsSync filePath
-      return errors.push "#{name} (#{filePath}) cannot be found"
+  _testPathExists: (filePath, name, root, errors) ->
+    p = path.join root, filePath
+    unless fs.existsSync p
+      return errors.push "#{name} (#{p}) cannot be found"
 
-    if fs.statSync(filePath).isFile()
-      return errors.push "#{name} (#{filePath}) cannot be found, expecting a directory and is a file"
+    if fs.statSync(p).isFile()
+      return errors.push "#{name} (#{p}) cannot be found, expecting a directory and is a file"
 
   _configTop: ->
     """

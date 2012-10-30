@@ -43,6 +43,8 @@ printResults = (mods, verbose) ->
 
   logger.green "  Install modules by executing \'mimosa mod:install <<name of module>>\' \n"
 
+  process.exit 1
+
 search = (opts) ->
   logger.green "\n  Searching NPM for Mimosa modules, this might take a few seconds...\n"
   npm.load { outfd: null, exit: false, loglevel:'silent' }, ->

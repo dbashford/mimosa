@@ -18,6 +18,7 @@ Pluggability has arrived.  Obviously as Mimosa is new and therefore its use isn'
 ### Minor Changes
 * You can now use a `mimosa-config.js` if you want. Mimosa will not give you one of those, but you can make the minor necessary charges.
 * gzippo branch used as dependency with past versions of Mimosa is now gone, which will force you to upgrade/remediate as indicated in previous release
+* mimosa-logger is now logmimosa to distinguish it from actual modules
 
 ### You'll need to...
 * At the very least, add the commented out lines of config for modules so should you want to update modules later, its there and easy to update.
@@ -31,6 +32,7 @@ Pluggability has arrived.  Obviously as Mimosa is new and therefore its use isn'
 ```
 
 * Make modules of your own!  `mimosa mod:init mimosa-[nameOfModule]` and get crackin'!  Check out http://mimosajs.com/modules.html for details.
+* mimosa-logger will be removed from NPM shortly, so you'll want to be sure you aren't using it.
 
 
 # 0.3.1beta - October 22 2012
