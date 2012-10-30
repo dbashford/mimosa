@@ -1,6 +1,6 @@
 fs =   require 'fs'
 
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 
 fileUtils = require '../../util/file'
 
@@ -11,10 +11,8 @@ class MimosaFileWriteModule
     unless config.isVirgin
       e = config.extensions
       cExts = config.copy.extensions
-      register ['buildFile'],             'write',  @_write, [e.javascript..., cExts...]
-      register ['buildExtension'],        'write',  @_write, [e.template..., e.css...]
-      register ['add','update','remove'], 'write',  @_write, [e.template..., e.css...]
-      register ['add','update'],          'write',  @_write, [e.javascript..., cExts...]
+      register ['add','update','remove','buildExtension'], 'write', @_write, [e.template..., e.css...]
+      register ['add','update','buildFile'],               'write', @_write, [e.javascript..., cExts...]
 
   _write: (config, options, next) =>
     return next() unless options.files?.length > 0

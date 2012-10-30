@@ -1,3 +1,40 @@
+# 0.4.0beta - October 31 2012
+
+Pluggability has arrived.  Obviously as Mimosa is new and therefore its use isn't widespread, so there aren't modules besides the core set that come with Mimosa for you to use. But as time passes, I'll be building more, and in a perfect world a community of sorts develops and chips stuff in too. This enables that.
+
+### Major
+* http://mimosajs.com/modules.html , modules/extensibility added and documented, few highlights...
+* A new top level configuration property `modules` has been introduced.  It defaults to ['lint', 'server', 'require', 'minify']. This is what it needs to be for Mimosa to keep on doing what it always has for you, so you can leave it at its default. The modules property is how you tell Mimosa what modules to use. The default modules are external to Mimosa, but are installed with Mimosa by default.
+* You can choose to remove `modules` from your project if you feel you don't need them.  For instance, if you don't want to lint your code, remove the `lint` module from the list and remove the `lint` config. This saves you having to turn if off using the lint config itself.  (In this example, if it is all commented out, you don't have to remove the lint config, but if you aren't using it, may as well clean it up!)
+* You can also add new modules, modules outside the core set of Mimosa modules.  As of this writing none exist, but the point of making Mimosa pluggable was to allow for them to exist and be used.  If someone coded a `mimosa-foo` module and installed it in NPM, you can add `foo` to the list of modules. Mimosa assumes the required `mimosa-` prefix.
+* An entire set of commands around modules have been introduced.  They are all underneath a `mod:` prefix.
+
+  * `mod:init [name]` - if you are interested in creating a module, this creates a module skeleton for you to use complete with heavily commented code and including docco'd docs for that code.
+  * `mod:search` - This command scans npm for any `mimosa-` modules in the registry and gives you some information about them.  Use a `--verbose` flag to get more information.
+  * `mod:list` - This lists all the modules installed within your Mimosa. Use a `--verbose` flag to get more information.
+  * `mod:install` - This will install a Mimosa module into your Mimosa.
+  * `mod:uninstall` - This will uninstall a Mimosa module from your Mimosa.
+
+### Minor Changes
+* You can now use a `mimosa-config.js` if you want. Mimosa will not give you one of those, but you can make the minor necessary charges.
+* gzippo branch used as dependency with past versions of Mimosa is now gone, which will force you to upgrade/remediate as indicated in previous release
+* mimosa-logger is now logmimosa to distinguish it from actual modules
+
+### You'll need to...
+* At the very least, add the commented out lines of config for modules so should you want to update modules later, its there and easy to update.
+```
+# modules: ['lint', 'server', 'require', 'minify']   # The list of Mimosa modules to use for this application. The defaults
+                                                     # (lint, server, require, minify) come bundled with Mimosa and do not
+                                                     # need to be installed.  The 'mimosa-' that preceeds all Mimosa module
+                                                     # names is assumed, however you can use it if you want.  If a module
+                                                     # is listed here that Mimosa is unaware of, Mimosa will attempt to
+                                                     # install it.
+```
+
+* Make modules of your own!  `mimosa mod:init mimosa-[nameOfModule]` and get crackin'!  Check out http://mimosajs.com/modules.html for details.
+* mimosa-logger will be removed from NPM shortly, so you'll want to be sure you aren't using it.
+
+
 # 0.3.1beta - October 22 2012
 
 ### Minor Changes
@@ -32,13 +69,13 @@ Another step towards pluggability.  Much code yanked out of mimosa core and plac
 * #75, addressed LiveScript problem
 
 ### Minor Changes
-* Moved server code into buildDone lifecycle
+* Moved server code into buildDone workflow
 
 # 0.2.0beta - October 15 2012
 
 ### Colossal Change & Roadmap
 
-Beta 1 to 2 was an entire refactor of the guts of Mimosa.  Pre beta2, an asset's workflow was tied tightly to compilers.  Calls to lint, calls to minify, calls to deal with amd/requirejs, etc, were all contained in the compilers.  It was a bit messy and with beta 1 decently featureful, I wanted to take the time to pull all of that apart.  What this will allow, and you'll see in beta3, is the detaching of some of that code from Mimosa entirely, putting it instead is separate npm modules to version, maintain, and eventually test apart from the larger Mimosa codebase.  Also in the next few betas one will be able to write their own modules that will be able perform tasks at certain points of an asset's lifecycle.
+Beta 1 to 2 was an entire refactor of the guts of Mimosa.  Pre beta2, an asset's workflow was tied tightly to compilers.  Calls to lint, calls to minify, calls to deal with amd/requirejs, etc, were all contained in the compilers.  It was a bit messy and with beta 1 decently featureful, I wanted to take the time to pull all of that apart.  What this will allow, and you'll see in beta3, is the detaching of some of that code from Mimosa entirely, putting it instead is separate npm modules to version, maintain, and eventually test apart from the larger Mimosa codebase.  Also in the next few betas one will be able to write their own modules that will be able perform tasks at certain points of an asset's workflow.
 
 Despite many urges to the contrary, I tried not to add any new features as I wanted this refactor to be as seamless an experience from an Mimosa interface perspective as possible.  So, in all cases except for the gzippo case below, you should need to do nothing to upgrade from beta1 to 2 other than reinstall Mimosa.  beta3 should largely be the same.  I'll be pulling code out of Mimosa, and moving some things around, but there should be very few breaking changes.  beta4 will likely be a return to feature development and I've got quite the backlog of stuff building up.
 

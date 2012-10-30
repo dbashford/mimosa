@@ -1,0 +1,93 @@
+<!DOCTYPE html>  <html> <head>   <title>index.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="config.html">                 config.coffee               </a>                                           <a class="source" href="index.html">                 index.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               index.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h3>Module Interface</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>The code contained herein is all example code and shouldn't be used verbatim.
+The example in this case is modified from the mimosa-minify module.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Pulling in the <a href="./config.html">configuration management</a> code that is a
+part of the module.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">config = </span><span class="nx">require</span> <span class="s">&#39;./config&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>The registration function is the key part of your module.  This function is called
+during Mimosa's startup and it allows your module to bind to one or many steps
+in a Mimosa's workflow.</p>
+
+<p>The arguments passed in are:</p>
+
+<ol>
+<li>mimosaConfig: The full mimosa-config including added flags to indicate what
+sort of Mimosa command is being run (like isForceClean, or isVirgin), and an
+added list of extensions being used by the application. You may decide based
+on the flags in the config to not register anything, which is fine. In the case
+of the minification example, if the isMinify flag isn't turned on then the
+minification module code isn't registered.</li>
+<li>A register callback function which is used to inform what module function to call
+and under what circumstances to call it.</li>
+</ol>
+
+<p>The register callback function takes 4 parameters:</p>
+
+<ol>
+<li>workflow types, an array of strings. Pick one-to-many types depending on the
+sort of task your module accomplishes. Possible values: buildFile, buildExtension,
+buildDone, add, update, remove.</li>
+<li>workflow step, a string. A workflow step for the selected workflow types.  For
+example, for the type 'update', you might choose to have your module code executed
+'afterCompile', which makes sense for this example.  To help you figure out which
+step you might want to use, visit the <a href="http://mimosajs.com/utilities.html">modules</a>
+page on the website.</li>
+<li>The callback function.  The code to be executed during a Mimosa workflow.</li>
+<li>An optional array of extensions upon which to execute the callback. If the file or
+extension being processed doesn't match one of these extensions, the callback will
+not be executed. The extensions refer to the original extension of the file being
+processed, so 'coffee' for instance. The mimosaConfig object has an extensions object
+you can use to cover all of the desired extensions.  The extensions object has
+4 properties: javascript, css, template, and copy. In the case of this example,
+javascript minification, you would want to use the extensions available in
+mimosaConfig.extensions.javascript so that your module would apply to all possible
+JavaScript variations. If no extensions are provided, Mimosa will send all files
+through the module.</li>
+</ol>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">registration = </span><span class="nf">(mimosaConfig, register) -&gt;</span>
+  <span class="k">if</span> <span class="nx">mimosaConfig</span><span class="p">.</span><span class="nx">isMinify</span>
+    <span class="nv">e = </span><span class="nx">mimosaConfig</span><span class="p">.</span><span class="nx">extensions</span>
+    <span class="nx">register</span> <span class="p">[</span><span class="s">&#39;add&#39;</span><span class="p">,</span><span class="s">&#39;update&#39;</span><span class="p">,</span><span class="s">&#39;buildFile&#39;</span><span class="p">],</span>      <span class="s">&#39;afterCompile&#39;</span><span class="p">,</span> <span class="nx">_minifyJS</span><span class="p">,</span>  <span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">javascript</span><span class="p">...]</span>
+    <span class="nx">register</span> <span class="p">[</span><span class="s">&#39;add&#39;</span><span class="p">,</span><span class="s">&#39;update&#39;</span><span class="p">,</span><span class="s">&#39;buildExtension&#39;</span><span class="p">],</span> <span class="s">&#39;beforeWrite&#39;</span><span class="p">,</span>  <span class="nx">_minifyJS</span><span class="p">,</span>  <span class="p">[</span><span class="nx">e</span><span class="p">.</span><span class="nx">template</span><span class="p">...]</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>The _minifyJS function here represents your workflow callback function.  This function will be called
+during the workflow type and step you selected, if the file/extension being processed matches
+the registered extensions.  So given the example registration above, the _minifyJS function
+would be called after a JavaScript file is updated, during the 'afterCompile' step.  The 'compile' step is
+where, for instance, CoffeeScript is compiled to JavaScript, and you wouldn't want to minify CoffeeScript,
+so 'afterCompile' is appropriate.</p>
+
+<p>Your workflow callback is handed 3 arguments:</p>
+
+<ol>
+<li>config: full mimosa-config enriched with all sorts of useful data beyond the default mimosa-config.</li>
+<li>options: contains information about the asset(s) currently being processed.  Inside the options
+object is a 'files' array that is created early in the workflow. The array contains a list of file
+objects that are being processed. At different steps of the Mimosa workflow, those file objects are
+populated with the inputFileName, the outputFileName, the inputFileText, the outputFileText and some
+flags to indicate if the asset is a vendor asset, etc. The outputFileText is populated during the
+'compile' step, so in the case of this example code, we'd want to run minification over each file in the
+files array, transforming the outputFileText to minified outputFileText.</li>
+<li>next: a workflow callback. This callback must be called when your module has finished processing.  It
+tells Mimosa to execute the next step in the workflow.  If for some reason your module decides that
+processing for the current asset/build step needs to stop, the callback can be called passing false.
+Ex: next(false). In most cases you do not want to do this.</li>
+</ol>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_minifyJS = </span><span class="nf">(config, options, next) -&gt;</span>
+  <span class="k">for</span> <span class="nx">file</span> <span class="k">in</span> <span class="nx">options</span><span class="p">.</span><span class="nx">files</span>
+    <span class="nv">file.outputFileText = </span><span class="nx">minify</span><span class="p">(</span><span class="nx">file</span><span class="p">.</span><span class="nx">outputFileText</span><span class="p">)</span>
+  <span class="nx">next</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>The module.exports exposes module code to Mimosa.  The properties that
+are exported are Mimosa's hook to your module.  Mimosa will attempt
+to access functions that are placed into this exports matching these names:</p>
+
+<ol>
+<li>registration: This function is called to bind your module to a Mimosa workflow.</li>
+<li>defaults: This function is called to access the default configuration for your module.
+See <a href="./config.html">config.coffee</a>.</li>
+<li>placeholder: This function is used to build a mimosa-config during 'mimosa new' and
+'mimosa config'. See <a href="./config.html">config.coffee</a>.</li>
+<li>validate: This function is called during Mimosa's startup to validate the mimosa-config.
+This is your module's opportunity to ensure the configuration it will be given later is
+valid. See <a href="./config.html">config.coffee</a>.</li>
+</ol>
+
+<p>Any other functions exported will be ignored by Mimosa, but may be useful to you if you have
+multiple modules that need to talk to one another.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">module.exports =</span>
+  <span class="nv">registration: </span><span class="nx">registration</span>
+  <span class="nv">defaults: </span>    <span class="nx">config</span><span class="p">.</span><span class="nx">defaults</span>
+  <span class="nv">placeholder: </span> <span class="nx">config</span><span class="p">.</span><span class="nx">placeholder</span>
+  <span class="nv">validate: </span>    <span class="nx">config</span><span class="p">.</span><span class="nx">validate</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html>

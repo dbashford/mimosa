@@ -3,14 +3,16 @@ path   =  require 'path'
 
 wrench =  require 'wrench'
 _      =  require 'lodash'
-logger =  require 'mimosa-logger'
+logger =  require 'logmimosa'
 
 util =    require '../util/util'
 
 clean = (opts) ->
   if opts.debug then logger.setDebug()
 
-  util.processConfig opts, (config) =>
+  opts.clean = true
+
+  util.processConfig opts, (config, modules) =>
     if opts.force
       if fs.existsSync config.watch.compiledDir
         logger.info "Forcibly removing the entire directory [[ #{config.watch.compiledDir} ]]"

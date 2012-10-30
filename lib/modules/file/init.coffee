@@ -1,7 +1,7 @@
 path = require 'path'
 fs =   require 'fs'
 
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 
 fileUtils = require '../../util/file'
 
@@ -10,8 +10,7 @@ class MimosaFileInitModule
   registration: (config, register) ->
     e = config.extensions
     cExts = config.copy.extensions
-    register ['buildFile'],                              'init', @_initSingleAsset, [e.javascript..., cExts...]
-    register ['add','update','remove'],                  'init', @_initSingleAsset, [e.javascript..., cExts...]
+    register ['add','update','remove','buildFile'],      'init', @_initSingleAsset, [e.javascript..., cExts...]
     register ['add','update','remove','buildExtension'], 'init', @_initMultiAsset,  [e.template..., e.css...]
 
   _initSingleAsset: (config, options, next) =>

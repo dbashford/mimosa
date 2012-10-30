@@ -1,6 +1,6 @@
 fs = require 'fs'
 
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 
 class MimosaFileDeleteModule
 

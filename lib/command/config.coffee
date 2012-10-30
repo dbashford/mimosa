@@ -1,7 +1,7 @@
 path =   require 'path'
 fs =     require 'fs'
 
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 configurer = require '../util/configurer'
 
 copyConfig = (opts) ->
@@ -12,6 +12,8 @@ copyConfig = (opts) ->
   logger.debug "Writing config file to #{currPath}"
   fs.writeFile currPath, configText, 'ascii'
   logger.success "Copied default config file into current directory."
+
+  process.exit 1
 
 register = (program, callback) ->
   program

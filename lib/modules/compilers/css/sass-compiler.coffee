@@ -3,7 +3,7 @@ path = require 'path'
 {spawn, exec} = require 'child_process'
 
 _ = require 'lodash'
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 
 AbstractCssCompiler = require './css'
 

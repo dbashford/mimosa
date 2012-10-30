@@ -4,7 +4,7 @@ fs     = require 'fs'
 color  = require('ansi-color').set
 _      = require 'lodash'
 wrench = require 'wrench'
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 
 fileUtils = require './file'
 configurer = require './configurer'
@@ -27,13 +27,25 @@ exports.projectPossibilities = (callback) ->
 
 exports.processConfig = (opts, callback) ->
   configPath = _findConfigPath()
-  {config} = require configPath if configPath?
-  unless config?
-    logger.warn "No configuration file found (mimosa-config.coffee), running from current directory using Mimosa's defaults."
+  unless configPath?
+    logger.debug "Didn't find mimosa-config.coffee, going to try mimosa-config.js"
+    configPath = _findConfigPath(path.resolve('mimosa-config.js'))
+
+  try
+    {config} = require configPath if configPath?
+  catch err
+    return logger.fatal "Improperly formatted configuration file: #{err}"
+    config = null
+
+  if config?
+    configPath = path.dirname configPath
+  else
+    logger.warn "No configuration file found (mimosa-config.coffee/mimosa-config.js), running from current directory using Mimosa's defaults."
     logger.warn "Run 'mimosa config' to copy the default Mimosa configuration to the current directory."
     config = {}
-    configPath = path.dirname path.resolve('right-here.foo')
+    configPath = process.cwd()
 
+  logger.debug "Config path is #{configPath}"
   logger.debug "Your mimosa config:\n#{JSON.stringify(config, null, 2)}"
 
   config.isVirgin =     opts?.virgin
@@ -42,15 +54,17 @@ exports.processConfig = (opts, callback) ->
   config.isMinify =     opts?.minify
   config.isForceClean = opts?.force
   config.isClean =      opts?.clean
+  config.isBuild =      opts?.build
+  config.isWatch =      opts?.watch
 
-  configurer.applyAndValidateDefaults config, configPath, (err, newConfig) =>
+  configurer.applyAndValidateDefaults config, configPath, (err, newConfig, modules) =>
     if err
       logger.error "Unable to start Mimosa for the following reason(s):\n * #{err.join('\n * ')} "
       process.exit 1
     else
       logger.debug "Full mimosa config:\n#{JSON.stringify(newConfig, null, 2)}"
       logger.setConfig(newConfig)
-      callback(newConfig)
+      callback(newConfig, modules)
 
 exports.cleanCompiledDirectories = (config, cb) ->
   i = 0

@@ -3,7 +3,7 @@ fs = require 'fs'
 
 volo = require 'volo'
 wrench = require 'wrench'
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 
 util = require '../util/util'
 
@@ -14,7 +14,7 @@ class InstallCommand
   install: (args...) =>
     @prepArgs(args)
 
-    util.processConfig {}, (config) =>
+    util.processConfig {}, (config, modules) =>
       dirs = @directories(config)
       logger.debug "All directories found:\n#{dirs.join('\n')}"
 

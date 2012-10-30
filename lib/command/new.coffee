@@ -4,7 +4,7 @@ fs =     require 'fs'
 
 wrench = require 'wrench'
 _ =      require 'lodash'
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 
 fileUtils = require '../util/file'
 util =      require '../util/util'
@@ -43,12 +43,13 @@ class NewCommand
         prettyName:"Embedded JavaScript Templates (EJS) - https://github.com/visionmedia/ejs"
         library: "ejs"
         extension:"ejs"
+        version: "0.8.3"
       }
     ]
 
   constructor: (@program) ->
     for view in @views
-      view.version = deps[view.library]
+      view.version = deps[view.library] unless view.version?
 
   register: =>
     @program

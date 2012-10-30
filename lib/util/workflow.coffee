@@ -2,7 +2,7 @@ path =   require 'path'
 
 wrench = require 'wrench'
 _ =      require 'lodash'
-logger = require 'mimosa-logger'
+logger = require 'logmimosa'
 
 compilers = require '../modules/compilers'
 
@@ -13,13 +13,13 @@ module.exports = class LifeCycleManager
   registration: {}
 
   masterTypes:
-    buildFile:      ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
-    buildExtension: ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
-    buildDone:      ["init", "beforeOptimize", "optimize", "afterOptimize", "beforeServer", "server", "afterServer", "beforePackage", "package", "afterPackage", "complete"]
+    buildFile:      ["init", "beforeRead", "read", "afterRead", "betweenReadCompile", "beforeCompile", "compile", "afterCompile", "betweenCompileWrite", "beforeWrite", "write", "afterWrite", "complete"]
+    buildExtension: ["init", "beforeRead", "read", "afterRead", "betweenReadCompile", "beforeCompile", "compile", "afterCompile", "betweenCompileWrite", "beforeWrite", "write", "afterWrite", "complete"]
+    buildDone:      ["init", "beforeOptimize", "optimize", "afterOptimize", "beforeServer", "server", "afterServer", "beforePackage", "package", "afterPackage", "beforeInstall", "install", "afterInstall", "complete"]
 
-    add:    ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
-    update: ["init", "beforeRead", "read", "afterRead", "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
-    remove: ["init", "beforeRead", "read", "afterRead", "beforeDelete",  "delete",  "afterDelete",  "beforeCompile", "compile", "afterCompile", "beforeWrite", "write", "afterWrite", "complete"]
+    add:    ["init", "beforeRead", "read", "afterRead", "betweenReadCompile", "beforeCompile", "compile", "afterCompile", "betweenCompileWrite", "beforeWrite", "write", "afterWrite", "complete"]
+    update: ["init", "beforeRead", "read", "afterRead", "betweenReadCompile", "beforeCompile", "compile", "afterCompile", "betweenCompileWrite", "beforeWrite", "write", "afterWrite", "complete"]
+    remove: ["init", "beforeRead", "read", "afterRead", "beforeDelete",  "delete",  "afterDelete",  "beforeCompile", "compile", "afterCompile", "betweenCompileWrite", "beforeWrite", "write", "afterWrite", "complete"]
 
   constructor: (@config, modules, @buildDoneCallback) ->
     compilers.setupCompilers(@config)
@@ -49,7 +49,7 @@ module.exports = class LifeCycleManager
     @initialFiles = files
 
   cleanUpRegistration: =>
-    logger.debug "Cleaning up unused lifecycle steps"
+    logger.debug "Cleaning up unused workflow steps"
 
     for type, typeReg of @registration
       for step, stepReg of typeReg
@@ -64,24 +64,24 @@ module.exports = class LifeCycleManager
 
   register: (types, step, callback, extensions = ['*']) =>
     unless _.isArray(types)
-      return logger.warn "Lifecycle types not passed in as array: [[ #{types} ]], ending registration for plugin."
+      return logger.warn "Workflow types not passed in as array: [[ #{types} ]], ending registration for plugin."
 
     unless _.isArray(extensions)
-      return logger.warn "Lifecycle extensions not passed in as array: [[ #{extensions} ]], ending registration for plugin."
+      return logger.warn "Workflow extensions not passed in as array: [[ #{extensions} ]], ending registration for plugin."
 
     unless _.isString(step)
-      return logger.warn "Lifecycle step not passed in as string: [[ #{step} ]], ending registration for plugin."
+      return logger.warn "Workflow step not passed in as string: [[ #{step} ]], ending registration for plugin."
 
     unless _.isFunction(callback)
-      return logger.warn "Lifecycle callback not passed in as function: [[ #{callback} ]], ending registration for plugin."
+      return logger.warn "Workflow callback not passed in as function: [[ #{callback} ]], ending registration for plugin."
 
     for type in types
 
       unless @types[type]?
-        return logger.warn "Unrecognized lifecycle type [[ #{type} ]], valid types are [[ #{Object.keys(@types).join(',')} ]], ending registration for plugin."
+        return logger.warn "Unrecognized workflow type [[ #{type} ]], valid types are [[ #{Object.keys(@types).join(',')} ]], ending registration for plugin."
 
       if @types[type].indexOf(step) < 0
-        return logger.warn "Unrecognized lifecycle step [[ #{step} ]] for type [[ #{type} ]], valid steps are [[ #{@types[type]} ]]"
+        return logger.warn "Unrecognized workflow step [[ #{step} ]] for type [[ #{type} ]], valid steps are [[ #{@types[type]} ]]"
 
       # no registering the same extension twice
       for extension in _.uniq(extensions)
@@ -94,20 +94,20 @@ module.exports = class LifeCycleManager
 
         @registration[type][step][extension].push callback
 
-  update: (fileName) => @_executeLifecycleStep(@_buildAssetOptions(fileName), 'update')
-  remove: (fileName) => @_executeLifecycleStep(@_buildAssetOptions(fileName), 'remove')
+  update: (fileName) => @_executeWorkflowStep(@_buildAssetOptions(fileName), 'update')
+  remove: (fileName) => @_executeWorkflowStep(@_buildAssetOptions(fileName), 'remove')
   add: (fileName) =>
     if @startup
-      @_executeLifecycleStep(@_buildAssetOptions(fileName), 'buildFile')
+      @_executeWorkflowStep(@_buildAssetOptions(fileName), 'buildFile')
     else
-      @_executeLifecycleStep(@_buildAssetOptions(fileName), 'add')
+      @_executeWorkflowStep(@_buildAssetOptions(fileName), 'add')
 
   _buildAssetOptions: (fileName) ->
     ext = path.extname(fileName)
     ext = if ext.length > 1 then ext.substring(1) else ''
     {inputFile:fileName, extension:ext}
 
-  _executeLifecycleStep: (options, type, done = @_finishedWithFile) ->
+  _executeWorkflowStep: (options, type, done = @_finishedWithFile) ->
     options.lifeCycleType = type
 
     # if processing a file, and the file's extension isn't in the list, boot it
@@ -117,7 +117,7 @@ module.exports = class LifeCycleManager
     i = 0
     next = =>
       if i < @types[type].length
-        @_lifecycleMethod type, @types[type][i++], options, cb
+        @_workflowMethod type, @types[type][i++], options, cb
       else
         # finished naturally
         done(options)
@@ -130,8 +130,8 @@ module.exports = class LifeCycleManager
 
     next()
 
-  _lifecycleMethod: (type, step, options, done) ->
-    logger.debug "Calling lifecycle: [[ #{type} ]], [[ #{step} ]], [[ #{options.extension} ]], [[ #{options.inputFile} ]]"
+  _workflowMethod: (type, step, options, done) ->
+    logger.debug "Calling workflow: [[ #{type} ]], [[ #{step} ]], [[ #{options.extension} ]], [[ #{options.inputFile} ]]"
 
     tasks = []
     ext = options.extension
@@ -144,7 +144,7 @@ module.exports = class LifeCycleManager
       if i < tasks.length
         tasks[i++](@config, options, cb)
       else
-        # natural finish to lifecycle step
+        # natural finish to workflow step
         done()
 
     cb = (nextVal) ->
@@ -172,10 +172,10 @@ module.exports = class LifeCycleManager
     done = 0
     # go through startup for each extension
     @allExtensions.forEach (extension) =>
-      @_executeLifecycleStep {extension:extension}, 'buildExtension', =>
+      @_executeWorkflowStep {extension:extension}, 'buildExtension', =>
         @_buildDone() if ++done is @allExtensions.length
 
   _buildDone: =>
     # wrap up, buildDone
-    @_executeLifecycleStep {}, 'buildDone', =>
+    @_executeWorkflowStep {}, 'buildDone', =>
       if @buildDoneCallback? then @buildDoneCallback()

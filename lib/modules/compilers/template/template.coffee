@@ -3,10 +3,14 @@ fs =   require 'fs'
 
 wrench = require 'wrench'
 _ =      require 'lodash'
-logger =           require 'mimosa-logger'
-requireRegister =  require 'mimosa-require'
+logger =           require 'logmimosa'
 
 fileUtils =        require '../../../util/file'
+
+try
+  requireRegister =  require 'mimosa-require'
+catch err
+  logger.debug "mimosa-require not installed, so cannot use inside template compiler"
 
 module.exports = class AbstractTemplateCompiler
 
@@ -178,7 +182,7 @@ module.exports = class AbstractTemplateCompiler
 
   libraryPath: ->
     libPath = "vendor/#{@clientLibrary}"
-    requireRegister.aliasForPath(libPath) ? libPath
+    requireRegister?.aliasForPath(libPath) ? libPath
 
   templatePreamble: (fileName) ->
     """
