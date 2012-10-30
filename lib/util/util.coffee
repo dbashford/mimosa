@@ -54,14 +54,14 @@ exports.processConfig = (opts, callback) ->
   config.isBuild =      opts?.build
   config.isWatch =      opts?.watch
 
-  configurer.applyAndValidateDefaults config, configPath, (err, newConfig) =>
+  configurer.applyAndValidateDefaults config, configPath, (err, newConfig, modules) =>
     if err
       logger.error "Unable to start Mimosa for the following reason(s):\n * #{err.join('\n * ')} "
       process.exit 1
     else
       logger.debug "Full mimosa config:\n#{JSON.stringify(newConfig, null, 2)}"
       logger.setConfig(newConfig)
-      callback(newConfig)
+      callback(newConfig, modules)
 
 exports.cleanCompiledDirectories = (config, cb) ->
   i = 0

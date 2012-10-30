@@ -12,7 +12,7 @@ clean = (opts) ->
 
   opts.clean = true
 
-  util.processConfig opts, (config) =>
+  util.processConfig opts, (config, modules) =>
     if opts.force
       if fs.existsSync config.watch.compiledDir
         logger.info "Forcibly removing the entire directory [[ #{config.watch.compiledDir} ]]"

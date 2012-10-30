@@ -2,15 +2,13 @@ watch =     require 'chokidar'
 logger =    require 'logmimosa'
 
 Workflow = require './workflow'
-moduleManager = require '../modules'
 
 class Watcher
 
   adds:[]
 
-  constructor: (@config, @persist, @initCallback) ->
+  constructor: (@config, modules, @persist, @initCallback) ->
     @throttle = @config.watch.throttle
-    modules = moduleManager.getConfiguredModules(@config)
     @workflow = new Workflow(@config, modules, @_buildDoneCallback)
     @_startWatcher()
 

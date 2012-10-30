@@ -6,8 +6,8 @@ Watcher =  require '../util/watcher'
 virgin = (opts) =>
   if opts.debug then logger.setDebug()
   opts.virgin = true
-  util.processConfig opts, (config) ->
-    new Watcher(config, true)
+  util.processConfig opts, (config, modules) ->
+    new Watcher(config, modules, true)
 
 register = (program, callback) =>
   program

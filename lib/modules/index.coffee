@@ -1,3 +1,6 @@
+path = require 'path'
+{exec} = require 'child_process'
+
 _ = require 'lodash'
 
 compilers = require './compilers'
@@ -21,12 +24,19 @@ for dep, version of pack.dependencies when dep.indexOf('mimosa-') > -1
     default: if builtIns.indexOf(dep) > -1 then "yes" else "no"
     dependencies: modPack.dependencies
 
-configured = (moduleNames) ->
+configured = (moduleNames, callback) ->
   return configuredModules if configuredModules
 
   # file must be first
   configuredModules = [file, compilers, logger]
-  for modName in moduleNames
+  index = 0
+
+  processModule = ->
+    if index is moduleNames.length
+      return callback(configuredModules)
+
+    modName = moduleNames[index]
+    index++
     unless modName.indexOf('mimosa-') is 0
       modName = "mimosa-#{modName}"
 
@@ -37,18 +47,28 @@ configured = (moduleNames) ->
         configuredModules.push(require modName)
         break
 
-    unless found
-      logger.debug "Did not find module [[ #{modName} ]] among those installed in Mimosa"
+    if found
+      processModule()
+    else
+      logger.info "Module [[ #{modName} ]] not installed inside your Mimosa, attempting to install it from NPM."
 
-      try
-        logger.debug "Check if installed globally, as if developer of module"
-        globalMod = require modName
-        console.log "Found [[ #{modName} ]] installed as global dependency"
-        configuredModules.push globalMod
-      catch err
-        console.log "TODO: Did not find [[ #{modName} ]] as global install, now check NPM, if found, install"
+      currentDir = process.cwd()
+      mimosaPath = path.join __dirname, '..', '..'
+      process.chdir mimosaPath
 
-  configuredModules
+      installString = "npm install #{modName} --save"
+      exec installString, (err, sout, serr) =>
+        if err
+          logger.error err
+        else
+          logger.success "Install of '#{modName}' successful"
+
+        logger.debug "NPM INSTALL standard out\n#{sout}"
+        logger.debug "NPM INSTALL standard err\n#{serr}"
+        process.chdir currentDir
+        processModule()
+
+  processModule()
 
 module.exports =
   basic: [file, compilers]

@@ -22,10 +22,12 @@ init = (name, opts) ->
           copySkeleton(name, opts.javascript, moduleDirPath)
         else
           logger.error "File already exists at [[ #{moduleDirPath} ]]"
+          process.exit 1
     else
       fs.mkdir moduleDirPath, (err) ->
         if err
-          return logger.error "Error creating directory: #{err}"
+          logger.error "Error creating directory: #{err}"
+          process.exit 1
         else
           copySkeleton(name, opts.javascript, moduleDirPath)
 
@@ -41,6 +43,7 @@ copySkeleton = (name, isJavascript, moduleDirPath) ->
       console.log ""
       logger.success "Module skeleton successfully placed in #{name} directory. The first thing you'll" +
                      " want to do is go into #{name}#{path.sep}package.json and replace the placeholders.\n"
+      process.exit 1
 
 register = (program, callback) ->
   program

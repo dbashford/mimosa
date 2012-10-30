@@ -21,19 +21,20 @@ class MimosaConfigurer
 
   applyAndValidateDefaults: (config, configPath, callback) =>
     moduleNames = config.modules ? @baseDefaults.modules
-    @modules = moduleManager.getConfiguredModules(moduleNames)
+    moduleManager.getConfiguredModules moduleNames, (modules) =>
 
-    config.root = path.dirname(configPath)
-    config = @_applyDefaults(config)
-    errors = @_validateSettings(config)
-    err = if errors.length is 0
-      logger.debug "No mimosa config errors"
-      config = @_manipulateConfig(config)
-      null
-    else
-      errors
+      @modules = modules
+      config.root = path.dirname(configPath)
+      config = @_applyDefaults(config)
+      errors = @_validateSettings(config)
+      err = if errors.length is 0
+        logger.debug "No mimosa config errors"
+        config = @_manipulateConfig(config)
+        null
+      else
+        errors
 
-    callback(err, config)
+      callback(err, config, modules)
 
   _moduleDefaults: ->
     defs = {}

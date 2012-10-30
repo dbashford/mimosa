@@ -17,6 +17,8 @@ install = (name, opts) ->
     logger.info "No name provided, assuming developing module."
     installLocally(currentDir, mimosaPath)
 
+  process.exit 1
+
 installFromNPM = (name, currentDir, mimosaPath) ->
   unless name.indexOf('mimosa-') is 0
     return logger.error "Can only install 'mimosa-' prefixed modules with mod:install (ex: mimosa-server)."

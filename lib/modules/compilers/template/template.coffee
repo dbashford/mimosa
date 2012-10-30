@@ -4,9 +4,13 @@ fs =   require 'fs'
 wrench = require 'wrench'
 _ =      require 'lodash'
 logger =           require 'logmimosa'
-requireRegister =  require 'mimosa-require'
 
 fileUtils =        require '../../../util/file'
+
+try
+  requireRegister =  require 'mimosa-require'
+catch err
+  logger.debug "mimosa-require not installed, so cannot use inside template compiler"
 
 module.exports = class AbstractTemplateCompiler
 

@@ -16,9 +16,9 @@ build = (opts) =>
   logger.info "Beginning build"
   opts.build = true
 
-  util.processConfig opts, (config) =>
+  util.processConfig opts, (config, modules) =>
     if opts.removeCombined then config.require.optimize.overrides.removeCombined = true
-    new Watcher config, false, -> logger.success "Finished build"
+    new Watcher config, modules, false, -> logger.success "Finished build"
 
     _writeJade(config) if opts.jade
 

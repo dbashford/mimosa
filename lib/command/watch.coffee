@@ -6,10 +6,10 @@ Watcher = require '../util/watcher'
 watch = (opts) =>
   if opts.debug then logger.setDebug()
   opts.watch = true
-  util.processConfig opts, (config) =>
+  util.processConfig opts, (config, modules) =>
     instWatcher = ->
       config.isClean = false
-      new Watcher(config, true)
+      new Watcher(config, modules, true)
 
     if opts.clean
       config.isClean = true

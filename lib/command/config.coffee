@@ -13,6 +13,8 @@ copyConfig = (opts) ->
   fs.writeFile currPath, configText, 'ascii'
   logger.success "Copied default config file into current directory."
 
+  process.exit 1
+
 register = (program, callback) ->
   program
     .command('config')
