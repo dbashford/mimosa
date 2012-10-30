@@ -38,7 +38,7 @@ class MimosaCompilerModule
 
     if ++@templateLibrariesBeingUsed is 2
       logger.error "More than one template library is being used, but multiple template.outputFileName entries not found." +
-        " You will want to configure a map of template.outfileFileName entries in your config, otherwise you will only get" +
+        " You will want to configure a map of template.outputFileName entries in your config, otherwise you will only get" +
         " template output for one of the libraries."
 
     next()

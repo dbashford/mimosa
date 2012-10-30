@@ -46,7 +46,7 @@ class MimosaConfigurer
   _extend: (obj, props) ->
     Object.keys(props).forEach (k) =>
       val = props[k]
-      if val? and typeof val is 'object' and not Array.isArray(val)
+      if val? and typeof val is 'object' and not Array.isArray(val) and typeof obj[k] is typeof val
         @_extend obj[k], val
       else
         obj[k] = val
