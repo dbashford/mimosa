@@ -28,10 +28,10 @@ deleteMod = (name, opts) ->
   exec uninstallString, (err, sout, serr) =>
     if err
       logger.error err
-    else if serr
-      logger.error serr
     else
       console.log ""
+      if serr
+        logger.error serr
       logger.success "Uninstall of '#{name}' successful\n"
 
     logger.debug "NPM UNINSTALL standard out\n#{sout}"
