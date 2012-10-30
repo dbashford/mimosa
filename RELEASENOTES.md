@@ -1,8 +1,9 @@
-# 0.4.0beta - October ?? 2012
+# 0.4.0beta - October 31 2012
 
 Pluggability has arrived.  Obviously as Mimosa is new and therefore its use isn't widespread, so there aren't modules besides the core set that come with Mimosa for you to use. But as time passes, I'll be building more, and in a perfect world a community of sorts develops and chips stuff in too. This enables that.
 
 ### Major
+* http://mimosajs.com/modules.html , modules/extensibility added and documented, few highlights...
 * A new top level configuration property `modules` has been introduced.  It defaults to ['lint', 'server', 'require', 'minify']. This is what it needs to be for Mimosa to keep on doing what it always has for you, so you can leave it at its default. The modules property is how you tell Mimosa what modules to use. The default modules are external to Mimosa, but are installed with Mimosa by default.
 * You can choose to remove `modules` from your project if you feel you don't need them.  For instance, if you don't want to lint your code, remove the `lint` module from the list and remove the `lint` config. This saves you having to turn if off using the lint config itself.  (In this example, if it is all commented out, you don't have to remove the lint config, but if you aren't using it, may as well clean it up!)
 * You can also add new modules, modules outside the core set of Mimosa modules.  As of this writing none exist, but the point of making Mimosa pluggable was to allow for them to exist and be used.  If someone coded a `mimosa-foo` module and installed it in NPM, you can add `foo` to the list of modules. Mimosa assumes the required `mimosa-` prefix.
@@ -16,6 +17,7 @@ Pluggability has arrived.  Obviously as Mimosa is new and therefore its use isn'
 
 ### Minor Changes
 * You can now use a `mimosa-config.js` if you want. Mimosa will not give you one of those, but you can make the minor necessary charges.
+* gzippo branch used as dependency with past versions of Mimosa is now gone, which will force you to upgrade/remediate as indicated in previous release
 
 ### You'll need to...
 * At the very least, add the commented out lines of config for modules so should you want to update modules later, its there and easy to update.
@@ -28,7 +30,6 @@ Pluggability has arrived.  Obviously as Mimosa is new and therefore its use isn'
                                                      # install it.
 ```
 
-* If you want to take advantage of the new modules, then uncomment and make some changes.
 * Make modules of your own!  `mimosa mod:init mimosa-[nameOfModule]` and get crackin'!  Check out http://mimosajs.com/modules.html for details.
 
 
