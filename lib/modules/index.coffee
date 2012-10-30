@@ -59,9 +59,11 @@ configured = (moduleNames, callback) ->
       installString = "npm install #{modName} --save"
       exec installString, (err, sout, serr) =>
         if err
-          logger.error err
+          logger.error "Unable to install [[ #{modName} ]], but allowing Mimosa to continue.  Install error follows."
+          logger.warn err
         else
           logger.success "Install of '#{modName}' successful"
+          configuredModules.push(require modName)
 
         logger.debug "NPM INSTALL standard out\n#{sout}"
         logger.debug "NPM INSTALL standard err\n#{serr}"
