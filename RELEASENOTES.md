@@ -2,6 +2,8 @@
 
 Pluggability has arrived.  Obviously Mimosa is new and therefore its use isn't widespread, so there aren't modules besides the core set that come with Mimosa for you to use. But as time passes, I'll be building more, and in a perfect world a community of sorts develops and chips stuff in too. This release enables that.
 
+This is another low breaking-changes release.  Don't need to do much to upgrade.  A few minor things listed below.
+
 ### Major
 * The `install` command has been renamed to `import` to make way for possible future different use of `install`.
 * http://mimosajs.com/modules.html , modules/extensibility added and documented, few highlights...
