@@ -56,6 +56,8 @@ exports.processConfig = (opts, callback) ->
   config.isClean =      opts?.clean
   config.isBuild =      opts?.build
   config.isWatch =      opts?.watch
+  config.isPackage =    opts?.package
+  config.isInstall =    opts?.install
 
   configurer.applyAndValidateDefaults config, configPath, (err, newConfig, modules) =>
     if err
