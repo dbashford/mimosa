@@ -4,6 +4,8 @@ Pluggability has arrived.  Obviously Mimosa is new and therefore its use isn't w
 
 This is another low breaking-changes release.  Don't need to do much to upgrade.  A few minor things listed below.
 
+beta5 will be a return to adding features that have been building up while module work has commenced. Not terribly far from a 1.0.
+
 ### Major
 * The `install` command has been renamed to `import` to make way for possible future different use of `install`.
 * http://mimosajs.com/modules.html , modules/extensibility added and documented, few highlights...
