@@ -17,8 +17,6 @@ install = (name, opts) ->
     logger.info "No name provided, assuming developing module."
     installLocally(currentDir, mimosaPath)
 
-  process.exit 1
-
 installFromNPM = (name, currentDir, mimosaPath) ->
   unless name.indexOf('mimosa-') is 0
     return logger.error "Can only install 'mimosa-' prefixed modules with mod:install (ex: mimosa-server)."
@@ -36,6 +34,8 @@ installFromNPM = (name, currentDir, mimosaPath) ->
     logger.debug "NPM INSTALL standard out\n#{sout}"
     logger.debug "NPM INSTALL standard err\n#{serr}"
     process.chdir currentDir
+
+    process.exit 1
 
 installLocally = (currentDir, mimosaPath) ->
   try
@@ -73,6 +73,9 @@ installLocally = (currentDir, mimosaPath) ->
     logger.debug "NPM INSTALL standard out\n#{sout}"
     logger.debug "NPM INSTALL standard err\n#{serr}"
     process.chdir currentDir
+
+    process.exit 1
+
 
 register = (program, callback) ->
   program
