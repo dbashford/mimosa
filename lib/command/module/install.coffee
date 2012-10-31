@@ -34,7 +34,7 @@ installFromNPM = (name, currentDir, mimosaPath) ->
     logger.debug "NPM INSTALL standard err\n#{serr}"
     process.chdir currentDir
 
-    process.exit 1
+    process.exit 0
 
 installLocally = (currentDir, mimosaPath) ->
   try
@@ -73,7 +73,7 @@ installLocally = (currentDir, mimosaPath) ->
     logger.debug "NPM INSTALL standard err\n#{serr}"
     process.chdir currentDir
 
-    process.exit 1
+    process.exit 0
 
 register = (program, callback) ->
   program

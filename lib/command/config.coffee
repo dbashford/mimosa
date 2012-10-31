@@ -12,7 +12,7 @@ copyConfig = (opts) ->
   logger.debug "Writing config file to #{currPath}"
   fs.writeFileSync currPath, configText, 'ascii'
   logger.success "Copied default config file into current directory."
-  process.exit 1
+  process.exit 0
 
 register = (program, callback) ->
   program

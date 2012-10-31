@@ -38,7 +38,7 @@ list = (opts) ->
   unless opts.verbose
     logger.green "\n  To view more module details, execute \'mimosa mod:list -v\' for \'verbose\' logging. \n"
 
-  process.exit 1
+  process.exit 0
 
 register = (program, callback) ->
   program

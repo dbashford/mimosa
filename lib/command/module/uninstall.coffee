@@ -36,7 +36,7 @@ deleteMod = (name, opts) ->
     logger.debug "NPM UNINSTALL standard out\n#{sout}"
     logger.debug "NPM UNINSTALL standard err\n#{serr}"
     process.chdir currentDir
-    process.exit 1
+    process.exit 0
 
 register = (program, callback) ->
   program
