@@ -3,6 +3,7 @@
 Pluggability has arrived.  Obviously as Mimosa is new and therefore its use isn't widespread, so there aren't modules besides the core set that come with Mimosa for you to use. But as time passes, I'll be building more, and in a perfect world a community of sorts develops and chips stuff in too. This enables that.
 
 ### Major
+* The `install` command has been renamed to `import` to make way for possible future different use of `install`.
 * http://mimosajs.com/modules.html , modules/extensibility added and documented, few highlights...
 * A new top level configuration property `modules` has been introduced.  It defaults to ['lint', 'server', 'require', 'minify']. This is what it needs to be for Mimosa to keep on doing what it always has for you, so you can leave it at its default. The modules property is how you tell Mimosa what modules to use. The default modules are external to Mimosa, but are installed with Mimosa by default.
 * You can choose to remove `modules` from your project if you feel you don't need them.  For instance, if you don't want to lint your code, remove the `lint` module from the list and remove the `lint` config. This saves you having to turn if off using the lint config itself.  (In this example, if it is all commented out, you don't have to remove the lint config, but if you aren't using it, may as well clean it up!)
