@@ -4,7 +4,7 @@ config for your module. If your module has no config, the function can be
 removed or return null. Mimosa uses this function when applying default
 configuration to a user's config.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">exports.defaults = </span><span class="o">-&gt;</span>
   <span class="nv">minify:</span>
-    <span class="nx">exclude</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;\.min\.&quot;</span><span class="p">]</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>The placeholder function should return a string that represents the
+    <span class="nx">exclude</span><span class="o">:</span><span class="p">[</span><span class="s">&quot;\\.min\\.&quot;</span><span class="p">]</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>The placeholder function should return a string that represents the
 mimosa-config placeholder for your configuration defaults including
 explanations for each config setting where appropriate.  The content
 of the string should be all commented out. If you have no config,
@@ -15,7 +15,7 @@ when Mimosa is creating an initial mimosa-config using 'mimosa new' or
 <span class="s">  \t</span>
 <span class="s">    # minify:                   # Configuration for non-require minification/compression via uglify</span>
 <span class="s">                                # using the --minify flag.</span>
-<span class="s">      # exclude:[&quot;\\.min\\.&quot;]     # List of regexes to exclude files when running minification.</span>
+<span class="s">      # exclude:[&quot;\\\\.min\\\\.&quot;]     # List of regexes to exclude files when running minification.</span>
 <span class="s">                                # Any path with &quot;.min.&quot; in its name, like jquery.min.js, is assumed to</span>
 <span class="s">                                # already be minified and is ignored by default. Override this property</span>
 <span class="s">                                # if you have other files that you&#39;d like to exempt from minification.</span>
