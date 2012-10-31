@@ -28,8 +28,7 @@ installFromNPM = (name, currentDir, mimosaPath) ->
     if err
       logger.error err
     else
-      console.log ""
-      logger.success "Install of '#{name}' successful\n"
+      logger.success "Install of '#{name}' successful"
 
     logger.debug "NPM INSTALL standard out\n#{sout}"
     logger.debug "NPM INSTALL standard err\n#{serr}"
@@ -76,7 +75,6 @@ installLocally = (currentDir, mimosaPath) ->
 
     process.exit 1
 
-
 register = (program, callback) ->
   program
     .command('mod:install [name]')
@@ -96,10 +94,6 @@ register = (program, callback) ->
       logger.green('  Mimosa, then execute \'mod:install\' from the root of the module, the same location as the')
       logger.green('  package.json, without providing a name.  Mimosa will copy the module and install it.')
       logger.blue( '\n    $ mimosa mod:install\n')
-
-
-
-
 
 module.exports = (program) ->
   register program, install
