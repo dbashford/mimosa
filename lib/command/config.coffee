@@ -10,9 +10,8 @@ copyConfig = (opts) ->
   configText = configurer.buildConfigText()
   currPath = path.join path.resolve(''), "mimosa-config.coffee"
   logger.debug "Writing config file to #{currPath}"
-  fs.writeFile currPath, configText, 'ascii'
+  fs.writeFileSync currPath, configText, 'ascii'
   logger.success "Copied default config file into current directory."
-
   process.exit 1
 
 register = (program, callback) ->
