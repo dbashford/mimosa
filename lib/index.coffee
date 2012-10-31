@@ -16,7 +16,7 @@ class Mimosa
     require('./command/watch')(program)
     require('./command/virgin')(program)
     require('./command/update')(program)
-    require('./command/install')(program)
+    require('./command/import')(program)
 
     require('./command/module/install')(program)
     require('./command/module/init')(program)

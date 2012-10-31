@@ -7,21 +7,21 @@ logger = require 'logmimosa'
 
 util = require '../util/util'
 
-class InstallCommand
+class ImportCommand
 
   constructor: (@program) ->
 
-  install: (args...) =>
+  import: (args...) =>
     @prepArgs(args)
 
     util.processConfig {}, (config, modules) =>
       dirs = @directories(config)
       logger.debug "All directories found:\n#{dirs.join('\n')}"
 
-      logger.green "\n  In which directory would you like to install this library? \n"
+      logger.green "\n  Into which directory would you like to import this library? \n"
       @program.choose dirs, (i) =>
         logger.blue "\n  You chose #{dirs[i]}. \n"
-        logger.info "Beginning install..."
+        logger.info "Beginning import..."
 
         currentDir = process.cwd()
         desiredDir = dirs[i]
@@ -54,7 +54,7 @@ class InstallCommand
         " at #{path.join(destDirectory,b)}"
       okText = okText.replace /\s+name:\s+([^\s]+)/g, (a, b) ->
         " name: #{path.join(dependencyName,b)}"
-      logger.success "#{okText}\nInstall Complete!"
+      logger.success "#{okText}\nImport Complete!"
       callback()
     , (errText) ->
       logger.error errText
@@ -69,27 +69,27 @@ class InstallCommand
 
   register: =>
     @program
-      .command('install')
-      .description("install libraries from github via the command line")
+      .command('import')
+      .description("import libraries from github via the command line using volo")
       .option("-n, --noamd",  "will load the non-amd version")
       .option("-D, --debug", "run in debug mode")
-      .action(@install)
+      .action(@import)
       .on '--help', ->
-        logger.green('  This command exposes basic volo (http://volojs.org/) functionality to install libraries')
-        logger.green('  from GitHub.  Mimosa will ask you where you\'d like to install the library.  Then your')
-        logger.green('  library will be fetched from GitHub and placed in the directory you chose.  Mimosa will')
-        logger.green('  also fetch any dependent libraries.  For instance, if you install Backbone it will also')
-        logger.green('  install jquery and underscore.')
-        logger.blue( '\n    $ mimosa install backbone\n')
+        logger.green('  This command exposes basic volo (http://volojs.org/) functionality to import and install')
+        logger.green('  libraries from GitHub.  Mimosa will ask you where you\'d like to import the library.  Then')
+        logger.green('  your library will be fetched from GitHub and placed in the directory you chose.  Mimosa')
+        logger.green('  will also fetch any dependent libraries.  For instance, if you import Backbone it will')
+        logger.green('  also import jquery and underscore.')
+        logger.blue( '\n    $ mimosa import backbone\n')
         logger.green('  Mimosa assumes you want an AMD version of the library you are attempting to fetch and will')
         logger.green('  attempt to find that.  Should a non-AMD library be found, you will be asked to provide details')
         logger.green('  regarding dependencies and and export information.\n')
-        logger.green('  Should you not want an AMD version, you can provide the \'install\' command with a --noamd')
+        logger.green('  Should you not want an AMD version, you can provide the \'import\' command with a --noamd')
         logger.green('  flag.  In this case an AMD version will not be sought, and a non-AMD version will not trigger ')
         logger.green('  a list of questions.')
-        logger.blue( '\n    $ mimosa install backbone --noamd')
-        logger.blue( '    $ mimosa install backbone -n\n')
+        logger.blue( '\n    $ mimosa import backbone --noamd')
+        logger.blue( '    $ mimosa import backbone -n\n')
 
 module.exports = (program) ->
-  command = new InstallCommand(program)
+  command = new ImportCommand(program)
   command.register()
