@@ -1,3 +1,17 @@
+# 0.4.1beta - November ?? 2012
+
+### Major
+* Added a `--package` flag to `mimosa build`, this does nothing other than add an `isPackage` flag to the `mimosa-config`.
+* Created a new module `mimosa-web-package`, that will package up a web application. See the github repo for details: https://github.com/dbashford/mimosa-web-package  Naturally, this works with the package flag is ticked on.  This module is not a default module, but can be used by uncommenting the `modules` config and adding `web=package`
+* I've locked down the mimosa-config via Object.freeze().  Now that the app is open to module development, I felt it fairly important to keep this immutable. Now modules cannot modify the config.  I encourage the use of "use strict" in your modules so you have errors thrown when you attempt to modify the config.
+
+### Minor
+* Upgrade all modules and the module skeleton to use the latest logmimosa.
+* Added coffee-script as a dependency for mimosa's 'new' skeleton when CoffeeScript is selected as the language of choice.
+
+### You'll need to...
+* If you have a CoffeeScript app.For the new package module to work, you'll need to add "coffee-script": "1.3.3"  (or 1.4.0) to the list of dependencies in your `package.json` and then run `npm install` from the root of your project.
+
 # 0.4.0beta - October 31 2012
 
 Pluggability has arrived.  Obviously Mimosa is new and therefore its use isn't widespread, so there aren't modules besides the core set that come with Mimosa for you to use. But as time passes, I'll be building more, and in a perfect world a community of sorts develops and chips stuff in too. This release enables that.

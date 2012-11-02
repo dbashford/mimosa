@@ -3,6 +3,12 @@
 # The code contained herein is all example code and shouldn't be used verbatim.
 # The example in this case is modified from the mimosa-minify module.
 
+# By the time your registration code is executed the mimosa-config has been
+# locked down using Object.freeze.  To ensure you don't attempt to alter
+# the mimosa-config, it is best to include "use strict" which will cause an
+# exception to be thrown should you attempt to alter the config.
+"use strict"
+
 # Pulling in the <a href="./config.html">configuration management</a> code that is a
 # part of the module.
 
@@ -73,7 +79,7 @@ registration = (mimosaConfig, register) ->
 # processing for the current asset/build step needs to stop, the callback can be called passing false.
 # Ex: next(false). In most cases you do not want to do this.
 
-_minifyJS = (config, options, next) ->
+_minifyJS = (mimosaConfig, options, next) ->
   for file in options.files
     file.outputFileText = minify(file.outputFileText)
   next()

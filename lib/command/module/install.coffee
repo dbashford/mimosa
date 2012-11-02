@@ -66,8 +66,7 @@ installLocally = (currentDir, mimosaPath) ->
       logger.debug "New mimosa dependencies:\n #{JSON.stringify(mimosaPackage, null, 2)}"
       fs.writeFileSync mimosaPackagePath, JSON.stringify(mimosaPackage, null, 2), 'ascii'
 
-      console.log ""
-      logger.success "Install of '#{pack.name}' successful\n"
+      logger.success "Install of '#{pack.name}' successful"
 
     logger.debug "NPM INSTALL standard out\n#{sout}"
     logger.debug "NPM INSTALL standard err\n#{serr}"

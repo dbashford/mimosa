@@ -24,6 +24,8 @@ module.exports = class LifeCycleManager
   constructor: (@config, modules, @buildDoneCallback) ->
     compilers.setupCompilers(@config)
 
+    @_deepFreeze(@config)
+
     @types = _.clone(@masterTypes, true)
     for type, steps of @types
       @registration[type] = {}
@@ -179,3 +181,11 @@ module.exports = class LifeCycleManager
     # wrap up, buildDone
     @_executeWorkflowStep {}, 'buildDone', =>
       if @buildDoneCallback? then @buildDoneCallback()
+
+  _deepFreeze: (o) =>
+    Object.freeze(o)
+    Object.getOwnPropertyNames(o).forEach (prop) =>
+      if o.hasOwnProperty(prop) and o[prop] isnt null and
+      (typeof o[prop] is "object" || typeof o[prop] is "function") and
+      not Object.isFrozen(o[prop])
+        @_deepFreeze o[prop]
