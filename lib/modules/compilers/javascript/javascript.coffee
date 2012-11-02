@@ -1,3 +1,5 @@
+"use strict"
+
 logger =    require 'logmimosa'
 
 module.exports = class JSCompiler

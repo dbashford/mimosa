@@ -1,3 +1,5 @@
+"use strict"
+
 hogan = require "hogan.js"
 
 AbstractTemplateCompiler = require './template'

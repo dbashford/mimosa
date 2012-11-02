@@ -1,3 +1,5 @@
+"use strict"
+
 path = require 'path'
 {exec} = require 'child_process'
 

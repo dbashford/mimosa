@@ -1,3 +1,5 @@
+"use strict"
+
 AbstractUnderscoreCompiler = require './underscore'
 
 module.exports = class UnderscoreCompiler extends AbstractUnderscoreCompiler

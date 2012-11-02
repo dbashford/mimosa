@@ -1,3 +1,5 @@
+"use strict"
+
 init = require './init'
 beforeRead = require './beforeRead'
 read = require './read'

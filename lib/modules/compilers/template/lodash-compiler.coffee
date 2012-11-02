@@ -1,3 +1,5 @@
+"use strict"
+
 AbstractUnderscoreCompiler = require './underscore'
 
 module.exports = class LodashCompiler extends AbstractUnderscoreCompiler
@@ -12,4 +14,3 @@ module.exports = class LodashCompiler extends AbstractUnderscoreCompiler
 
   getLibrary: ->
     require 'lodash'
-

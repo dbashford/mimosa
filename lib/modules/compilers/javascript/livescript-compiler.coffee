@@ -1,3 +1,5 @@
+"use strict"
+
 liveScript = require 'LiveScript'
 
 JSCompiler = require "./javascript"

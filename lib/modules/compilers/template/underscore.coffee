@@ -1,3 +1,5 @@
+"use strict"
+
 AbstractTemplateCompiler = require './template'
 
 module.exports = class AbstractUnderscoreCompiler extends AbstractTemplateCompiler

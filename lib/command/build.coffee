@@ -18,7 +18,6 @@ build = (opts) =>
 
   util.processConfig opts, (config, modules) =>
     if opts.removeCombined then config.require.optimize.overrides.removeCombined = true
-    config.server.useReload = false
     new Watcher config, modules, false, -> logger.success "Finished build"
 
     _writeJade(config) if opts.jade

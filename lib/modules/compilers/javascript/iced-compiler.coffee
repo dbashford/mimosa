@@ -1,3 +1,5 @@
+"use strict"
+
 iced = require 'iced-coffee-script'
 
 JSCompiler = require "./javascript"

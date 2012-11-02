@@ -1,4 +1,4 @@
-# TEMPLATES
+"use strict"
 
 module.exports = class NoneCompiler
   @prettyName        = "None (No Templating)"

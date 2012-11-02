@@ -1,3 +1,5 @@
+"use strict"
+
 jade = require 'jade'
 
 AbstractTemplateCompiler = require './template'
