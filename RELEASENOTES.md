@@ -1,9 +1,9 @@
-# 0.4.1beta - November ?? 2012
+# 0.4.1beta - November 02 2012
 
 ### Major
 * Added a `--package` flag to `mimosa build`, this does nothing other than add an `isPackage` flag to the `mimosa-config`.
 * Created a new module `mimosa-web-package`, that will package up a web application. See the github repo for details: https://github.com/dbashford/mimosa-web-package  Naturally, this works with the new package flag is ticked on.  This module is not a default module, but can be used by uncommenting the `modules` config and adding `web-package`
-* I've locked down the mimosa-config via Object.freeze().  Now that the app is open to module development, I felt it fairly important to keep this immutable. Now modules cannot modify the config.  I encourage the use of "use strict" in your modules so you have errors thrown when you attempt to modify the config. The module skeleton now uses "use strict".
+* I've locked down the mimosa-config via Object.freeze().  Now that the app is open to module development, I felt it fairly important to keep this immutable. Now modules cannot modify the config.  I encourage the use of "use strict" in your modules so you have errors thrown when you attempt to modify the config. The module skeleton now uses "use strict". You can still alter any part of the config during the call to `validate(config)` inside a module, but that will be limited to just the portions of the config belonging to a module in a future release.
 
 ### Minor
 * Upgrade all modules and the module skeleton to use the latest logmimosa.
