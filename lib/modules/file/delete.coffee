@@ -1,3 +1,5 @@
+"use strict"
+
 fs = require 'fs'
 
 logger = require 'logmimosa'

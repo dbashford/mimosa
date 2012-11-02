@@ -1,3 +1,5 @@
+"use strict"
+
 _ = require 'underscore'
 
 AbstractTemplateCompiler = require './template'

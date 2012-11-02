@@ -1,3 +1,5 @@
+"use strict"
+
 dust = require 'dustjs-linkedin'
 
 AbstractTemplateCompiler = require './template'

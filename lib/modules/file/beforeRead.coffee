@@ -1,3 +1,5 @@
+"use strict"
+
 logger = require 'logmimosa'
 
 fileUtils = require '../../util/file'

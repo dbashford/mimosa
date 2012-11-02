@@ -26,10 +26,10 @@ exports.projectPossibilities = (callback) ->
       break
 
 exports.processConfig = (opts, callback) ->
-  configPath = _findConfigPath()
+  configPath = _findConfigPath('mimosa-config.coffee', path.resolve('mimosa-config.coffee'))
   unless configPath?
     logger.debug "Didn't find mimosa-config.coffee, going to try mimosa-config.js"
-    configPath = _findConfigPath(path.resolve('mimosa-config.js'))
+    configPath = _findConfigPath('mimosa-config.js', path.resolve('mimosa-config.js'))
 
   try
     {config} = require configPath if configPath?
@@ -125,14 +125,14 @@ _cleanUp = (config, cb) ->
     else
       done()
 
-_findConfigPath = (configPath = path.resolve('mimosa-config.coffee')) ->
+_findConfigPath = (fileName, configPath) ->
   if fs.existsSync configPath
     logger.debug "Found mimosa-config: [[ #{configPath} ]]"
     configPath
   else
-    configPath = path.join(path.dirname(configPath), '..', 'mimosa-config.coffee')
+    configPath = path.join(path.dirname(configPath), '..', fileName)
     logger.debug "Trying #{configPath}"
-    if configPath.length is 'mimosa-config.coffee'.length + 1
+    if configPath.length is fileName.length + 1
       logger.debug "Unable to find mimosa-config"
       return null
-    _findConfigPath(configPath)
+    _findConfigPath(fileName, configPath)

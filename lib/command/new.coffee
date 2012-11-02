@@ -276,6 +276,10 @@ class NewCommand
       logger.debug "removing iced-coffee-script from package.json"
       delete packageJson.dependencies["iced-coffee-script"]
 
+    unless chosen.javascript.base is "coffee"
+      logger.debug "removing coffee-script from package.json"
+      delete packageJson.dependencies["coffee-script"]
+
     fs.writeFileSync jPath, JSON.stringify(packageJson, null, 2)
 
     logger.debug "Moving server into place"
