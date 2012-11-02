@@ -77,6 +77,14 @@ exports.cleanCompiledDirectories = (config, cb) ->
     _cleanMisc config, done
     _cleanUp config, done
 
+exports.deepFreeze = (o) ->
+  Object.freeze(o)
+  Object.getOwnPropertyNames(o).forEach (prop) =>
+    if o.hasOwnProperty(prop) and o[prop] isnt null and
+    (typeof o[prop] is "object" || typeof o[prop] is "function") and
+    not Object.isFrozen(o[prop])
+      exports.deepFreeze o[prop]
+
 _cleanMisc = (config, cb) ->
   jsDir = path.join config.watch.compiledDir, config.watch.javascriptDir
   files = fileUtils.glob "#{jsDir}/**/*-built.js"

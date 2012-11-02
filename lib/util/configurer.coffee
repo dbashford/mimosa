@@ -1,3 +1,5 @@
+"use strict"
+
 path = require 'path'
 fs =   require 'fs'
 
@@ -5,6 +7,7 @@ wrench = require 'wrench'
 logger = require 'logmimosa'
 _      = require 'lodash'
 
+util   = require './util'
 moduleManager = require('../modules')
 
 class MimosaConfigurer
@@ -26,7 +29,7 @@ class MimosaConfigurer
       @modules = modules
       config.root = configPath
       config = @_applyDefaults(config)
-      errors = @_validateSettings(config)
+      [errors, config] = @_validateSettings(config)
       err = if errors.length is 0
         logger.debug "No mimosa config errors"
         config = @_manipulateConfig(config)
@@ -67,10 +70,36 @@ class MimosaConfigurer
     config
 
   _validateSettings: (config) ->
-    errors = []
+    errors = @_validateWatchConfig(config)
+
     for mod in @modules when mod.validate?
+
+      if mod.defaults?
+        config = _.clone(config, true)
+        allConfigKeys = Object.keys(config)
+        defaults = mod.defaults()
+        modKeys = if typeof defaults is "object" and not Array.isArray()
+          Object.keys(defaults)
+        else
+          []
+
+        allConfigKeys.forEach (key) ->
+          unless modKeys.indexOf(key) > -1
+            if typeof config[key] is "object"
+              util.deepFreeze(config[key])
+      else
+        util.deepFreeze(config)
+
       moduleErrors = mod.validate(config)
       errors.push moduleErrors... if moduleErrors
+
+    # return to unfrozen
+    config = _.clone(config, true)
+
+    [errors, config]
+
+  _validateWatchConfig: (config) =>
+    errors = []
 
     if typeof config.watch.sourceDir is "string"
       @_testPathExists(config.watch.sourceDir, "watch.sourceDir", config.root, errors)
