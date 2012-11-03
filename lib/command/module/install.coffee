@@ -37,6 +37,7 @@ installFromNPM = (name, currentDir, mimosaPath) ->
     process.exit 0
 
 installLocally = (currentDir, mimosaPath) ->
+
   try
     pack = require path.join(currentDir, 'package.json')
   catch err
@@ -49,30 +50,56 @@ installLocally = (currentDir, mimosaPath) ->
 
   logger.info "Installing your local module [[ #{pack.name} ]] to [[ #{nodemods} ]]"
 
+  done = ->
+    process.chdir currentDir
+    process.exit 0
+
   unless fs.existsSync nodemods
     fs.mkdirSync nodemods
+
+  Object.keys(require.cache).forEach (key) ->
+    if key.indexOf(nodemods) is 0
+      delete require.cache[key]
 
   wrench.copyDirSyncRecursive currentDir, nodemods
 
   process.chdir nodemods
+
   logger.info "Running NPM Install inside installed module"
   exec "npm install", (err, sout, serr) =>
     if err
       logger.error err
+      done()
     else
+      logger.debug "NPM INSTALL standard out\n#{sout}"
+      logger.debug "NPM INSTALL standard err\n#{serr}"
+
       mimosaPackagePath = path.join mimosaPath, 'package.json'
       mimosaPackage = require(mimosaPackagePath)
       mimosaPackage.dependencies[pack.name] = pack.version
       logger.debug "New mimosa dependencies:\n #{JSON.stringify(mimosaPackage, null, 2)}"
       fs.writeFileSync mimosaPackagePath, JSON.stringify(mimosaPackage, null, 2), 'ascii'
 
-      logger.success "Install of '#{pack.name}' successful"
+      logger.info "Module installed, testing module to ensure it works"
+      try
+        require nodemods
+        logger.success "Install of '#{pack.name}' successful"
+        done()
+      catch err
+        logger.error "Error using module, backing out module install."
+        logger.error err
 
-    logger.debug "NPM INSTALL standard out\n#{sout}"
-    logger.debug "NPM INSTALL standard err\n#{serr}"
-    process.chdir currentDir
+        process.chdir mimosaPath
+        exec "npm uninstall #{pack.name} --save", (err, sout, serr) =>
+          if err
+            logger.error err
+          else
+            logger.info "Module #{pack.name} uninstalled"
 
-    process.exit 0
+          logger.debug "NPM INSTALL standard out\n#{sout}"
+          logger.debug "NPM INSTALL standard err\n#{serr}"
+
+          done()
 
 register = (program, callback) ->
   program

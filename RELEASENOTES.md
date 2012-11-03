@@ -1,3 +1,9 @@
+# 0.4.2beta - November ?? 2012
+
+### Minor
+* Mimosa now attempts to load locally installed modules before installing them within Mimosa. If the module doesn't load (bad CoffeeScript syntax, bad require path, etc), Mimosa will not install it.  Previously, bad modules could be installed and that would cause Mimosa to be unable to subsequently start.  This does not stop bad modules from being loaded from NPM, just locally.
+* Modules can now only change properties from their own config within the mimosa-config, both during validate() function, and during workflows.
+
 # 0.4.1beta - November 02 2012
 
 ### Major
