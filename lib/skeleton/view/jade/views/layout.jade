@@ -4,16 +4,14 @@ html
     title Mimosa
     link(rel='stylesheet', href='/stylesheets/style.css' + cachebust)
 
-    // Switch between optimized and non-optimized modes
+    if reload
+      script(src='/socket.io/socket.io.js')
+      script(src='/javascripts/reload-client.js')
+
     if optimize
       script(src='/javascripts/main-built.js')
     else
       script(src='/javascripts/vendor/require.js', data-main='/javascripts/main.js')
-
-    // Do not remove this if you want to take advantage of live reload
-    if reload
-      script(src='/socket.io/socket.io.js')
-      script(src='/socket-enable.js')
 
   body
     block content

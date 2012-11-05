@@ -1,5 +1,4 @@
 express =        require 'express'
-reloadOnChange = require 'watch-connect'
 engines =        require 'consolidate'
 
 routes  =        require './routes'
@@ -22,18 +21,11 @@ exports.startServer = (config) ->
     app.use express.favicon()
     app.use express.bodyParser()
     app.use express.methodOverride()
-    if config.server.useReload
-      options =
-        server:server
-        basedir: config.server.views.path
-        watchdir:publicPath
-        skipAdding: true
-        exclude:["almond\.js"]
-        additionaldirs:[config.server.views.path]
-      app.use reloadOnChange(options)
     app.use express.compress()
     app.use config.server.base, app.router
     app.use express.static(publicPath)
 
   app.configure 'development', ->
     app.use express.errorHandler()
+
+  server
