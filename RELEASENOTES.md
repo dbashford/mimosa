@@ -1,8 +1,36 @@
-# 0.4.2beta - November ?? 2012
+# 0.5.0beta - November ?? 2012
+
+This release has a small amount of changes, but they require a good amount of changes to beta4 codebases.
+
+### Major
+* In beta4 and previous, the `mimosa-server` module had live-reload functionality built in.  That functionality has been broken out of `mimosa-server` and placed into a new module, `mimosa-live-reload` which will be a default module installed with Mimosa.
+* The live-reload functionality itself has be drastically altered.  No longer does Mimosa depend on another library (`watch-connect`) to provide the functionality, it has been included entirely in `mimosa-live-reload`.
+* Projects that have their own server will no longer need any live-reload code in their codebase other than to include the flag in their server views to turn live-reload on and off. Mimosa handles everything else internally.  This means a lot less boilerplate code to deliver and for users to maintain in their Mimosa-based projects.
+* Also, changed CSS files no longer cause a full browser reload.  Instead just the CSS is updated and recomputed in the browser. So if you are developing a big single page app, no more having to start over in a page flow from page A to see CSS changes on page E.
 
 ### Minor
 * Mimosa now attempts to load locally installed modules before installing them within Mimosa. If the module doesn't load (bad CoffeeScript syntax, bad require path, etc), Mimosa will not install it.  Previously, bad modules could be installed and that would cause Mimosa to be unable to subsequently start.  This does not stop bad modules from being loaded from NPM, just locally.
-* Modules can now only change properties from their own config within the mimosa-config, both during validate() function, and during workflows.
+* Modules can now only change properties from their own config within the `mimosa-config`, both during validate() function, and during workflows.
+
+### You'll need to...
+* Swap the order of the live-reload scripts and the requirejs scripts in your server templates.  The live-reload scripts should be first.
+* Change the name of the `/socket-enable.js` script to `/javascripts/reload-client.js`
+* The configuration for live-reload has moved.  There is no longer a `server.useReload` property.  There is now a top level `liveReload` object. Include the config snippet for the `mimosa-live-reload` module in your `mimosa-config`:
+```
+# liveReload:                   # Configuration for live-reload
+  # enabled:true                # Whether or not live-reload is enabled
+  # additionalDirs:["views"]    # Additional directories outside the watch.compiledDir
+                                # that you would like to have trigger a page refresh,
+                                # like, by default, static views
+```
+* The new default list of modules now includes `live-reload`, so you'll want to either copy the new commented out config for future use, or update your list if you've uncommented it already.
+```
+# modules: ['lint', 'server', 'require', 'minify', 'live-reload']
+```
+* The dependency on `watch-connect` is gone, so it can be removed from your `package.json`.
+* All of the live-reload related code can be removed from your `server` file.  This includes the `require 'watch-connect'` and the `if useReload` block.
+* Replace any references to `config.server.useReload` to `config.liveReload.enabled`
+* The `startServer` function needs to return the server object returned by `app.listen()`
 
 # 0.4.1beta - November 02 2012
 

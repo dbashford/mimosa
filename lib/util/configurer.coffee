@@ -14,7 +14,7 @@ class MimosaConfigurer
 
   # watch defaults, other defaults reside in modules
   baseDefaults:
-    modules: ['lint', 'server', 'require', 'minify']
+    modules: ['lint', 'server', 'require', 'minify', 'live-reload']
     watch:
       sourceDir: "assets"
       compiledDir: "public"

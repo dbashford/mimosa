@@ -41,7 +41,7 @@ copySkeleton = (name, isJavascript, moduleDirPath) ->
     text = text.replace '???', name
     fs.writeFile packageJson, text, (err) ->
       logger.success "Module skeleton successfully placed in #{name} directory. The first thing you'll" +
-                     " want to do is go into #{name}#{path.sep}package.json and replace the placeholders.\n"
+                     " want to do is go into #{name}#{path.sep}package.json and replace the placeholders."
       process.exit 0
 
 register = (program, callback) ->
