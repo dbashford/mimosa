@@ -56,27 +56,31 @@ search = (opts) ->
         mods = []
         i = 0
         add = (mod) ->
-          mods.push mod
+          mods.push mod if mod
           printResults(mods, opts.verbose) if ++i is packageNames.length
 
         packageNames.forEach (pkg) ->
           npm.commands.view [pkg], true, (err, packageInfo) ->
-            for version, data of packageInfo
-              installed = false
-              for m in moduleMetadata
-                if m.name is data.name
-                  installed = true
-                  break
 
-              mod =
-                name:         data.name
-                version:      version
-                site:         data.homepage
-                dependencies: data.dependencies
-                desc:         data.description
-                updated:      data.time[version].replace('T', ' ').replace(/\.\w+$/,'')
-                installed:    if installed then "yes" else "no"
-              add(mod)
+            if packageInfo
+              for version, data of packageInfo
+                installed = false
+                for m in moduleMetadata
+                  if m.name is data.name
+                    installed = true
+                    break
+
+                mod =
+                  name:         data.name
+                  version:      version
+                  site:         data.homepage
+                  dependencies: data.dependencies
+                  desc:         data.description
+                  updated:      data.time[version].replace('T', ' ').replace(/\.\w+$/,'')
+                  installed:    if installed then "yes" else "no"
+                add mod
+            else
+              add null
 
 register = (program, callback) ->
   program
