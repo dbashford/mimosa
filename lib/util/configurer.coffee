@@ -144,33 +144,36 @@ class MimosaConfigurer
 
   _configTop: ->
     """
-    # All of the below are mimosa defaults and only need to be uncommented
-    # in the event you want to override them.
+    # All of the below are mimosa defaults and only need to be uncommented in the event you want
+    # to override them.
     #
-    # IMPORTANT: Be sure to comment out all of the nodes from the base to the
-    # option you want to override.  If you want to turn change the source directory
-    # you would need to uncomment watch and sourceDir. Also be sure to respect
-    # coffeescript indentation rules.  2 spaces per level please!
+    # IMPORTANT: Be sure to comment out all of the nodes from the base to the option you want to
+    # override. If you want to turn change the source directory you would need to uncomment watch
+    # and sourceDir. Also be sure to respect coffeescript indentation rules.  2 spaces per level
+    # please!
 
     exports.config = {
-      # modules: ['lint', 'server', 'require', 'minify']   # The list of Mimosa modules to use for this application. The defaults
-                                                           # (lint, server, require, minify) come bundled with Mimosa and do not
-                                                           # need to be installed.  The 'mimosa-' that preceeds all Mimosa module
-                                                           # names is assumed, however you can use it if you want.  If a module
-                                                           # is listed here that Mimosa is unaware of, Mimosa will attempt to
-                                                           # install it.
+      ###
+      The list of Mimosa modules to use for this application. The defaults (lint, server, require,
+      minify, live-reload) come bundled with Mimosa and do not need to be installed.  The 'mimosa-'
+      that preceeds all Mimosa module names is assumed, however you can use it if you want.  If a
+      module is listed here that Mimosa is unaware of, Mimosa will attempt to install it.
+      ###
+      # modules: ['lint', 'server', 'require', 'minify', 'live-reload']
 
       # watch:
         # sourceDir: "assets"             # directory location of web assets
         # compiledDir: "public"           # directory location of compiled web assets
-        # javascriptDir: "javascripts"    # Location of precompiled javascript (coffeescript for instance), and therefore
-                                          # also the location of the compiled javascript.
-        # exclude: ["[/\\\\\\\\]\\\\.\\\\w+$"]    # regexes matching the files to be entirely ignored by mimosa, the default matches
-                                          # files that start with a period.  Be sure to double escape.
-        # throttle: 0                     # number of file adds the watcher handles before taking a 100 millisecond pause to let
-                                          # those files finish their processing. This helps avoid EMFILE issues for projects
-                                          # containing large numbers of files that all get copied at once. If the throttle is
-                                          # set to 0, no throttling is performed. Recommended to leave this set at 0, the
+        # javascriptDir: "javascripts"    # Location of precompiled javascript (i.e. coffeescript)
+        # exclude: ["[/\\\\\\\\]\\\\.\\\\w+$"]    # regexes matching the files to be entirely
+                                          # ignored by mimosa, the default matchesfiles that start
+                                          # with a period.  Be sure to double escape.
+        # throttle: 0                     # number of file adds the watcher handles before taking a
+                                          # 100 millisecond pause to let those files finish their
+                                          # processing. This helps avoid EMFILE issues for projects
+                                          # containing large numbers of files that all get copied
+                                          # at once. If the throttle is set to 0, no throttling is
+                                          # performed. Recommended to leave this set at 0, the
                                           # default, until you start encountering EMFILE problems.
 
     """

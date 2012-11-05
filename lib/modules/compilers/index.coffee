@@ -110,23 +110,27 @@ class MimosaCompilerModule
     """
     \t
       # compilers:
-        # extensionOverrides:             # A list of extension overrides, format is compilerName:[arrayOfExtensions]
-                                          # see http://mimosajs.com/compilers.html for a list of compiler names
-          # coffee: ["coff"]              # This is an example override, this is not a default, must be array of strings
+        # extensionOverrides:       # A list of extension overrides, format is:
+                                    # [compilerName]:[arrayOfExtensions], see
+                                    # http://mimosajs.com/compilers.html for list of compiler names
+          # coffee: ["coff"]        # This is an example override, this is not a default, must be
+                                    # array of strings
 
       # template:
-        # outputFileName: "templates"                      # the file all templates are compiled into, is relative to watch.javascriptDir
-                                                           # Optionally outputFileName can be provided a hash of file extension
-                                                           # to file name in the event you are using multiple templating
-                                                           # libraries. The file extension must match one of the default compiler extensions
-                                                           # or one of the extensions configure for a compiler in the
-                                                           # compilers.extensionOverrides section above. Ex: {hogan:"js/hogans", jade:"js/jades"}
-        # helperFiles:["app/template/handlebars-helpers"]  # relevant to handlebars only, the paths from watch.javascriptDir to
-                                                           # the files containing handlebars helper/partial registrations,
-                                                           # does not need to exist
+        # outputFileName: "templates"     # the file all templates are compiled into, is relative
+                                          # to watch.javascriptDir. Optionally outputFileName can
+                                          # be provided a hash of file extension to file name in
+                                          # the event you are using multiple templating libraries.
+                                          # The file extension must match one of the default
+                                          # compiler extensions or one of the extensions configured
+                                          # for a compiler in the compilers.extensionOverrides
+                                          # section above. Ex: {hogan:"js/hogans", jade:"js/jades"}
+        # helperFiles:["app/template/handlebars-helpers"]  # relevant to handlebars only, the paths
+                                          # from watch.javascriptDir to the files containing
+                                          # handlebars helper/partial registrations
 
       ###
-      # the extensions of files to simply copy from sourceDir to compiledDir.  vendor js/css, images, etc.
+      # the extensions of files to copy from sourceDir to compiledDir. vendor js/css, images, etc.
       ###
       # copy:
         # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]

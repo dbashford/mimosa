@@ -37,6 +37,7 @@ class NewCommand
         prettyName:"Plain HTML"
         library: "ejs"
         extension:"html"
+        version: "0.8.3"
       }
       {
         name:"ejs"
