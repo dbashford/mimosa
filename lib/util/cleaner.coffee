@@ -1,5 +1,6 @@
 watch =  require 'chokidar'
 logger = require 'logmimosa'
+_ = require 'lodash'
 
 Workflow = require './workflow'
 modules =   require '../modules'
@@ -7,7 +8,7 @@ modules =   require '../modules'
 class Cleaner
 
   constructor: (@config, initCallback) ->
-    @workflow = new Workflow(@config, modules.basic, initCallback)
+    @workflow = new Workflow(_.clone(@config, true), modules.basic, initCallback)
     @_startWatcher()
 
   _startWatcher:  ->
