@@ -11,6 +11,7 @@ This release has a small amount of changes, but they have a decent number of bre
 ### Minor
 * Mimosa now attempts to load locally installed modules before installing them within Mimosa. If the module doesn't load (bad CoffeeScript syntax, bad require path, etc), Mimosa will not install it.  Previously, bad modules could be installed and that would cause Mimosa to be unable to subsequently start.  This does not stop bad modules from being loaded from NPM, just locally.
 * Modules can now only change properties from their own config within the `mimosa-config`, both during validate() function, and during workflows.
+* The default `mimosa mod:init` skeleton is now JavaScript.  With a `--coffee` or `-c` flag you can get a CoffeeScript module skeleton.
 
 ### You'll need to...
 * A few changes to your codebase, see the next few bullets for details, and this commit for an idea of the sort of changes you'll need to make: https://github.com/dbashford/mimosa/commit/d21c182ff903e226d387bf8844a5580a251b4c03

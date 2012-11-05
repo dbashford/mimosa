@@ -19,7 +19,7 @@ init = (name, opts) ->
       fs.stat moduleDirPath, (err, stats) ->
         if stats.isDirectory()
           logger.info "Directory/file already exists at [[ #{moduleDirPath} ]], placing skeleton inside that directory."
-          copySkeleton(name, opts.javascript, moduleDirPath)
+          copySkeleton(name, opts.coffee, moduleDirPath)
         else
           logger.error "File already exists at [[ #{moduleDirPath} ]]"
           process.exit 0
@@ -29,10 +29,10 @@ init = (name, opts) ->
           logger.error "Error creating directory: #{err}"
           process.exit 1
         else
-          copySkeleton(name, opts.javascript, moduleDirPath)
+          copySkeleton(name, opts.coffee, moduleDirPath)
 
-copySkeleton = (name, isJavascript, moduleDirPath) ->
-  lang = if isJavascript then "js" else 'coffee'
+copySkeleton = (name, isCoffee, moduleDirPath) ->
+  lang = if isCoffee then "coffee" else 'js'
   skeletonPath = path.join __dirname, '..', '..', 'modules', 'skeleton', lang
   wrench.copyDirSyncRecursive skeletonPath, moduleDirPath
 
@@ -48,7 +48,7 @@ register = (program, callback) ->
   program
     .command('mod:init [name]')
     .option("-D, --debug", "run in debug mode")
-    .option("-j, --javascript", "get a javascript version of the skeleton")
+    .option("-c, --coffee", "get a coffeescript version of the skeleton")
     .description("create a Mimosa module skeleton in the named directory")
     .action(callback)
     .on '--help', =>
@@ -56,8 +56,8 @@ register = (program, callback) ->
       logger.green('  module skeleton into the directory.  If a directory for the name given already exists')
       logger.green('  Mimosa will place the module skeleton inside of it.')
       logger.blue( '\n    $ mimosa mod:init [nameOfModule]\n')
-      logger.green('  The default skeleton is written in CoffeeScript.  If you want a skeleton delivered')
-      logger.green('  in JavaScipt add a \'javascript\' flag.')
+      logger.green('  The default skeleton is written in JavaScript.  If you want a skeleton delivered')
+      logger.green('  in CoffeeScript add a \'coffee\' flag.')
 
 
 module.exports = (program) ->
