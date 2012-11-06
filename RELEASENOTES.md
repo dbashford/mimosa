@@ -21,6 +21,7 @@ This release has a small amount of changes, but they have a decent number of bre
 * Replace any references to `config.server.useReload` to `config.liveReload.enabled`
 * The `startServer` function needs to return the server object returned by `app.listen()`.  Without this live-reload will not work.
 * The configuration for live-reload has moved.  There is no longer a `server.useReload` property.  There is now a top level `liveReload` object. Include the config snippet for the `mimosa-live-reload` module in your `mimosa-config`:
+
 ```
 # liveReload:                   # Configuration for live-reload
   # enabled:true                # Whether or not live-reload is enabled
@@ -28,10 +29,13 @@ This release has a small amount of changes, but they have a decent number of bre
                                 # that you would like to have trigger a page refresh,
                                 # like, by default, static views
 ```
+
 * The new default list of modules now includes `live-reload`, so you'll want to either copy the new commented out config for future use, or update your list if you've uncommented it already.
+
 ```
 # modules: ['lint', 'server', 'require', 'minify', 'live-reload']
 ```
+
 * The dependency on `watch-connect` is gone, so it can be removed from your `package.json`.
 
 
