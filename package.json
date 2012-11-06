@@ -71,7 +71,7 @@
     "mimosa-require": "0.3.0",
     "mimosa-minify": "0.3.0",
     "mimosa-lint": "0.3.0",
-    "mimosa-live-reload": "0.1.1",
+    "mimosa-live-reload": "0.3.0",
     "npm": "1.1.65"
   },
   "license": "MIT",
