@@ -1,4 +1,4 @@
-# 0.5.0beta - November ?? 2012
+# 0.5.0beta - November 06 2012
 
 This release has a small amount of changes, but they have a decent number of breaking changes from beta4.
 
