@@ -37,20 +37,16 @@ class NewCommand
         prettyName:"Plain HTML"
         library: "ejs"
         extension:"html"
-        version: "0.8.3"
       }
       {
         name:"ejs"
         prettyName:"Embedded JavaScript Templates (EJS) - https://github.com/visionmedia/ejs"
         library: "ejs"
         extension:"ejs"
-        version: "0.8.3"
       }
     ]
 
   constructor: (@program) ->
-    for view in @views
-      view.version = deps[view.library] unless view.version?
 
   register: =>
     @program
@@ -267,19 +263,16 @@ class NewCommand
     jPath = path.join @currPath, "package.json"
     packageJson = require(jPath)
     packageJson.name = name if name?
-    packageJson.dependencies[chosen.views.library] = chosen.views.version
 
-    unless chosen.javascript.base is "livescript"
-      logger.debug "removing iced-coffee-script from package.json"
-      delete packageJson.dependencies["LiveScript"]
+    @removeFromPackageDeps(chosen.javascript.base, "livescript", "LiveScript", packageJson)
+    @removeFromPackageDeps(chosen.javascript.base, "iced", "iced-coffee-script", packageJson)
+    @removeFromPackageDeps(chosen.javascript.base, "coffee", "coffee-script", packageJson)
 
-    unless chosen.javascript.base is "iced"
-      logger.debug "removing iced-coffee-script from package.json"
-      delete packageJson.dependencies["iced-coffee-script"]
-
-    unless chosen.javascript.base is "coffee"
-      logger.debug "removing coffee-script from package.json"
-      delete packageJson.dependencies["coffee-script"]
+    @removeFromPackageDeps(chosen.views.name, "jade", "jade", packageJson)
+    @removeFromPackageDeps(chosen.views.name, "hogan", "hogan.js", packageJson)
+    unless chosen.views.library is "ejs"
+      @removeFromPackageDeps(chosen.views.name, "html", "ejs", packageJson)
+      @removeFromPackageDeps(chosen.views.name, "ejs", "ejs", packageJson)
 
     fs.writeFileSync jPath, JSON.stringify(packageJson, null, 2)
 
@@ -296,6 +289,11 @@ class NewCommand
       logger.debug "Node module install serr: #{serr}"
       process.chdir currentDir
       @_done()
+
+  removeFromPackageDeps: (item, match, lib, json) =>
+    unless item is match
+      logger.debug "removing #{lib} from package.json"
+      delete json.dependencies[lib]
 
   _done: =>
     configPath = path.join @currPath, "mimosa-config.coffee"

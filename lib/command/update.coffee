@@ -26,6 +26,7 @@ update = (opts) ->
   done = ->
     process.chdir currentDir
     logger.success "Finished.  You are all up to date!"
+    process.exit 0
 
   jspacks = ['iced-coffee-script', 'LiveScript']
 
