@@ -1,3 +1,11 @@
+# 0.5.1beta - November ?? 2012
+
+Small bug fixes. Library updates. Other miscellany.
+
+### Minor Changes
+* Library updates across the board, both in core and in the modules
+* updated jquery and requirejs in the `mimosa new` skeleton
+
 # 0.5.0beta - November 06 2012
 
 This release has a small amount of changes, but they have a decent number of breaking changes from beta4.
