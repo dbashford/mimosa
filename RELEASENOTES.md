@@ -1,4 +1,4 @@
-# 0.5.1beta - November ?? 2012
+# 0.5.1beta - November 09 2012
 
 Small bug fixes. Library updates. Other miscellany.
 
@@ -7,6 +7,9 @@ Small bug fixes. Library updates. Other miscellany.
 * updated jquery and requirejs in the `mimosa new` skeleton
 * Fixed middleware ordering issue in the delivered express server
 * `mimosa config` and `mimosa new` will now rewrite your `mimosa-config` `modules` array to use whichever modules you have installed.  Previously those commands would leave the default placeholder in place for the `modules` array, but include all the config placeholders for all installed modules.
+
+### You'll need to...
+* If working with an application skeleton delivered by `mimosa new`, you'll probably want to perform the changes from this commit: https://github.com/dbashford/mimosa/commit/c97f91884ad35f34a790378ba83d8db9ce40af81 most notably the moving of the router to below the configure blocks.
 
 # 0.5.0beta - November 06 2012
 
