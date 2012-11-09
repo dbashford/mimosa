@@ -5,6 +5,8 @@ Small bug fixes. Library updates. Other miscellany.
 ### Minor Changes
 * Library updates across the board, both in core and in the modules
 * updated jquery and requirejs in the `mimosa new` skeleton
+* Fixed middleware ordering issue in the delivered express server
+* `mimosa config` and `mimosa new` will now rewrite your `mimosa-config` `modules` array to use whichever modules you have installed.  Previously those commands would leave the default placeholder in place for the `modules` array, but include all the config placeholders for all installed modules.
 
 # 0.5.0beta - November 06 2012
 

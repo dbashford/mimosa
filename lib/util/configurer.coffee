@@ -188,6 +188,11 @@ class MimosaConfigurer
         ph = mod.placeholder()
         configText += ph if ph?
     configText += @_configBottom()
+
+    if moduleManager.configModuleString?
+      configText = configText.replace "['lint', 'server', 'require', 'minify', 'live-reload']", moduleManager.configModuleString
+      configText = configText.replace "  # ", "  "
+
     configText
 
 defs = new MimosaConfigurer()

@@ -10,7 +10,7 @@ file =      require './file'
 logger =    require 'logmimosa'
 pack =      require('../../package.json')
 
-builtIns = ['mimosa-server','mimosa-lint','mimosa-require','mimosa-minify']
+builtIns = ['mimosa-server','mimosa-lint','mimosa-require','mimosa-minify','mimosa-live-reload']
 configuredModules = null
 meta = []
 all = [compilers, logger, file]
@@ -25,6 +25,25 @@ for dep, version of pack.dependencies when dep.indexOf('mimosa-') > -1
     desc:    modPack.description
     default: if builtIns.indexOf(dep) > -1 then "yes" else "no"
     dependencies: modPack.dependencies
+
+allDefaults = true
+if builtIns.length isnt meta.length
+  allDefaults = false
+else
+  for builtIn in builtIns
+    found = false
+    for aMeta in meta
+      if aMeta.name is builtIn
+        found = true
+        break
+    if not found
+      allDefaults = false
+      break
+
+configModuleString = unless allDefaults
+  names = _.pluck(meta, 'name')
+  names = names.map (name) -> name.replace 'mimosa-', ''
+  JSON.stringify(names)
 
 configured = (moduleNames, callback) ->
   return configuredModules if configuredModules
@@ -75,7 +94,8 @@ configured = (moduleNames, callback) ->
   processModule()
 
 module.exports =
-  basic: [file, compilers]
-  installedMetadata: meta
+  basic:                [file, compilers]
+  installedMetadata:    meta
   getConfiguredModules: configured
-  all:all
+  all:                  all
+  configModuleString:   configModuleString
