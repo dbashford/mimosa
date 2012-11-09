@@ -5,13 +5,9 @@ routes  =        require './routes'
 
 exports.startServer = (config) ->
 
-  publicPath = config.watch.compiledDir
-
   app = express()
   server = app.listen config.server.port, ->
     console.log "Express server listening on port %d in %s mode", server.address().port, app.settings.env
-
-  app.get '/', routes.index(config)
 
   app.configure ->
     app.set 'port', config.server.port
@@ -23,10 +19,12 @@ exports.startServer = (config) ->
     app.use express.methodOverride()
     app.use express.compress()
     app.use config.server.base, app.router
-    app.use express.static(publicPath)
+    app.use express.static(config.watch.compiledDir)
 
   app.configure 'development', ->
     app.use express.errorHandler()
+
+  app.get '/', routes.index(config)
 
   server
 
