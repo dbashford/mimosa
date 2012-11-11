@@ -1,7 +1,13 @@
-# 0.5.2beta - November ?? 2012
+# 0.5.2beta - November 11 2012
+
+More minor updates while I am busy working on both TypeScript and CommonJS support.
 
 ### Minor Changes
-* If you are using socket.io on your own, using live reload, which also binds socket.io to your server, can cause some issues.  The `startServer` function in your server file, to use live reload, should currently be returning the server.  `startServer` can continue to do that if you do not need to use socket.io on your own.  If you need to use socket.io, `startServer` should return this object `{server:server, socketio:io}`, where `server` is what `startServer` returns currently, and `io` is the object returned by `socketio.listen(server)`.
+* `mimosa-live-reload` and `mimosa-server` modules have been updated to handle the case where a user's project is already using socket.io.  If you are using socket.io on your own, using live reload, which also binds socket.io to your server, can cause some issues.  The `startServer` function in your server file, to use live reload, should currently be returning the server.  `startServer` can continue to do that if you do not need to use socket.io on your own.  If you need to use socket.io, `startServer` should return this object `{server:server, socketio:io}`, where `server` is what `startServer` returns currently, and `io` is the object returned by `socketio.listen(server)`.
+* Updated the `logmimosa` version in the module skeletons.
+
+### You'll need to...
+* If you are using `mimosa-live-reload` and want to use socket.io, update your `startServer` function so that it returns `{server:server, socketio:io}`, where `server` is what `startServer` returns currently, and `io` is the object returned by `socketio.listen(server)`
 
 # 0.5.1beta - November 09 2012
 
