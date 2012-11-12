@@ -1,11 +1,14 @@
 # 0.5.3beta - November ?? 2012
 
+Phase1 CommonJS support.  Not pure CommonJS, but CommonJS via AMD/RequireJS.  For those of you who just can't stomach wrapping all your code, but would love to take advantage of all that RequireJS provides, Mimosa can help.
+
 ### Major Changes
 * CommonJS support via AMD/RequireJS using the `mimosa-require-commonjs` module.  For details: https://github.com/dbashford/mimosa-require-commonjs
 
 ### Minor Changes
 * Upgrade version of `mimosa-require` to support `mimosa-require-commonjs`
 * Fixed issue with requirejs plugin paths that had no dependency after the !.  Ex: `vendor/domReady!`
+* #81, addressed `mimosa update` installing a bunch of stuff it not ought to have
 
 # 0.5.2beta - November 11 2012
 
