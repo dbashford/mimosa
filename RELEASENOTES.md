@@ -1,3 +1,12 @@
+# 0.5.3beta - November ?? 2012
+
+### Major Changes
+* CommonJS support via AMD/RequireJS using the `mimosa-require-commonjs` module.  For details: https://github.com/dbashford/mimosa-require-commonjs
+
+### Minor Changes
+* Upgrade version of `mimosa-require` to support `mimosa-require-commonjs`
+* Fixed issue with requirejs plugin paths that had no dependency after the !.  Ex: `vendor/domReady!`
+
 # 0.5.2beta - November 11 2012
 
 More minor updates while I am busy working on both TypeScript and CommonJS support.
