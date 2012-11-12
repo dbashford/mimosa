@@ -57,6 +57,7 @@ _uninstallDependencies = (deps, clientDeps, callback) ->
 
 _installDependencies = (deps, origClientDeps, done) ->
   names = for name, version of deps
+    continue unless origClientDeps[name]?
     logger.info "Installing node package: #{name}:#{version}"
     if version.indexOf("github.com") > -1
       version
