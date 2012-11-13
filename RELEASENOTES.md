@@ -1,4 +1,4 @@
-# 0.5.3beta - November ?? 2012
+# 0.5.3beta - November 13 2012
 
 Phase1 CommonJS support.  Not pure CommonJS, but CommonJS via AMD/RequireJS.  For those of you who just can't stomach wrapping all your code, but would love to take advantage of all that RequireJS provides, Mimosa can help.
 
