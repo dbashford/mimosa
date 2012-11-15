@@ -1,7 +1,7 @@
-# 0.5.4beta - November ?? 2012
+# 0.5.4beta - November 14 2012
 
 ### Major Change
-* New module `mimosa-combine`, an external module that has to be installed, not a default one, will take a folder and merge the file contents into a single file.  All configurable.
+* New module `mimosa-combine`, an external module that has to be installed, not a default one, will take a folder and merge the file contents into a single file.  All configurable.  Details: https://github.com/dbashford/mimosa-combine
 * New command `mod:config` will write the default configuration snippet for any module.  Ex: `mimosa mod:config server` will output the config snippet for the `mimosa-server` module.
 
 ### Minor Change
