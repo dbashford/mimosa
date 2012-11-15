@@ -87,10 +87,11 @@ register = (program, callback) ->
     .description("update all the node libraries that Mimosa packaged into your application")
     .action(callback)
     .on '--help', =>
-      logger.green('  The update command keeps you from having to deal with updating your node_modules directory')
-      logger.green('  when Mimosa updates its functionality.  For instance, if Express updates to a new version,')
-      logger.green('  this command will update your package.json and install new node packages so you can take')
-      logger.green('  advantage of the new Express functionality without having to deal with it yourself.')
+      logger.green('  The update command keeps you from having to deal with updating your project\'s node_modules ')
+      logger.green('  directory when Mimosa updates its libraries.  For instance, if Express updates to a new,')
+      logger.green('  version this command will update your package.json and install new node packages so you')
+      logger.green('  can take advantage of the new Express functionality without having to deal with installing')
+      logger.green('  it yourself.')
       logger.blue( '\n    $ mimosa update\n')
 
 module.exports = (program) ->

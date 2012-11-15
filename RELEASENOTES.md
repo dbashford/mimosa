@@ -1,6 +1,9 @@
-# 0.5.5beta - November ?? 2012
+# 0.5.5beta - November 15 2012
+
+Purely bug fixes, both for the mimosa-require module.
 
 ### Minor Change
+* Fixed #83, didn't recognize main module when it lacked config
 * Fixed issue in `mimosa-require` module where workflow next callback was being called too soon.
 
 # 0.5.4beta - November 14 2012
@@ -14,7 +17,6 @@
 
 ### You'll need to...
 * To use the new module, simply add it to the list of modules in your `mimosa-config` or use `mimosa mod:install mimosa-combine`.  Once it is installed, use the new `mimosa mod:config` to print the config to your console so you can copy/paste it into your mimosa-config.
-
 
 # 0.5.3beta - November 13 2012
 
