@@ -1,3 +1,8 @@
+# 0.5.5beta - November ?? 2012
+
+### Minor Change
+* Fixed issue in `mimosa-require` module where workflow next callback was being called too soon.
+
 # 0.5.4beta - November 14 2012
 
 ### Major Change

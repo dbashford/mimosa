@@ -68,7 +68,7 @@
     "glob": "3.1.14",
     "logmimosa": "0.2.1",
     "mimosa-server": "0.3.3",
-    "mimosa-require": "0.3.3",
+    "mimosa-require": "0.3.4",
     "mimosa-minify": "0.3.1",
     "mimosa-lint": "0.3.1",
     "mimosa-live-reload": "0.3.1",
