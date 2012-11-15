@@ -1,3 +1,16 @@
+# 0.5.4beta - November ?? 2012
+
+### Major Change
+* New module `mimosa-combine`, an external module that has to be installed, not a default one, will take a folder and merge the file contents into a single file.  All configurable.
+* New command `mod:config` will write the default configuration snippet for any module.  Ex: `mimosa mod:config server` will output the config snippet for the `mimosa-server` module.
+
+### Minor Change
+* Very tiny reorg to some module code to enable the `mimosa-combine` work
+
+### You'll need to...
+* To use the new module, simply add it to the list of modules in your `mimosa-config` or use `mimosa mod:install mimosa-combine`.  Once it is installed, use the new `mimosa mod:config` to print the config to your console so you can copy/paste it into your mimosa-config.
+
+
 # 0.5.3beta - November 13 2012
 
 Phase1 CommonJS support.  Not pure CommonJS, but CommonJS via AMD/RequireJS.  For those of you who just can't stomach wrapping all your code, but would love to take advantage of all that RequireJS provides, Mimosa can help.

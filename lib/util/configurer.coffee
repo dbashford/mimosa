@@ -32,7 +32,6 @@ class MimosaConfigurer
       [errors, config] = @_validateSettings(config)
       err = if errors.length is 0
         logger.debug "No mimosa config errors"
-        config = @_manipulateConfig(config)
         null
       else
         errors
@@ -71,6 +70,9 @@ class MimosaConfigurer
 
   _validateSettings: (config) ->
     errors = @_validateWatchConfig(config)
+
+    if errors.length is 0
+      config = @_manipulateConfig(config)
 
     for mod in @modules when mod.validate?
 
