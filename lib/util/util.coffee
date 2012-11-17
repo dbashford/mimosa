@@ -140,7 +140,8 @@ _findConfigPath = (fileName, configPath) ->
   else
     configPath = path.join(path.dirname(configPath), '..', fileName)
     logger.debug "Trying #{configPath}"
-    if configPath.length is fileName.length + 1
+    dirname = path.dirname configPath
+    if dirname.indexOf(path.sep) is dirname.lastIndexOf(path.sep)
       logger.debug "Unable to find mimosa-config"
       return null
     _findConfigPath(fileName, configPath)

@@ -1,3 +1,12 @@
+# ? - November ?? 2012
+
+### Major Change
+* Added EJS support for client templates.
+* Big upgrade to interface for `mimosa-combine` module, released as 0.2.0 on Nov 16th
+
+### Minor Change
+* #85, fixed issue with windows config file detection
+
 # 0.5.5beta - November 15 2012
 
 Purely bug fixes, both for the mimosa-require module.

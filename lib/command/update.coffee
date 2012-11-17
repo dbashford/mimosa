@@ -77,8 +77,12 @@ _findPackageJsonPath = (packagePath = path.resolve('package.json')) ->
     packagePath
   else
     packagePath = path.join(path.dirname(packagePath), '..', 'package.json')
-    return null if packagePath.length is 'package.json'.length + 1
-    _findPackageJsonPath(packagePath)
+    logger.debug "Didn not find package.json, trying [[ #{packagePath} ]]"
+    dirname = path.dirname packagePath
+    if dirname.indexOf(path.sep) is dirname.lastIndexOf(path.sep)
+      return null
+    else
+      _findPackageJsonPath(packagePath)
 
 register = (program, callback) ->
   program
