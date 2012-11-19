@@ -1,4 +1,4 @@
-# ? - November ?? 2012
+# Next Release - November ?? 2012
 
 ### Major Change
 * Added EJS support for client templates.
