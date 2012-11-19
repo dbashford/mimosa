@@ -3,9 +3,15 @@
 ### Major Change
 * Added EJS support for client templates.
 * Big upgrade to interface for `mimosa-combine` module, released as 0.2.0 on Nov 16th
+* Pushing to latest version of `mimosa-require`.  Latest version of that module pulls building of r.js run configs, and execution of r.js runs into 2 different steps in the workflow.  This means that modules can jump in the middle, programmatically and dynamically changing the r.js run config that `mimosa-require` generates before it executes.  This further empowers users of Mimosa to take control over the r.js runs.  A module can be custom built to alter the config to do just about anything.
+* Added a module demonstrating the above: https://github.com/dbashford/mimosa-requirebuild-textplugin-include
 
 ### Minor Change
 * #85, fixed issue with windows config file detection
+* To allow for workflow tasks to space out a bit more, added `betweenWriteOptimize`, `beforeOptimize`, `optimize`, and `afterOptimize` as new steps in the `add`, `update`, and `remove` workflows
+
+### You'll need to...
+* If you were using `mimosa-combine`, take a look at the latest documentation and see if you want to upgrade to 0.2.0.  The interface is now a good deal more flexible.
 
 # 0.5.5beta - November 15 2012
 
