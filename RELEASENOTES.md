@@ -5,6 +5,8 @@
 * Big upgrade to interface for `mimosa-combine` module, released as 0.2.0 on Nov 16th
 * Pushing to latest version of `mimosa-require`.  Latest version of that module pulls building of r.js run configs, and execution of r.js runs into 2 different steps in the workflow.  This means that modules can jump in the middle, programmatically and dynamically changing the r.js run config that `mimosa-require` generates before it executes.  This further empowers users of Mimosa to take control over the r.js runs.  A module can be custom built to alter the config to do just about anything.
 * Added a module demonstrating the above: https://github.com/dbashford/mimosa-requirebuild-textplugin-include
+* New module, `mimosa-server-reload`, for those running own node/express server, will restart server when server resources change.  https://github.com/dbashford/mimosa-server-reload
+* Upped to latest versions of `server`, `live-reload` which support `server-reload`
 
 ### Minor Change
 * #85, fixed issue with windows config file detection
