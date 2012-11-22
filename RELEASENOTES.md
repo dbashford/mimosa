@@ -1,4 +1,6 @@
-# 0.6.0 - November ?? 2012
+# 0.6.0 - November 21 2012
+
+Leaving beta. Plenty still to do, but its been decently shaken out at this point.  This release opens up the door to manipulate the r.js configuration to dynamic runtime updates.
 
 ### Major Changes
 * Added EJS support for client templates.
