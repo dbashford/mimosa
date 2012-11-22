@@ -25,13 +25,11 @@ class Watcher
     @initCallback(@config) if @initCallback?
 
   _startWatcher:  ->
-    watcher = watch.watch(@config.watch.sourceDir, {persistent:@persist})
+    watcher = watch.watch(@config.watch.sourceDir, {ignored:@_ignoreFunct, persistent:@persist})
     watcher.on "error", (error) -> logger.warn "File watching error: #{error}"
-    watcher.on "change", (f) => @workflow.update(f) unless @_ignored(f)
-    watcher.on "unlink", (f) => @workflow.remove(f) unless @_ignored(f)
-    watcher.on "add", (f) =>
-      unless @_ignored(f)
-        if @throttle > 0 then @adds.push(f) else @workflow.add(f)
+    watcher.on "change", @workflow.update
+    watcher.on "unlink", @workflow.remove
+    watcher.on "add", (f) => if @throttle > 0 then @adds.push(f) else @workflow.add(f)
 
   _pullFiles: =>
     return if @adds.length is 0
@@ -41,11 +39,15 @@ class Watcher
       @adds.splice(0, @throttle)
     @workflow.add(f) for f in filesToAdd
 
-  _ignored: (fileName) ->
-    if @config.watch.exclude and fileName.match @config.watch.exclude
-      logger.debug "Ignoring file [[ #{fileName} ]], matches exclude"
-      true
-    else
-      false
+  _ignoreFunct = (name) =>
+    if @config.watch.excludeRegex?
+      if name.match(@config.watch.excludeRegex)
+        logger.debug "Ignoring file [[ #{name} ]], matches exclude regex"
+        return true
+    if @config.watch.exclude?
+      if @config.watch.exclude.indexOf(name) > -1
+        logger.debug "Ignoring file [[ #{name} ]], matches exclude string path"
+        return true
+    false
 
 module.exports = Watcher

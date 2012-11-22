@@ -12,14 +12,18 @@ class Cleaner
     @_startWatcher()
 
   _startWatcher:  ->
-    watcher = watch.watch(@config.watch.sourceDir, {persistent:false})
-    watcher.on "add", (f) => @workflow.remove(f) unless @_ignored(f)
+    watcher = watch.watch(@config.watch.sourceDir, {ignored:@_ignoreFunct, persistent:false})
+    watcher.on "add", @workflow.remove
 
-  _ignored: (fileName) ->
-    if @config.watch.exclude and fileName.match @config.watch.exclude
-      logger.debug "Ignoring file [[ #{fileName} ]], matches exclude"
-      true
-    else
-      false
+  _ignoreFunct: (name) =>
+    if @config.watch.excludeRegex?
+      if name.match(@config.watch.excludeRegex)
+        logger.debug "Ignoring file [[ #{name} ]], matches exclude regex"
+        return true
+    if @config.watch.exclude?
+      if @config.watch.exclude.indexOf(name) > -1
+        logger.debug "Ignoring file [[ #{name} ]], matches exclude string path"
+        return true
+    false
 
 module.exports = Cleaner

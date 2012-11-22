@@ -60,7 +60,6 @@ class NewCommand
   new: (name, opts) =>
     if opts.debug then logger.setDebug()
     logger.debug "Project name: #{name}"
-    logger.green "\n  Determining system capabilities..."
 
     util.projectPossibilities (compilers) =>
       if opts.defaults

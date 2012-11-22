@@ -10,6 +10,8 @@ _      = require 'lodash'
 util   = require './util'
 moduleManager = require('../modules')
 
+windowsDrive = /^[A-Za-z]:\\/
+
 class MimosaConfigurer
 
   # watch defaults, other defaults reside in modules
@@ -19,7 +21,7 @@ class MimosaConfigurer
       sourceDir: "assets"
       compiledDir: "public"
       javascriptDir: "javascripts"
-      exclude: ["[/\\\\]\\.\\w+$"]
+      exclude: [/[/\\]\.\w+$/]
       throttle: 0
 
   applyAndValidateDefaults: (config, configPath, callback) =>
@@ -59,13 +61,7 @@ class MimosaConfigurer
 
   _manipulateConfig: (config) ->
     config.extensions = {javascript: ['js'], css: ['css'], template: [], copy: []}
-    config.watch.sourceDir =             path.join config.root, config.watch.sourceDir
-    config.watch.compiledDir =           path.join config.root, config.watch.compiledDir
-    config.watch.compiledJavascriptDir = path.join config.watch.compiledDir, config.watch.javascriptDir
-
-    if config.watch.exclude?.length > 0
-      config.watch.exclude = new RegExp config.watch.exclude.join("|"), "i"
-
+    config.watch.compiledJavascriptDir = __determinePath config.watch.javascriptDir, config.watch.compiledDir
     config
 
   _validateSettings: (config) ->
@@ -103,8 +99,11 @@ class MimosaConfigurer
   _validateWatchConfig: (config) =>
     errors = []
 
+    config.watch.sourceDir =   __determinePath config.watch.sourceDir,     config.root
+    config.watch.compiledDir = __determinePath config.watch.compiledDir,   config.root
+
     if typeof config.watch.sourceDir is "string"
-      @_testPathExists(config.watch.sourceDir, "watch.sourceDir", config.root, errors)
+      @_testPathExists(config.watch.sourceDir, "watch.sourceDir", errors)
     else
       errors.push "watch.sourceDir must be a string"
 
@@ -119,15 +118,27 @@ class MimosaConfigurer
     if typeof config.watch.javascriptDir is "string"
       jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
       unless config.isVirgin
-        @_testPathExists(jsDir,"watch.javascriptDir", config.root, errors)
+        @_testPathExists(jsDir,"watch.javascriptDir", errors)
     else
       errors.push "watch.javascriptDir must be a string"
 
+
     if Array.isArray(config.watch.exclude)
-      for ex in config.watch.exclude
-        unless typeof ex is "string"
-          errors.push "watch.exclude must be an array of strings"
-          break
+       regexes = []
+       newExclude = []
+       for exclude in config.watch.exclude
+         if typeof exclude is "string"
+           newExclude.push __determinePath exclude, config.watch.sourceDir
+         else if exclude instanceof RegExp
+           regexes.push exclude.source
+         else
+           errors.push "watch.exclude must be an array of strings and/or regexes."
+           break
+
+       if regexes.length > 0
+         config.watch.excludeRegex = new RegExp regexes.join("|"), "i"
+
+       config.watch.exclude = newExclude
     else
       errors.push "watch.exclude must be an array"
 
@@ -136,13 +147,12 @@ class MimosaConfigurer
 
     errors
 
-  _testPathExists: (filePath, name, root, errors) ->
-    p = path.join root, filePath
-    unless fs.existsSync p
-      return errors.push "#{name} (#{p}) cannot be found"
+  _testPathExists: (filePath, name, errors) ->
+    unless fs.existsSync filePath
+      return errors.push "#{name} [[ #{filePath} ]] cannot be found"
 
-    if fs.statSync(p).isFile()
-      return errors.push "#{name} (#{p}) cannot be found, expecting a directory and is a file"
+    if fs.statSync(filePath).isFile()
+      return errors.push "#{name} [[ #{filePath} ]] cannot be found, expecting a directory and is a file"
 
   _configTop: ->
     """
@@ -164,12 +174,15 @@ class MimosaConfigurer
       # modules: ['lint', 'server', 'require', 'minify', 'live-reload']
 
       # watch:
-        # sourceDir: "assets"             # directory location of web assets
-        # compiledDir: "public"           # directory location of compiled web assets
-        # javascriptDir: "javascripts"    # Location of precompiled javascript (i.e. coffeescript)
-        # exclude: ["[/\\\\\\\\]\\\\.\\\\w+$"]    # regexes matching the files to be entirely
+        # sourceDir: "assets"             # directory location of web assets, can be relative to
+                                          # the project root, or absolute
+        # compiledDir: "public"           # directory location of compiled web assets, can be
+                                          # relative to the project root, or absolute
+        # javascriptDir: "javascripts"    # Location of precompiled javascript (i.e. coffeescript),
+                                          # must be relative to sourceDir
+        # exclude: [/[/\\\\]\\.\\w+$/]    # regexes matching the files to be entirely
                                           # ignored by mimosa, the default matchesfiles that start
-                                          # with a period.  Be sure to double escape.
+                                          # with a period.
         # throttle: 0                     # number of file adds the watcher handles before taking a
                                           # 100 millisecond pause to let those files finish their
                                           # processing. This helps avoid EMFILE issues for projects
@@ -196,6 +209,12 @@ class MimosaConfigurer
       configText = configText.replace "  # ", "  "
 
     configText
+
+
+  __determinePath = (thePath, relativeTo) ->
+    return thePath if windowsDrive.test thePath
+    return thePath if thePath.indexOf("/") is 0
+    path.join relativeTo, thePath
 
 defs = new MimosaConfigurer()
 

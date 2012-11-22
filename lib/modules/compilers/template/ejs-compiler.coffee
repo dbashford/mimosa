@@ -8,7 +8,7 @@ module.exports = class EJSCompiler extends AbstractTemplateCompiler
 
   clientLibrary: "ejs-filters"
 
-  @prettyName        = "EJS (Embedded JavaScript Templates) - http://jade-lang.com/"
+  @prettyName        = "Embedded JavaScript Templates (EJS) - https://github.com/visionmedia/ejs"
   @defaultExtensions = ["ejs"]
 
   constructor: (config, @extensions) ->

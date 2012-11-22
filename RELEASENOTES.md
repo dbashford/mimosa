@@ -1,19 +1,27 @@
-# Next Release - November ?? 2012
+# 0.6.0 - November ?? 2012
 
-### Major Change
+### Major Changes
 * Added EJS support for client templates.
 * Big upgrade to interface for `mimosa-combine` module, released as 0.2.0 on Nov 16th
 * Pushing to latest version of `mimosa-require`.  Latest version of that module pulls building of r.js run configs, and execution of r.js runs into 2 different steps in the workflow.  This means that modules can jump in the middle, programmatically and dynamically changing the r.js run config that `mimosa-require` generates before it executes.  This further empowers users of Mimosa to take control over the r.js runs.  A module can be custom built to alter the config to do just about anything.
 * Added a module demonstrating the above: https://github.com/dbashford/mimosa-requirebuild-textplugin-include
 * New module, `mimosa-server-reload`, for those running own node/express server, will restart server when server resources change.  https://github.com/dbashford/mimosa-server-reload
-* Upped to latest versions of `server`, `live-reload` which support `server-reload`
+* Details below under minor changes, but across the board `mimosa-config` paths can now be both relative and absolute, and `mimosa-config` string regexs (and arrays of string regexs) are now just regexs (and arrays of regexs), which eliminates the extra escaping.
 
-### Minor Change
+### Minor Changes
+* Upped to latest versions of `server`, `live-reload` which support `server-reload`
 * #85, fixed issue with windows config file detection
 * To allow for workflow tasks to space out a bit more, added `betweenWriteOptimize`, `beforeOptimize`, `optimize`, and `afterOptimize` as new steps in the `add`, `update`, and `remove` workflows
+* With v0.2.0 of `mimosa-web-package`, `outPath` can now be absolute as well as relative to the root of the folder.
+* With v0.2.0 of `mimosa-require-commonjs`, `exclude` can now be expressed as an array containing all of the following: regex, string path relative to `watch.javascriptDir`, and/or absolute string path.  Previous is was only allowed to me a list of regex strings...not regexs.
+* With v0.4.0 of `mimosa-minify`, `exclude` can now be expressed as an array containing all of the following: regex, string path relative to `watch.compiledDir`, and/or absolute string path.  Previous is was only allowed to me a list of regex strings...not regexs.
+* With v0.4.1 of `mimosa-live-reload`, the `additionalDirs` config can take both absolute and relative paths to folders.
+* `watch.sourceDir` and `watch.compiledDir` can now be absolute in addition to being relative to the project root.
+* `watch.exclude` is now an array of regexes and strings.  Strings are paths and can be relative or absolute.
 
 ### You'll need to...
 * If you were using `mimosa-combine`, take a look at the latest documentation and see if you want to upgrade to 0.2.0.  The interface is now a good deal more flexible.
+* For `mimosa-require-commonjs`, the `minify` config, and the `watch` config, if you overrode exclude, your string regexs need to turn into real regexs.  Ex: ["/foo/"] => [/foo/].  And you can now use string paths, both relative and absolute.
 
 # 0.5.5beta - November 15 2012
 

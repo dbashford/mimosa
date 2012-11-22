@@ -38,14 +38,17 @@ module.exports = class WorkflowManager
 
     @cleanUpRegistration()
 
-    #console.log @registration
-
     e = @config.extensions
     @allExtensions = [e.javascript..., e.css..., e.template..., config.copy.extensions...]
     files = wrench.readdirSyncRecursive(@config.watch.sourceDir).filter (f) =>
       ext = path.extname(f).substring(1)
+      f = path.join @config.watch.sourceDir, f
       isValidExtension = ext.length >= 1 and @allExtensions.indexOf(ext) >= 0
-      isIgnored = if @config.watch.exclude? then f.match @config.watch.exclude else false
+      isIgnored = false
+      if @config.watch.excludeRegex? and f.match @config.watch.excludeRegex
+        isIgnored = true
+      if @config.watch.exclude? and @config.watch.exclude.indexOf(f) > -1
+        isIgnored = true
       isValidExtension and not isIgnored
 
     @initialFileCount = files.length
