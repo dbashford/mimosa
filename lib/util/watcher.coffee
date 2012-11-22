@@ -24,7 +24,7 @@ class Watcher
     clearInterval(@intervalId) if @intervalId? and !@persist
     @initCallback(@config) if @initCallback?
 
-  _startWatcher:  ->
+  _startWatcher: ->
     watcher = watch.watch(@config.watch.sourceDir, {ignored:@_ignoreFunct, persistent:@persist})
     watcher.on "error", (error) -> logger.warn "File watching error: #{error}"
     watcher.on "change", @workflow.update
@@ -39,7 +39,7 @@ class Watcher
       @adds.splice(0, @throttle)
     @workflow.add(f) for f in filesToAdd
 
-  _ignoreFunct = (name) =>
+  _ignoreFunct: (name) =>
     if @config.watch.excludeRegex?
       if name.match(@config.watch.excludeRegex)
         logger.debug "Ignoring file [[ #{name} ]], matches exclude regex"

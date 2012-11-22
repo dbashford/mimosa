@@ -11,7 +11,7 @@ class Cleaner
     @workflow = new Workflow(_.clone(@config, true), modules.basic, initCallback)
     @_startWatcher()
 
-  _startWatcher:  ->
+  _startWatcher: ->
     watcher = watch.watch(@config.watch.sourceDir, {ignored:@_ignoreFunct, persistent:false})
     watcher.on "add", @workflow.remove
 
