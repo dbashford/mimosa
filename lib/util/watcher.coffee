@@ -45,9 +45,10 @@ class Watcher
         logger.debug "Ignoring file [[ #{name} ]], matches exclude regex"
         return true
     if @config.watch.exclude?
-      if @config.watch.exclude.indexOf(name) > -1
-        logger.debug "Ignoring file [[ #{name} ]], matches exclude string path"
-        return true
+      for exclude in @config.watch.exclude
+        if name.indexOf(exclude) is 0
+          logger.debug "Ignoring file [[ #{name} ]], matches exclude string path"
+          return true
     false
 
 module.exports = Watcher

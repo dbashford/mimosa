@@ -12,6 +12,7 @@ module.exports = class WorkflowManager
   startup:true
   initialFilesHandled:0
   registration: {}
+  doneFiles: []
 
   masterTypes:
     buildFile:      ["init", "beforeRead", "read", "afterRead", "betweenReadCompile", "beforeCompile", "compile", "afterCompile", "betweenCompileWrite", "beforeWrite", "write", "afterWrite", "complete"]
@@ -47,12 +48,15 @@ module.exports = class WorkflowManager
       isIgnored = false
       if @config.watch.excludeRegex? and f.match @config.watch.excludeRegex
         isIgnored = true
-      if @config.watch.exclude? and @config.watch.exclude.indexOf(f) > -1
-        isIgnored = true
+      if @config.watch.exclude?
+        for exclude in @config.watch.exclude
+          if f.indexOf(exclude) is 0
+            isIgnored = true
+
       isValidExtension and not isIgnored
 
     @initialFileCount = files.length
-    @initialFiles = files
+    @initialFiles = files.map (f) => path.join @config.watch.sourceDir, f
 
   cleanUpRegistration: =>
     logger.debug "Cleaning up unused workflow steps"
@@ -167,6 +171,9 @@ module.exports = class WorkflowManager
 
   _finishedWithFile: (options) =>
     logger.debug "Finished with file: [[ #{options.inputFile} ]]"
+    #@doneFiles.push(options.inputFile)
+    #console.log _.difference(@initialFiles, @doneFiles)
+    #console.log "finished #{@initialFilesHandled + 1} of #{@initialFileCount}"
     if @startup and ++@initialFilesHandled is @initialFileCount
       if @config.isClean
         if @buildDoneCallback? then @buildDoneCallback()
