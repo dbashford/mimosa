@@ -15,6 +15,8 @@ module.exports = class WorkflowManager
   doneFiles: []
 
   masterTypes:
+    beforeBuild: ["init", "complete"]
+
     buildFile:      ["init", "beforeRead", "read", "afterRead", "betweenReadCompile", "beforeCompile", "compile", "afterCompile", "betweenCompileWrite", "beforeWrite", "write", "afterWrite", "complete"]
     buildExtension: ["init", "beforeRead", "read", "afterRead", "betweenReadCompile", "beforeCompile", "compile", "afterCompile", "betweenCompileWrite", "beforeWrite", "write", "afterWrite", "complete"]
     buildDone:      ["init", "beforeOptimize", "optimize", "afterOptimize", "beforeServer", "server", "afterServer", "beforePackage", "package", "afterPackage", "beforeInstall", "install", "afterInstall", "complete"]
@@ -56,7 +58,11 @@ module.exports = class WorkflowManager
       isValidExtension and not isIgnored
 
     @initialFileCount = files.length
-    @initialFiles = files.map (f) => path.join @config.watch.sourceDir, f
+    # @initialFiles = files.map (f) => path.join @config.watch.sourceDir, f
+
+  init: (cb) =>
+    # kick off before build step
+    @_executeWorkflowStep {}, 'beforeBuild', cb
 
   cleanUpRegistration: =>
     logger.debug "Cleaning up unused workflow steps"
@@ -73,13 +79,13 @@ module.exports = class WorkflowManager
           delete typeReg[step]
 
   register: (types, step, callback, extensions = ['*']) =>
-    unless _.isArray(types)
+    unless Array.isArray(types)
       return logger.warn "Workflow types not passed in as array: [[ #{types} ]], ending registration for plugin."
 
-    unless _.isArray(extensions)
+    unless Array.isArray(extensions)
       return logger.warn "Workflow extensions not passed in as array: [[ #{extensions} ]], ending registration for plugin."
 
-    unless _.isString(step)
+    unless typeof step is "string"
       return logger.warn "Workflow step not passed in as string: [[ #{step} ]], ending registration for plugin."
 
     unless _.isFunction(callback)

@@ -1,3 +1,8 @@
+# 0.6.2 - November ?? 2012
+
+### Minor Changes
+* Added new workflow before everything starts called `beforeBuild`.  Has two steps for now, `init` and `complete`.  Steps always easy to add.  This workflow is executed before `buildFile`, so before any individual assets are considered.
+
 # 0.6.1 - November 23 2012
 
 ### Minor Changes

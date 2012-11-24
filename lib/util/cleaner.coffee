@@ -8,10 +8,10 @@ modules =   require '../modules'
 class Cleaner
 
   constructor: (@config, initCallback) ->
-    @workflow = new Workflow(_.clone(@config, true), modules.basic, initCallback)
-    @_startWatcher()
+    @workflow = new Workflow _.clone(@config, true), modules.basic, initCallback
+    @workflow.init @_startWatcher
 
-  _startWatcher: ->
+  _startWatcher: =>
     watcher = watch.watch(@config.watch.sourceDir, {ignored:@_ignoreFunct, persistent:false})
     watcher.on "add", @workflow.remove
 

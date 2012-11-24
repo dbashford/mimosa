@@ -9,8 +9,15 @@ class Watcher
 
   constructor: (@config, modules, @persist, @initCallback) ->
     @throttle = @config.watch.throttle
-    @workflow = new Workflow(@config, modules, @_buildDoneCallback)
-    @_startWatcher()
+    @workflow = new Workflow @config, modules, @_buildDoneCallback
+    @workflow.init @_startWatcher
+
+  _startWatcher: =>
+    watcher = watch.watch(@config.watch.sourceDir, {ignored:@_ignoreFunct, persistent:@persist})
+    watcher.on "error", (error) -> logger.warn "File watching error: #{error}"
+    watcher.on "change", @workflow.update
+    watcher.on "unlink", @workflow.remove
+    watcher.on "add", (f) => if @throttle > 0 then @adds.push(f) else @workflow.add(f)
 
     logger.info "Watching #{@config.watch.sourceDir}" if @persist
 
@@ -23,13 +30,6 @@ class Watcher
     logger.buildDone()
     clearInterval(@intervalId) if @intervalId? and !@persist
     @initCallback(@config) if @initCallback?
-
-  _startWatcher: ->
-    watcher = watch.watch(@config.watch.sourceDir, {ignored:@_ignoreFunct, persistent:@persist})
-    watcher.on "error", (error) -> logger.warn "File watching error: #{error}"
-    watcher.on "change", @workflow.update
-    watcher.on "unlink", @workflow.remove
-    watcher.on "add", (f) => if @throttle > 0 then @adds.push(f) else @workflow.add(f)
 
   _pullFiles: =>
     return if @adds.length is 0
