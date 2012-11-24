@@ -1,3 +1,8 @@
+# 0.6.1 - November 23 2012
+
+### Minor Changes
+* Fixed #87, excluding paths via `watch.exclude` not working properly.  `watch.exclude` paths not exclude anything that starts with that path.  So you can point at a directory and anything within that directory (recursive) will be excluded.
+
 # 0.6.0 - November 21 2012
 
 Leaving beta. Plenty still to do, but its been decently shaken out at this point.  This release opens up the door to manipulate the r.js configuration to dynamic runtime updates.
