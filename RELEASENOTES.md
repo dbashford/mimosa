@@ -1,7 +1,10 @@
 # 0.6.2 - November ?? 2012
 
 ### Minor Changes
-* Added new workflow before everything starts called `beforeBuild`.  Has two steps for now, `init` and `complete`.  Steps always easy to add.  This workflow is executed before `buildFile`, so before any individual assets are considered.
+* Added new workflow before everything starts called `preBuild`.  Has two steps for now, `init` and `complete`.  Steps always easy to add.  This workflow is executed before `buildFile`, so before any individual assets are considered.
+* Added `preClean`, `cleanFile`, `postClean` workflows and redirected all current cleaning behavior to use `clean`.
+* Changed name of `buildDone` workflow to `postBuild` and changed all modules that registered for `buildDone` to use `postBuild`
+* mimosa-require-commonjs #1, added return to end of wrap
 
 # 0.6.1 - November 23 2012
 
