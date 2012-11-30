@@ -3,17 +3,19 @@ logger = require 'logmimosa'
 _ = require 'lodash'
 
 Workflow = require './workflow'
-modules =   require '../modules'
 
 class Cleaner
 
-  constructor: (@config, initCallback) ->
-    @workflow = new Workflow _.clone(@config, true), modules.basic, initCallback
-    @workflow.init @_startWatcher
+  constructor: (@config, modules, @initCallback) ->
+    @workflow = new Workflow _.clone(@config, true), modules, @_cleanDone
+    @workflow.initClean @_startWatcher
 
   _startWatcher: =>
     watcher = watch.watch(@config.watch.sourceDir, {ignored:@_ignoreFunct, persistent:false})
-    watcher.on "add", @workflow.remove
+    watcher.on "add", @workflow.clean
+
+  _cleanDone: =>
+    @workflow.postClean @initCallback
 
   _ignoreFunct: (name) =>
     if @config.watch.excludeRegex?

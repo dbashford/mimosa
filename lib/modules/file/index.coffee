@@ -5,7 +5,9 @@ beforeRead = require './beforeRead'
 read = require './read'
 write = require './write'
 del = require './delete'
-modules = [init, beforeRead, read, write, del]
+clean = require './clean'
+
+modules = [init, beforeRead, read, write, del, clean]
 
 class MimosaFileModule
 

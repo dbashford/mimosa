@@ -10,7 +10,7 @@ class Watcher
   constructor: (@config, modules, @persist, @initCallback) ->
     @throttle = @config.watch.throttle
     @workflow = new Workflow @config, modules, @_buildDoneCallback
-    @workflow.init @_startWatcher
+    @workflow.initBuild @_startWatcher
 
   _startWatcher: =>
     watcher = watch.watch(@config.watch.sourceDir, {ignored:@_ignoreFunct, persistent:@persist})

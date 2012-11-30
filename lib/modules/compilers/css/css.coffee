@@ -14,20 +14,15 @@ module.exports = class AbstractCSSCompiler
   constructor: ->
 
   registration: (config, register) ->
-    if config.isClean
-      register ['remove'], 'init', @_checkState,         [@extensions...]
-      register ['remove'], 'init', @_findBasesToCompile, [@extensions...]
-      return
-
     register ['buildExtension'], 'init',    @_processWatchedDirectories, [@extensions[0]]
     register ['buildExtension'], 'init',    @_findBasesToCompileStartup, [@extensions[0]]
     register ['buildExtension'], 'compile', @_compile,                   [@extensions[0]]
 
-    register ['add'],                   'init',         @_processWatchedDirectories, [@extensions...]
-    register ['remove'],                'init',         @_checkState,                [@extensions...]
-    register ['add','update','remove'], 'init',         @_findBasesToCompile,        [@extensions...]
-    register ['add','update','remove'], 'compile',      @_compile,                   [@extensions...]
-    register ['update','remove'],       'afterCompile', @_processWatchedDirectories, [@extensions...]
+    register ['add'],                           'init',         @_processWatchedDirectories, [@extensions...]
+    register ['remove','cleanFile'],                'init',         @_checkState,                [@extensions...]
+    register ['add','update','remove','cleanFile'], 'init',         @_findBasesToCompile,        [@extensions...]
+    register ['add','update','remove'],         'compile',      @_compile,                   [@extensions...]
+    register ['update','remove'],               'afterCompile', @_processWatchedDirectories, [@extensions...]
 
   # for clean
   _checkState: (config, options, next) =>

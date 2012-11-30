@@ -2,6 +2,8 @@ logger =  require 'logmimosa'
 
 util =    require '../util/util'
 Watcher = require '../util/watcher'
+Cleaner = require '../util/cleaner'
+
 
 watch = (opts) =>
   if opts.debug then logger.setDebug()
@@ -13,7 +15,7 @@ watch = (opts) =>
 
     if opts.clean
       config.isClean = true
-      util.cleanCompiledDirectories(config, instWatcher)
+      new Cleaner(config, modules, instWatcher)
     else
       instWatcher()
 

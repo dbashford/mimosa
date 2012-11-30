@@ -5,6 +5,8 @@ wrench =  require 'wrench'
 _      =  require 'lodash'
 logger =  require 'logmimosa'
 
+Cleaner = require '../util/cleaner'
+
 util =    require '../util/util'
 
 clean = (opts) ->
@@ -22,7 +24,7 @@ clean = (opts) ->
         logger.success "Compiled directory already deleted"
     else
       config.isClean = true
-      util.cleanCompiledDirectories config, ->
+      new Cleaner config, modules, ->
         logger.success "[[ #{config.watch.compiledDir} ]] has been cleaned."
 
 register = (program, callback) =>

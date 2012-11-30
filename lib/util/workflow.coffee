@@ -16,11 +16,15 @@ module.exports = class WorkflowManager
   doneFiles: []
 
   masterTypes:
-    beforeBuild: ["init", "complete"]
 
+    preClean:  ["init", "complete"]
+    cleanFile:     ["init", "beforeRead", "read", "afterRead", "beforeDelete", "delete", "afterDelete", "complete"]
+    postClean: ["init", "complete"]
+
+    preBuild:       ["init", "complete"]
     buildFile:      ["init", "beforeRead", "read", "afterRead", "betweenReadCompile", "beforeCompile", "compile", "afterCompile", "betweenCompileWrite", "beforeWrite", "write", "afterWrite", "complete"]
     buildExtension: ["init", "beforeRead", "read", "afterRead", "betweenReadCompile", "beforeCompile", "compile", "afterCompile", "betweenCompileWrite", "beforeWrite", "write", "afterWrite", "complete"]
-    buildDone:      ["init", "beforeOptimize", "optimize", "afterOptimize", "beforeServer", "server", "afterServer", "beforePackage", "package", "afterPackage", "beforeInstall", "install", "afterInstall", "complete"]
+    postBuild:      ["init", "beforeOptimize", "optimize", "afterOptimize", "beforeServer", "server", "afterServer", "beforePackage", "package", "afterPackage", "beforeInstall", "install", "afterInstall", "complete"]
 
     add:    ["init", "beforeRead", "read", "afterRead", "betweenReadCompile", "beforeCompile", "compile", "afterCompile", "betweenCompileWrite", "beforeWrite", "write", "afterWrite", "betweenWriteOptimize", "beforeOptimize", "optimize", "afterOptimize", "complete"]
     update: ["init", "beforeRead", "read", "afterRead", "betweenReadCompile", "beforeCompile", "compile", "afterCompile", "betweenCompileWrite", "beforeWrite", "write", "afterWrite", "betweenWriteOptimize", "beforeOptimize", "optimize", "afterOptimize", "complete"]
@@ -61,9 +65,14 @@ module.exports = class WorkflowManager
     @initialFileCount = files.length
     # @initialFiles = files.map (f) => path.join @config.watch.sourceDir, f
 
-  init: (cb) =>
-    # kick off before build step
-    @_executeWorkflowStep {}, 'beforeBuild', cb
+  initClean: (cb) =>
+    @_executeWorkflowStep {}, 'preClean', cb
+
+  initBuild: (cb) =>
+    @_executeWorkflowStep {}, 'preBuild', cb
+
+  postClean: (cb) =>
+    @_executeWorkflowStep {}, 'postClean', cb
 
   cleanUpRegistration: =>
     logger.debug "Cleaning up unused workflow steps"
@@ -81,21 +90,21 @@ module.exports = class WorkflowManager
 
   register: (types, step, callback, extensions = ['*']) =>
     unless Array.isArray(types)
-      return logger.warn "Workflow types not passed in as array: [[ #{types} ]], ending registration for plugin."
+      return logger.warn "Workflow types not passed in as array: [[ #{types} ]], ending registration for module."
 
     unless Array.isArray(extensions)
-      return logger.warn "Workflow extensions not passed in as array: [[ #{extensions} ]], ending registration for plugin."
+      return logger.warn "Workflow extensions not passed in as array: [[ #{extensions} ]], ending registration for module."
 
     unless typeof step is "string"
-      return logger.warn "Workflow step not passed in as string: [[ #{step} ]], ending registration for plugin."
+      return logger.warn "Workflow step not passed in as string: [[ #{step} ]], ending registration for module."
 
     unless _.isFunction(callback)
-      return logger.warn "Workflow callback not passed in as function: [[ #{callback} ]], ending registration for plugin."
+      return logger.warn "Workflow callback not passed in as function: [[ #{callback} ]], ending registration for module."
 
     for type in types
 
       unless @types[type]?
-        return logger.warn "Unrecognized workflow type [[ #{type} ]], valid types are [[ #{Object.keys(@types).join(',')} ]], ending registration for plugin."
+        return logger.warn "Unrecognized workflow type [[ #{type} ]], valid types are [[ #{Object.keys(@types).join(',')} ]], ending registration for module."
 
       if @types[type].indexOf(step) < 0
         return logger.warn "Unrecognized workflow step [[ #{step} ]] for type [[ #{type} ]], valid steps are [[ #{@types[type]} ]]"
@@ -111,6 +120,7 @@ module.exports = class WorkflowManager
 
         @registration[type][step][extension].push callback
 
+  clean:  (fileName) => @_executeWorkflowStep(@_buildAssetOptions(fileName), 'cleanFile')
   update: (fileName) => @_executeWorkflowStep(@_buildAssetOptions(fileName), 'update')
   remove: (fileName) => @_executeWorkflowStep(@_buildAssetOptions(fileName), 'remove')
   add: (fileName) =>
@@ -201,5 +211,5 @@ module.exports = class WorkflowManager
 
   _buildDone: =>
     # wrap up, buildDone
-    @_executeWorkflowStep {}, 'buildDone', =>
+    @_executeWorkflowStep {}, 'postBuild', =>
       if @buildDoneCallback? then @buildDoneCallback()

@@ -2,13 +2,9 @@ path   = require 'path'
 fs     = require 'fs'
 
 color  = require('ansi-color').set
-_      = require 'lodash'
-wrench = require 'wrench'
 logger = require 'logmimosa'
 
-fileUtils = require './file'
 configurer = require './configurer'
-Cleaner = require './cleaner'
 compilerCentral = require '../modules/compilers'
 
 exports.projectPossibilities = (callback) ->
@@ -68,15 +64,6 @@ exports.processConfig = (opts, callback) ->
       logger.setConfig(newConfig)
       callback(newConfig, modules)
 
-exports.cleanCompiledDirectories = (config, cb) ->
-  i = 0
-  done = ->
-    cb() if ++i is 2
-
-  new Cleaner config, ->
-    _cleanMisc config, done
-    _cleanUp config, done
-
 exports.deepFreeze = (o) ->
   Object.freeze(o)
   Object.getOwnPropertyNames(o).forEach (prop) =>
@@ -84,54 +71,6 @@ exports.deepFreeze = (o) ->
     (typeof o[prop] is "object" || typeof o[prop] is "function") and
     not Object.isFrozen(o[prop])
       exports.deepFreeze o[prop]
-
-_cleanMisc = (config, cb) ->
-  jsDir = path.join config.watch.compiledDir, config.watch.javascriptDir
-  files = fileUtils.glob "#{jsDir}/**/*-built.js"
-
-  i = 0
-  done = ->
-    cb() if ++i is files.length + 1
-
-  for file in files
-    logger.debug("Deleting '-built' file, [[ #{file} ]]")
-    fs.unlink file, (err) ->
-      logger.success "Deleted file [[ #{file} ]]"
-      done()
-
-  compiledJadeFile = path.join config.watch.compiledDir, 'index.html'
-  fs.exists compiledJadeFile, (exists) ->
-    if exists
-      logger.debug("Deleting compiledJadeFile [[ #{compiledJadeFile} ]]")
-      fs.unlink compiledJadeFile, (err) ->
-        logger.success "Deleted file [[ #{compiledJadeFile} ]]"
-        done()
-    else
-      done()
-
-_cleanUp = (config, cb) ->
-  dir = config.watch.sourceDir
-  directories = wrench.readdirSyncRecursive(dir).filter (f) -> fs.statSync(path.join(dir, f)).isDirectory()
-
-  return cb() if directories.length is 0
-
-  i = 0
-  done = ->
-    cb() if ++i is directories.length
-
-  _.sortBy(directories, 'length').reverse().forEach (dir) ->
-    dirPath = path.join(config.watch.compiledDir, dir)
-    if fs.existsSync dirPath
-      logger.debug "Deleting directory [[ #{dirPath} ]]"
-      fs.rmdir dirPath, (err) ->
-        if err?.code is not "ENOTEMPTY"
-          logger.error "Unable to delete directory, #{dirPath}"
-          logger.error err
-        else
-          logger.success "Deleted empty directory [[ #{dirPath} ]]"
-        done()
-    else
-      done()
 
 _findConfigPath = (fileName, configPath) ->
   if fs.existsSync configPath

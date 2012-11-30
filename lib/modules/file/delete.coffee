@@ -9,7 +9,7 @@ class MimosaFileDeleteModule
   registration: (config, register) =>
     e = config.extensions
     cExts = config.copy.extensions
-    register ['remove'], 'delete', @_delete, [e.javascript..., e.css..., cExts...]
+    register ['remove','cleanFile'], 'delete', @_delete, [e.javascript..., e.css..., cExts...]
 
   _delete: (config, options, next) =>
     fileName = options.destinationFile(options.inputFile)

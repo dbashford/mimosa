@@ -24,7 +24,7 @@ module.exports = class AbstractTemplateCompiler
 
   registration: (config, register) ->
     if config.isClean
-      return register ['remove'], 'init', @_removeFiles, [@extensions...]
+      return register ['cleanFile'], 'init', @_removeFiles, [@extensions...]
 
     register ['buildExtension'], 'init',       @_gatherFiles,            [@extensions[0]]
     register ['buildExtension'], 'beforeRead', @_templateNeedsCompiling, [@extensions[0]]
