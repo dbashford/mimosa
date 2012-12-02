@@ -1,5 +1,7 @@
 # 0.6.2 - December 02 2012
 
+Due to the holiday and me attending a conference all week this release took a bit.  With a bunch of the backlog a few more releases this week are likely.
+
 ### Major Changes
 * New module, `mimosa-import-source`, see the module's README for details https://github.com/dbashford/mimosa-import-source
 
