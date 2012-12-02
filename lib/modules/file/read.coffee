@@ -9,8 +9,8 @@ class MimosaFileReadModule
   registration: (config, register) =>
     e = config.extensions
     cExts = config.copy.extensions
-    register ['add','update','buildFile'],                           'read', @_read, [e.javascript..., cExts...]
-    register ['add','update','remove','cleanFile','buildExtension'], 'read', @_read, [e.css..., e.template...]
+    register ['add','update','buildFile'],               'read', @_read, [e.javascript..., cExts...]
+    register ['add','update','remove','buildExtension'], 'read', @_read, [e.css..., e.template...]
 
   _read: (config, options, next) ->
     return next() unless options.files?.length > 0
