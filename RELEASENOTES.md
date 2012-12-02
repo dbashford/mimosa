@@ -1,10 +1,17 @@
-# 0.6.2 - November ?? 2012
+# 0.6.2 - December 02 2012
+
+### Major Changes
+* New module, `mimosa-import-source`, see the module's README for details https://github.com/dbashford/mimosa-import-source
 
 ### Minor Changes
 * Added new workflow before everything starts called `preBuild`.  Has two steps for now, `init` and `complete`.  Steps always easy to add.  This workflow is executed before `buildFile`, so before any individual assets are considered.
 * Added `preClean`, `cleanFile`, `postClean` workflows and redirected all current cleaning behavior to use `clean`.
 * Changed name of `buildDone` workflow to `postBuild` and changed all modules that registered for `buildDone` to use `postBuild`
 * mimosa-require-commonjs #1, added return to end of wrap
+* reworked modules page on site
+
+### You'll need to...
+* If you are doing any module work, you'll want to change your workflow details to match the new names
 
 # 0.6.1 - November 23 2012
 
