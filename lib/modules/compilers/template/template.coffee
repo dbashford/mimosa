@@ -23,9 +23,6 @@ module.exports = class AbstractTemplateCompiler
       @clientPath = path.join jsDir, 'vendor', "#{@clientLibrary}.js"
 
   registration: (config, register) ->
-    if config.isClean
-      return register ['cleanFile'], 'init', @_removeFiles, [@extensions...]
-
     register ['buildExtension'], 'init',       @_gatherFiles,            [@extensions[0]]
     register ['buildExtension'], 'beforeRead', @_templateNeedsCompiling, [@extensions[0]]
     register ['buildExtension'], 'compile',    @_compile,                [@extensions[0]]
@@ -35,6 +32,8 @@ module.exports = class AbstractTemplateCompiler
     register ['add','update','remove'], 'compile',    @_compile,                [@extensions...]
 
     unless config.isVirgin
+      register ['cleanFile'], 'init', @_removeFiles, [@extensions...]
+
       register ['buildExtension'],        'afterCompile', @_merge, [@extensions[0]]
       register ['add','update','remove'], 'afterCompile', @_merge, [@extensions...]
 
