@@ -26,6 +26,7 @@ clean = (opts) ->
       config.isClean = true
       new Cleaner config, modules, ->
         logger.success "[[ #{config.watch.compiledDir} ]] has been cleaned."
+        process.exit 0
 
 register = (program, callback) =>
   program
