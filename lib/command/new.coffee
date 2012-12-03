@@ -178,7 +178,12 @@ class NewCommand
     replacements = {}
     unless comps.javascript.isDefault
       replacements["# server:"]                 = "server:"
-      replacements["# path: 'server.coffee'"]   = "path: 'server.#{comps.javascript.defaultExtensions[0]}'"
+
+      # Typescript hack since cannot handle typescript on the server
+      if comps.javascript.base is "typescript"
+        replacements["# path: 'server.coffee'"]   = "path: 'server.js'"
+      else
+        replacements["# path: 'server.coffee'"]   = "path: 'server.#{comps.javascript.defaultExtensions[0]}'"
 
     unless comps.views.isDefault
       replacements["# server:"]             = "server:"
@@ -218,6 +223,11 @@ class NewCommand
     serverPath = path.join @currPath,  'servers'
     allItems = wrench.readdirSyncRecursive(serverPath)
     files = allItems.filter (i) -> fs.statSync(path.join(serverPath, i)).isFile()
+
+    # Typescript hack since cannot handle typescript on the server
+    if comps.javascript.base is "typescript"
+      safePaths.push "\\.js$"
+
     for file in files
       filePath = path.join(serverPath, file)
       isSafe = safePaths.some (path) -> file.match(path)
@@ -264,6 +274,7 @@ class NewCommand
     packageJson.name = name if name?
 
     @removeFromPackageDeps(chosen.javascript.base, "livescript", "LiveScript", packageJson)
+    #@removeFromPackageDeps(chosen.javascript.base, "typescript", "typescript", packageJson)
     @removeFromPackageDeps(chosen.javascript.base, "iced", "iced-coffee-script", packageJson)
     @removeFromPackageDeps(chosen.javascript.base, "coffee", "coffee-script", packageJson)
 

@@ -28,7 +28,7 @@ update = (opts) ->
     logger.success "Finished.  You are all up to date!"
     process.exit 0
 
-  jspacks = ['iced-coffee-script', 'LiveScript']
+  jspacks = ['iced-coffee-script', 'LiveScript', 'typescript']
 
   for pack in jspacks
     if !clientPackageJson.dependencies[pack]? and mimosaPackageJson.dependencies[pack]?
