@@ -8,6 +8,7 @@ Also, I'm not a TypeScript developer, I've only dabbled and played. So there are
 Lastly, the trivial TypeScript web assets delivered with `mimosa new` are very likely not idiomatic TypeScript. If someone wants to help out with that...
 
 ### Minor Changes
+* mimosa-require #1, fixed `inferConfig: false` code path
 
 # 0.6.2 - December 02 2012
 
