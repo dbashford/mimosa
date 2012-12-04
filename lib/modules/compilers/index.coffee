@@ -108,6 +108,8 @@ class MimosaCompilerModule
       helperFiles:["app/template/handlebars-helpers"]
     copy:
       extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
+    typescript:
+      module:true
 
   placeholder: ->
     """

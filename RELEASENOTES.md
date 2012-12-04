@@ -9,6 +9,9 @@ Lastly, the trivial TypeScript web assets delivered with `mimosa new` are very l
 
 ### Minor Changes
 * mimosa-require #1, fixed `inferConfig: false` code path
+* mimosa-live-reload #1, client script now cleaned up upon `mimosa clean`
+* mimosa #94, when clean finishes, exit hard
+* mimosa #95, default README for `mimosa mod:init`
 
 # 0.6.2 - December 02 2012
 
