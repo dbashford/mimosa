@@ -22,11 +22,12 @@ module.exports = class TypeScriptCompiler extends JSCompiler
     @sourceUnitPath = path.join __dirname, "assets", "lib.d.ts"
     @sourceUnitText = fs.readFileSync @sourceUnitPath, "utf-8"
 
-    @settings = new TypeScript.CompilationSettings()
-    @settings.codeGenTarget = TypeScript.CodeGenTarget.ES5
-    #@settings.moduleGenTarget = TypeScript.ModuleGenTarget.Asynchronous
-    #@settings.moduleGenTarget = TypeScript.ModuleGenTarget.Synchronous
-    @settings.resolve = true
+    TypeScript.codeGenTarget = TypeScript.CodeGenTarget.ES5
+    if config.typescript?.module?
+      if config.typescript.module is "commonjs"
+        TypeScript.moduleGenTarget = TypeScript.ModuleGenTarget.Synchronous
+      else if config.typescript.module is "amd"
+        TypeScript.moduleGenTarget = TypeScript.ModuleGenTarget.Asynchronous
 
   compile: (file, cb) ->
     outText = ""
@@ -41,10 +42,10 @@ module.exports = class TypeScriptCompiler extends JSCompiler
       WriteLine: (str) -> errorMessage += str
       Close: ->
 
-    compiler = new TypeScript.TypeScriptCompiler(outTextAssembler, outTextAssembler, new TypeScript.NullLogger(), @settings)
+    compiler = new TypeScript.TypeScriptCompiler(outTextAssembler, outTextAssembler, new TypeScript.NullLogger())
     compiler.setErrorOutput stderr
     compiler.parser.errorRecovery = true
-    env = new TypeScript.CompilationEnvironment(@settings, io)
+    env = new TypeScript.CompilationEnvironment({resolve:true}, io)
     resolver = new TypeScript.CodeResolver(env)
     compiler.addUnit @sourceUnitText, @sourceUnitPath, false
     compiler.addUnit file.inputFileText, file.inputFileName, false

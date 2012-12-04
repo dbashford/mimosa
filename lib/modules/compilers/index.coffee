@@ -70,7 +70,10 @@ class MimosaCompilerModule
       extensions = if Compiler.base is "copy"
         config.copy.extensions
       else
-        if config.compilers.extensionOverrides[Compiler.base]?
+        if config.compilers.extensionOverrides[Compiler.base] is null
+          logger.debug "Not registering compiler [[ #{Compiler.base} ]], has been set to null in config."
+          false
+        else if config.compilers.extensionOverrides[Compiler.base]?
           config.compilers.extensionOverrides[Compiler.base]
         else
           # check and see if an overridden extension conflicts with an existing one
@@ -79,11 +82,11 @@ class MimosaCompilerModule
       # compiler left without extensions, don't register
 
       #continue if extensions.length is 0
-
-      compiler = new Compiler(config, extensions)
-      allCompilers.push compiler
-      extHash[ext] = compiler for ext in compiler.extensions
-      config.extensions[Compiler.type].push(extensions...)
+      if extensions
+        compiler = new Compiler(config, extensions)
+        allCompilers.push compiler
+        extHash[ext] = compiler for ext in compiler.extensions
+        config.extensions[Compiler.type].push(extensions...)
 
     for type, extensions of config.extensions
       config.extensions[type] = _.uniq(extensions)
@@ -156,7 +159,8 @@ class MimosaCompilerModule
                   unless typeof ext is "string"
                     errors.push "compilers.extensionOverrides.#{configComp} must be an array of strings."
               else
-                errors.push "compilers.extensionOverrides must be an array."
+                unless configComp is null
+                  errors.push "compilers.extensionOverrides must be an array."
           else
             errors.push "compilers.extensionOverrides must be an object."
       else
