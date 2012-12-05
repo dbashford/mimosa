@@ -7,11 +7,15 @@ configurer = require '../util/configurer'
 copyConfig = (opts) ->
   if opts.debug then logger.setDebug()
 
-  configText = configurer.buildConfigText()
   currPath = path.join path.resolve(''), "mimosa-config.coffee"
-  logger.debug "Writing config file to #{currPath}"
-  fs.writeFileSync currPath, configText, 'ascii'
-  logger.success "Copied default config file into current directory."
+  if fs.existsSync currPath
+    logger.warn "A mimosa-config.coffee already exists in this directory.  Will not overwrite.  Please navigate to a directory that does not contain a mimosa-config."
+  else
+    configText = configurer.buildConfigText()
+    logger.debug "Writing config file to #{currPath}"
+    fs.writeFileSync currPath, configText, 'ascii'
+    logger.success "Copied default config file into current directory."
+
   process.exit 0
 
 register = (program, callback) ->
