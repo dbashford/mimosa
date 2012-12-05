@@ -3,7 +3,6 @@
 path = require 'path'
 fs =   require 'fs'
 
-wrench = require 'wrench'
 _ =      require 'lodash'
 logger =           require 'logmimosa'
 
@@ -42,19 +41,19 @@ module.exports = class AbstractTemplateCompiler
       register ['buildExtension'], 'afterCompile', @_readInClientLibrary,        [@extensions[0]]
 
   _gatherFiles: (config, options, next) =>
-    allFiles = wrench.readdirSyncRecursive(config.watch.sourceDir)
-      .map (file) => path.join(config.watch.sourceDir, file)
+    allFiles = fileUtils.readdirSyncRecursive(config.watch.sourceDir, config.watch.exclude, config.watch.excludeRegex)
 
     fileNames = []
     for file in allFiles
       extension = path.extname(file).substring(1)
-      fileNames.push(file) if _.any(@extensions, (ext) -> ext is extension)
+      if _.any(@extensions, (e) -> e is extension)
+        fileNames.push(file)
 
-    if fileNames.length is 0
-      options.files = []
+    options.files = if fileNames.length is 0
+      []
     else
       @_testForSameTemplateName(fileNames) unless fileNames.length is 1
-      options.files = fileNames.map (file) ->
+      fileNames.map (file) ->
         inputFileName:file
         inputFileText:null
         outputFileText:null

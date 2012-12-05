@@ -3,7 +3,6 @@
 fs =     require 'fs'
 path =   require 'path'
 
-wrench = require 'wrench'
 _ =      require 'lodash'
 logger =    require 'logmimosa'
 
@@ -133,9 +132,7 @@ module.exports = class AbstractCSSCompiler
     next()
 
   __getAllFiles: (config) =>
-    files = wrench.readdirSyncRecursive(config.watch.sourceDir)
-      .map (file) =>
-        path.join(config.watch.sourceDir, file)
+    files = fileUtils.readdirSyncRecursive(config.watch.sourceDir, config.watch.exclude, config.watch.excludeRegex)
       .filter (file) =>
         @extensions.some (ext) ->
           file.slice(-ext.length) is ext

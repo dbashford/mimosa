@@ -8,7 +8,7 @@ logger = require 'logmimosa'
 _      = require 'lodash'
 
 util   = require './util'
-moduleManager = require('../modules')
+moduleManager = require '../modules'
 
 windowsDrive = /^[A-Za-z]:\\/
 
@@ -21,7 +21,7 @@ class MimosaConfigurer
       sourceDir: "assets"
       compiledDir: "public"
       javascriptDir: "javascripts"
-      exclude: [/[/\\]\.\w+$/]
+      exclude: [/[/\\](\.|\.#|~)[\w\.]+$/]
       throttle: 0
 
   applyAndValidateDefaults: (config, configPath, callback) =>
@@ -174,22 +174,23 @@ class MimosaConfigurer
       # modules: ['lint', 'server', 'require', 'minify', 'live-reload']
 
       # watch:
-        # sourceDir: "assets"             # directory location of web assets, can be relative to
-                                          # the project root, or absolute
-        # compiledDir: "public"           # directory location of compiled web assets, can be
-                                          # relative to the project root, or absolute
-        # javascriptDir: "javascripts"    # Location of precompiled javascript (i.e. coffeescript),
-                                          # must be relative to sourceDir
-        # exclude: [/[/\\\\]\\.\\w+$/]    # regexes matching the files to be entirely
-                                          # ignored by mimosa, the default matchesfiles that start
-                                          # with a period.
-        # throttle: 0                     # number of file adds the watcher handles before taking a
-                                          # 100 millisecond pause to let those files finish their
-                                          # processing. This helps avoid EMFILE issues for projects
-                                          # containing large numbers of files that all get copied
-                                          # at once. If the throttle is set to 0, no throttling is
-                                          # performed. Recommended to leave this set at 0, the
-                                          # default, until you start encountering EMFILE problems.
+        # sourceDir: "assets"                # directory location of web assets, can be relative to
+                                             # the project root, or absolute
+        # compiledDir: "public"              # directory location of compiled web assets, can be
+                                             # relative to the project root, or absolute
+        # javascriptDir: "javascripts"       # Location of precompiled javascript (i.e.
+                                             # coffeescript), must be relative to sourceDir
+        # exclude: [/[/\\\\](\\.|\\.#|~)[\\w\\.]+$/]  # regexes matching the files to be entirely
+                                             # ignored by mimosa, the default matches files that
+                                             # start with a period.
+        # throttle: 0                        # number of file adds the watcher handles before
+                                             # taking a 100 millisecond pause to let those files
+                                             # finish their processing. This helps avoid EMFILE
+                                             # issues for projects containing large numbers of
+                                             # files that all get copied at once. If the throttle
+                                             # is set to 0, no throttling is performed. Recommended
+                                             # to leave this set at 0, thedefault, until you start
+                                             # encountering EMFILE problems.
 
     """
 

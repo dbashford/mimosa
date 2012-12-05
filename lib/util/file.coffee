@@ -60,4 +60,32 @@ class FileUtils
     else
       globRest str
 
+  readdirSyncRecursive: (baseDir, excludes = [], excludeRegex) ->
+    baseDir = baseDir.replace /\/$/, ''
+
+    readdirSyncRecursive = (baseDir) ->
+      curFiles = fs.readdirSync(baseDir).map (f) ->
+        path.join(baseDir, f)
+
+      if excludes.length > 0
+        curFiles = curFiles.filter (f) ->
+          for exclude in excludes
+            if f is exclude or f.indexOf(exclude) is 0
+              return false
+          true
+
+      if excludeRegex
+        curFiles = curFiles.filter (f) -> not f.match(excludeRegex)
+
+      nextDirs = curFiles.filter (fname) ->
+        fs.statSync(fname).isDirectory()
+
+      files = curFiles
+      while (nextDirs.length)
+        files = files.concat(readdirSyncRecursive(nextDirs.shift()))
+      files
+
+    readdirSyncRecursive(baseDir)
+
+
 module.exports = new FileUtils

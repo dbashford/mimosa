@@ -62,7 +62,7 @@
     "nib": "0.8.2",
     "stylus": "0.30.1",
     "ansi-color": "0.2.1",
-    "wrench": "1.3.9",
+    "wrench": "1.4.4",
     "commander": "1.0.5",
     "chokidar": "0.4.0",
     "volo": "0.2.4",

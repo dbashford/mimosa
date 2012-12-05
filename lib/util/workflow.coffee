@@ -1,12 +1,12 @@
 path =   require 'path'
-fs = require 'fs'
+fs =     require 'fs'
 
-wrench = require 'wrench'
 _ =      require 'lodash'
 logger = require 'logmimosa'
 
 compilers = require '../modules/compilers'
 util      = require './util'
+fileUtils = require './file'
 
 module.exports = class WorkflowManager
 
@@ -48,19 +48,11 @@ module.exports = class WorkflowManager
 
     e = @config.extensions
     @allExtensions = [e.javascript..., e.css..., e.template..., config.copy.extensions...]
-    files = wrench.readdirSyncRecursive(@config.watch.sourceDir).filter (f) =>
-      ext = path.extname(f).substring(1)
-      f = path.join @config.watch.sourceDir, f
-      isValidExtension = ext.length >= 1 and @allExtensions.indexOf(ext) >= 0
-      isIgnored = false
-      if @config.watch.excludeRegex? and f.match @config.watch.excludeRegex
-        isIgnored = true
-      if @config.watch.exclude?
-        for exclude in @config.watch.exclude
-          if f.indexOf(exclude) is 0
-            isIgnored = true
 
-      isValidExtension and not isIgnored
+    w = @config.watch
+    files = fileUtils.readdirSyncRecursive(w.sourceDir, w.exclude, w.excludeRegex).filter (f) =>
+      ext = path.extname(f).substring(1)
+      ext.length >= 1 and @allExtensions.indexOf(ext) >= 0
 
     @initialFileCount = files.length
     # @initialFiles = files.map (f) => path.join @config.watch.sourceDir, f

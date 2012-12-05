@@ -12,6 +12,10 @@ Lastly, the trivial TypeScript web assets delivered with `mimosa new` are very l
 * mimosa-live-reload #1, client script now cleaned up upon `mimosa clean`
 * mimosa #94, when clean finishes, exit hard
 * mimosa #95, default README for `mimosa mod:init`
+* mimosa #90, upgraded default exclude to `/[/\\](\.|\.#|~)[\w\.]+$/` to cover a wider range of temp/dot/backup files, also fixed hidden issue where CSS and template compilers were ignoring `watch.exclude`
+
+### You'll need to...
+* Update your `watch.exclude` to have the default of `[/[/\\](\.|\.#|~)[\w\.]+$/]`
 
 # 0.6.2 - December 02 2012
 
