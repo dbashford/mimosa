@@ -7,12 +7,15 @@ Also, I'm not a TypeScript developer, I've only dabbled and played. So there are
 
 Lastly, the trivial TypeScript web assets delivered with `mimosa new` are very likely not idiomatic TypeScript. If someone wants to help out with that...
 
+### Major Changes
+* mimosa #90, upgraded default exclude to `/[/\\](\.|\.#|~)[\w\.]+$/` to cover a wider range of temp/dot/backup files, also fixed hidden issue where CSS and template compilers were ignoring `watch.exclude`
+
 ### Minor Changes
 * mimosa-require #1, fixed `inferConfig: false` code path
 * mimosa-live-reload #1, client script now cleaned up upon `mimosa clean`
 * mimosa #94, when clean finishes, exit hard
 * mimosa #95, default README for `mimosa mod:init`
-* mimosa #90, upgraded default exclude to `/[/\\](\.|\.#|~)[\w\.]+$/` to cover a wider range of temp/dot/backup files, also fixed hidden issue where CSS and template compilers were ignoring `watch.exclude`
+* mimosa #97, added a few more things to skeleton `.gitignore`
 
 ### You'll need to...
 * Update your `watch.exclude` to have the default of `[/[/\\](\.|\.#|~)[\w\.]+$/]`
