@@ -17,6 +17,7 @@ Lastly, the trivial TypeScript web assets delivered with `mimosa new` are very l
 * mimosa #95, default README for `mimosa mod:init`
 * mimosa #97, added a few more things to skeleton `.gitignore`
 * Removed needless dependency on lodash in mimosa-lint
+* mimosa #99, mimosa config will no longer overwrite existing config in same directory
 
 ### You'll need to...
 * Update your `watch.exclude` to have the default of `[/[/\\](\.|\.#|~)[\w\.]+$/]`
