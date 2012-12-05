@@ -21,7 +21,7 @@ class MimosaConfigurer
       sourceDir: "assets"
       compiledDir: "public"
       javascriptDir: "javascripts"
-      exclude: [/[/\\](\.|\.#|~)[\w\.]+$/]
+      exclude: [/[/\\](\.|~)[^/\\]+$/]
       throttle: 0
 
   applyAndValidateDefaults: (config, configPath, callback) =>
@@ -180,7 +180,7 @@ class MimosaConfigurer
                                              # relative to the project root, or absolute
         # javascriptDir: "javascripts"       # Location of precompiled javascript (i.e.
                                              # coffeescript), must be relative to sourceDir
-        # exclude: [/[/\\\\](\\.|\\.#|~)[\\w\\.]+$/]  # regexes matching the files to be entirely
+        # exclude: [/[/\\\\](\\.|~)[^/\\\\]+$/]   # regexes matching the files to be entirely
                                              # ignored by mimosa, the default matches files that
                                              # start with a period.
         # throttle: 0                        # number of file adds the watcher handles before
