@@ -8,6 +8,7 @@ Also, I'm not a TypeScript developer, I've only dabbled and played. So there are
 Lastly, the trivial TypeScript web assets delivered with `mimosa new` are very likely not idiomatic TypeScript. If someone wants to help out with that...
 
 ### Major Changes
+* Removed `removeCombine` flag from `mimosa build`.  Mimosa will now always remove all the files involved in the r.js run when the `--optimize` flag is used during `mimosa build` and it will not use r.js' removeCombined to do it.  Relates to mimosa-require #3.
 * mimosa #90, upgraded default exclude to `/[/\\](\.|~)[^/\\]+$/` to cover a wider range of temp/dot/backup files, also fixed hidden issue where CSS and template compilers were ignoring `watch.exclude`
 
 ### Minor Changes
@@ -18,9 +19,11 @@ Lastly, the trivial TypeScript web assets delivered with `mimosa new` are very l
 * mimosa #97, added a few more things to skeleton `.gitignore`
 * Removed needless dependency on lodash in mimosa-lint
 * mimosa #99, mimosa config will no longer overwrite existing config in same directory
+* mimosa-require #2, r.js `out` can now be removed from config
 
 ### You'll need to...
 * Update your `watch.exclude` to have the default of `[/[/\\](\.|\.#|~)[\w\.]+$/]`
+* Were you using `removeCombined`?  It's no longer available as a flag, and its functionality will be the default functionality whenever the optimize flag is used and r.js is invoked.
 
 # 0.6.2 - December 02 2012
 

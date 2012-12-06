@@ -8,17 +8,14 @@ util = require '../util/util'
 Watcher =  require '../util/watcher'
 
 build = (opts) =>
-  if !opts.optimize and opts.removeCombined
-    logger.warn "--removeCombined flag set without setting --optimize flag, ignoring --removeCombined"
-    opts.removeCombined = false
-
   if opts.debug then logger.setDebug()
   logger.info "Beginning build"
   opts.build = true
 
   util.processConfig opts, (config, modules) =>
-    if opts.removeCombined then config.require.optimize.overrides.removeCombined = true
-    new Watcher config, modules, false, -> logger.success "Finished build"
+    new Watcher config, modules, false, ->
+      logger.success "Finished build"
+      process.exit 0
 
     _writeJade(config) if opts.jade
 
@@ -62,7 +59,6 @@ register = (program, callback) =>
     .option("-o, --optimize", "run r.js optimization after building")
     .option("-m, --minify", "minify each asset as it is compiled using uglify")
     .option("-p, --package", "package code for distribution after the code has been built")
-    .option("-r, --removeCombined", "removes all of the files involved in the optimization, leaving behind just the built files")
     .option("-j, --jade", "compile the provided jade template into an html, for those not deploying to node environment and in need of an html file")
     .option("-D, --debug", "run in debug mode")
     .action(callback)
@@ -86,11 +82,6 @@ register = (program, callback) =>
       logger.green('  executing packaging functionality for you after the building of assets is complete.')
       logger.blue( '\n    $ mimosa build --package')
       logger.blue( '    $ mimosa build -p\n')
-      logger.green('  Pass a \'removeCombined\' flag in addition to the `--optimize` flag and Mimosa will ensure that')
-      logger.green('  that all of the assets that go into the optimization are removed after the minified files are ')
-      logger.green('  created.')
-      logger.blue( '\n    $ mimosa build --optimize --removeCombined')
-      logger.blue( '    $ mimosa build -o -r\n')
       logger.green('  Pass an \'jade\' flag and Mimosa will attempt to compile the jade template (index.jade) that comes')
       logger.green('  bundled with Mimosa\'s starter app created with the `new` command.  It will do so as if you were')
       logger.green('  deploying the resulting html to a production-like environment.  Live reload will not be included.')
