@@ -10,6 +10,7 @@ Lastly, the trivial TypeScript web assets delivered with `mimosa new` are very l
 ### Major Changes
 * Removed `removeCombine` flag from `mimosa build`.  Mimosa will now always remove all the files involved in the r.js run when the `--optimize` flag is used during `mimosa build` and it will not use r.js' removeCombined to do it.  Relates to mimosa-require #3.
 * mimosa #90, upgraded default exclude to `/[/\\](\.|~)[^/\\]+$/` to cover a wider range of temp/dot/backup files, also fixed hidden issue where CSS and template compilers were ignoring `watch.exclude`
+* mimosa #96, added handlebars as a server template option
 
 ### Minor Changes
 * mimosa-require #1, fixed `inferConfig: false` code path

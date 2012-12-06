@@ -20,6 +20,7 @@
     "consolidate": "0.5.0",
     "jade": "0.27.7",
     "hogan.js": "2.0.0",
-    "ejs": "0.8.3"
+    "ejs": "0.8.3",
+    "handlebars": "1.0.7"
   }
 }
