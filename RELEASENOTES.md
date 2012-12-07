@@ -24,6 +24,12 @@ Lastly, the trivial TypeScript web assets delivered with `mimosa new` are very l
 * mimosa-require #2, r.js `out` can now be removed from config
 * mimosa-require #4, upgrade almond
 * mimosa-require #5, require overrides from mimosa-config were remaining frozen when sent to r.js
+* You can now disable a compiler by setting it to null in the `extensionOverrides` setting, for instance if you wanted to not compile something but just copy it over.  So if you wanted to copy `.dust` files rather than have mimosa compile them for you, you'd add "dust" to the list of `copy` extensions and then turn the dust compiler off like so:
+```
+compilers:
+   extensionOverrides:
+     dust: null
+```
 
 ### You'll need to...
 * Update your `watch.exclude` to have the default of `[/[/\\](\.|\.#|~)[\w\.]+$/]`

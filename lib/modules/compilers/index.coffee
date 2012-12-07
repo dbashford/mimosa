@@ -161,7 +161,7 @@ class MimosaCompilerModule
                   unless typeof ext is "string"
                     errors.push "compilers.extensionOverrides.#{configComp} must be an array of strings."
               else
-                unless configComp is null
+                unless config.compilers.extensionOverrides[configComp] is null
                   errors.push "compilers.extensionOverrides must be an array."
           else
             errors.push "compilers.extensionOverrides must be an object."
