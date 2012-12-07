@@ -203,7 +203,8 @@ class NewCommand
   _copyCompilerSpecificExampleFiles: (comps) ->
     safePaths = _.flatten([comps.javascript.defaultExtensions, comps.css.defaultExtensions, comps.template.defaultExtensions]).map (path) ->
       "\\.#{path}$"
-    safePaths.push "javascripts[/\\\\]vendor"
+    safePaths.push "jquery\.js"
+    safePaths.push "require\.js"
 
     assetsPath = path.join @currPath,  'assets'
     allItems = wrench.readdirSyncRecursive(assetsPath)
@@ -233,6 +234,8 @@ class NewCommand
     # Typescript hack since cannot handle typescript on the server
     if comps.javascript.base is "typescript"
       safePaths.push "\\.js$"
+    else
+
 
     for file in files
       filePath = path.join(serverPath, file)
