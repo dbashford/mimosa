@@ -5,41 +5,89 @@ fs =     require 'fs'
 wrench = require 'wrench'
 logger = require 'logmimosa'
 
+mimosaPath = path.join __dirname, '..', '..', '..'
+currentDir = process.cwd()
+
 install = (name, opts) ->
   if opts.debug then logger.setDebug()
 
-  currentDir = process.cwd()
-  mimosaPath = path.join __dirname, '..', '..', '..'
-
   if name?
-    installFromNPM(name, currentDir, mimosaPath)
+    unless name.indexOf('mimosa-') is 0
+      return logger.error "Can only install 'mimosa-' prefixed modules with mod:install (ex: mimosa-server)."
+
+    process.chdir mimosaPath
+
+    unless name.indexOf("@") > 7
+      oldVersion = moveThingsToPrepareForInstall name
+
+    installFromNPM name, done(name, oldVersion)
+
   else
     logger.info "No name provided, assuming developing module."
-    installLocally(currentDir, mimosaPath)
+    installLocally()
 
-installFromNPM = (name, currentDir, mimosaPath) ->
-  unless name.indexOf('mimosa-') is 0
-    return logger.error "Can only install 'mimosa-' prefixed modules with mod:install (ex: mimosa-server)."
+done = (name, oldVersion) ->
+  (err) ->
+    if oldVersion
+      # need to move things back
+      if err
+        putThingsBack oldVersion, name
+      cleanUp name
 
-  process.chdir mimosaPath
+    process.chdir currentDir
+    process.exit 0
 
+moveThingsToPrepareForInstall = (name) ->
+  beginPath = path.join mimosaPath, "node_modules", name
+  oldVersion = null
+  if fs.existsSync beginPath
+    endPath = path.join mimosaPath, "node_modules", name + "_____backup"
+    wrench.copyDirSyncRecursive beginPath, endPath
+
+    mimosaPackagePath = path.join mimosaPath, 'package.json'
+    mimosaPackage = require mimosaPackagePath
+    if mimosaPackage.dependencies[name]
+      oldVersion = mimosaPackage.dependencies[name]
+      delete mimosaPackage.dependencies[name]
+      logger.debug "New mimosa dependencies:\n #{JSON.stringify(mimosaPackage, null, 2)}"
+      fs.writeFileSync mimosaPackagePath, JSON.stringify(mimosaPackage, null, 2), 'ascii'
+
+  oldVersion
+
+cleanUp = (name) ->
+  backupPath = path.join mimosaPath, "node_modules", name + "_____backup"
+  try
+    wrench.rmdirSyncRecursive backupPath
+  catch err
+    logger.error "Error removing module backup folder at [[ #{backupPath} ]]"
+
+putThingsBack = (oldVersion, name) ->
+  beginPath = path.join mimosaPath, "node_modules", name + "_____backup"
+  if fs.existsSync beginPath
+    endPath = path.join mimosaPath, "node_modules", name
+    wrench.copyDirSyncRecursive beginPath, endPath
+
+    mimosaPackagePath = path.join mimosaPath, 'package.json'
+    mimosaPackage = require mimosaPackagePath
+    mimosaPackage.dependencies[name] = oldVersion
+    logger.debug "New mimosa dependencies:\n #{JSON.stringify(mimosaPackage, null, 2)}"
+    fs.writeFileSync mimosaPackagePath, JSON.stringify(mimosaPackage, null, 2), 'ascii'
+
+installFromNPM = (name, done) ->
   installString = "npm install #{name} --save"
   exec installString, (err, sout, serr) =>
-    if err
-      logger.error err
-    else
+    unless err
+      console.log sout
       logger.success "Install of '#{name}' successful"
 
     logger.debug "NPM INSTALL standard out\n#{sout}"
     logger.debug "NPM INSTALL standard err\n#{serr}"
-    process.chdir currentDir
 
-    process.exit 0
+    done(err)
 
-installLocally = (currentDir, mimosaPath) ->
-
+installLocally = ->
   try
-    pack = require path.join(currentDir, 'package.json')
+    pack = require path.join currentDir, 'package.json'
   catch err
     return logger.error "Unable to find package.json, or badly formatted: #{err}"
 
