@@ -130,12 +130,15 @@ module.exports = class WorkflowManager
     options.lifeCycleType = type
 
     if options.inputFile?
-      if options.extension.length is 0 and fs.statSync(options.inputFile).isDirectory()
+      if options.extension.length is 0 and fs.existsSync(options.inputFile) and fs.statSync(options.inputFile).isDirectory()
         return logger.debug "Not handling directory [[ #{options.inputFile} ]]"
 
       # if processing a file, and the file's extension isn't in the list, boot it
       if @allExtensions.indexOf(options.extension) is -1
-        return logger.warn "No compiler has been registered for extension: [[ #{options.extension} ]], file: [[ #{options.inputFile} ]]"
+        if options.extension?.length is 0
+          return logger.debug "No extension detected [[ #{options.inputFile} ]]."
+        else
+          return logger.warn "No compiler has been registered for extension: [[ #{options.extension} ]], file: [[ #{options.inputFile} ]]"
 
     i = 0
     next = =>
