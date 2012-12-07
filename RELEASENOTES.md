@@ -30,6 +30,8 @@ compilers:
    extensionOverrides:
      dust: null
 ```
+* mimosa #13, handling files not existing
+* mimosa #100, handling directory moving
 
 ### You'll need to...
 * Update your `watch.exclude` to have the default of `[/[/\\](\.|\.#|~)[\w\.]+$/]`
