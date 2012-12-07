@@ -32,6 +32,7 @@ compilers:
 ```
 * mimosa #13, handling files not existing
 * mimosa #100, handling directory moving
+* simplified and consolidated `mod:install` code
 
 ### You'll need to...
 * Update your `watch.exclude` to have the default of `[/[/\\](\.|\.#|~)[\w\.]+$/]`
