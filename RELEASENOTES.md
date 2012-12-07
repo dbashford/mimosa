@@ -33,6 +33,7 @@ compilers:
 * mimosa #13, handling files not existing
 * mimosa #100, handling directory moving
 * simplified and consolidated `mod:install` code
+* mimosa-server-reload #1, added defaults to `watch` config
 
 ### You'll need to...
 * Update your `watch.exclude` to have the default of `[/[/\\](\.|\.#|~)[\w\.]+$/]`
