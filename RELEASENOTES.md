@@ -1,4 +1,4 @@
-# 0.6.3 - December ?? 2012
+# 0.7.0 - December ?? 2012
 
 ### TypeScript
 Added preliminary TypeScript support. It is preliminary in the sense that Mimosa is built to compile web assets, not server assets. TypeScript needs to be compiled to be run via node, so for now there is no TypeScript compilation on the server. There is probably an opportunity to have compilation of server assets to occur via an external module, but to be honest, I haven't spent a lot of time thinking this through. For the time being, when running `mimosa new`, if TypeScript and Express are chosen, the delivered server assets are JavaScript.
@@ -20,11 +20,11 @@ Lastly, the trivial TypeScript web assets delivered with `mimosa new` are very l
 * mimosa #95, default README for `mimosa mod:init`
 * mimosa #97, added a few more things to skeleton `.gitignore`
 * Removed needless dependency on lodash in mimosa-lint
-* mimosa #99, mimosa config will no longer overwrite existing config in same directory
+* mimosa #99, `mimosa config` command will no longer overwrite existing config in same directory
 * mimosa-require #2, r.js `out` can now be removed from config
 * mimosa-require #4, upgrade almond
-* mimosa-require #5, require overrides from mimosa-config were remaining frozen when sent to r.js
-* You can now disable a compiler by setting it to null in the `extensionOverrides` setting, for instance if you wanted to not compile something but just copy it over.  So if you wanted to copy `.dust` files rather than have mimosa compile them for you, you'd add "dust" to the list of `copy` extensions and then turn the dust compiler off like so:
+* mimosa-require #5, require overrides from `mimosa-config` were remaining frozen when sent to r.js
+* You can now disable a compiler by setting it to `null` in the `extensionOverrides` setting, for instance if you didn't to compile something and instead just copy the files.  So if you wanted to copy `.dust` files rather than have mimosa compile them for you, you'd add `"dust"` to the list of `copy` extensions and then turn the dust compiler off like so:
 ```
 compilers:
    extensionOverrides:
@@ -36,8 +36,11 @@ compilers:
 * mimosa-server-reload #1, added defaults to `watch` config
 
 ### You'll need to...
-* Update your `watch.exclude` to have the default of `[/[/\\](\.|\.#|~)[\w\.]+$/]`
-* Were you using `removeCombined`?  It's no longer available as a flag, and its functionality will be the default functionality whenever the optimize flag is used and r.js is invoked.
+* Update your `watch.exclude` to have the default of `[/[/\\](\.|~)[^/\\]+$/]`
+* Were you using `removeCombined`?  It's no longer available as a flag.  Its functionality will be the default functionality whenever the `optimize` flag is used during a `mimosa build` run.
+
+
+
 
 # 0.6.2 - December 02 2012
 
