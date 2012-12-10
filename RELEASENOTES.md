@@ -35,13 +35,11 @@ compilers:
 * mimosa #100, handling directory moving
 * simplified and consolidated `mod:install` code
 * mimosa-server-reload #1, added defaults to `watch` config
+* mimosa-minify upgraded to the latest uglify.  I've done all the work to figure out source maps, but commented out the source map related code for future use as it doesn't make much sense given the current use of uglify
 
 ### You'll need to...
 * Update your `watch.exclude` to have the default of `[/[/\\](\.|~)[^/\\]+$/]`
 * Were you using `removeCombined`?  It's no longer available as a flag.  Its functionality will be the default functionality whenever the `optimize` flag is used during a `mimosa build` run.
-
-
-
 
 # 0.6.2 - December 02 2012
 
