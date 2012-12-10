@@ -6,6 +6,7 @@ logger = require 'logmimosa'
 
 util = require '../util/util'
 Watcher =  require '../util/watcher'
+Cleaner = require '../util/cleaner'
 
 build = (opts) =>
   if opts.debug then logger.setDebug()
@@ -13,11 +14,16 @@ build = (opts) =>
   opts.build = true
 
   util.processConfig opts, (config, modules) =>
-    new Watcher config, modules, false, ->
-      logger.success "Finished build"
-      process.exit 0
+    doBuild = ->
+      config.isClean = false
+      new Watcher config, modules, false, ->
+        logger.success "Finished build"
+        process.exit 0
 
-    _writeJade(config) if opts.jade
+      _writeJade(config) if opts.jade
+
+    config.isClean = true
+    new Cleaner(config, modules, doBuild)
 
 _writeJade = (config) ->
   logger.info "Attempting to compile index.jade"

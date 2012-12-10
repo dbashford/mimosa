@@ -12,6 +12,7 @@ Lastly, the trivial TypeScript web assets delivered with `mimosa new` are very l
 * mimosa #90, upgraded default exclude to `/[/\\](\.|~)[^/\\]+$/` to cover a wider range of temp/dot/backup files, also fixed hidden issue where CSS and template compilers were ignoring `watch.exclude`
 * mimosa #96, added handlebars as a server template option
 * mimosa #82, fixed problem where modules could not be upgraded using `mod:install` alone
+* `mimosa build` now executes a clean prior to building.
 
 ### Minor Changes
 * mimosa-require #1, fixed `inferConfig: false` code path
