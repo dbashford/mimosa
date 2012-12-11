@@ -56,14 +56,20 @@ configured = (moduleNames, callback) ->
     if index is moduleNames.length
       return callback(configuredModules)
 
-    modName = moduleNames[index]
-    index++
+    modName = moduleNames[index++]
     unless modName.indexOf('mimosa-') is 0
       modName = "mimosa-#{modName}"
 
+    fullModName = modName
+
+    if modName.indexOf('@') > 7
+      modParts = modName.split('@')
+      modName = modParts[0]
+      modVersion = modParts[1]
+
     found = false
-    for installed in meta
-      if installed.name is modName
+    for installed in meta when installed.name is modName
+      unless modVersion? and modVersion isnt installed.version
         found = true
         configuredModules.push(require modName)
         break
@@ -71,20 +77,35 @@ configured = (moduleNames, callback) ->
     if found
       processModule()
     else
-      logger.info "Module [[ #{modName} ]] not installed inside your Mimosa, attempting to install it from NPM."
+      logger.info "Module [[ #{fullModName} ]] not installed inside your Mimosa, attempting to install it from NPM."
 
       currentDir = process.cwd()
       mimosaPath = path.join __dirname, '..', '..'
       process.chdir mimosaPath
 
-      installString = "npm install #{modName} --save"
+      installString = "npm install #{fullModName} --save"
       exec installString, (err, sout, serr) =>
         if err
-          logger.error "Unable to install [[ #{modName} ]], but allowing Mimosa to continue.  Install error follows."
+          console.log ""
+          logger.error "Unable to install [[ #{fullModName} ]], but allowing Mimosa to continue.  Install error follows.\n"
           logger.warn err
         else
-          logger.success "Install of '#{modName}' successful"
-          configuredModules.push(require modName)
+          logger.success "Install of '#{fullModName}' successful"
+
+          modPath = path.join mimosaPath, "node_modules", modName
+          Object.keys(require.cache).forEach (key) ->
+            if key.indexOf(modPath) is 0
+              delete require.cache[key]
+
+          try
+            configuredModules.push(require modName)
+          catch err
+            logger.warn "There was an error attempting to include the newly installed module in the currently running Mimosa process," +
+              "but the install was successful. Mimosa is exiting. When it is restarted, Mimosa will use the newly installed module."
+            logger.debug err
+
+            process.exit 0
+
 
         logger.debug "NPM INSTALL standard out\n#{sout}"
         logger.debug "NPM INSTALL standard err\n#{serr}"

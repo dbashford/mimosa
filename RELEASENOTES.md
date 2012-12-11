@@ -8,6 +8,7 @@ Also, I'm not a TypeScript developer, I've only dabbled and played. So there are
 Lastly, the trivial TypeScript web assets delivered with `mimosa new` are very likely not idiomatic TypeScript. If someone wants to help out with that...
 
 ### Major Changes
+* You can now list specific versions of modules in the `modules` array in the `mimosa-config`. For folks working on multi-person projects, this'll let a single person update the mimosa-config to specific (usually newer) versions of Mimosa modules, and the other members of the team need not worry about installing those versions themselves.  When Mimosa fires up, if it detects it has modules with versions that vary from the versions listed in the `modules` array, it will make a trip to NPM to install the desired version.
 * Removed `removeCombine` flag from `mimosa build`.  Mimosa will now always remove all the files involved in the r.js run when the `--optimize` flag is used during `mimosa build` and it will not use r.js' removeCombined to do it.  Relates to mimosa-require #3.
 * mimosa #90, upgraded default exclude to `/[/\\](\.|~)[^/\\]+$/` to cover a wider range of temp/dot/backup files, also fixed hidden issue where CSS and template compilers were ignoring `watch.exclude`
 * mimosa #96, added handlebars as a server template option
@@ -16,25 +17,25 @@ Lastly, the trivial TypeScript web assets delivered with `mimosa new` are very l
 
 ### Minor Changes
 * mimosa-require #1, fixed `inferConfig: false` code path
+* mimosa-require #2, r.js `out` can now be removed from config
+* mimosa-require #4, upgrade almond
+* mimosa-require #5, require overrides from `mimosa-config` were remaining frozen when sent to r.js
 * mimosa-live-reload #1, client script now cleaned up upon `mimosa clean`
+* mimosa-server-reload #1, added defaults to `watch` config
+* mimosa #13, handling files not existing
 * mimosa #94, when clean finishes, exit hard
 * mimosa #95, default README for `mimosa mod:init`
 * mimosa #97, added a few more things to skeleton `.gitignore`
 * Removed needless dependency on lodash in mimosa-lint
 * mimosa #99, `mimosa config` command will no longer overwrite existing config in same directory
-* mimosa-require #2, r.js `out` can now be removed from config
-* mimosa-require #4, upgrade almond
-* mimosa-require #5, require overrides from `mimosa-config` were remaining frozen when sent to r.js
+* mimosa #100, handling directory moving
 * You can now disable a compiler by setting it to `null` in the `extensionOverrides` setting, for instance if you didn't to compile something and instead just copy the files.  So if you wanted to copy `.dust` files rather than have mimosa compile them for you, you'd add `"dust"` to the list of `copy` extensions and then turn the dust compiler off like so:
 ```
 compilers:
    extensionOverrides:
      dust: null
 ```
-* mimosa #13, handling files not existing
-* mimosa #100, handling directory moving
 * simplified and consolidated `mod:install` code
-* mimosa-server-reload #1, added defaults to `watch` config
 * mimosa-minify upgraded to the latest uglify.  I've done all the work to figure out source maps, but commented out the source map related code for future use as it doesn't make much sense given the current use of uglify
 
 ### You'll need to...
