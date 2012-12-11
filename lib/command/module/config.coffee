@@ -1,7 +1,6 @@
 logger = require 'logmimosa'
 
 config = (name, opts) ->
-
   unless name?
     return logger.error "Must provide a module name, ex: mimosa mod:config mimosa-moduleX"
 
@@ -12,7 +11,7 @@ config = (name, opts) ->
   if mod?
     if mod.placeholder
       text = mod.placeholder()
-      logger.green "\n#{text}\n\n"
+      logger.green "#{text}\n\n"
     else
       logger.info "Module [[ #{name} ]] has no configuration"
   else
@@ -22,11 +21,9 @@ config = (name, opts) ->
 
 getModule = (name) ->
   try
-    mod = require name
-    return mod
+    require name
   catch err
     logger.debug "Did not find module named [[ #{name} ]]"
-  null
 
 register = (program, callback) ->
   program
@@ -35,11 +32,10 @@ register = (program, callback) ->
     .description("Print out the configuration snippet for a module to the console")
     .action(callback)
     .on '--help', =>
-      logger.green('  The mod:config command will print out the default commented out CoffeeScript snippet, ')
-      logger.green('  for the given named Mimosa module, that you would need to include in your config to')
-      logger.green('  begin using the module.')
+      logger.green('  The mod:config command will print out the default commented out CoffeeScript snippet ')
+      logger.green('  for the given named Mimosa module. If there is already a mimosa-config.coffee in the')
+      logger.green('  current directory, Mimosa will not copy the file in.')
       logger.blue( '\n    $ mimosa mod:config [nameOfModule]\n')
-
 
 module.exports = (program) ->
   register program, config
