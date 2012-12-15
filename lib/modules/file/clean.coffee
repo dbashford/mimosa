@@ -26,24 +26,16 @@ class MimosaCleanModule
     jsDir = path.join config.watch.compiledDir, config.watch.javascriptDir
     files = fileUtils.glob "#{jsDir}/**/*-built.js"
 
+    return cb() if files.length is 0
+
     i = 0
     done = ->
-      cb() if ++i is files.length + 1
+      cb() if ++i is files.length
 
     for file in files
       logger.debug("Deleting '-built' file, [[ #{file} ]]")
       fs.unlink file, (err) ->
         logger.success "Deleted file [[ #{file} ]]"
-        done()
-
-    compiledJadeFile = path.join config.watch.compiledDir, 'index.html'
-    fs.exists compiledJadeFile, (exists) ->
-      if exists
-        logger.debug("Deleting compiledJadeFile [[ #{compiledJadeFile} ]]")
-        fs.unlink compiledJadeFile, (err) ->
-          logger.success "Deleted file [[ #{compiledJadeFile} ]]"
-          done()
-      else
         done()
 
   __cleanUp: (config, cb) ->

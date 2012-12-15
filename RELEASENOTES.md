@@ -10,6 +10,7 @@ Lastly, the trivial TypeScript web assets delivered with `mimosa new` are far fr
 ### Major Changes
 * You can now list specific versions of modules in the `modules` array in the `mimosa-config`. For folks working on multi-person projects, this'll let a single person update the mimosa-config to specific (usually newer) versions of Mimosa modules, and the other members of the team need not worry about installing those versions themselves.  When Mimosa starts, if it detects it has modules with versions that vary from the versions listed in the `modules` array, it will install the desired version from NPM. To use a specific version, add `@` followed by the version. Ex: `require@0.5.0`
 * Removed `removeCombine` flag from `mimosa build`.  Mimosa will now always remove all the files involved in the r.js run when the `--optimize` flag is used during `mimosa build` and it will not use r.js' removeCombined to do it.  Relates to mimosa-require #3.
+* Removed the `jade` flag that was a part of `mimosa build`.  The limited functionality behind that flag is now part of the `mimosa-server-compile-template` module. Server template compiling is no longer limited to Jade, no longer limited to a single file, and no longer hard-coded to pass in certain values.  This new module will let static sites be built using dynamic templates, and in time the Mimosa website will move over to using Mimosa to build it. https://github.com/dbashford/mimosa-server-template-compile
 * mimosa #90, upgraded default exclude to `/[/\\](\.|~)[^/\\]+$/` to cover a wider range of temp/dot/backup files, also fixed hidden issue where CSS and template compilers were ignoring `watch.exclude`
 * mimosa #96, added handlebars as a server template option
 * mimosa #82, fixed problem where modules could not be upgraded using `mod:install` alone
@@ -28,6 +29,7 @@ Lastly, the trivial TypeScript web assets delivered with `mimosa new` are far fr
 * mimosa #97, added a few more things to skeleton `.gitignore`
 * mimosa #99, `mimosa config` command will no longer overwrite an existing config in same directory
 * mimosa #100, handling directory moving
+* mimosa #104, tweaked mimosa-combine module to append a semi-colon after combined `.js` files
 * Removed needless dependency on lodash in mimosa-lint
 * You can now disable a compiler by setting it to `null` in the `extensionOverrides` setting, for instance if you didn't want to compile a certain type of file, but instead wanted to just copy those files verbatim.  So if you wanted to copy `.dust` files rather than have Mimosa compile them for you, you'd add `"dust"` to the list of `copy` extensions and then turn the dust compiler off like so:
 ```
@@ -41,6 +43,7 @@ compilers:
 ### You'll need to...
 * Update your `watch.exclude` to have the default of `[/[/\\](\.|~)[^/\\]+$/]`
 * Were you using `removeCombined`?  It's no longer available as a flag.  Its functionality will be the default functionality whenever the `optimize` flag is used during a `mimosa build` run.
+* Were you using the `jade` flag with the `mimosa build` command?  It is now gone.  You'll want to use the `mimosa-server-template-compile` module instead.
 
 # 0.6.2 - December 02 2012
 
