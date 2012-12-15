@@ -1,6 +1,8 @@
 path = require 'path'
 fs = require 'fs'
 
+logger = require 'logmimosa'
+
 globWin = require('glob-whatev').glob
 globRest = require('glob').sync
 
@@ -43,11 +45,23 @@ class FileUtils
       callback(error)
 
   isFirstFileNewer: (file1, file2, cb) ->
-    fs.exists file2, (exists) ->
-      return cb(true) if !exists
-      fs.stat file2, (err, stats2) ->
-        fs.stat file1, (err, stats1) ->
-          if stats1.mtime > stats2.mtime then cb(true) else cb(false)
+    fs.exists file1, (exists1) ->
+      unless exists1
+        logger.warn "Detected change with file [[ #{file1} ]] but is no longer present."
+        return cb(false)
+
+      fs.exists file2, (exists2) ->
+        unless exists2
+          logger.debug "File missing, so is new file [[ #{file2} ]]"
+          return cb(true)
+
+        fs.stat file2, (err, stats2) ->
+          fs.stat file1, (err, stats1) ->
+            unless stats1? and stats2?
+              logger.debug "Somehow a file went missing [[ #{stats1} ]], [[ #{stats2} ]] "
+              return cb(false)
+
+            if stats1.mtime > stats2.mtime then cb(true) else cb(false)
 
   # node-glob doesn't work entirely on win32
   # node-glob-whatev works on windows, but is terribly inefficient
