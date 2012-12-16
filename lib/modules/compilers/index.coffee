@@ -109,7 +109,7 @@ class MimosaCompilerModule
     copy:
       extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml"]
     typescript:
-      module:true
+      module:"amd"
 
   placeholder: ->
     """
