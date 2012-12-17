@@ -5,7 +5,7 @@ Added preliminary TypeScript support. Mimosa's TypeScript compiling is currently
 
 I'm not a TypeScript developer, I've only dabbled and played. So there are likely options the TypeScript compiler needs to support that it is not.  I need feedback from TypeScripters on that.
 
-Lastly, the trivial TypeScript web assets delivered with `mimosa new` are far from idiomatic TypeScript. If someone wants to help out with that...
+Lastly, the trivial TypeScript web assets delivered with `mimosa new` are far from idiomatic TypeScript. If someone wants to help out with that...https://github.com/dbashford/MimosaTypeScript
 
 ### Major Changes
 * You can now list specific versions of modules in the `modules` array in the `mimosa-config`. For folks working on multi-person projects, this'll let a single person update the mimosa-config to specific (usually newer) versions of Mimosa modules, and the other members of the team need not worry about installing those versions themselves.  When Mimosa starts, if it detects it has modules with versions that vary from the versions listed in the `modules` array, it will install the desired version from NPM. To use a specific version, add `@` followed by the version. Ex: `require@0.5.0`
