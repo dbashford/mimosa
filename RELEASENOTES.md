@@ -1,4 +1,4 @@
-# 0.7.0 - December ?? 2012
+# 0.7.0 - December 17 2012
 
 ### TypeScript
 Added preliminary TypeScript support. Mimosa's TypeScript compiling is currently for web assets, not server assets. There is probably an opportunity to have compilation of server assets to occur via an external module, but I haven't spent a lot of time thinking that through. For the time being, when running `mimosa new`, if TypeScript and Express are chosen, the delivered server assets are JavaScript.
