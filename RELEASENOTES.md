@@ -1,3 +1,16 @@
+# 0.7.1 - December 24 2012
+
+Tiny update, been taking a much needed break for the holidays, but squeezed a few things in.  I'll be back at it in the new year with skeletons, new server options for `mimosa new`, big updates for the mimosa-lint module, and a consolidation of the module validation logic for reuse purposes.  And most likely requirejs source map stuff too.
+
+### Major Changes
+* New base config parameter `minMimosaVersion` indicates what version of Mimosa is expected for the project running with that `mimosa-config`.  If a `mimMimosaVersion` is set to `0.7.1` and the local install is for `0.7.0`, mimosa will log an error and not start. This makes it easy for a single person on a team to upgrade and validate a given Mimosa install, and then enforce its use across the project team.
+
+### Minor Changes
+* mimosa #101, Added `-d/--delete` flag to `mimosa watch` that allows one to completely remove the `watch.compiledDir` before anything else occurs.  Ex: `mimosa watch -d`
+* Removed some leftover logging from sass compiler
+* mimosa-require #6, commented out all debug logging, should speed up verification quite a bit.
+* mimosa-combine #5, removed validation from folder path.
+
 # 0.7.0 - December 17 2012
 
 ### TypeScript

@@ -67,6 +67,7 @@ module.exports = class AbstractCSSCompiler
         else
           if config.isVirgin
             logger.success "Compiled/copied [[ #{file.outputFileName} ]]", options
+
           file.outputFileText = result
           newFiles.push file
 

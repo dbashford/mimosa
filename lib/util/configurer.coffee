@@ -16,6 +16,7 @@ class MimosaConfigurer
 
   # watch defaults, other defaults reside in modules
   baseDefaults:
+    minMimosaVersion:null
     modules: ['lint', 'server', 'require', 'minify', 'live-reload']
     watch:
       sourceDir: "assets"
@@ -99,6 +100,18 @@ class MimosaConfigurer
   _validateWatchConfig: (config) =>
     errors = []
 
+    if config.minMimosaVersion?
+      if config.minMimosaVersion.match(/^(\d+\.){2}(\d+)$/)
+        currVersion =  require('../../package.json').version
+        versionPieces = currVersion.split('.')
+        minVersionPieces = config.minMimosaVersion.split('.')
+
+        for i in [0..2]
+          if +versionPieces[i] < +minVersionPieces[i]
+            return ["Your version of Mimosa [[ #{currVersion} ]] is less than the required version for this project [[ #{config.minMimosaVersion} ]]"]
+      else
+        errors.push "minMimosaVersion must take the form 'number.number.number', ex: '0.7.0'"
+
     config.watch.sourceDir =   __determinePath config.watch.sourceDir,     config.root
     config.watch.compiledDir = __determinePath config.watch.compiledDir,   config.root
 
@@ -121,7 +134,6 @@ class MimosaConfigurer
         @_testPathExists(jsDir,"watch.javascriptDir", errors)
     else
       errors.push "watch.javascriptDir must be a string"
-
 
     if Array.isArray(config.watch.exclude)
        regexes = []
@@ -165,6 +177,13 @@ class MimosaConfigurer
     # please!
 
     exports.config = {
+
+      # minMimosaVersion:null   # The minimum Mimosa version that must be installed to use the
+                                # project. Defaults to null, which means Mimosa will not check
+                                # the version.  This is a no-nonsense way for big teams to ensure
+                                # everyone stays up to date with the blessed Mimosa version for a
+                                # project.
+
       ###
       The list of Mimosa modules to use for this application. The defaults (lint, server, require,
       minify, live-reload) come bundled with Mimosa and do not need to be installed.  The 'mimosa-'
@@ -206,11 +225,9 @@ class MimosaConfigurer
     configText += @_configBottom()
 
     if moduleManager.configModuleString?
-      configText = configText.replace "['lint', 'server', 'require', 'minify', 'live-reload']", moduleManager.configModuleString
-      configText = configText.replace "  # ", "  "
+      configText = configText.replace("  # modules: ['lint', 'server', 'require', 'minify', 'live-reload']", "  modules: " + moduleManager.configModuleString)
 
     configText
-
 
   __determinePath = (thePath, relativeTo) ->
     return thePath if windowsDrive.test thePath
