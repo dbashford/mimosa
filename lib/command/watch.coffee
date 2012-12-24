@@ -1,4 +1,7 @@
+fs = require 'fs'
+
 logger =  require 'logmimosa'
+wrench =  require 'wrench'
 
 util =    require '../util/util'
 Watcher = require '../util/watcher'
@@ -12,7 +15,12 @@ watch = (opts) =>
       config.isClean = false
       new Watcher(config, modules, true)
 
-    if opts.clean
+    if opts.delete
+      if fs.existsSync config.watch.compiledDir
+        wrench.rmdirSyncRecursive config.watch.compiledDir
+        logger.success "[[ #{config.watch.compiledDir} ]] has been removed"
+        instWatcher()
+    else if opts.clean
       config.isClean = true
       new Cleaner(config, modules, instWatcher)
     else
@@ -26,6 +34,7 @@ register = (program, callback) =>
     .option("-o, --optimize", "run require.js optimization after each js file compile")
     .option("-m, --minify", "minify each asset as it is compiled using uglify")
     .option("-c, --clean", "clean the compiled directory before you begin the watch, this forces a recompile of all your assets")
+    .option("-d, --delete", "remove the compiled directory entirely before starting")
     .option("-D, --debug", "run in debug mode")
     .action(callback)
     .on '--help', =>
@@ -44,6 +53,9 @@ register = (program, callback) =>
       logger.green('  has the effect of forcing a recompile of all of your assets.')
       logger.blue( '\n    $ mimosa watch --clean')
       logger.blue( '    $ mimosa watch -c\n')
+      logger.green('  Pass a \'delete\' flag and Mimosa will first remove the compiled directory before starting the watch.')
+      logger.blue( '\n    $ mimosa watch --delete')
+      logger.blue( '    $ mimosa watch -d\n')
       logger.green('  Pass an \'optimize\' flag and Mimosa will use requirejs to optimize your assets and provide you with')
       logger.green('  single files for the named requirejs modules.  It will do this any time a JavaScript asset is changed.')
       logger.blue( '\n    $ mimosa watch --optimize')
