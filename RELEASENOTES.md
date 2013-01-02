@@ -1,3 +1,8 @@
+# 0.7.1 - January ?? 2012
+
+### Minor Changes
+* mimosa #109, Omit comments in compiled template file when using the `optimize` flag.
+
 # 0.7.1 - December 24 2012
 
 Tiny update, been taking a much needed break for the holidays, but squeezed a few things in.  I'll be back at it in the new year with skeletons, new server options for `mimosa new`, big updates for the mimosa-lint module, and a consolidation of the module validation logic for reuse purposes.  And most likely requirejs source map stuff too.

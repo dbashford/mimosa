@@ -89,7 +89,8 @@ module.exports = class AbstractTemplateCompiler
 
     mergedText = @amdPrefix(config)
     options.files.forEach (file) =>
-      mergedText += @templatePreamble file.inputFileName
+      unless config.isOptimize
+        mergedText += @templatePreamble file.inputFileName
       mergedText += file.outputFileText
 
     mergedText += @amdSuffix()
