@@ -2,6 +2,7 @@
 
 ### Minor Changes
 * mimosa #109, Omit comments in compiled template file when using the `optimize` flag.
+* Added `.gitignore` to module skeleton that omits `node_modules` now that module installs run `npm install` locally to verify install.
 
 # 0.7.1 - December 24 2012
 
