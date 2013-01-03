@@ -21,7 +21,7 @@
     "ADD MORE KEYWORDS TO HELP PEOPLE FIND YOUR MODULE ON NPM"
   ],
   "dependencies": {
-    "logmimosa": "0.2.1"
+    "logmimosa": "0.3.0"
   },
   "license": "MIT",
   "engines": {
