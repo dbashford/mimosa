@@ -1,11 +1,13 @@
 # 0.7.2 - January ?? 2012
 
 ### Major Changes
-* Changed the `update` command to `refresh` to differentiate it from `npm update/install`.  Too may folks have confused the `mimosa update` with `npm update`, thinking that the command updated Mimosa itself.
+* Changed the `update` command to `refresh` to differentiate it from `npm update/install`.  Too many folks have confused the `mimosa update` with `npm update`, erroneously thinking that the command updated Mimosa itself rather than the packages in their own project.
 
 ### Minor Changes
 * mimosa #109, Omit comments in compiled template file when using the `optimize` flag.
 * mimosa, Added `.gitignore` to module skeleton that omits `node_modules` now that module installs run `npm install` locally to verify install.
+* mimosa, cleaning should now do a better job of removing empty folders from the `watchDir`
+* mimosa-server-template-compile #1, new version, 0.2.0, module now cleans up after itself
 * logmimosa, removed new lines from growl message as growl library doesn't support it
 
 # 0.7.1 - December 24 2012
