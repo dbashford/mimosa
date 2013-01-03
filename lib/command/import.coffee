@@ -12,6 +12,9 @@ class ImportCommand
   constructor: (@program) ->
 
   import: (args...) =>
+    unless typeof args[0] is 'string'
+      return logger.error "You must provide a name of a library to import."
+
     @prepArgs(args)
 
     util.processConfig {}, (config, modules) =>
