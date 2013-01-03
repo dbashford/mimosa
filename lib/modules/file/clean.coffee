@@ -39,7 +39,7 @@ class MimosaCleanModule
         done()
 
   __cleanUp: (config, cb) ->
-    dir = config.watch.sourceDir
+    dir = config.watch.compiledDir
     directories = wrench.readdirSyncRecursive(dir).filter (f) -> fs.statSync(path.join(dir, f)).isDirectory()
 
     return cb() if directories.length is 0
@@ -53,9 +53,12 @@ class MimosaCleanModule
       if fs.existsSync dirPath
         logger.debug "Deleting directory [[ #{dirPath} ]]"
         fs.rmdir dirPath, (err) ->
-          if err?.code is not "ENOTEMPTY"
-            logger.error "Unable to delete directory, #{dirPath}"
-            logger.error err
+          if err?
+            if err.code is "ENOTEMPTY"
+              logger.info "Unable to delete directory [[ #{dirPath} ]] because directory not empty"
+            else
+              logger.error "Unable to delete directory, [[ #{dirPath} ]]"
+              logger.error err
           else
             logger.success "Deleted empty directory [[ #{dirPath} ]]"
           done()
