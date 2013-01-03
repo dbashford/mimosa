@@ -86,14 +86,14 @@ _findPackageJsonPath = (packagePath = path.resolve('package.json')) ->
 
 register = (program, callback) ->
   program
-    .command('update')
+    .command('refresh')
     .option("-D, --debug", "run in debug mode")
-    .description("update all the node libraries that Mimosa packaged into your application")
+    .description("refresh all the node libraries that Mimosa packaged into your application")
     .action(callback)
     .on '--help', =>
       logger.green('  The update command keeps you from having to deal with updating your project\'s node_modules ')
-      logger.green('  directory when Mimosa updates its libraries.  For instance, if Express updates to a new,')
-      logger.green('  version this command will update your package.json and install new node packages so you')
+      logger.green('  directory when Mimosa updates its libraries.  For instance, if Express updates to a new')
+      logger.green('  version this command will refresh your package.json and install new node packages so you')
       logger.green('  can take advantage of the new Express functionality without having to deal with installing')
       logger.green('  it yourself.')
       logger.blue( '\n    $ mimosa update\n')
