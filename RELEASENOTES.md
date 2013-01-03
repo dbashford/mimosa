@@ -1,7 +1,7 @@
 # 0.7.2 - January ?? 2012
 
 ### Major Changes
-* Changed the `update` command to `refresh` to differentiate it from `npm install`.  Too may folks have confused the `mimosa update` with `npm update`, thinking that the command updated Mimosa itself.
+* Changed the `update` command to `refresh` to differentiate it from `npm update/install`.  Too may folks have confused the `mimosa update` with `npm update`, thinking that the command updated Mimosa itself.
 
 ### Minor Changes
 * mimosa #109, Omit comments in compiled template file when using the `optimize` flag.
