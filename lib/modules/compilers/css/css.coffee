@@ -60,20 +60,26 @@ module.exports = class AbstractCSSCompiler
     return next() if options.files?.length is 0
     i = 0
     newFiles = []
+    done = (file) ->
+      newFiles.push file if file
+      if ++i is options.files.length
+        options.files = newFiles
+        next()
+
     options.files.forEach (file) =>
-      @compile file, config, options, (err, result) =>
-        if err
-          logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}"
+      fs.exists file.inputFileName, (exists) =>
+        if exists
+          @compile file, config, options, (err, result) =>
+            if err
+              logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}"
+            else
+              if config.isVirgin
+                logger.success "Compiled/copied [[ #{file.outputFileName} ]]", options
+              file.outputFileText = result
+
+            done(file)
         else
-          if config.isVirgin
-            logger.success "Compiled/copied [[ #{file.outputFileName} ]]", options
-
-          file.outputFileText = result
-          newFiles.push file
-
-        if ++i is options.files.length
-          options.files = newFiles
-          next()
+          done(file)
 
   _findBasesToCompileStartup: (config, options, next) =>
     baseFilesToCompileNow = []

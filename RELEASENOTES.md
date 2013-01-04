@@ -7,6 +7,7 @@
 
 ### Minor Changes
 * mimosa #109, Omit comments in compiled template file when using the `optimize` flag.
+* mimosa #111, fixed crash on css preprocessor file movement
 * mimosa, Added `.gitignore` to module skeleton that omits `node_modules` now that module installs run `npm install` locally to verify install.
 * mimosa, cleaning should now do a better job of removing empty folders from the `watchDir`
 * mimosa-server-template-compile #1, new version, 0.2.0, module now cleans up after itself
