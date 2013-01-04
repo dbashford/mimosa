@@ -1,6 +1,8 @@
 # 0.7.2 - January ?? 2012
 
 ### Major Changes
+* Added the ability for a Mimosa module to add a command to Mimosa.  Now modules are no longer limited to working within a workflow. New commands can be added. Mimosa will pass a [commander](https://github.com/visionmedia/commander.js/) `program` object to a module as well as a function that can be used to retrieve the full `mimosa-config` should that command get invoked.  More details on the [modules page](http://mimosajs.com/modules.html) of the mimosa website.
+* Utilizing the ability to have modules introduce commands, the `import` command has been pulled out of the Mimosa core codebase and into a mimosa-volo module.  The functionality is the same.  But now to use it it must be installed: `mimosa mod:install mimosa-volo`.  This paves the way for a possible future [bower](https://github.com/twitter/bower) or [component](https://github.com/component/component) related modules.
 * Changed the `update` command to `refresh` to differentiate it from `npm update/install`.  Too many folks have confused the `mimosa update` with `npm update`, erroneously thinking that the command updated Mimosa itself rather than the packages in their own project.
 
 ### Minor Changes

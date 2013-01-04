@@ -4,8 +4,6 @@ fs =     require 'fs'
 
 logger = require 'logmimosa'
 
-util =   require 'util'
-
 update = (opts) ->
   if opts.debug then logger.setDebug()
 

@@ -106,7 +106,6 @@ configured = (moduleNames, callback) ->
 
             process.exit 0
 
-
         logger.debug "NPM INSTALL standard out\n#{sout}"
         logger.debug "NPM INSTALL standard err\n#{serr}"
         process.chdir currentDir
@@ -114,9 +113,17 @@ configured = (moduleNames, callback) ->
 
   processModule()
 
+modulesWithCommands = ->
+  mods = []
+  for mod in all
+    if mod.registerCommand?
+      mods.push mod
+  mods
+
 module.exports =
   basic:                [file, compilers]
   installedMetadata:    meta
   getConfiguredModules: configured
   all:                  all
   configModuleString:   configModuleString
+  modulesWithCommands:  modulesWithCommands

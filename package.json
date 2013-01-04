@@ -65,7 +65,6 @@
     "wrench": "1.4.4",
     "commander": "1.1.1",
     "chokidar": "0.5.0",
-    "volo": "0.2.6",
     "glob-whatev": "0.1.8",
     "glob": "3.1.14",
     "logmimosa": "0.3.0",
