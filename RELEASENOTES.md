@@ -13,6 +13,9 @@
 * mimosa-server-template-compile #1, new version, 0.2.0, module now cleans up after itself
 * logmimosa, removed new lines from growl message as growl library doesn't support it
 
+### You'll need to...
+* If you were using `mimosa import`, it is now no longer a part of mimosa core and needs to be installed separately.  `mimosa mod:install mimosa-volo`
+
 # 0.7.1 - December 24 2012
 
 Tiny update, been taking a much needed break for the holidays, but squeezed a few things in.  I'll be back at it in the new year with skeletons, new server options for `mimosa new`, big updates for the mimosa-lint module, and a consolidation of the module validation logic for reuse purposes.  And most likely requirejs source map stuff too.
