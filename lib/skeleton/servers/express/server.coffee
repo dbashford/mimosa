@@ -3,7 +3,7 @@ engines =        require 'consolidate'
 
 routes  =        require './routes'
 
-exports.startServer = (config) ->
+exports.startServer = (config, callback) ->
 
   app = express()
   server = app.listen config.server.port, ->
@@ -26,5 +26,5 @@ exports.startServer = (config) ->
 
   app.get '/', routes.index(config)
 
-  server
+  callback(server)
 

@@ -1,5 +1,11 @@
 # 0.8.0 - January ?? 2012
 
+### Minor Change
+* mimosa #112, servers now must call a provided callback and hand that callback the server instance and the instance of socketio.  This increases flexibility and allows server support to handle servers that start asynchronously.
+
+### You'll need to...
+* Change your `startServer` function to take a 2nd parameter that is a callback function.  Instead of returning values from `startServer`, the callback needs to be executed and the server and socketio instance, in that order, should be provided to the callback.
+
 # 0.7.3 - January 05 2012
 
 ### Major Changes
