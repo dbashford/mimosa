@@ -37,8 +37,9 @@ copySkeleton = (name, isCoffee, moduleDirPath) ->
   wrench.copyDirSyncRecursive skeletonPath, moduleDirPath, {excludeHiddenUnix:false}
 
   gitignore = path.join(moduleDirPath, '.npmignore')
-  gitignoreText = fs.readFileSync gitignore, 'ascii'
-  fs.writeFileSync path.join(moduleDirPath, '.gitignore'), gitignoreText
+  if fs.existsSync gitignore
+    gitignoreText = fs.readFileSync gitignore, 'ascii'
+    fs.writeFileSync path.join(moduleDirPath, '.gitignore'), gitignoreText
 
   packageJson = path.join(moduleDirPath, 'package.json')
   fs.readFile packageJson, 'ascii', (err, text) ->
