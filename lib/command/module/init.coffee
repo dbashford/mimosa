@@ -34,7 +34,11 @@ init = (name, opts) ->
 copySkeleton = (name, isCoffee, moduleDirPath) ->
   lang = if isCoffee then "coffee" else 'js'
   skeletonPath = path.join __dirname, '..', '..', 'modules', 'skeleton', lang
-  wrench.copyDirSyncRecursive skeletonPath, moduleDirPath
+  wrench.copyDirSyncRecursive skeletonPath, moduleDirPath, {excludeHiddenUnix:false}
+
+  gitignore = path.join(moduleDirPath, '.npmignore')
+  gitignoreText = fs.readFileSync gitignore, 'ascii'
+  fs.writeFileSync path.join(moduleDirPath, '.gitignore'), gitignoreText
 
   packageJson = path.join(moduleDirPath, 'package.json')
   fs.readFile packageJson, 'ascii', (err, text) ->
