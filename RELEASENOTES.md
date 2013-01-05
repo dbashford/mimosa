@@ -1,6 +1,6 @@
 # 0.8.0 - January ?? 2012
 
-# 0.7.2 - January 04 2012
+# 0.7.2 - January 05 2012
 
 The next set of changes I have planned will be fairly breaking in nature, so I wanted slide this mostly non-breaking release out. A few small tidbits, fixes and updates. This release also sets the stage for future modules that will not only add functionality to Mimosa workflows, but also introduce entirely new Mimosa commands.
 
