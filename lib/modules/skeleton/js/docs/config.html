@@ -5,7 +5,7 @@ removed or return null. Mimosa uses this function when applying default
 configuration to a user's config.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">defaults</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">return</span> <span class="p">{</span>
     <span class="nx">minify</span><span class="o">:</span> <span class="p">{</span>
-      <span class="nx">exclude</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;\\.min\\.&quot;</span><span class="p">]</span>
+      <span class="nx">exclude</span><span class="o">:</span> <span class="p">[</span><span class="sr">/\.min\./</span><span class="p">]</span>
     <span class="p">}</span>
   <span class="p">};</span>
 <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>The placeholder function should return a string that represents the
@@ -15,10 +15,10 @@ of the string should be all commented out. If you have no config,
 the function can be removed or can return null.  This function is called
 when Mimosa is creating an initial mimosa-config using 'mimosa new' or
 'mimosa config'</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">placeholder</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="s2">&quot;\t\n&quot;</span><span class="o">+</span>
+  <span class="k">return</span> <span class="s2">&quot;\t\n\n&quot;</span><span class="o">+</span>
          <span class="s2">&quot;  # minify:                    # Configuration for non-require minification/compression via uglify\n&quot;</span> <span class="o">+</span>
          <span class="s2">&quot;                               # using the --minify flag.\n&quot;</span> <span class="o">+</span>
-         <span class="s2">&quot;    # exclude:[\&quot;\\\\.min\\\\.\&quot;]     # List of regexes to exclude files when running minification.\n&quot;</span> <span class="o">+</span>
+         <span class="s2">&quot;    # exclude:[/\\.min\\./]     # List of regexes to exclude files when running minification.\n&quot;</span> <span class="o">+</span>
          <span class="s2">&quot;                               # Any path with \&quot;.min.\&quot; in its name, like jquery.min.js, is assumed to\n&quot;</span> <span class="o">+</span>
          <span class="s2">&quot;                               # already be minified and is ignored by default. Override this property\n&quot;</span> <span class="o">+</span>
          <span class="s2">&quot;                               # if you have other files that you&#39;d like to exempt from minification.&quot;</span><span class="p">;</span>

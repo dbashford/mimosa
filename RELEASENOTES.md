@@ -1,4 +1,8 @@
-# 0.7.2 - January ?? 2012
+# 0.8.0 - January ?? 2012
+
+# 0.7.2 - January 04 2012
+
+The next set of changes I have planned will be fairly breaking in nature, so I wanted slide this mostly non-breaking release out. A few small tidbits, fixes and updates. This release also sets the stage for future modules that will not only add functionality to Mimosa workflows, but also introduce entirely new Mimosa commands.
 
 ### Major Changes
 * Updated libraries in Mimosa and in all the modules resulting in updated versions for every module.
@@ -11,7 +15,7 @@
 * mimosa #111, fixed crash on css preprocessor file movement
 * mimosa, Added `.gitignore` to module skeleton that omits `node_modules` now that module installs run `npm install` locally to verify install.
 * mimosa, cleaning should now do a better job of removing empty folders from the `watchDir`
-* mimosa-server-template-compile #1, new version, 0.2.0, module now cleans up after itself
+* mimosa-server-template-compile #1, module now cleans up after itself
 * logmimosa, removed new lines from growl message as growl library doesn't support it
 
 ### You'll need to...

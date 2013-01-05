@@ -28,7 +28,7 @@ exports.placeholder = ->
 
     # minify:                    # Configuration for non-require minification/compression via uglify
                                  # using the --minify flag.
-      # exclude:["\\\\.min\\\\."]     # List of regexes to exclude files when running minification.
+      # exclude:[/\.min\./]     # List of regexes to exclude files when running minification.
                                  # Any path with ".min." in its name, like jquery.min.js, is assumed to
                                  # already be minified and is ignored by default. Override this property
                                  # if you have other files that you'd like to exempt from minification.

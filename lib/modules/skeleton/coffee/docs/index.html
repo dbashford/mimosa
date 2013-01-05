@@ -71,12 +71,30 @@ Ex: next(false). In most cases you do not want to do this.</li>
 </ol>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_minifyJS = </span><span class="nf">(mimosaConfig, options, next) -&gt;</span>
   <span class="k">for</span> <span class="nx">file</span> <span class="k">in</span> <span class="nx">options</span><span class="p">.</span><span class="nx">files</span>
     <span class="nv">file.outputFileText = </span><span class="nx">minify</span><span class="p">(</span><span class="nx">file</span><span class="p">.</span><span class="nx">outputFileText</span><span class="p">)</span>
-  <span class="nx">next</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>The module.exports exposes module code to Mimosa.  The properties that
+  <span class="nx">next</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>The registerCommand function is used to register new Mimosa commands. If this function is implemented
+Mimosa will call it during startup so the module has an opportunity to respond to the command line.</p>
+
+<p>registerCommand is passed 2 arguments:</p>
+
+<ol>
+<li>program, a commander.js program object, read more here: http://visionmedia.github.com/commander.js/
+Use this object to create a command, the flags for it, any input values, the help text and the callback
+for the command.</li>
+<li>retrieveConfig, a function, use retrieveConfig to get the mimosa-config before doing anything.
+retrieveConfig will generate the mimosa-config and pass it to the callback provided to the retrieveConfig
+function</li>
+</ol>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">registerCommand = </span><span class="nf">(program, retrieveConfig) -&gt;</span>
+  <span class="nx">program</span>
+    <span class="p">.</span><span class="nx">command</span><span class="p">(</span><span class="s">&#39;foo&#39;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">description</span><span class="p">(</span><span class="s">&quot;Do something fooey&quot;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">action</span> <span class="o">-&gt;</span>
+      <span class="nx">retrieveConfig</span> <span class="nf">(config) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>The module.exports exposes module code to Mimosa.  The properties that
 are exported are Mimosa's hook to your module.  Mimosa will attempt
 to access functions that are placed into this exports matching these names:</p>
 
 <ol>
 <li>registration: This function is called to bind your module to a Mimosa workflow.</li>
+<li>registerCommand: This function is called to create a new Mimosa command.</li>
 <li>defaults: This function is called to access the default configuration for your module.
 See <a href="./config.html">config.coffee</a>.</li>
 <li>placeholder: This function is used to build a mimosa-config during 'mimosa new' and
@@ -88,9 +106,10 @@ valid. See <a href="./config.html">config.coffee</a>.</li>
 
 <p>Any other functions exported will be ignored by Mimosa, but may be useful to you if you have
 multiple modules that need to talk to one another.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">module.exports =</span>
-  <span class="nv">registration: </span><span class="nx">registration</span>
-  <span class="nv">defaults: </span>    <span class="nx">config</span><span class="p">.</span><span class="nx">defaults</span>
-  <span class="nv">placeholder: </span> <span class="nx">config</span><span class="p">.</span><span class="nx">placeholder</span>
-  <span class="nv">validate: </span>    <span class="nx">config</span><span class="p">.</span><span class="nx">validate</span>
+  <span class="nv">registration: </span>   <span class="nx">registration</span>
+  <span class="nv">registerCommand: </span><span class="nx">registerCommand</span>
+  <span class="nv">defaults: </span>       <span class="nx">config</span><span class="p">.</span><span class="nx">defaults</span>
+  <span class="nv">placeholder: </span>    <span class="nx">config</span><span class="p">.</span><span class="nx">placeholder</span>
+  <span class="nv">validate: </span>       <span class="nx">config</span><span class="p">.</span><span class="nx">validate</span>
 
-</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html>
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

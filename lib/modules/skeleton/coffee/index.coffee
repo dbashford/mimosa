@@ -84,16 +84,36 @@ _minifyJS = (mimosaConfig, options, next) ->
     file.outputFileText = minify(file.outputFileText)
   next()
 
+# The registerCommand function is used to register new Mimosa commands. If this function is implemented
+# Mimosa will call it during startup so the module has an opportunity to respond to the command line.
+#
+# registerCommand is passed 2 arguments:
+#
+# 1. program, a commander.js program object, read more here: http://visionmedia.github.com/commander.js/
+# Use this object to create a command, the flags for it, any input values, the help text and the callback
+# for the command.
+# 2. retrieveConfig, a function, use retrieveConfig to get the mimosa-config before doing anything.
+# retrieveConfig will generate the mimosa-config and pass it to the callback provided to the retrieveConfig
+# function
+
+registerCommand = (program, retrieveConfig) ->
+  program
+    .command('foo')
+    .description("Do something fooey")
+    .action ->
+      retrieveConfig (config) ->
+
 # The module.exports exposes module code to Mimosa.  The properties that
 # are exported are Mimosa's hook to your module.  Mimosa will attempt
 # to access functions that are placed into this exports matching these names:
 #
 # 1. registration: This function is called to bind your module to a Mimosa workflow.
-# 2. defaults: This function is called to access the default configuration for your module.
+# 2. registerCommand: This function is called to create a new Mimosa command.
+# 3. defaults: This function is called to access the default configuration for your module.
 # See <a href="./config.html">config.coffee</a>.
-# 3. placeholder: This function is used to build a mimosa-config during 'mimosa new' and
+# 4. placeholder: This function is used to build a mimosa-config during 'mimosa new' and
 # 'mimosa config'. See <a href="./config.html">config.coffee</a>.
-# 4. validate: This function is called during Mimosa's startup to validate the mimosa-config.
+# 5. validate: This function is called during Mimosa's startup to validate the mimosa-config.
 # This is your module's opportunity to ensure the configuration it will be given later is
 # valid. See <a href="./config.html">config.coffee</a>.
 #
@@ -101,7 +121,8 @@ _minifyJS = (mimosaConfig, options, next) ->
 # multiple modules that need to talk to one another.
 
 module.exports =
-  registration: registration
-  defaults:     config.defaults
-  placeholder:  config.placeholder
-  validate:     config.validate
+  registration:    registration
+  registerCommand: registerCommand
+  defaults:        config.defaults
+  placeholder:     config.placeholder
+  validate:        config.validate
