@@ -1,10 +1,9 @@
 program = require 'commander'
 logger =  require 'logmimosa'
 
-modules = require './modules'
-util =    require './util/util'
-
 version = require('../package.json').version
+
+external = require('./command/external')
 
 class Mimosa
 
@@ -27,7 +26,7 @@ class Mimosa
     require('./command/module/search')(program)
     require('./command/module/config')(program)
 
-    @registerModuleCommands(program)
+    external(program)
 
     program.command('*').action (arg) ->
       if arg then logger.red "  #{arg} is not a valid command."
@@ -35,15 +34,5 @@ class Mimosa
       program.parse process.argv
 
     program.parse process.argv
-
-  registerModuleCommands: (program) ->
-    commandMods = modules.modulesWithCommands()
-
-    #logger.info "There are #{commandMods.length} command mods"
-
-    for mod in commandMods
-      mod.registerCommand program, (callback) ->
-        util.processConfig {}, (config) =>
-          callback(config)
 
 module.exports = new Mimosa()

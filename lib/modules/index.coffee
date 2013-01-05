@@ -118,6 +118,9 @@ modulesWithCommands = ->
   for mod in all
     if mod.registerCommand?
       mods.push mod
+
+  #logger.info "There are #{mods.length} command mods"
+
   mods
 
 module.exports =
