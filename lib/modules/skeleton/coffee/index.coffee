@@ -92,16 +92,17 @@ _minifyJS = (mimosaConfig, options, next) ->
 # 1. program, a commander.js program object, read more here: http://visionmedia.github.com/commander.js/
 # Use this object to create a command, the flags for it, any input values, the help text and the callback
 # for the command.
-# 2. retrieveConfig, a function, use retrieveConfig to get the mimosa-config before doing anything.
-# retrieveConfig will generate the mimosa-config and pass it to the callback provided to the retrieveConfig
-# function
+# 2. retrieveConfig, a function, use retrieveConfig to have Mimosa execute a build and get the mimosa-config
+# before a module's code is executed.  retrieveConfig takes two parameters, the first is a flag to indicate
+# if a build is needed before module code is executed.  The second is a callback that should contain the
+# module's functionality.  That callback is passed the mimosa-config.
 
 registerCommand = (program, retrieveConfig) ->
   program
     .command('foo')
     .description("Do something fooey")
     .action ->
-      retrieveConfig (config) ->
+      retrieveConfig false, config ->
 
 # The module.exports exposes module code to Mimosa.  The properties that
 # are exported are Mimosa's hook to your module.  Mimosa will attempt

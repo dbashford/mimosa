@@ -80,15 +80,16 @@ Mimosa will call it during startup so the module has an opportunity to respond t
 <li>program, a commander.js program object, read more here: http://visionmedia.github.com/commander.js/
 Use this object to create a command, the flags for it, any input values, the help text and the callback
 for the command.</li>
-<li>retrieveConfig, a function, use retrieveConfig to get the mimosa-config before doing anything.
-retrieveConfig will generate the mimosa-config and pass it to the callback provided to the retrieveConfig
-function</li>
+<li>retrieveConfig, a function, use retrieveConfig to have Mimosa execute a build and get the mimosa-config
+before a module's code is executed.  retrieveConfig takes two parameters, the first is a flag to indicate
+if a build is needed before module code is executed.  The second is a callback that should contain the
+module's functionality.  That callback is passed the mimosa-config.</li>
 </ol>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">registerCommand = </span><span class="nf">(program, retrieveConfig) -&gt;</span>
   <span class="nx">program</span>
     <span class="p">.</span><span class="nx">command</span><span class="p">(</span><span class="s">&#39;foo&#39;</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">description</span><span class="p">(</span><span class="s">&quot;Do something fooey&quot;</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">action</span> <span class="o">-&gt;</span>
-      <span class="nx">retrieveConfig</span> <span class="nf">(config) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>The module.exports exposes module code to Mimosa.  The properties that
+      <span class="nx">retrieveConfig</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">config</span> <span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>The module.exports exposes module code to Mimosa.  The properties that
 are exported are Mimosa's hook to your module.  Mimosa will attempt
 to access functions that are placed into this exports matching these names:</p>
 

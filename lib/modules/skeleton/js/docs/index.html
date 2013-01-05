@@ -85,12 +85,13 @@ Mimosa will call it during startup so the module has an opportunity to respond t
 <li>program, a commander.js program object, read more here: http://visionmedia.github.com/commander.js/
 Use this object to create a command, the flags for it, any input values, the help text and the callback
 for the command.</li>
-<li>retrieveConfig, a function, use retrieveConfig to get the mimosa-config before doing anything.
-retrieveConfig will generate the mimosa-config and pass it to the callback provided to the retrieveConfig
-function</li>
+<li>retrieveConfig, a function, use retrieveConfig to have Mimosa execute a build and get the mimosa-config
+before a module's code is executed.  retrieveConfig takes two parameters, the first is a flag to indicate
+if a build is needed before module code is executed.  The second is a callback that should contain the
+module's functionality.  That callback is passed the mimosa-config.</li>
 </ol>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">registerCommand</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">program</span><span class="p">,</span> <span class="nx">retrieveConfig</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">program</span><span class="p">.</span><span class="nx">command</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">).</span><span class="nx">description</span><span class="p">(</span><span class="s2">&quot;Do something fooey&quot;</span><span class="p">).</span><span class="nx">action</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">retrieveConfig</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">retrieveConfig</span><span class="p">(</span><span class="kc">false</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="p">});</span>
   <span class="p">});</span>
