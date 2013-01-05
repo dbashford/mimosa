@@ -1,6 +1,6 @@
 # 0.8.0 - January ?? 2012
 
-# 0.7.3 - January 06 2012
+# 0.7.3 - January 05 2012
 
 ### Major Changes
 * Mimosa modules that introduce new commands can now request mimosa execute a clean and build before running.  So now commands that need to can operate on a fully built codebase, like, for instance, a `test` command.
