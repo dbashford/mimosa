@@ -1,7 +1,7 @@
 {
   "name": "mimosa",
   "preferGlobal": "true",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "homepage": "http://www.mimosajs.com",
   "author": "David Bashford",
   "description": "A modern browser stack workflow and toolkit. Compile, lint, optimize, serve and more.",
