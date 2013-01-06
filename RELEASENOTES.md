@@ -2,11 +2,22 @@
 
 ### Minor Change
 * mimosa #112, servers now must call a provided callback and hand that callback the server instance and the instance of socketio.  This increases flexibility and allows server support to handle servers that start asynchronously.
+* mimosa, fixed issue with mimMimosaVersion
 * mimosa-lint #1, added an `exclude` property to lint config
 * mimosa-lint #2, added jshintrc support
+* mimosa-lint #3, added default values for coffeescript and icedcoffeescript linting
 
 ### You'll need to...
 * Change your `startServer` function to take a 2nd parameter that is a callback function.  Instead of returning values from `startServer`, the callback needs to be executed and the server and socketio instance, in that order, should be provided to the callback.
+* Using mimosa-lint for linting your coffeescript or iced coffeescript?  Then there is a good chance you've added a few rules to your mimosa-config because of the nature of the JavaScript that the coffeescript compiler outputs.
+```
+rules:
+  javascript:
+    boss: true
+    eqnull: true
+    shadow: true
+```
+You can remove those now.  The latest version of mimosa-lint assumes those three rules when jshint-ing compiled CoffeeScript and IcedCoffeeScript.
 
 # 0.7.3 - January 05 2012
 

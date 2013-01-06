@@ -71,7 +71,7 @@
     "mimosa-server": "0.5.1",
     "mimosa-require": "0.5.6",
     "mimosa-minify": "0.5.1",
-    "mimosa-lint": "0.4.0",
+    "mimosa-lint": "0.3.3",
     "mimosa-live-reload": "0.5.2",
     "npm": "1.1.70"
   },
