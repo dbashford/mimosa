@@ -3,6 +3,7 @@
 ### Minor Change
 * mimosa #112, servers now must call a provided callback and hand that callback the server instance and the instance of socketio.  This increases flexibility and allows server support to handle servers that start asynchronously.
 * mimosa, fixed issue with mimMimosaVersion
+* mimosa, added `htc` and `ico` to list of default copy extensions
 * mimosa-lint #1, added an `exclude` property to lint config
 * mimosa-lint #2, added jshintrc support
 * mimosa-lint #3, added default values for coffeescript and icedcoffeescript linting
