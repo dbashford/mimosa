@@ -6,6 +6,7 @@
 * mimosa-lint #1, added an `exclude` property to lint config
 * mimosa-lint #2, added jshintrc support
 * mimosa-lint #3, added default values for coffeescript and icedcoffeescript linting
+* mimosa-lint #5, code will look up the file system looking for .jshintrc file.  If it doesn't find one in the project directory, it will work its way back down to the root of the file system attempting to find one.
 
 ### You'll need to...
 * Change your `startServer` function to take a 2nd parameter that is a callback function.  Instead of returning values from `startServer`, the callback needs to be executed and the server and socketio instance, in that order, should be provided to the callback.
