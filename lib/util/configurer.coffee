@@ -106,9 +106,14 @@ class MimosaConfigurer
         versionPieces = currVersion.split('.')
         minVersionPieces = config.minMimosaVersion.split('.')
 
+        isHigher = false
         for i in [0..2]
-          if +versionPieces[i] < +minVersionPieces[i]
-            return ["Your version of Mimosa [[ #{currVersion} ]] is less than the required version for this project [[ #{config.minMimosaVersion} ]]"]
+          if +versionPieces[i] > +minVersionPieces[i]
+            isHigher = true
+
+          unless isHigher
+            if +versionPieces[i] < +minVersionPieces[i]
+              return ["Your version of Mimosa [[ #{currVersion} ]] is less than the required version for this project [[ #{config.minMimosaVersion} ]]"]
       else
         errors.push "minMimosaVersion must take the form 'number.number.number', ex: '0.7.0'"
 
