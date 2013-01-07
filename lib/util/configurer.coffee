@@ -8,9 +8,8 @@ logger = require 'logmimosa'
 _      = require 'lodash'
 
 util   = require './util'
+validators = require './validators'
 moduleManager = require '../modules'
-
-windowsDrive = /^[A-Za-z]:\\/
 
 class MimosaConfigurer
 
@@ -62,7 +61,7 @@ class MimosaConfigurer
 
   _manipulateConfig: (config) ->
     config.extensions = {javascript: ['js'], css: ['css'], template: [], copy: []}
-    config.watch.compiledJavascriptDir = __determinePath config.watch.javascriptDir, config.watch.compiledDir
+    config.watch.compiledJavascriptDir = validators.determinePath config.watch.javascriptDir, config.watch.compiledDir
     config
 
   _validateSettings: (config) ->
@@ -89,7 +88,7 @@ class MimosaConfigurer
       else
         util.deepFreeze(config)
 
-      moduleErrors = mod.validate(config)
+      moduleErrors = mod.validate(config, validators)
       errors.push moduleErrors... if moduleErrors
 
     # return to unfrozen
@@ -117,16 +116,11 @@ class MimosaConfigurer
       else
         errors.push "minMimosaVersion must take the form 'number.number.number', ex: '0.7.0'"
 
-    config.watch.sourceDir =   __determinePath config.watch.sourceDir,     config.root
-    config.watch.compiledDir = __determinePath config.watch.compiledDir,   config.root
-
-    if typeof config.watch.sourceDir is "string"
-      @_testPathExists(config.watch.sourceDir, "watch.sourceDir", errors)
-    else
-      errors.push "watch.sourceDir must be a string"
+    validators.multiPathExists(errors, "watch.sourceDir", config.watch.sourceDir, config.root)
 
     unless config.isVirgin
       if typeof config.watch.compiledDir is "string"
+        config.watch.compiledDir = validators.determinePath config.watch.compiledDir, config.root
         if not fs.existsSync(config.watch.compiledDir) and not config.isForceClean
           logger.info "Did not find compiled directory [[ #{config.watch.compiledDir} ]], so making it for you"
           wrench.mkdirSyncRecursive config.watch.compiledDir, 0o0777
@@ -136,7 +130,7 @@ class MimosaConfigurer
     if typeof config.watch.javascriptDir is "string"
       jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
       unless config.isVirgin
-        @_testPathExists(jsDir,"watch.javascriptDir", errors)
+        validators.doesPathExist(errors,"watch.javascriptDir", jsDir)
     else
       errors.push "watch.javascriptDir must be a string"
 
@@ -145,7 +139,7 @@ class MimosaConfigurer
        newExclude = []
        for exclude in config.watch.exclude
          if typeof exclude is "string"
-           newExclude.push __determinePath exclude, config.watch.sourceDir
+           newExclude.push validators.determinePath exclude, config.watch.sourceDir
          else if exclude instanceof RegExp
            regexes.push exclude.source
          else
@@ -163,13 +157,6 @@ class MimosaConfigurer
       errors.push "watch.throttle must be a number"
 
     errors
-
-  _testPathExists: (filePath, name, errors) ->
-    unless fs.existsSync filePath
-      return errors.push "#{name} [[ #{filePath} ]] cannot be found"
-
-    if fs.statSync(filePath).isFile()
-      return errors.push "#{name} [[ #{filePath} ]] cannot be found, expecting a directory and is a file"
 
   _configTop: ->
     """
@@ -233,11 +220,6 @@ class MimosaConfigurer
       configText = configText.replace("  # modules: ['lint', 'server', 'require', 'minify', 'live-reload']", "  modules: " + moduleManager.configModuleString)
 
     configText
-
-  __determinePath = (thePath, relativeTo) ->
-    return thePath if windowsDrive.test thePath
-    return thePath if thePath.indexOf("/") is 0
-    path.join relativeTo, thePath
 
 defs = new MimosaConfigurer()
 
