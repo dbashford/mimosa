@@ -57,3 +57,25 @@ exports.multiPathExists = (errors, fld, pathh, relTo) ->
   else
     errors.push "#{fld} must be a string."
     false
+
+exports.multiPathNeedNotExist = (errors, fld, pathh, relTo) ->
+  if typeof pathh is "string"
+    pathh = exports.determinePath pathh, relTo
+    true
+  else
+    errors.push "#{fld} must be a string."
+    false
+
+exports.arrayOfMultiPathsNeedNotExist = (errors, fld, arrayOfPaths, relTo) ->
+  if arrayOfPaths?
+    if Array.isArray(arrayOfPaths)
+      newPaths = []
+      for pathh in arrayOfPaths
+        if typeof pathh is "string"
+          newPaths.push __determinePath pathh, relTo
+        else
+          errors.push "#{fld} must be an array of strings."
+          break
+      arrayOfPaths = newPaths
+    else
+      errors.push "#{fld} must be an array."
