@@ -21,6 +21,13 @@ exports.isArrayOfStringsIfExists = (errors, fld, obj) ->
   else
     false
 
+exports.isString = (errors, fld, obj) ->
+  if typeof obj is "string"
+    true
+  else
+    errors.push "#{fld} must be a string."
+    false
+
 exports.isObject = (errors, fld, obj) ->
   if typeof obj is "object" and not Array.isArray(obj)
     true
@@ -28,9 +35,51 @@ exports.isObject = (errors, fld, obj) ->
     errors.push "#{fld} must be an object."
     false
 
-exports.isObjectIfExists = (errors, fld, obj) ->
+exports.isArray = (errors, fld, obj) ->
+  if Array.isArray(obj)
+    true
+  else
+    errors.push "#{fld} must be an array."
+    false
+
+exports.isNumber = (errors, fld, obj) ->
+  if typeof obj is "number"
+    true
+  else
+    errors.push "#{fld} must be a number."
+    false
+
+exports.ifExistsIsNumber = (errors, fld, obj) ->
+  if obj?
+    exports.isNumber errors, fld, obj
+  else
+    false
+
+exports.ifExistsIsString = (errors, fld, obj) ->
+  if obj?
+    exports.isString errors, fld, obj
+  else
+    false
+
+exports.ifExistsIsArray = (errors, fld, obj) ->
+  if obj?
+    exports.isArray errors, fld, obj
+  else
+    false
+
+exports.ifExistsIsObject = (errors, fld, obj) ->
   if obj?
     exports.isObject errors, fld, obj
+  else
+    false
+
+exports.ifExistsIsBoolean = (errors, fld, obj) ->
+  if obj?
+    if typeof obj is "boolean"
+      true
+    else
+      errors.push "#{fld} must be a boolean."
+      false
   else
     false
 
@@ -50,32 +99,86 @@ exports.determinePath = (pathh, relTo) ->
   return pathh if pathh.indexOf("/") is 0
   path.join relTo, pathh
 
-exports.multiPathExists = (errors, fld, pathh, relTo) ->
+exports.multiPathMustExist = (errors, fld, pathh, relTo) ->
   if typeof pathh is "string"
     pathh = exports.determinePath pathh, relTo
-    exports.doesPathExist errors, fld, pathh
+    pathExists = exports.doesPathExist errors, fld, pathh
+    if pathExists then pathh else false
   else
     errors.push "#{fld} must be a string."
     false
 
 exports.multiPathNeedNotExist = (errors, fld, pathh, relTo) ->
   if typeof pathh is "string"
-    pathh = exports.determinePath pathh, relTo
-    true
+    exports.determinePath pathh, relTo
   else
     errors.push "#{fld} must be a string."
     false
 
-exports.arrayOfMultiPathsNeedNotExist = (errors, fld, arrayOfPaths, relTo) ->
+exports.ifExistsArrayOfMultiPaths = (errors, fld, arrayOfPaths, relTo) ->
   if arrayOfPaths?
     if Array.isArray(arrayOfPaths)
       newPaths = []
       for pathh in arrayOfPaths
         if typeof pathh is "string"
-          newPaths.push __determinePath pathh, relTo
+          newPaths.push exports.determinePath pathh, relTo
         else
           errors.push "#{fld} must be an array of strings."
-          break
-      arrayOfPaths = newPaths
+          return false
+      arrayOfPaths.length = 0
+      arrayOfPaths.push newPaths...
     else
       errors.push "#{fld} must be an array."
+      return false
+
+  true
+
+exports.ifExistsFileExcludeWithRegexAndString = (errors, fld, obj, relTo) ->
+  if obj.exclude?
+    if Array.isArray(obj.exclude)
+      regexes = []
+      newExclude = []
+      for exclude in obj.exclude
+        if typeof exclude is "string"
+          newExclude.push exports.determinePath exclude, relTo
+        else if exclude instanceof RegExp
+          regexes.push exclude.source
+        else
+          errors.push "#{fld} must be an array of strings and/or regexes."
+          return false
+
+      if regexes.length > 0
+        obj.excludeRegex = new RegExp regexes.join("|"), "i"
+
+      obj.exclude = newExclude
+    else
+      errors.push "#{fld} must be an array"
+      return false
+
+  true
+
+exports.isArrayOfStringsMustExist = (errors, fld, obj) ->
+  if obj?
+    if Array.isArray(obj)
+      for s in obj
+        unless typeof s is "string"
+          errors.push "#{fld} must be an array of strings."
+          break
+    else
+      errors.push "#{fld} configuration must be an array."
+  else
+    errors.push "#{fld} must be present."
+
+exports.stringMustExist = (errors, fld, obj) ->
+  if obj?
+    unless typeof obj is "string"
+      errors.push "#{fld} must be a string."
+  else
+    errors.push "#{fld} must be present."
+
+exports.booleanMustExist = (errors, fld, obj) ->
+  if obj?
+    unless typeof obj is "boolean"
+      errors.push "#{fld} must be a string."
+  else
+    errors.push "#{fld} must be present."

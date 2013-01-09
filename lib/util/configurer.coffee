@@ -116,7 +116,7 @@ class MimosaConfigurer
       else
         errors.push "minMimosaVersion must take the form 'number.number.number', ex: '0.7.0'"
 
-    validators.multiPathExists(errors, "watch.sourceDir", config.watch.sourceDir, config.root)
+    validators.multiPathMustExist(errors, "watch.sourceDir", config.watch.sourceDir, config.root)
 
     unless config.isVirgin
       if typeof config.watch.compiledDir is "string"

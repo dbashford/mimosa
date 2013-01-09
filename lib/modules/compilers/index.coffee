@@ -144,8 +144,8 @@ class MimosaCompilerModule
   validate: (config, validators) ->
     errors = []
 
-    if validators.isObjectIfExists(errors, "compilers config", config.compilers)
-      if validators.isObjectIfExists(errors, "compilers.extensionOverrides", config.compilers.extensionOverrides)
+    if validators.ifExistsIsObject(errors, "compilers config", config.compilers)
+      if validators.ifExistsIsObject(errors, "compilers.extensionOverrides", config.compilers.extensionOverrides)
         for configComp in Object.keys(config.compilers.extensionOverrides)
           found = false
           for comp in @all
@@ -163,7 +163,7 @@ class MimosaCompilerModule
             unless config.compilers.extensionOverrides[configComp] is null
               errors.push "compilers.extensionOverrides must be an array."
 
-    if validators.isObjectIfExists(errors, "template config", config.template)
+    if validators.ifExistsIsObject(errors, "template config", config.template)
       if config.template.outputFileName?
         fName = config.template.outputFileName
         unless ((typeof fName is "object") or (typeof fName is "string")) and not Array.isArray(fName)
@@ -171,7 +171,7 @@ class MimosaCompilerModule
 
       validators.isArrayOfStringsIfExists(errors, "template.helperFiles", config.template.helperFiles)
 
-    if validators.isObjectIfExists(errors, "copy config", config.copy)
+    if validators.ifExistsIsObject(errors, "copy config", config.copy)
       validators.isArrayOfStrings(errors, "copy.extensions", config.copy.extensions)
 
     errors
