@@ -6,6 +6,7 @@
 * Every published mimosa module has been updated to use the new validation functions. Because of this, the latest version of the modules can only be used with v0.8.0+ of Mimosa.
 
 ### Minor Change
+* core #114, fixed iced coffee script support, still more work to make it perfect, but it will at least work
 * core, fixed issue with mimMimosaVersion
 * core, added `htc` and `ico` to list of default copy extensions
 * core, updated module skeletons to include validation object
