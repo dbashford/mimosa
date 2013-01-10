@@ -1,4 +1,4 @@
-# 0.8.0 - January ?? 2012
+# 0.8.0 - January 10 2012
 
 This update is shallow, but wide.  Every module has been updated, and there are a few breaking changes, so check the "You'll need to..." section below.  Big updates to mimosa-lint, big reduction in module code overall as validation logic for module configuration has been centralized.
 
