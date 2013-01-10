@@ -30,6 +30,7 @@ rules:
     shadow: true
 ```
 You can remove those now.  The latest versions of mimosa-lint (both 4.0 and 5.0) assume those three rules when jshint-ing compiled CoffeeScript and IcedCoffeeScript.
+* If you might have been in the process of building your own module, you'll want to take advantage of the 2nd parameter being passed to the `validate` function.
 
 # 0.7.3 - January 05 2012
 
