@@ -1,12 +1,14 @@
 # 0.8.0 - January ?? 2012
 
+This update is shallow, but wide.  Every module has been updated, and there are a few breaking changes, so check the "You'll need to..." section below.  Big updates to mimosa-lint, big reduction in module code overall as validation logic for module configuration has been centralized.
+
 ### Major Change
 * mimosa #112, servers now must call a provided callback and hand that callback the server instance and the instance of socketio.  This increases flexibility and allows server support to handle servers that start asynchronously.
-* core, module `validation` function will now be passed a 2nd parameter that will consist of several validation methods, like `isString` and `ifExistsIsBoolean` as well as more complex validations like `isArrayOfStringsMustExist`.  These functions cut down immensely on what was a growing amount of duplicated code in module validation across modules.  Hopefully eventual module authors will find the functions useful, but they certainly will speed up my own development of modules.
+* core, module `validation` function will now be passed a 2nd parameter that will consist of several validation methods, like `isString` and `ifExistsIsBoolean` as well as more complex validations like `isArrayOfStringsMustExist`.  These functions cut down immensely on what was a growing amount of duplicated code in module validation across modules.  Hopefully eventual module authors will find the functions useful, but they certainly will speed up my own development of modules.  See the [validation source code](https://github.com/dbashford/mimosa/blob/master/lib/util/validators.coffee) to see all of the validation functions available, and if you want more, just ask!
 * Every published mimosa module has been updated to use the new validation functions. Because of this, the latest version of the modules can only be used with v0.8.0+ of Mimosa.
 
 ### Minor Change
-* core #114, fixed iced coffee script support, still more work to make it perfect, but it will at least work
+* core #114, fixed iced coffee script support, still more work to make it perfect (see #115)
 * core, fixed issue with mimMimosaVersion
 * core, added `htc` and `ico` to list of default copy extensions
 * core, updated module skeletons to include validation object
@@ -18,6 +20,7 @@
 
 ### You'll need to...
 * Change your `startServer` function to take a 2nd parameter that is a callback function.  Instead of returning values from `startServer`, the callback needs to be executed and the server and socketio instance, in that order, should be provided to the callback.
+* Older versions of Mimosa (pre-0.8.0) will not be able to use the latest version of the modules.  Older versions of the modules can be used with the latest Mimosa.  So, as long as you keep your Mimosa up to date there's nothing to fear!
 * Using mimosa-lint for linting your coffeescript or iced coffeescript?  Then there is a good chance you've added a few rules to your mimosa-config because of the nature of the JavaScript that the coffeescript compiler outputs.
 ```
 rules:
@@ -26,7 +29,7 @@ rules:
     eqnull: true
     shadow: true
 ```
-You can remove those now.  The latest version of mimosa-lint assumes those three rules when jshint-ing compiled CoffeeScript and IcedCoffeeScript.
+You can remove those now.  The latest versions of mimosa-lint (both 4.0 and 5.0) assume those three rules when jshint-ing compiled CoffeeScript and IcedCoffeeScript.
 
 # 0.7.3 - January 05 2012
 
