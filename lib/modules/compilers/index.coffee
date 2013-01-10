@@ -169,7 +169,7 @@ class MimosaCompilerModule
         unless ((typeof fName is "object") or (typeof fName is "string")) and not Array.isArray(fName)
           errors.push "template.outputFileName must be an object or a string."
 
-      validators.isArrayOfStringsIfExists(errors, "template.helperFiles", config.template.helperFiles)
+      validators.ifExistsIsArrayOfStrings(errors, "template.helperFiles", config.template.helperFiles)
 
     if validators.ifExistsIsObject(errors, "copy config", config.copy)
       validators.isArrayOfStrings(errors, "copy.extensions", config.copy.extensions)

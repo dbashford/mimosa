@@ -15,12 +15,6 @@ exports.isArrayOfStrings = (errors, fld, obj) ->
 
   true
 
-exports.isArrayOfStringsIfExists = (errors, fld, obj) ->
-  if obj?
-    exports.isArrayOfStrings errors, fld, obj
-  else
-    false
-
 exports.isString = (errors, fld, obj) ->
   if typeof obj is "string"
     true
@@ -47,6 +41,12 @@ exports.isNumber = (errors, fld, obj) ->
     true
   else
     errors.push "#{fld} must be a number."
+    false
+
+exports.ifExistsIsArrayOfStrings = (errors, fld, obj) ->
+  if obj?
+    exports.isArrayOfStrings errors, fld, obj
+  else
     false
 
 exports.ifExistsIsNumber = (errors, fld, obj) ->
@@ -83,21 +83,31 @@ exports.ifExistsIsBoolean = (errors, fld, obj) ->
   else
     false
 
-exports.doesPathExist = (errors, fld, pathh) ->
-  unless fs.existsSync pathh
-    errors.push "#{fld} [[ #{pathh} ]] cannot be found"
-    return false
+exports.stringMustExist = (errors, fld, obj) ->
+  if obj?
+    unless typeof obj is "string"
+      errors.push "#{fld} must be a string."
+  else
+    errors.push "#{fld} must be present."
 
-  if fs.statSync(pathh).isFile()
-    errors.push "#{fld} [[ #{pathh} ]] cannot be found, expecting a directory and is a file"
-    return false
+exports.booleanMustExist = (errors, fld, obj) ->
+  if obj?
+    unless typeof obj is "boolean"
+      errors.push "#{fld} must be a string."
+  else
+    errors.push "#{fld} must be present."
 
-  true
-
-exports.determinePath = (pathh, relTo) ->
-  return pathh if windowsDrive.test pathh
-  return pathh if pathh.indexOf("/") is 0
-  path.join relTo, pathh
+exports.isArrayOfStringsMustExist = (errors, fld, obj) ->
+  if obj?
+    if Array.isArray(obj)
+      for s in obj
+        unless typeof s is "string"
+          errors.push "#{fld} must be an array of strings."
+          break
+    else
+      errors.push "#{fld} configuration must be an array."
+  else
+    errors.push "#{fld} must be present."
 
 exports.multiPathMustExist = (errors, fld, pathh, relTo) ->
   if typeof pathh is "string"
@@ -157,28 +167,18 @@ exports.ifExistsFileExcludeWithRegexAndString = (errors, fld, obj, relTo) ->
 
   true
 
-exports.isArrayOfStringsMustExist = (errors, fld, obj) ->
-  if obj?
-    if Array.isArray(obj)
-      for s in obj
-        unless typeof s is "string"
-          errors.push "#{fld} must be an array of strings."
-          break
-    else
-      errors.push "#{fld} configuration must be an array."
-  else
-    errors.push "#{fld} must be present."
+exports.doesPathExist = (errors, fld, pathh) ->
+  unless fs.existsSync pathh
+    errors.push "#{fld} [[ #{pathh} ]] cannot be found"
+    return false
 
-exports.stringMustExist = (errors, fld, obj) ->
-  if obj?
-    unless typeof obj is "string"
-      errors.push "#{fld} must be a string."
-  else
-    errors.push "#{fld} must be present."
+  if fs.statSync(pathh).isFile()
+    errors.push "#{fld} [[ #{pathh} ]] cannot be found, expecting a directory and is a file"
+    return false
 
-exports.booleanMustExist = (errors, fld, obj) ->
-  if obj?
-    unless typeof obj is "boolean"
-      errors.push "#{fld} must be a string."
-  else
-    errors.push "#{fld} must be present."
+  true
+
+exports.determinePath = (pathh, relTo) ->
+  return pathh if windowsDrive.test pathh
+  return pathh if pathh.indexOf("/") is 0
+  path.join relTo, pathh
