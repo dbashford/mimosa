@@ -8,6 +8,7 @@
 ### Minor Change
 * core, fixed issue with mimMimosaVersion
 * core, added `htc` and `ico` to list of default copy extensions
+* core, updated module skeletons to include validation object
 * mimosa-lint #1, added an `exclude` property to lint config
 * mimosa-lint #2, added jshintrc support
 * mimosa-lint #3, added default values for coffeescript and icedcoffeescript linting

@@ -26,35 +26,31 @@ exports.placeholder = ->
   """
   \t
 
-    \# minify:                      \# Configuration for non-require minification/compression via uglify
-                                 \# using the --minify flag.
-      \# exclude:[/\.min\./]    \# List of regexes to exclude files when running minification.
-                                 \# Any path with ".min." in its name, like jquery.min.js, is assumed to
-                                 \# already be minified and is ignored by default. Override this property
-                                 \# if you have other files that you'd like to exempt from minification.
+    # minify:                  # Configuration for non-require minification/compression via uglify
+                               # using the --minify flag.
+      # exclude:[/\\.min\\./]    # List of regexes to exclude files when running minification.
+                               # Any path with ".min." in its name, like jquery.min.js, is assumed to
+                               # already be minified and is ignored by default. Override this property
+                               # if you have other files that you'd like to exempt from minification.
   """
 
-# The validate function should take a config object (which is the entire
-# mimosa-config), find the module specific config, validate the settings
-# and return a list of strings that are validation error messages. If
-# there are no errors, return an empty array or return nothing.  Mimosa
-# uses this function when Mimosa starts up to ensure the configuration
-# has been set properly.
+# The validate function takes a config object (which is the entire
+# mimosa-config) and a validators object which contains several useful
+# validation methods. Using custom validation and validation provided
+# via the validators, the validate method should find the module specific
+# config, validate the settings and return a list of strings that are
+# validation error messages. If there are no errors, return an empty
+# array or return nothing.  Mimosa uses this function when Mimosa starts
+# up to ensure the configuration has been set properly.
 
-exports.validate = (config) ->
+exports.validate = (config, validators) ->
   errors = []
-  if config.minify?
-    if typeof config.minify is "object" and not Array.isArray(config.minify)
-      if config.minify.exclude?
-        if Array.isArray(config.minify.exclude)
-          for ex in config.minify.exclude
-            unless typeof ex is "string"
-              errors.push "minify.exclude must be an array of strings"
-              break
-        else
-          errors.push "minify.exclude must be an array."
-    else
-      errors.push "minify configuration must be an object."
+  if validators.ifExistsIsObject(errors, "minify config", config.minify)
+    if validators.ifExistsIsArray(errors, "minify.exclude", config.minify.exclude)
+      for ex in config.minify.exclude
+        unless typeof ex is "string"
+          errors.push "minify.exclude must be an array of strings"
+          break
 
   # The validate function is also an opportunity to do configuration massaging,
   # for instance, turning a list of strings into a single RegExp.  Changes
