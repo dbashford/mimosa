@@ -1,9 +1,13 @@
 # 0.8.0 - January ?? 2012
 
-### Minor Change
+### Major Change
 * mimosa #112, servers now must call a provided callback and hand that callback the server instance and the instance of socketio.  This increases flexibility and allows server support to handle servers that start asynchronously.
-* mimosa, fixed issue with mimMimosaVersion
-* mimosa, added `htc` and `ico` to list of default copy extensions
+* core, module `validation` function will now be passed a 2nd parameter that will consist of several validation methods, like `isString` and `ifExistsIsBoolean` as well as more complex validations like `isArrayOfStringsMustExist`.  These functions cut down immensely on what was a growing amount of duplicated code in module validation across modules.  Hopefully eventual module authors will find the functions useful, but they certainly will speed up my own development of modules.
+* Every published mimosa module has been updated to use the new validation functions. Because of this, the latest version of the modules can only be used with v0.8.0+ of Mimosa.
+
+### Minor Change
+* core, fixed issue with mimMimosaVersion
+* core, added `htc` and `ico` to list of default copy extensions
 * mimosa-lint #1, added an `exclude` property to lint config
 * mimosa-lint #2, added jshintrc support
 * mimosa-lint #3, added default values for coffeescript and icedcoffeescript linting
