@@ -1,6 +1,7 @@
 # 0.8.2 - January ?? 2012
 
 ### Minor Change
+* mimosa #117, added `htm` to the list of copy extensions.
 * mimosa-server #2, for the default server, allowing any and every path not to static assets to route to the app's index (this was released as `mimosa-server@0.6.1` on 1/10)
 
 # 0.8.1 - January 10 2012
