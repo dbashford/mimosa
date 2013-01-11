@@ -1,3 +1,13 @@
+# 0.8.2 - January ?? 2012
+
+### Minor Change
+* mimosa-server #2, for the default server, allowing any and every path not to static assets to route to the app's index (this was released as `mimosa-server@0.6.1` on 1/10)
+
+# 0.8.1 - January 10 2012
+
+### Minor Change
+* Fixed pathing issue introduced with `0.8.0`
+
 # 0.8.0 - January 10 2012
 
 This update is shallow, but wide.  Every module has been updated, and there are a few breaking changes, so check the "You'll need to..." section below.  Big updates to mimosa-lint, big reduction in module code overall as validation logic for module configuration has been centralized.
