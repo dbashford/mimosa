@@ -1,4 +1,4 @@
-# 0.8.2 - January 11 2012
+# 0.8.2 - January 12 2012
 
 ### Minor Changes
 * mimosa #113, logmimosa logging functions now take varargs, much like console.log, ex: `logger.info("foo", bar, false)`
