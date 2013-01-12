@@ -10,7 +10,6 @@
       "email": ""
     }
   ],
-  "preferGlobal": "false",
   "private": true,
   "dependencies": {
     "express": "3.0.2",
