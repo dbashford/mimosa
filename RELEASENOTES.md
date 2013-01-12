@@ -1,6 +1,6 @@
-# 0.8.2 - January ?? 2012
+# 0.8.2 - January 11 2012
 
-### Minor Change
+### Minor Changes
 * mimosa #113, logmimosa logging functions now take varargs, much like console.log, ex: `logger.info("foo", bar, false)`
 * mimosa #117, added `htm` to the list of copy extensions.
 * mimosa #118, removed `preferGlobal` setting from all the modules and from module skeletons
