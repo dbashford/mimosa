@@ -1,6 +1,7 @@
 # 0.8.2 - January ?? 2012
 
 ### Minor Change
+* mimosa #113, logmimosa logging functions now take varargs, much like console.log, ex: `logger.info("foo", bar, false)`
 * mimosa #117, added `htm` to the list of copy extensions.
 * mimosa #118, removed `preferGlobal` setting from all the modules and from module skeletons
 * mimosa-server #2, for the default server, allowing any and every path not to static assets to route to the app's index (this was released as `mimosa-server@0.6.1` on 1/10)
