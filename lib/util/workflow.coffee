@@ -49,19 +49,23 @@ module.exports = class WorkflowManager
     e = @config.extensions
     @allExtensions = [e.javascript..., e.css..., e.template..., config.copy.extensions...]
 
-    w = @config.watch
-    files = fileUtils.readdirSyncRecursive(w.sourceDir, w.exclude, w.excludeRegex).filter (f) =>
-      ext = path.extname(f).substring(1)
-      ext.length >= 1 and @allExtensions.indexOf(ext) >= 0
-
-    @initialFileCount = files.length
-    # @initialFiles = files.map (f) => path.join @config.watch.sourceDir, f
+    @determineFileCount()
 
   initClean: (cb) =>
     @_executeWorkflowStep {}, 'preClean', cb
 
   initBuild: (cb) =>
-    @_executeWorkflowStep {}, 'preBuild', cb
+    @_executeWorkflowStep {}, 'preBuild', =>
+      @determineFileCount()
+      cb()
+
+  determineFileCount: =>
+    w = @config.watch
+    files = fileUtils.readdirSyncRecursive(w.sourceDir, w.exclude, w.excludeRegex).filter (f) =>
+      ext = path.extname(f).substring(1)
+      ext.length >= 1 and @allExtensions.indexOf(ext) >= 0
+    @initialFileCount = files.length
+    # @initialFiles = files.map (f) => path.join @config.watch.sourceDir, f
 
   postClean: (cb) =>
     @_executeWorkflowStep {}, 'postClean', cb
