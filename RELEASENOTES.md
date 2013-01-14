@@ -1,7 +1,8 @@
-# 0.8.3 - January ?? 2012
+# 0.8.3 - January 13 2012
 
 ### Minor Changes
 * mimosa-import-source #1, handling problem in mimosa core where source file counts were not being updated after code was imported from mimosa-import-source.  Also fixing issue where orphan imported folders were preventing non-imported folders from being cleaned up.
+* mimosa-web-package #1, fixed web-package code dependency on mimosa-server
 
 # 0.8.2 - January 12 2012
 
