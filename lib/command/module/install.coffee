@@ -106,7 +106,7 @@ putThingsBack = (oldVersion, name) ->
       wrench.rmdirSyncRecursive modPath
 
 installModule = (name, done) ->
-  installString = "npm install #{name} --save"
+  installString = "npm install \"#{name}\" --save"
   exec installString, (err, sout, serr) =>
     unless err
       console.log sout
