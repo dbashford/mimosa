@@ -1,4 +1,4 @@
-# 0.8.4 - January 13 2012
+# 0.8.4 - January 14 2012
 
 ### Minor Changes
 * mimosa #121, handling spaces in the path for `mod:install` command.
