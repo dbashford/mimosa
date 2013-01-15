@@ -1,5 +1,6 @@
 "use strict"
 
+fs = require 'fs'
 path = require 'path'
 {exec} = require 'child_process'
 
@@ -12,19 +13,38 @@ pack =      require('../../package.json')
 
 builtIns = ['mimosa-server','mimosa-lint','mimosa-require','mimosa-minify','mimosa-live-reload']
 configuredModules = null
-meta = []
-all = [compilers, logger, file]
 
-for dep, version of pack.dependencies when dep.indexOf('mimosa-') > -1
-  modPack = require("../../node_modules/#{dep}/package.json")
-  all.push(require dep)
-  meta.push
-    name:    dep
-    version: modPack.version
-    site:    modPack.homepage
-    desc:    modPack.description
-    default: if builtIns.indexOf(dep) > -1 then "yes" else "no"
-    dependencies: modPack.dependencies
+isMimosaModuleName = (str) -> str.indexOf('mimosa-') > -1
+
+standardlyInstalled = _(pack.dependencies)
+  .keys()
+  .select(isMimosaModuleName)
+  .map (dep) ->
+    name: dep
+    nodeModulesDir: '../../node_modules'
+  .value()
+
+independentlyInstalled = do ->
+  topLevelNodeModulesDir = path.resolve __dirname, '../../..'
+  standardlyResolvedModules = _.pluck standardlyInstalled, 'name'
+  _(fs.readdirSync topLevelNodeModulesDir)
+    .select (dir) ->
+      isMimosaModuleName(dir) and dir not in standardlyResolvedModules
+    .map (dir) ->
+      name: dir
+      nodeModulesDir: topLevelNodeModulesDir
+    .value()
+
+meta = _.map standardlyInstalled.concat(independentlyInstalled), (modInfo) ->
+  modPack = require "#{modInfo.nodeModulesDir}/#{modInfo.name}/package.json"
+  name:    modInfo.name
+  version: modPack.version
+  site:    modPack.homepage
+  desc:    modPack.description
+  default: if builtIns.indexOf(modInfo.name) > -1 then "yes" else "no"
+  dependencies: modPack.dependencies
+
+all = [compilers, logger, file].concat _.map(_.pluck(meta, 'name'), require)
 
 allDefaults = true
 if builtIns.length isnt meta.length
