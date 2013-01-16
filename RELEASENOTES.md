@@ -1,4 +1,9 @@
-# 0.8.5 - January 14 2012
+# 0.8.6 - January ?? 2012
+
+### Minor Changes
+* Updated module skeleton to include updated logmimosa version
+
+# 0.8.5 - January 15 2012
 
 ### Major Changes
 * mimosa #123, got a pretty awesome pull request that will allow Mimosa to find and use Mimosa modules that are 1) installed globally if Mimosa is installed globally or 2) installed locally if Mimosa is installed locally.  Now you can install modules using `npm install` if you wish.  Mimosa will still auto-install any modules listed in the `mimosa-config` if Mimosa cannot find them.
