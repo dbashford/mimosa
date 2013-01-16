@@ -1,25 +1,25 @@
-# 0.8.6 - January ?? 2012
+# 0.8.6 - January ?? 2013
 
 ### Minor Changes
 * Updated module skeleton to include updated logmimosa version
 
-# 0.8.5 - January 15 2012
+# 0.8.5 - January 15 2013
 
 ### Major Changes
 * mimosa #123, got a pretty awesome pull request that will allow Mimosa to find and use Mimosa modules that are 1) installed globally if Mimosa is installed globally or 2) installed locally if Mimosa is installed locally.  Now you can install modules using `npm install` if you wish.  Mimosa will still auto-install any modules listed in the `mimosa-config` if Mimosa cannot find them.
 
-# 0.8.4 - January 14 2012
+# 0.8.4 - January 14 2013
 
 ### Minor Changes
 * mimosa #121, handling spaces in the path for `mod:install` command.
 
-# 0.8.3 - January 13 2012
+# 0.8.3 - January 13 2013
 
 ### Minor Changes
 * mimosa-import-source #1, handling problem in mimosa core where source file counts were not being updated after code was imported from mimosa-import-source.  Also fixing issue where orphan imported folders were preventing non-imported folders from being cleaned up.
 * mimosa-web-package #1, fixed web-package code dependency on mimosa-server
 
-# 0.8.2 - January 12 2012
+# 0.8.2 - January 12 2013
 
 ### Minor Changes
 * mimosa #113, logmimosa logging functions now take varargs, much like console.log, ex: `logger.info("foo", bar, false)`
@@ -28,12 +28,12 @@
 * mimosa #118, removed `preferGlobal` setting from all the modules and from module skeletons, all modules have been released with bumped versions
 * mimosa-server #2, for the default server, allowing any and every path not to static assets to route to the app's index
 
-# 0.8.1 - January 10 2012
+# 0.8.1 - January 10 2013
 
 ### Minor Change
 * Fixed pathing issue introduced with `0.8.0`
 
-# 0.8.0 - January 10 2012
+# 0.8.0 - January 10 2013
 
 This update is shallow, but wide.  Every module has been updated, and there are a few breaking changes, so check the "You'll need to..." section below.  Big updates to mimosa-lint, big reduction in module code overall as validation logic for module configuration has been centralized.
 
@@ -67,12 +67,12 @@ rules:
 You can remove those now.  The latest versions of mimosa-lint (both 4.0 and 5.0) assume those three rules when jshint-ing compiled CoffeeScript and IcedCoffeeScript.
 * If you might have been in the process of building your own module, you'll want to take advantage of the 2nd parameter being passed to the `validate` function.
 
-# 0.7.3 - January 05 2012
+# 0.7.3 - January 05 2013
 
 ### Major Changes
 * Mimosa modules that introduce new commands can now request mimosa execute a clean and build before running.  So now commands that need to can operate on a fully built codebase, like, for instance, a `test` command.
 
-# 0.7.2 - January 05 2012
+# 0.7.2 - January 05 2013
 
 The next set of changes I have planned will be fairly breaking in nature, so I wanted slide this mostly non-breaking release out. A few small tidbits, fixes and updates. This release also sets the stage for future modules that will not only add functionality to Mimosa workflows, but also introduce entirely new Mimosa commands.
 
