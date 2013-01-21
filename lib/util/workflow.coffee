@@ -41,14 +41,12 @@ module.exports = class WorkflowManager
       for step in steps
         @registration[type][step] = {}
 
+    @allExtensions = []
     for module in modules
       module.registration(@config, @register) if module.registration?
+    @allExtensions = _.uniq(@allExtensions)
 
     @cleanUpRegistration()
-
-    e = @config.extensions
-    @allExtensions = [e.javascript..., e.css..., e.template..., config.copy.extensions...]
-
     @determineFileCount()
 
   initClean: (cb) =>
@@ -107,6 +105,7 @@ module.exports = class WorkflowManager
 
       # no registering the same extension twice
       for extension in _.uniq(extensions)
+
         if @registration[type][step][extension]?
           if @registration[type][step][extension].indexOf(callback) >= 0
             logger.debug "Callback already registered for this extension, ignoring:", type, step, extension
@@ -114,6 +113,7 @@ module.exports = class WorkflowManager
         else
           @registration[type][step][extension] ?= []
 
+        @allExtensions.push extension
         @registration[type][step][extension].push callback
 
   clean:  (fileName) => @_executeWorkflowStep(@_buildAssetOptions(fileName), 'cleanFile')
@@ -142,7 +142,7 @@ module.exports = class WorkflowManager
         if options.extension?.length is 0
           return logger.debug "No extension detected [[ #{options.inputFile} ]]."
         else
-          return logger.warn "No compiler has been registered for extension: [[ #{options.extension} ]], file: [[ #{options.inputFile} ]]"
+          return logger.warn "No module has registered for extension: [[ #{options.extension} ]], file: [[ #{options.inputFile} ]]"
 
     i = 0
     next = =>

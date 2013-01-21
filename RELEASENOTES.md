@@ -8,6 +8,8 @@
 
 ### Minor Changes
 * Updated module skeleton to include updated logmimosa version
+* mimosa #119, handling directories properly when determining initial file counts
+* mimosa #124, allow any extension that has been registered for to pass through mimosas workflows
 
 # 0.8.5 - January 15 2013
 
