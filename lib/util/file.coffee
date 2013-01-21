@@ -74,7 +74,7 @@ class FileUtils
     else
       globRest str
 
-  readdirSyncRecursive: (baseDir, excludes = [], excludeRegex) ->
+  readdirSyncRecursive: (baseDir, excludes = [], excludeRegex, ignoreDirectories = false) ->
     baseDir = baseDir.replace /\/$/, ''
 
     readdirSyncRecursive = (baseDir) ->
@@ -93,6 +93,10 @@ class FileUtils
 
       nextDirs = curFiles.filter (fname) ->
         fs.statSync(fname).isDirectory()
+
+      if ignoreDirectories
+        curFiles = curFiles.filter (fname) ->
+          fs.statSync(fname).isFile()
 
       files = curFiles
       while (nextDirs.length)

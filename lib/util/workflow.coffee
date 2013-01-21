@@ -61,7 +61,7 @@ module.exports = class WorkflowManager
 
   determineFileCount: =>
     w = @config.watch
-    files = fileUtils.readdirSyncRecursive(w.sourceDir, w.exclude, w.excludeRegex).filter (f) =>
+    files = fileUtils.readdirSyncRecursive(w.sourceDir, w.exclude, w.excludeRegex, true).filter (f) =>
       ext = path.extname(f).substring(1)
       ext.length >= 1 and @allExtensions.indexOf(ext) >= 0
     @initialFileCount = files.length
