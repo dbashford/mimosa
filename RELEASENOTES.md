@@ -1,4 +1,4 @@
-# 0.8.6 - January ?? 2013
+# 0.8.6 - January 21 2013
 
 ### Major Changes
 * mimosa-skeleton module released on 1/19. Now it just needs actual skeletons.  I'll probably create one or two, but will rely on skeletons being contributed down the road. If you build it they will hopefully come? mimosa-skeleton will become a default module once it has a few skeletons.
