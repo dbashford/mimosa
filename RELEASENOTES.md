@@ -1,5 +1,26 @@
 # 0.8.7 - January ?? 2013
 
+### Major Changes
+* mimosa #108, you are now no longer limited to bundling together all micro-template files into the same output file.  Bundling them all together makes perfect sense for a one page app, but once a 2nd page is introduced, you don't want all the templates in one place because you don't want to have to load every template everywhere.  An alternate config for the `templates` has been introduced.
+
+```
+# outputFiles: [{     # outputFileName Alternate Config 2
+#   folder:""         # Use outputFiles instead of outputFileName if you want
+#   outputFileName:"" # to break up your templates into multiple files, for
+# }]                  # instance, if you have a two page app and want the
+                      # templates for each page to be built separately.
+                      # For each entry, provide a folder.  folder is relative
+                      # to watch.javascriptDir and must exist.  outputFileName
+                      # works identically to outputFileName above, including
+                      # the alternate config, however, no default file name is
+                      # assumed. An output name must be provided for each
+                      # outputFiles entry, and the names must be unique.
+```
+
+Mimosa will bundle all the templates inside `folder` and write them to `outputFileName`.  `outputFileName` is identical to the current `outputFileName` and can be both of the alternate `outputFileName` configs.
+
+`outputFileName` must be unique.  `folder`s can be nested.  You can have an entry where "app/foo" is turned into one file, and "app" is turned into another.
+
 ### Minor Changes
 * Update to mimosa-require to not attempt to remove remnants of build if there were no configs.  Hopefully fixes a bug with optimized builds that I was unfortunately unable to reproduce.
 * Update to mimosa module handling to more gracefully error out/message when permission issues stop a Mimosa process from reading files.
