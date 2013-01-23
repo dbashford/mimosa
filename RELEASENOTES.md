@@ -1,3 +1,9 @@
+# 0.8.7 - January ?? 2013
+
+### Minor Changes
+* Update to mimosa-require to not attempt to remove remnants of build if there were no configs.  Hopefully fixes a bug with optimized builds that I was unfortunately unable to reproduce.
+* Update to mimosa module handling to more gracefully error out/message when permission issues stop a Mimosa process from reading files.
+
 # 0.8.6 - January 21 2013
 
 ### Major Changes

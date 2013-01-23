@@ -36,13 +36,19 @@ independentlyInstalled = do ->
     .value()
 
 meta = _.map standardlyInstalled.concat(independentlyInstalled), (modInfo) ->
-  modPack = require "#{modInfo.nodeModulesDir}/#{modInfo.name}/package.json"
-  name:    modInfo.name
-  version: modPack.version
-  site:    modPack.homepage
-  desc:    modPack.description
-  default: if builtIns.indexOf(modInfo.name) > -1 then "yes" else "no"
-  dependencies: modPack.dependencies
+  requireString = "#{modInfo.nodeModulesDir}/#{modInfo.name}/package.json"
+  try
+    modPack = require requireString
+    name:    modInfo.name
+    version: modPack.version
+    site:    modPack.homepage
+    desc:    modPack.description
+    default: if builtIns.indexOf(modInfo.name) > -1 then "yes" else "no"
+    dependencies: modPack.dependencies
+  catch err
+    resolvedPath = path.resolve requireString
+    logger.error "Unable to read file at [[ #{resolvedPath} ]], possibly a permission issue? \nsystem error : #{err}"
+    process.exit 1
 
 all = [compilers, logger, file].concat _.map(_.pluck(meta, 'name'), require)
 
