@@ -114,6 +114,7 @@ class MimosaCompilerModule
   placeholder: ->
     """
     \t
+
       # compilers:
         # extensionOverrides:       # A list of extension overrides, format is:
                                     # [compilerName]:[arrayOfExtensions], see
@@ -123,13 +124,28 @@ class MimosaCompilerModule
 
       # template:
         # outputFileName: "templates"     # the file all templates are compiled into, is relative
-                                          # to watch.javascriptDir. Optionally outputFileName can
-                                          # be provided a hash of file extension to file name in
-                                          # the event you are using multiple templating libraries.
-                                          # The file extension must match one of the default
-                                          # compiler extensions or one of the extensions configured
-                                          # for a compiler in the compilers.extensionOverrides
-                                          # section above. Ex: {hogan:"js/hogans", jade:"js/jades"}
+                                          # to watch.javascriptDir.
+
+        # outputFileName:                 # outputFileName Alternate Config 1
+          # hogan:"javascripts/hogans"    # Optionally outputFileName can be provided an object of
+          # jade:"javascripts/jades"      # file extension to file name in the event you are using
+                                          # multiple templating libraries. The file extension must
+                                          # match one of the default compiler extensions or one of
+                                          # the extensions configured for a compiler in the
+                                          # compilers.extensionOverrides section above.
+
+        # outputFiles: [{                 # outputFileName Alternate Config 2
+        #   folder:""                     # Use outputFiles instead of outputFileName if you want
+        #   outputFileName: ""            # to break up your templates into multiple files, for
+        # }]                              # instance, if you have a two page app and want the
+                                          # templates for each page to be built separately.
+                                          # For each entry, provide a folder.  folder is relative
+                                          # to watch.javascriptDir and must exist.  outputFileName
+                                          # works identically to outputFileName above, including
+                                          # the alternate config, however, no default file name is
+                                          # assumed. An output name must be provided for each
+                                          # outputFiles entry, and the names must be unique.
+
         # helperFiles:["app/template/handlebars-helpers"]  # relevant to handlebars only, the paths
                                           # from watch.javascriptDir to the files containing
                                           # handlebars helper/partial registrations
@@ -164,12 +180,45 @@ class MimosaCompilerModule
               errors.push "compilers.extensionOverrides must be an array."
 
     if validators.ifExistsIsObject(errors, "template config", config.template)
+      if config.template.outputFiles and config.template.outputFileName
+        delete config.template.outputFileName
+
+      validTCompilers = ["handlebars", "dust", "hogan", "jade", "underscore", "lodash", "ejs", "html"]
+
       if config.template.outputFileName?
-        fName = config.template.outputFileName
-        unless ((typeof fName is "object") or (typeof fName is "string")) and not Array.isArray(fName)
-          errors.push "template.outputFileName must be an object or a string."
+        config.template.outputFiles = [{
+          folder:""
+          outputFileName:config.template.outputFileName
+        }]
+
+      if validators.ifExistsIsArrayOfObjects(errors, "template.outputFiles", config.template.outputFiles)
+        fileNames = []
+
+        for outputFilesConfig in config.template.outputFiles
+          if validators.stringMustExist errors, "template.templateFiles.folder", outputFilesConfig.folder
+            outputFilesConfig.folder = path.join config.watch.sourceDir, config.watch.javascriptDir, outputFilesConfig.folder
+
+          if outputFilesConfig.outputFileName?
+            fName = outputFilesConfig.outputFileName
+            if typeof fName is "string"
+              fileNames.push fName
+            else if typeof fName is "object" and not Array.isArray(fName)
+              for tComp in Object.keys(fName)
+                if validTCompilers.indexOf(tComp) is -1
+                  errors.push "template.outputFiles.outputFileName key [[ #{tComp} ]] does not match list of valid compilers: [[ #{validTCompilers.join(',')}]]"
+                  break
+                else
+                  fileNames.push fName[tComp]
+            else
+              errors.push "template.outputFileName must be an object or a string."
+          else
+            errors.push "template.outputFiles.outputFileName must exist for each entry in array."
+
+        if fileNames.length isnt _.uniq(fileNames).length
+          errors.push "template.outputFiles.outputFileName names must be unique."
 
       validators.ifExistsIsArrayOfStrings(errors, "template.helperFiles", config.template.helperFiles)
+
 
     if validators.ifExistsIsObject(errors, "copy config", config.copy)
       validators.isArrayOfStrings(errors, "copy.extensions", config.copy.extensions)

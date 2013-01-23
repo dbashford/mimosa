@@ -15,6 +15,20 @@ exports.isArrayOfStrings = (errors, fld, obj) ->
 
   true
 
+exports.isArrayOfObjects = (errors, fld, obj) ->
+  if Array.isArray(obj)
+    for hFile in obj
+      if typeof hFile is "object" and not Array.isArray(hFile)
+        # do nothing
+      else
+        errors.push("#{fld} must be an array of objects.")
+        return false
+  else
+    errors.push("#{fld} must be an array.")
+    return false
+
+  true
+
 exports.isString = (errors, fld, obj) ->
   if typeof obj is "string"
     true
@@ -46,6 +60,12 @@ exports.isNumber = (errors, fld, obj) ->
 exports.ifExistsIsArrayOfStrings = (errors, fld, obj) ->
   if obj?
     exports.isArrayOfStrings errors, fld, obj
+  else
+    false
+
+exports.ifExistsIsArrayOfObjects = (errors, fld, obj) ->
+  if obj?
+    exports.isArrayOfObjects errors, fld, obj
   else
     false
 
@@ -85,17 +105,24 @@ exports.ifExistsIsBoolean = (errors, fld, obj) ->
 
 exports.stringMustExist = (errors, fld, obj) ->
   if obj?
-    unless typeof obj is "string"
+    if typeof obj isnt "string"
       errors.push "#{fld} must be a string."
+    else
+     true
   else
     errors.push "#{fld} must be present."
+    false
 
 exports.booleanMustExist = (errors, fld, obj) ->
   if obj?
-    unless typeof obj is "boolean"
+    if typeof obj isnt "boolean"
       errors.push "#{fld} must be a string."
+      false
+    else
+      true
   else
     errors.push "#{fld} must be present."
+    false
 
 exports.isArrayOfStringsMustExist = (errors, fld, obj) ->
   if obj?
