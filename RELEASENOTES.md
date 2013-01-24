@@ -21,9 +21,12 @@ Mimosa will bundle all the templates inside `folder` and write them to `outputFi
 
 `outputFileName` must be unique.  `folder`s can be nested.  You can have an entry where "app/foo" is turned into one file, and "app" is turned into another.
 
+Future releases will allow multiple folders to be configured per output file to account for things like common site code.
+
 ### Minor Changes
 * Update to mimosa-require to not attempt to remove remnants of build if there were no configs.  Hopefully fixes a bug with optimized builds that I was unfortunately unable to reproduce.
 * Update to mimosa module handling to more gracefully error out/message when permission issues stop a Mimosa process from reading module files.
+* A few library updates
 
 # 0.8.6 - January 21 2013
 
