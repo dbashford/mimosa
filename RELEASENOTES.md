@@ -1,4 +1,4 @@
-# 0.8.7 - January ?? 2013
+# 0.8.7 - January 24 2013
 
 ### Major Changes
 * mimosa #108, you are now no longer limited to bundling together all micro-template files into the same output file.  Bundling them all together makes perfect sense for a one page app, but once a 2nd page is introduced, you don't want all the templates in one place because you don't want to have to load every template everywhere.  An alternate config for the `templates` has been introduced.
@@ -23,7 +23,7 @@ Mimosa will bundle all the templates inside `folder` and write them to `outputFi
 
 ### Minor Changes
 * Update to mimosa-require to not attempt to remove remnants of build if there were no configs.  Hopefully fixes a bug with optimized builds that I was unfortunately unable to reproduce.
-* Update to mimosa module handling to more gracefully error out/message when permission issues stop a Mimosa process from reading files.
+* Update to mimosa module handling to more gracefully error out/message when permission issues stop a Mimosa process from reading module files.
 
 # 0.8.6 - January 21 2013
 
