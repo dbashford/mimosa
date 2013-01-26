@@ -113,8 +113,12 @@ configured = (moduleNames, callback) ->
       exec installString, (err, sout, serr) =>
         if err
           console.log ""
-          logger.error "Unable to install [[ #{fullModName} ]], but allowing Mimosa to continue.  Install error follows.\n"
-          logger.warn err
+          logger.error "Unable to install [[ #{fullModName} ]]\n"
+          logger.info "Does the module exist in npm (https://npmjs.org/package/#{fullModName})?\n"
+          logger.info "Or, if your Mimosa is installed globally, might there be permissions issues with installing global npm packages? If you do not have the rights to do an 'npm install -g', modules will not install.\n"
+          logger.error err
+
+          process.exit 1
         else
           logger.success "Install of '#{fullModName}' successful"
 
