@@ -1,7 +1,7 @@
 {
   "name": "mimosa",
   "preferGlobal": "true",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "homepage": "http://www.mimosajs.com",
   "author": "David Bashford",
   "description": "A modern browser stack workflow and toolkit. Compile, lint, optimize, serve and more.",
@@ -69,7 +69,7 @@
     "glob": "3.1.17",
     "logmimosa": "0.3.1",
     "mimosa-server": "0.6.2",
-    "mimosa-require": "0.6.2",
+    "mimosa-require": "0.6.3",
     "mimosa-minify": "0.6.1",
     "mimosa-lint": "0.5.1",
     "mimosa-live-reload": "0.6.1",
