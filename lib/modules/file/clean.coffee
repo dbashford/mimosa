@@ -7,8 +7,6 @@ _ = require 'lodash'
 logger = require 'logmimosa'
 wrench = require 'wrench'
 
-fileUtils = require '../../util/file'
-
 class MimosaCleanModule
 
   registration: (config, register) =>
@@ -24,19 +22,15 @@ class MimosaCleanModule
 
   __cleanMisc: (config, cb) ->
     jsDir = path.join config.watch.compiledDir, config.watch.javascriptDir
-    files = fileUtils.glob "#{jsDir}/**/*-built.js"
+    files = wrench.readdirSyncRecursive(jsDir)
+      .filter (f) ->
+        /-built.js$/.test(f)
+      .map (f) ->
+        f = path.join jsDir, f
+        fs.unlinkSync f
+        logger.success "Deleted file [[ #{f} ]]"
 
-    return cb() if files.length is 0
-
-    i = 0
-    done = ->
-      cb() if ++i is files.length
-
-    for file in files
-      logger.debug("Deleting '-built' file, [[ #{file} ]]")
-      fs.unlink file, (err) ->
-        logger.success "Deleted file [[ #{file} ]]"
-        done()
+    cb()
 
   __cleanUp: (config, cb) ->
     dir = config.watch.compiledDir

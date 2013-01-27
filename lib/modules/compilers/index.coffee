@@ -4,8 +4,7 @@ path = require 'path'
 
 _ = require 'lodash'
 logger = require 'logmimosa'
-
-fileUtils =  require '../../util/file'
+wrench = require('wrench')
 
 baseDirRegex = /([^[\/\\\\]*]*)$/
 
@@ -14,16 +13,18 @@ class MimosaCompilerModule
   all: []
 
   constructor: ->
-    fileNames = fileUtils.glob "#{__dirname}/**/*-compiler.coffee"
-    fileNames.push "#{__dirname}/copy.coffee"
-    for file in fileNames
-      Compiler = require(file)
-      Compiler.base = path.basename(file, ".coffee").replace('-compiler', '')
-      if Compiler.base isnt "copy"
-        Compiler.type = baseDirRegex.exec(path.dirname(file))[0]
-      else
-        Compiler.type = "copy"
-      @all.push(Compiler)
+    @all = wrench.readdirSyncRecursive(__dirname)
+      .filter (f) ->
+        /-compiler.coffee$/.test(f) or /copy.coffee$/.test(f)
+      .map (f) ->
+        file = path.join __dirname, f
+        comp = require(file)
+        comp.base = path.basename(file, ".coffee").replace('-compiler', '')
+        if comp.base isnt "copy"
+          comp.type = baseDirRegex.exec(path.dirname(file))[0]
+        else
+          comp.type = "copy"
+        comp
 
   registration: (config, register) ->
     for compiler in @configuredCompilers.compilers

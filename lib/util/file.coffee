@@ -3,9 +3,6 @@ fs = require 'fs'
 
 logger = require 'logmimosa'
 
-globWin = require('glob-whatev').glob
-globRest = require('glob').sync
-
 class FileUtils
 
   isCSS: (fileName) ->
@@ -62,17 +59,6 @@ class FileUtils
               return cb(false)
 
             if stats1.mtime > stats2.mtime then cb(true) else cb(false)
-
-  # node-glob doesn't work entirely on win32
-  # node-glob-whatev works on windows, but is terribly inefficient
-  # for now, just switching between the two
-  # Down the road get to a single lib
-  # by 1) building own 2) fixing one of those or 3) finding one that works
-  glob: (str, opts = {}) ->
-    if process.platform is 'win32'
-      globWin str, opts
-    else
-      globRest str
 
   readdirSyncRecursive: (baseDir, excludes = [], excludeRegex, ignoreDirectories = false) ->
     baseDir = baseDir.replace /\/$/, ''

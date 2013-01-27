@@ -2,11 +2,10 @@ path =   require 'path'
 {exec} = require 'child_process'
 fs =     require 'fs'
 
-wrench = require 'wrench'
-_ =      require 'lodash'
-logger = require 'logmimosa'
+wrench =   require 'wrench'
+_ =        require 'lodash'
+logger =   require 'logmimosa'
 
-fileUtils = require '../util/file'
 util =      require '../util/util'
 deps =      require('../../package.json').dependencies
 configurer = require '../util/configurer'
@@ -256,9 +255,12 @@ class NewCommand
     logger.debug "Writing .gitignore"
     fs.writeFileSync path.join(@currPath, '.gitignore'), data, 'ascii'
 
-    files = fileUtils.glob "#{@currPath}/**/.gitkeep", {dot:true}
-    logger.debug "Removing #{files.length} .gitkeeps"
-    fs.unlinkSync(file) for file in files
+    wrench.readdirSyncRecursive(@currPath)
+      .filter (f) ->
+        f.indexOf(".gitkeep") > 0
+      .map (f) =>
+        f = path.join @currPath, f
+        fs.unlinkSync f
 
   _usingOwnViews: (chosen) ->
     logger.debug "Moving views into place"
