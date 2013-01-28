@@ -10,7 +10,6 @@
         rjs.include.push "foo"
 ```
 
-
 ### Minor Changes
 * mimosa #126, when a module does not install, mimosa no longer keeps going. It will fail and will provide some helpful messaging to correct the problem.
 * mimosa #128, remove dependency on globbing libraries

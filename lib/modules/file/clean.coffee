@@ -22,13 +22,14 @@ class MimosaCleanModule
 
   __cleanMisc: (config, cb) ->
     jsDir = path.join config.watch.compiledDir, config.watch.javascriptDir
-    files = wrench.readdirSyncRecursive(jsDir)
-      .filter (f) ->
-        /-built.js$/.test(f)
-      .map (f) ->
-        f = path.join jsDir, f
-        fs.unlinkSync f
-        logger.success "Deleted file [[ #{f} ]]"
+    if fs.existsSync jsDir
+      files = wrench.readdirSyncRecursive(jsDir)
+        .filter (f) ->
+          /-built.js$/.test(f)
+        .map (f) ->
+          f = path.join jsDir, f
+          fs.unlinkSync f
+          logger.success "Deleted file [[ #{f} ]]"
 
     cb()
 
