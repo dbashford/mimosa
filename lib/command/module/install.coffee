@@ -108,7 +108,10 @@ putThingsBack = (oldVersion, name) ->
 installModule = (name, done) ->
   installString = "npm install \"#{name}\" --save"
   exec installString, (err, sout, serr) =>
-    unless err
+    if err
+      logger.error "Error installing module"
+      logger.error err
+    else
       console.log sout
       logger.success "Install of '#{name}' successful"
 
