@@ -12,36 +12,15 @@ class MimosaCleanModule
   registration: (config, register) =>
     register ['postClean'], 'complete', @_clean
 
-  _clean: (config, options, next) =>
-    i = 0
-    done = ->
-      next() if ++i is 2
-
-    @__cleanMisc config, done
-    @__cleanUp config, done
-
-  __cleanMisc: (config, cb) ->
-    jsDir = path.join config.watch.compiledDir, config.watch.javascriptDir
-    if fs.existsSync jsDir
-      files = wrench.readdirSyncRecursive(jsDir)
-        .filter (f) ->
-          /-built.js$/.test(f)
-        .map (f) ->
-          f = path.join jsDir, f
-          fs.unlinkSync f
-          logger.success "Deleted file [[ #{f} ]]"
-
-    cb()
-
-  __cleanUp: (config, cb) ->
+  _clean: (config, options, next) ->
     dir = config.watch.compiledDir
     directories = wrench.readdirSyncRecursive(dir).filter (f) -> fs.statSync(path.join(dir, f)).isDirectory()
 
-    return cb() if directories.length is 0
+    return next() if directories.length is 0
 
     i = 0
     done = ->
-      cb() if ++i is directories.length
+      next() if ++i is directories.length
 
     _.sortBy(directories, 'length').reverse().forEach (dir) ->
       dirPath = path.join(config.watch.compiledDir, dir)
