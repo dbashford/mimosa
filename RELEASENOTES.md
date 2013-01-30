@@ -15,7 +15,6 @@
 * mimosa #128, remove dependency on globbing libraries
 * mimosa-require has been updated to the latest requirejs.
 * mimosa-require #8, added to the list of default r.js config settings is `logLevel:3` so that any errors will be written to the console. Obviously this can be overwritten if you do not want errors to be logged.
-* mimosa-skeleton #2, #3, fixed issue on windows with not removing .git directory
 * mimosa-skeleton #4, fixed issue with github clones not properly landing in the current directory.
 
 # 0.8.7 - January 24 2013
