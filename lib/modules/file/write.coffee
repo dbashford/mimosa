@@ -24,8 +24,13 @@ class MimosaFileWriteModule
       next() if ++i is options.files.length
 
     options.files.forEach (file) =>
-      return done() if not file.outputFileText or not file.outputFileName
+      return done() if (file.outputFileText isnt "" and not file.outputFileText) or not file.outputFileName
+
+      if file.outputFileText is ""
+        logger.warn "Compile of file [[ #{file.inputFileName} ]] resulted in empty output."
+
       logger.debug "Writing file [[ #{file.outputFileName} ]]"
+
       fileUtils.writeFile file.outputFileName, file.outputFileText, (err) =>
         if err?
           logger.error "Failed to write new file [[ #{file.outputFileName} ]], Error: #{err}"
