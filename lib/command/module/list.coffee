@@ -5,7 +5,9 @@ logger = require 'logmimosa'
 moduleMetadata = require('../../modules').installedMetadata
 
 list = (opts) ->
-  if opts.debug then logger.setDebug()
+  if opts.debug
+    logger.setDebug()
+    process.env.DEBUG = true
 
   logger.green "\n  The following is a list of the Mimosa modules you have installed.\n"
   logger.blue "  Name                      Version         Website"

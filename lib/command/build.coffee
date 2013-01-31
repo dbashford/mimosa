@@ -8,7 +8,10 @@ Watcher =  require '../util/watcher'
 Cleaner = require '../util/cleaner'
 
 build = (opts) =>
-  if opts.debug then logger.setDebug()
+  if opts.debug
+    logger.setDebug()
+    process.env.DEBUG = true
+
   logger.info "Beginning build"
   opts.build = true
 

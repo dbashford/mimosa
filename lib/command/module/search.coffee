@@ -46,6 +46,10 @@ printResults = (mods, verbose) ->
   process.exit 0
 
 search = (opts) ->
+  if opts.debug
+    logger.setDebug()
+    process.env.DEBUG = true
+
   logger.green "\n  Searching NPM for Mimosa modules, this might take a few seconds...\n"
   npm.load { outfd: null, exit: false, loglevel:'silent' }, ->
     npm.commands.search ['mimosa-'], true, (err, pkgs) ->

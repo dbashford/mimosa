@@ -9,7 +9,9 @@ mimosaPath = path.join __dirname, '..', '..', '..'
 currentDir = process.cwd()
 
 install = (name, opts) ->
-  if opts.debug then logger.setDebug()
+  if opts.debug
+    logger.setDebug()
+    process.env.DEBUG = true
 
   if name?
     unless name? and name.indexOf('mimosa-') is 0

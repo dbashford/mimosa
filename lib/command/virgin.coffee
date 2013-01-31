@@ -4,7 +4,10 @@ util =     require '../util/util'
 Watcher =  require '../util/watcher'
 
 virgin = (opts) =>
-  if opts.debug then logger.setDebug()
+  if opts.debug
+    logger.setDebug()
+    process.env.DEBUG = true
+
   opts.virgin = true
   util.processConfig opts, (config, modules) ->
     new Watcher(config, modules, true)

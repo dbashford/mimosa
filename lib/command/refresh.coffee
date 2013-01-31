@@ -5,7 +5,9 @@ fs =     require 'fs'
 logger = require 'logmimosa'
 
 update = (opts) ->
-  if opts.debug then logger.setDebug()
+  if opts.debug
+    logger.setDebug()
+    process.env.DEBUG = true
 
   clientPackageJsonPath = _findPackageJsonPath()
   unless clientPackageJsonPath?

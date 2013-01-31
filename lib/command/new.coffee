@@ -63,7 +63,10 @@ class NewCommand
       .on '--help', @_printHelp
 
   new: (name, opts) =>
-    if opts.debug then logger.setDebug()
+    if opts.debug
+      logger.setDebug()
+      process.env.DEBUG = true
+
     logger.debug "Project name: #{name}"
 
     util.projectPossibilities (compilers) =>

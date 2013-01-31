@@ -8,7 +8,10 @@ Watcher = require '../util/watcher'
 Cleaner = require '../util/cleaner'
 
 watch = (opts) =>
-  if opts.debug then logger.setDebug()
+  if opts.debug
+    logger.setDebug()
+    process.env.DEBUG = true
+
   opts.watch = true
   util.processConfig opts, (config, modules) =>
     instWatcher = ->

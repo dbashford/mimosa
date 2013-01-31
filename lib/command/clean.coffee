@@ -10,7 +10,9 @@ Cleaner = require '../util/cleaner'
 util =    require '../util/util'
 
 clean = (opts) ->
-  if opts.debug then logger.setDebug()
+  if opts.debug
+    logger.setDebug()
+    process.env.DEBUG = true
 
   opts.clean = true
 

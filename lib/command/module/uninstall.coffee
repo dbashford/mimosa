@@ -6,7 +6,9 @@ logger = require 'logmimosa'
 moduleMetadata = require('../../modules').installedMetadata
 
 deleteMod = (name, opts) ->
-  if opts.debug then logger.setDebug()
+  if opts.debug
+    logger.setDebug()
+    process.env.DEBUG = true
 
   unless name.indexOf('mimosa-') is 0
     return logger.error "Can only delete 'mimosa-' prefixed modules with mod:delete (ex: mimosa-server)."

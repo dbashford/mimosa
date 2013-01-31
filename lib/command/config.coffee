@@ -5,7 +5,9 @@ logger = require 'logmimosa'
 configurer = require '../util/configurer'
 
 copyConfig = (opts) ->
-  if opts.debug then logger.setDebug()
+  if opts.debug
+    logger.setDebug()
+    process.env.DEBUG = true
 
   currPath = path.join path.resolve(''), "mimosa-config.coffee"
   if fs.existsSync currPath
