@@ -14,6 +14,7 @@
 * mimosa #126, when a module does not install, mimosa no longer keeps going. It will fail and will provide some helpful messaging to correct the problem.
 * mimosa #128, remove dependency on globbing libraries
 * mimosa #130, added "json","txt","xml","xsd" to list of default copy extensions
+* mimosa #131, mimosa will now write empty files, but will warn they are empty
 * logmimosa, setting and using process.env.DEBUG for registering debug mode
 * mimosa-require has been updated to the latest requirejs.
 * mimosa-require #8, added to the list of default r.js config settings is `logLevel:3` so that any errors will be written to the console. Obviously this can be overwritten if you do not want errors to be logged.
