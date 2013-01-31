@@ -108,7 +108,7 @@ class MimosaCompilerModule
       outputFileName: "templates"
       helperFiles:["app/template/handlebars-helpers"]
     copy:
-      extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm"]
+      extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd"]
     typescript:
       module:null
 
@@ -155,7 +155,7 @@ class MimosaCompilerModule
       # the extensions of files to copy from sourceDir to compiledDir. vendor js/css, images, etc.
       ###
       # copy:
-        # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm"]
+        # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd"]
     """
 
   validate: (config, validators) ->
