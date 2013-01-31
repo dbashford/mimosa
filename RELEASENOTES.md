@@ -1,4 +1,4 @@
-# 0.8.8 - January ?? 2013
+# 0.8.8 - Feb ?? 2013
 
 ### Major Changes
 * mimosa-require #7, `require.optimize.overrides` can now be function. If it is a function, it is called after mimosa-require has built its inferred config.  This allows the overrides function to enhance the inferred r.js config rather than just replace it. As in the example below, mimosa-require creates an r.js config that includes an `include` array already. This added functionality allows additional includes to be pushed onto that array which keeps the original inferences in place.
@@ -13,8 +13,10 @@
 ### Minor Changes
 * mimosa #126, when a module does not install, mimosa no longer keeps going. It will fail and will provide some helpful messaging to correct the problem.
 * mimosa #128, remove dependency on globbing libraries
+* mimosa #130, added "json","txt","xml","xsd" to list of default copy extensions
 * mimosa-require has been updated to the latest requirejs.
 * mimosa-require #8, added to the list of default r.js config settings is `logLevel:3` so that any errors will be written to the console. Obviously this can be overwritten if you do not want errors to be logged.
+* mimosa-require, moved require based cleaning logic to mimosa-require module from core
 * mimosa-skeleton #4, fixed issue with github clones not properly landing in the current directory.
 
 # 0.8.7 - January 24 2013
