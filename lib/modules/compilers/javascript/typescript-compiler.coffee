@@ -8,6 +8,8 @@ With a tip of the hat to: https://github.com/joshheyse/typescript-brunch/
 fs = require "fs"
 path = require "path"
 
+logger = require "logmimosa"
+
 io = require "./assets/io"
 TypeScript = require "./assets/tsc.js"
 JSCompiler = require "./javascript"
@@ -74,5 +76,10 @@ module.exports = class TypeScriptCompiler extends JSCompiler
       new Error(errorMessage)
     else
       null
+
+    if /.d.ts$/.test(file.inputFileName) and outText is ""
+      outText = undefined
+      unless error
+        logger.success "Compiled [[ #{file.inputFileName} ]]"
 
     cb(error, outText)
