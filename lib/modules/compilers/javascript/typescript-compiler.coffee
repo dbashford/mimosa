@@ -54,15 +54,15 @@ module.exports = class TypeScriptCompiler extends JSCompiler
 
     inputFile = TypeScript.switchToForwardSlashes file.inputFileName
     resolver.resolveCode inputFile, "", false,
-      postResolution: (file, code) =>
+      postResolution: (f, code) =>
         depPath = TypeScript.switchToForwardSlashes code.path
         if(!(units.some (u) -> u.fileName is depPath))
           units.push {fileName: depPath, code: code.content}
-      postResolutionError: (file, message) ->
-        errorMessage += "TypeScript Error: " + message + "\n File: " + file
+      postResolutionError: (f, message) ->
+        errorMessage += "TypeScript Error: " + message + "\n File: " + f
 
     units.forEach (u) =>
-      unless u.fileName is file.inputFileName
+      unless u.fileName is inputFile
         u.code = fs.readFileSync(u.fileName, "utf8") unless u.code
         compiler.addUnit u.code, u.fileName, false
 
