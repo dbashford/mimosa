@@ -1,7 +1,8 @@
-# 0.8.9 - Feb ?? 2013
+# 0.8.9 - Feb 01 2013
 
 ### Major Changes
 * mimosa #129, TypeScript should now compile properly on Windows.
+* mimosa #132, mimosa no longer writing empty compiled .d.ts files
 
 # 0.8.8 - Feb 01 2013
 
