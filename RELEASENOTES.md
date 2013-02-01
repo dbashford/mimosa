@@ -1,6 +1,7 @@
-# 0.8.8 - Feb ?? 2013
+# 0.8.8 - Feb 01 2013
 
 ### Major Changes
+* Every mimosa module has been incremented, in most cases just to get the latest version
 * mimosa-require #7, `require.optimize.overrides` can now be function. If it is a function, it is called after mimosa-require has built its inferred config.  This allows the overrides function to enhance the inferred r.js config rather than just replace it. As in the example below, mimosa-require creates an r.js config that includes an `include` array already. This added functionality allows additional includes to be pushed onto that array which keeps the original inferences in place.
 
 ```
