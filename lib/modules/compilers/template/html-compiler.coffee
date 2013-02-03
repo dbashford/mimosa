@@ -2,9 +2,9 @@
 
 _ = require 'underscore'
 
-AbstractTemplateCompiler = require './template'
+TemplateCompiler = require './template'
 
-module.exports = class HTMLCompiler extends AbstractTemplateCompiler
+module.exports = class HTMLCompiler extends TemplateCompiler
 
   clientLibrary: null
 

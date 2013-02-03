@@ -2,9 +2,9 @@
 
 hogan = require "hogan.js"
 
-AbstractTemplateCompiler = require './template'
+TemplateCompiler = require './template'
 
-module.exports = class HoganCompiler extends AbstractTemplateCompiler
+module.exports = class HoganCompiler extends TemplateCompiler
 
   clientLibrary: "hogan-template"
 

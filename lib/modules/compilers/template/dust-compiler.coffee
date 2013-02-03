@@ -2,9 +2,9 @@
 
 dust = require 'dustjs-linkedin'
 
-AbstractTemplateCompiler = require './template'
+TemplateCompiler = require './template'
 
-module.exports = class DustCompiler extends AbstractTemplateCompiler
+module.exports = class DustCompiler extends TemplateCompiler
 
   clientLibrary: "dust"
   handlesNamespacing: true

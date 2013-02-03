@@ -1,6 +1,6 @@
 "use strict"
 
-logger =    require 'logmimosa'
+logger = require 'logmimosa'
 
 module.exports = class JSCompiler
 

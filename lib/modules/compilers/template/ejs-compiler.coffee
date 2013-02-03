@@ -2,9 +2,9 @@
 
 ejs = require 'ejs'
 
-AbstractTemplateCompiler = require './template'
+TemplateCompiler = require './template'
 
-module.exports = class EJSCompiler extends AbstractTemplateCompiler
+module.exports = class EJSCompiler extends TemplateCompiler
 
   clientLibrary: "ejs-filters"
 
@@ -13,7 +13,6 @@ module.exports = class EJSCompiler extends AbstractTemplateCompiler
 
   constructor: (config, @extensions) ->
     super(config)
-
 
   amdPrefix: ->
     """
@@ -45,6 +44,3 @@ module.exports = class EJSCompiler extends AbstractTemplateCompiler
 
   transform: (output) =>
     output.replace(/\nescape[\s\S]*?};/, 'escape = escape || globalEscape; filters = filters || globalFilters;')
-
-
-

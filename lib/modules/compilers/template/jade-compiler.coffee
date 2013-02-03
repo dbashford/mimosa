@@ -2,9 +2,9 @@
 
 jade = require 'jade'
 
-AbstractTemplateCompiler = require './template'
+TemplateCompiler = require './template'
 
-module.exports = class JadeCompiler extends AbstractTemplateCompiler
+module.exports = class JadeCompiler extends TemplateCompiler
 
   clientLibrary: "jade-runtime"
 

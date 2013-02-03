@@ -160,11 +160,10 @@ class NewCommand
     currPath
 
   _moveDirectoryContents: (sourcePath, outPath) ->
-    contents = wrench.readdirSyncRecursive(sourcePath)
-    for item in contents
+    for item in wrench.readdirSyncRecursive(sourcePath)
       fullSourcePath = path.join sourcePath, item
       fileStats = fs.statSync fullSourcePath
-      fullOutPath = path.join(outPath, item)
+      fullOutPath = path.join outPath, item
       if fileStats.isDirectory()
         logger.debug "Copying directory: [[ #{fullOutPath} ]]"
         wrench.mkdirSyncRecursive fullOutPath, 0o0777
@@ -219,13 +218,13 @@ class NewCommand
       # clear out the bad views
       if isSafe
         if filePath.indexOf('example-view-') >= 0
-          unless _.some(comps.template.defaultExtensions, (ext) -> filePath.indexOf("-#{ext}.") >= 0)
-            isSafe = false
-          else
+          if comps.template.defaultExtensions.some((ext) -> filePath.indexOf("-#{ext}.") >= 0)
             templateView = filePath
+          else
+            isSafe = false
 
         isSafe = false if filePath.indexOf('handlebars-helpers') >= 0 and
-          not _.some(comps.template.defaultExtensions, (ext) -> ext is "hbs")
+          not comps.template.defaultExtensions.some (ext) -> ext is "hbs"
 
       fs.unlink filePath unless isSafe
 
@@ -236,13 +235,13 @@ class NewCommand
     # Typescript hack since cannot handle typescript on the server
     if comps.javascript.base is "typescript"
       safePaths.push "\\.js$"
-    else
 
-
-    for file in files
-      filePath = path.join(serverPath, file)
-      isSafe = safePaths.some (path) -> file.match(path)
-      fs.unlink filePath unless isSafe
+    files.filter (file) ->
+      not safePaths.some (pathh) -> file.match(pathh)
+    .map (file) ->
+      path.join(serverPath, file)
+    .forEach (filePath) ->
+      fs.unlink filePath
 
     # alter template view name and insert css framework
     if templateView?
@@ -262,7 +261,8 @@ class NewCommand
       .filter (f) ->
         f.indexOf(".gitkeep") > 0
       .map (f) =>
-        f = path.join @currPath, f
+        path.join @currPath, f
+      .forEach (f) ->
         fs.unlinkSync f
 
   _usingOwnViews: (chosen) ->

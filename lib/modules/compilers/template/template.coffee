@@ -13,7 +13,7 @@ try
 catch err
   logger.debug "mimosa-require not installed, so cannot use inside template compiler"
 
-module.exports = class AbstractTemplateCompiler
+module.exports = class TemplateCompiler
 
   constructor: (config) ->
     if @clientLibrary?

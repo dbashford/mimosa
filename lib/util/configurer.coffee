@@ -89,7 +89,8 @@ class MimosaConfigurer
         util.deepFreeze(config)
 
       moduleErrors = mod.validate(config, validators)
-      errors.push moduleErrors... if moduleErrors
+      if moduleErrors
+        errors.push moduleErrors...
 
     # return to unfrozen
     config = _.clone(config, true)
@@ -134,24 +135,7 @@ class MimosaConfigurer
     else
       errors.push "watch.javascriptDir must be a string"
 
-    if Array.isArray(config.watch.exclude)
-       regexes = []
-       newExclude = []
-       for exclude in config.watch.exclude
-         if typeof exclude is "string"
-           newExclude.push validators.determinePath exclude, config.watch.sourceDir
-         else if exclude instanceof RegExp
-           regexes.push exclude.source
-         else
-           errors.push "watch.exclude must be an array of strings and/or regexes."
-           break
-
-       if regexes.length > 0
-         config.watch.excludeRegex = new RegExp regexes.join("|"), "i"
-
-       config.watch.exclude = newExclude
-    else
-      errors.push "watch.exclude must be an array"
+    validators.ifExistsFileExcludeWithRegexAndString(errors, "watch.exclude", config.watch, config.watch.sourceDir)
 
     unless typeof config.watch.throttle is "number"
       errors.push "watch.throttle must be a number"
@@ -191,9 +175,10 @@ class MimosaConfigurer
                                              # relative to the project root, or absolute
         # javascriptDir: "javascripts"       # Location of precompiled javascript (i.e.
                                              # coffeescript), must be relative to sourceDir
-        # exclude: [/[/\\\\](\\.|~)[^/\\\\]+$/]   # regexes matching the files to be entirely
-                                             # ignored by mimosa, the default matches files that
-                                             # start with a period.
+        # exclude: [/[/\\\\](\\.|~)[^/\\\\]+$/]   # regexes or strings matching the files to be
+                                             # ignored by mimosa, the default matches all sorts of
+                                             # dot files and temp files. Strings are paths and can
+                                             # be relative to sourceDir or absolute.
         # throttle: 0                        # number of file adds the watcher handles before
                                              # taking a 100 millisecond pause to let those files
                                              # finish their processing. This helps avoid EMFILE
@@ -221,8 +206,8 @@ class MimosaConfigurer
 
     configText
 
-defs = new MimosaConfigurer()
+configurer = new MimosaConfigurer()
 
 module.exports =
-  applyAndValidateDefaults: defs.applyAndValidateDefaults
-  buildConfigText: defs.buildConfigText
+  applyAndValidateDefaults: configurer.applyAndValidateDefaults
+  buildConfigText:          configurer.buildConfigText

@@ -1,8 +1,8 @@
 "use strict"
 
-AbstractTemplateCompiler = require './template'
+TemplateCompiler = require './template'
 
-module.exports = class AbstractUnderscoreCompiler extends AbstractTemplateCompiler
+module.exports = class AbstractUnderscoreCompiler extends TemplateCompiler
 
   constructor: (config) ->
     super(config)
