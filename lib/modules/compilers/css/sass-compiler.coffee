@@ -77,7 +77,7 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     path.basename(fileName).charAt(0) is '_'
 
   _determineBaseFiles: =>
-    baseFiles = _.filter @allFiles, (file) =>
+    baseFiles = @allFiles.filter (file) =>
       (not @_isInclude(file)) and file.indexOf('compass') < 0
     logger.debug "Base files for SASS are:\n#{baseFiles.join('\n')}"
     baseFiles

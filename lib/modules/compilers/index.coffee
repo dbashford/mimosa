@@ -34,7 +34,7 @@ class MimosaCompilerModule
 
   _testDifferentTemplateLibraries: (config, options, next) =>
     return next() unless options.files?.length > 0
-    return next() unless _.isString(config.template.outputFileName)
+    return next() unless typeof config.template.outputFileName is "string"
 
     unless @templateLibrariesBeingUsed
       @templateLibrariesBeingUsed = 0
