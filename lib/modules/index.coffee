@@ -4,21 +4,43 @@ fs = require 'fs'
 path = require 'path'
 {exec} = require 'child_process'
 
-_ = require 'lodash'
+_ =      require 'lodash'
+logger = require 'logmimosa'
 
-compilers = require './compilers'
-file =      require './file'
-logger =    require 'logmimosa'
-pack =      require('../../package.json')
+compilers =     require './compilers'
+file =          require './file'
+mimosaPackage = require('../../package.json')
 
 builtIns = ['mimosa-server','mimosa-lint','mimosa-require','mimosa-minify','mimosa-live-reload']
 configuredModules = null
 
 isMimosaModuleName = (str) -> str.indexOf('mimosa-') > -1
 
-standardlyInstalled = _(pack.dependencies)
+projectPackageJsonPath = path.resolve process.cwd, 'package.json'
+locallyInstalled = if fs.existsSync projectPackageJsonPath
+    projectNodeModules = path.resolve process.cwd, 'node_modules'
+    projPack = require projectPackageJsonPath
+    _(projPack.dependencies)
+      .keys()
+      .select(isMimosaModuleName)
+      .select (dep) ->
+        try
+          require path.join projectNodeModules, dep
+          true
+        catch err
+          false
+      .map (dep) ->
+        local: true
+        name: dep
+        nodeModulesDir: projectNodeModules
+      .value()
+  else
+    []
+
+standardlyInstalled = _(mimosaPackage.dependencies)
   .keys()
-  .select(isMimosaModuleName)
+  .select (dir) ->
+    isMimosaModuleName(dir) and dir not in locallyInstalled
   .map (dep) ->
     name: dep
     nodeModulesDir: '../../node_modules'
@@ -29,16 +51,19 @@ independentlyInstalled = do ->
   standardlyResolvedModules = _.pluck standardlyInstalled, 'name'
   _(fs.readdirSync topLevelNodeModulesDir)
     .select (dir) ->
-      isMimosaModuleName(dir) and dir not in standardlyResolvedModules
+      isMimosaModuleName(dir) and dir not in standardlyResolvedModules and dir not in locallyInstalled
     .map (dir) ->
       name: dir
       nodeModulesDir: topLevelNodeModulesDir
     .value()
 
-meta = _.map standardlyInstalled.concat(independentlyInstalled), (modInfo) ->
+allInstalled = standardlyInstalled.concat(independentlyInstalled).concat(locallyInstalled)
+meta = _.map allInstalled, (modInfo) ->
   requireString = "#{modInfo.nodeModulesDir}/#{modInfo.name}/package.json"
   try
     modPack = require requireString
+
+    mod:     if modInfo.local then require "#{modInfo.nodeModulesDir}/#{modInfo.name}/" else require modInfo.name
     name:    modInfo.name
     version: modPack.version
     site:    modPack.homepage
@@ -49,8 +74,6 @@ meta = _.map standardlyInstalled.concat(independentlyInstalled), (modInfo) ->
     resolvedPath = path.resolve requireString
     logger.error "Unable to read file at [[ #{resolvedPath} ]], possibly a permission issue? \nsystem error : #{err}"
     process.exit 1
-
-all = [compilers, logger, file].concat _.map(_.pluck(meta, 'name'), require)
 
 allDefaults = true
 if builtIns.length isnt meta.length
@@ -97,13 +120,13 @@ configured = (moduleNames, callback) ->
     for installed in meta when installed.name is modName
       unless modVersion? and modVersion isnt installed.version
         found = true
-        configuredModules.push(require modName)
+        configuredModules.push installed.mod
         break
 
     if found
       processModule()
     else
-      logger.info "Module [[ #{fullModName} ]] not installed inside your Mimosa, attempting to install it from NPM."
+      logger.info "Module [[ #{fullModName} ]] not installed inside your Mimosa, attempting to install it from NPM into your Mimosa."
 
       currentDir = process.cwd()
       mimosaPath = path.join __dirname, '..', '..'
@@ -120,7 +143,7 @@ configured = (moduleNames, callback) ->
 
           process.exit 1
         else
-          logger.success "Install of '#{fullModName}' successful"
+          logger.success "'#{fullModName}' successful installed into your Mimosa."
 
           modPath = path.join mimosaPath, "node_modules", modName
           Object.keys(require.cache).forEach (key) ->
@@ -142,6 +165,8 @@ configured = (moduleNames, callback) ->
         processModule()
 
   processModule()
+
+all = [compilers, logger, file].concat _.pluck(meta, 'mod')
 
 modulesWithCommands = ->
   mods = []

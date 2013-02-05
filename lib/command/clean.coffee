@@ -6,7 +6,6 @@ _      =  require 'lodash'
 logger =  require 'logmimosa'
 
 Cleaner = require '../util/cleaner'
-
 util =    require '../util/util'
 
 clean = (opts) ->
