@@ -24,12 +24,12 @@ class MimosaConfigurer
       exclude: [/[/\\](\.|~)[^/\\]+$/]
       throttle: 0
 
-  applyAndValidateDefaults: (config, configPath, callback) =>
+  applyAndValidateDefaults: (config, callback) =>
     moduleNames = config.modules ? @baseDefaults.modules
     moduleManager.getConfiguredModules moduleNames, (modules) =>
 
       @modules = modules
-      config.root = configPath
+      config.root = process.cwd()
       config = @_applyDefaults(config)
       [errors, config] = @_validateSettings(config)
       err = if errors.length is 0
@@ -47,17 +47,17 @@ class MimosaConfigurer
     _.extend(defs, @baseDefaults)
     defs
 
-  _extend: (obj, props) ->
+  extend: (obj, props) ->
     Object.keys(props).forEach (k) =>
       val = props[k]
       if val? and typeof val is 'object' and not Array.isArray(val) and typeof obj[k] is typeof val
-        @_extend obj[k], val
+        @extend obj[k], val
       else
         obj[k] = val
     obj
 
   _applyDefaults: (config) ->
-    @_extend @_moduleDefaults(), config
+    @extend @_moduleDefaults(), config
 
   _manipulateConfig: (config) ->
     config.extensions = {javascript: ['js'], css: ['css'], template: [], copy: []}
@@ -211,3 +211,4 @@ configurer = new MimosaConfigurer()
 module.exports =
   applyAndValidateDefaults: configurer.applyAndValidateDefaults
   buildConfigText:          configurer.buildConfigText
+  extend:                   configurer.extend

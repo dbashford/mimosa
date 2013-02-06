@@ -3,6 +3,7 @@ fs     = require 'fs'
 
 color  = require('ansi-color').set
 logger = require 'logmimosa'
+_      = require 'lodash'
 
 configurer = require './configurer'
 compilerCentral = require '../modules/compilers'
@@ -22,27 +23,34 @@ exports.projectPossibilities = (callback) ->
       break
 
 exports.processConfig = (opts, callback) ->
-  configPath = _findConfigPath('mimosa-config.coffee', path.resolve('mimosa-config.coffee'))
-  unless configPath?
-    logger.debug "Didn't find mimosa-config.coffee, going to try mimosa-config.js"
-    configPath = _findConfigPath('mimosa-config.js', path.resolve('mimosa-config.js'))
 
-  try
-    {config} = require configPath if configPath?
-  catch err
-    return logger.fatal "Improperly formatted configuration file: #{err}"
-    config = null
-
-  if config?
-    configPath = path.dirname configPath
+  config = {}
+  mainConfigPath = _findConfigPath "mimosa-config"
+  if mainConfigPath?
+    try
+      {config} = require mainConfigPath
+    catch err
+      return logger.fatal "Improperly formatted configuration file [[ #{mainConfigPath} ]]: #{err}"
   else
     logger.warn "No configuration file found (mimosa-config.coffee/mimosa-config.js), running from current directory using Mimosa's defaults."
     logger.warn "Run 'mimosa config' to copy the default Mimosa configuration to the current directory."
-    config = {}
-    configPath = process.cwd()
 
-  logger.debug "Config path is #{configPath}"
   logger.debug "Your mimosa config:\n#{JSON.stringify(config, null, 2)}"
+
+  if opts.profile
+    profileConfigPath = _findConfigPath path.join("profiles", opts.profile)
+    if profileConfigPath?
+      try
+        profileConfig = require(profileConfigPath).config
+      catch err
+        return logger.fatal "Improperly formatted configuration file [[ #{profileConfigPath} ]]: #{err}"
+
+      logger.debug "Profile config:\n#{JSON.stringify(profileConfig, null, 2)}"
+
+      config = configurer.extend(config, profileConfig)
+      logger.debug "mimosa config after profile applied:\n#{JSON.stringify(config, null, 2)}"
+    else
+      return logger.fatal "Profile provided but not found at [[ #{path.join('profiles', opts.profile)} ]]"
 
   config.isVirgin =     opts?.virgin
   config.isServer =     opts?.server
@@ -55,7 +63,7 @@ exports.processConfig = (opts, callback) ->
   config.isPackage =    opts?.package
   config.isInstall =    opts?.install
 
-  configurer.applyAndValidateDefaults config, configPath, (err, newConfig, modules) =>
+  configurer.applyAndValidateDefaults config, (err, newConfig, modules) =>
     if err
       logger.error "Unable to start Mimosa for the following reason(s):\n * #{err.join('\n * ')} "
       process.exit 1
@@ -73,15 +81,11 @@ exports.deepFreeze = (o) ->
       not Object.isFrozen(o[prop])
         exports.deepFreeze o[prop]
 
-_findConfigPath = (fileName, configPath) ->
-  if fs.existsSync configPath
-    logger.debug "Found mimosa-config: [[ #{configPath} ]]"
-    configPath
+_findConfigPath = (file) ->
+  configCoffee = path.resolve("#{file}.coffee")
+  if fs.existsSync configCoffee
+    configCoffee
   else
-    configPath = path.join(path.dirname(configPath), '..', fileName)
-    logger.debug "Trying #{configPath}"
-    dirname = path.dirname configPath
-    if dirname.indexOf(path.sep) is dirname.lastIndexOf(path.sep)
-      logger.debug "Unable to find mimosa-config"
-      return null
-    _findConfigPath(fileName, configPath)
+    configJs = path.resolve("#{file}.js")
+    if fs.existsSync configJs
+      configJs

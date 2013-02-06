@@ -33,6 +33,7 @@ register = (program, callback) =>
   program
     .command('clean')
     .option("-f, --force", "completely delete your compiledDir")
+    .option("-P, --profile <profileName>", "select a mimosa profile")
     .option("-D, --debug", "run in debug mode")
     .description("clean out all of the compiled assets from the compiled directory")
     .action(callback)
@@ -49,6 +50,9 @@ register = (program, callback) =>
       logger.green('  forcibly remove the entire compiledDir, use the \'force\' flag.')
       logger.blue( '\n    $ mimosa clean -force')
       logger.blue( '    $ mimosa clean -f\n')
+      logger.green('  Pass a \'profile\' flag and the name of a Mimosa profile to run with mimosa config overrides from a profile.')
+      logger.blue( '\n    $ mimosa clean --profile build')
+      logger.blue( '    $ mimosa clean -P build')
 
 module.exports = (program) ->
   register(program, clean)

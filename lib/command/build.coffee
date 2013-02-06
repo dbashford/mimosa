@@ -7,7 +7,8 @@ util = require '../util/util'
 Watcher =  require '../util/watcher'
 Cleaner = require '../util/cleaner'
 
-build = (opts) =>
+build = (opts, foo, bar, baz, what) =>
+  console.log opts.profile
   if opts.debug
     logger.setDebug()
     process.env.DEBUG = true
@@ -32,6 +33,7 @@ register = (program, callback) =>
     .option("-o, --optimize", "run r.js optimization after building")
     .option("-m, --minify", "minify each asset as it is compiled using uglify")
     .option("-p, --package", "package code for distribution after the code has been built")
+    .option("-P, --profile <profileName>", "select a mimosa profile")
     .option("-D, --debug", "run in debug mode")
     .action(callback)
     .on '--help', =>
@@ -54,6 +56,9 @@ register = (program, callback) =>
       logger.green('  executing packaging functionality for you after the building of assets is complete.')
       logger.blue( '\n    $ mimosa build --package')
       logger.blue( '    $ mimosa build -p\n')
+      logger.green('  Pass a \'profile\' flag and the name of a Mimosa profile to run with mimosa config overrides from a profile.')
+      logger.blue( '\n    $ mimosa build --profile build')
+      logger.blue( '    $ mimosa build -P build')
 
 module.exports = (program) ->
   register(program, build)

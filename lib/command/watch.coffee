@@ -38,6 +38,7 @@ register = (program, callback) =>
     .option("-m, --minify", "minify each asset as it is compiled using uglify")
     .option("-c, --clean", "clean the compiled directory before you begin the watch, this forces a recompile of all your assets")
     .option("-d, --delete", "remove the compiled directory entirely before starting")
+    .option("-P, --profile <profileName>", "select a mimosa profile")
     .option("-D, --debug", "run in debug mode")
     .action(callback)
     .on '--help', =>
@@ -71,6 +72,9 @@ register = (program, callback) =>
       logger.green('  can break them) but you still want everything together in a single file.')
       logger.blue( '\n    $ mimosa watch --minify')
       logger.blue( '    $ mimosa watch -m\n')
+      logger.green('  Pass a \'profile\' flag and the name of a Mimosa profile to run with mimosa config overrides from a profile.')
+      logger.blue( '\n    $ mimosa clean --profile build')
+      logger.blue( '    $ mimosa clean -P build')
 
 module.exports = (program) ->
   register(program, watch)

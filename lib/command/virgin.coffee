@@ -16,6 +16,7 @@ register = (program, callback) =>
   program
     .command('virgin')
     .option("-D, --debug", "run in debug mode")
+    .option("-P, --profile <profileName>", "select a mimosa profile")
     .description("compile and lint assets but do not write the output")
     .action(callback)
     .on '--help', ->
@@ -24,6 +25,9 @@ register = (program, callback) =>
       logger.green('  perform any RequireJS optimizations.  Use this is if you already have a server and an "asset pipeline",')
       logger.green('  but want the instant compilation feedback and the linting.')
       logger.blue( '\n    $ mimosa virgin\n')
+      logger.green('  Pass a \'profile\' flag and the name of a Mimosa profile to run with mimosa config overrides from a profile.')
+      logger.blue( '\n    $ mimosa clean --profile build')
+      logger.blue( '    $ mimosa clean -P build')
 
 module.exports = (program) ->
   register(program, virgin)

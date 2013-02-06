@@ -3,14 +3,17 @@
 ### Major Changes
 * Mimosa will now check a 3rd scope for installed Mimosa modules...project scope.  So now Mimosa will work down the following path attempting to locate a module and stop when it finds it:
 
-1) Look in project scope
-2) Looks inside Mimosa's global install
-3) Looks inside the globally installed node modules
-4) install the module from NPM into the global Mimosa install.
+  1. Look in project scope
+  2. Looks inside Mimosa's global install
+  3. Looks inside the globally installed node modules
+  4. install the module from NPM into the global Mimosa install.
 
-If a module is, for instance, installed in all 3 spaces, Mimosa will use the project scoped module.
+  If a module is, for instance, installed in all 3 spaces, Mimosa will use the project scoped module.
 
-Hopefully this update clears up a few issues folks have reported with shared resource issues across multiple concurrent Mimosa builds and permission problems with global installs.  Now if node and Mimosa are installed in a global protected space, a project can easily use Mimosa modules by executing, for instance, `npm install --save mimosa-web-package` from the project root which isn't protected space.
+  Hopefully this update clears up a few issues folks have reported with shared resource issues across multiple concurrent Mimosa builds and permission problems with global installs.  Now if node and Mimosa are installed in a global protected space, a project can easily use Mimosa modules by executing, for instance, `npm install --save mimosa-web-package` from the project root which isn't protected space.
+
+### Minor Changes
+* Mimosa will no longer look up directories in the file structure attempting to find a mimosa-config.  If a mimosa-config isn't found in the current working directory, Mimosa will attempt to run in that directory using the default configuration.
 
 # 0.8.9 - Feb 01 2013
 
