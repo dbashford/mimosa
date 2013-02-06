@@ -1,21 +1,21 @@
-# 0.?.? - Feb ?? 2013
+# 0.9.0 - Feb ?? 2013
 
 ### Major Changes
-* Mimosa now supports profile loading at startup for the `watch`, `build`, `clean` and `virgin` commands.  Those commands now have a `-P/--profile` flag that takes a string.  That string is the name of a Mimosa config file in a `profiles/` folder in the root of the project.  Profile files are simply `mimosa-config` files that will override the main project `mimosa-config`.
+* Mimosa now supports profile loading at startup for the `watch`, `build`, `clean` and `virgin` commands.  Those commands have a new `-P/--profile` flag that takes a string.  That string is the name of a Mimosa config file in a `profiles/` folder in the root of the project.  Profile files are simply `mimosa-config` files that override the main project `mimosa-config`.
 
   If this command,  `mimosa build -P jenkins`, is executed, Mimosa will look in the `profiles/` folder for a file named `jenkins.coffee` or `jenkins.js`, read that file in, and override the `mimosa-config` with the settings contained inside.
-* Mimosa will now check a 3rd scope for installed Mimosa modules...project scope.  So now Mimosa will work down the following path attempting to locate a module and stop when it finds it:
+* Mimosa now checks a 3rd scope for installed Mimosa modules: project scope.  Mimosa will work down the following path attempting to locate a module and stop when it finds it:
     1. Look in project scope
-    2. Looks inside Mimosa's global install
-    3. Looks inside the globally installed node modules
-    4. install the module from NPM into the global Mimosa install.
+    2. Look inside Mimosa's global install
+    3. Look inside the globally installed node modules
+    4. Install the module from NPM into the global Mimosa install.
 
   If a module is, for instance, installed in all 3 spaces, Mimosa will use the project scoped module.
 
-  Hopefully this update clears up a few issues folks have reported with shared resource issues across multiple concurrent Mimosa builds and permission problems with global installs.  Now if node and Mimosa are installed in a global protected space, a project can easily use Mimosa modules by executing, for instance, `npm install --save mimosa-web-package` from the project root which isn't protected space.
+  Hopefully this update clears up a few issues folks have reported with shared resource issues across multiple concurrent Mimosa builds and permission problems with global installs.  Now if node and Mimosa are installed in a global protected space, a project can easily use Mimosa modules by executing, for instance, `npm install --save mimosa-web-package` from the project root which isn't typically a protected space.
 
 ### Minor Changes
-* Mimosa will no longer look up directories in the file structure attempting to find a mimosa-config.  If a mimosa-config isn't found in the current working directory, Mimosa will attempt to run in that directory using the default configuration.
+* Mimosa will no longer look up the file structure attempting to find a mimosa-config.  If a mimosa-config isn't found in the current working directory, Mimosa will attempt to run in that directory using the default configuration.
 
 # 0.8.9 - Feb 01 2013
 
