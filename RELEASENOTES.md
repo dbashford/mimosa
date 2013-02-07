@@ -4,6 +4,9 @@
 * Mimosa now supports profile loading at startup for the `watch`, `build`, `clean` and `virgin` commands.  Those commands have a new `-P/--profile` flag that takes a string.  That string is the name of a Mimosa config file in a `profiles/` folder in the root of the project.  Profile files are simply `mimosa-config` files that override the main project `mimosa-config`.
 
   If this command,  `mimosa build -P jenkins`, is executed, Mimosa will look in the `profiles/` folder for a file named `jenkins.coffee` or `jenkins.js`, read that file in, and override the `mimosa-config` with the settings contained inside.
+
+  The profile folder is configurable inside the root mimosa-config using a root level `profileLocation` property.  `profileLocation` must be relative to the root of the project.
+
 * Mimosa now checks a 3rd scope for installed Mimosa modules: project scope.  Mimosa will work down the following path attempting to locate a module and stop when it finds it:
     1. Look in project scope
     2. Look inside Mimosa's global install

@@ -38,7 +38,10 @@ exports.processConfig = (opts, callback) ->
   logger.debug "Your mimosa config:\n#{JSON.stringify(config, null, 2)}"
 
   if opts.profile
-    profileConfigPath = _findConfigPath path.join("profiles", opts.profile)
+    unless config.profileLocation
+      config.profileLocation = "profiles"
+
+    profileConfigPath = _findConfigPath path.join(config.profileLocation, opts.profile)
     if profileConfigPath?
       try
         profileConfig = require(profileConfigPath).config
