@@ -19,6 +19,7 @@
 
 ### Minor Changes
 * Mimosa will no longer look up the file structure attempting to find a mimosa-config.  If a mimosa-config isn't found in the current working directory, Mimosa will attempt to run in that directory using the default configuration.
+* mimosa #134, fixing scope issue in jade-runtime client library
 
 # 0.8.9 - Feb 01 2013
 
