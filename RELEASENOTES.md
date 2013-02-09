@@ -5,17 +5,17 @@ Big release with three big new features.  Also a few minor breaking changes, so 
 ### Major Changes
 * mimosa #125, Mimosa will now allow you to take multiple folders worth of micro-templates and bundle them together into separate compiled and merged template files.  So, for example, if you've got two pages, `search` and `user`, which each have many templates of their own (inside `search` and `user` directories), but that also share common templates from a `shared` folder you can now configure that like so:
 
-```
-template:
-  output: [{
-    folders:["search","shared"]
-    outputFileName: "search_templates"
-  },
-  {
-    folders:["user","shared"]
-    outputFileName: "user_templates"
-  }]
-```
+  ```
+  template:
+    output: [{
+      folders:["search","shared"]
+      outputFileName: "search_templates"
+    },
+    {
+      folders:["user","shared"]
+      outputFileName: "user_templates"
+    }]
+  ```
 
   This will result in two template files being created, one for each page, each containing the page specific templates and those from the shared directory.
 
