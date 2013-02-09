@@ -143,7 +143,7 @@ configured = (moduleNames, callback) ->
 
           process.exit 1
         else
-          logger.success "'#{fullModName}' successful installed into your Mimosa."
+          logger.success "[[ #{fullModName}' ]] successful installed into your Mimosa."
 
           modPath = path.join mimosaPath, "node_modules", modName
           Object.keys(require.cache).forEach (key) ->
