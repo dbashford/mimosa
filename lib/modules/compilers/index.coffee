@@ -1,10 +1,11 @@
 "use strict"
 
 path = require 'path'
+fs =   require 'fs'
 
-_ = require 'lodash'
+_ =      require 'lodash'
 logger = require 'logmimosa'
-wrench = require('wrench')
+wrench = require 'wrench'
 
 baseDirRegex = /([^[\/\\\\]*]*)$/
 
@@ -135,17 +136,19 @@ class MimosaCompilerModule
                                           # the extensions configured for a compiler in the
                                           # compilers.extensionOverrides section above.
 
-        # outputFiles: [{                 # outputFileName Alternate Config 2
-        #   folder:""                     # Use outputFiles instead of outputFileName if you want
+        # output: [{                      # output Alternate Config 2
+        #   folders:[""]                  # Use output instead of outputFileName if you want
         #   outputFileName: ""            # to break up your templates into multiple files, for
         # }]                              # instance, if you have a two page app and want the
                                           # templates for each page to be built separately.
-                                          # For each entry, provide a folder.  folder is relative
-                                          # to watch.javascriptDir and must exist.  outputFileName
-                                          # works identically to outputFileName above, including
-                                          # the alternate config, however, no default file name is
-                                          # assumed. An output name must be provided for each
-                                          # outputFiles entry, and the names must be unique.
+                                          # For each entry, provide an array of folders that
+                                          # contain the templates to combine.  folders entries are
+                                          # relative to watch.javascriptDir and must exist.
+                                          # outputFileName works identically to outputFileName
+                                          # above, including the alternate config, however, no
+                                          # default file name is assumed. An output name must be
+                                          # provided for each output entry, and the names
+                                          # must be unique.
 
         # helperFiles:["app/template/handlebars-helpers"]  # relevant to handlebars only, the paths
                                           # from watch.javascriptDir to the files containing
@@ -181,42 +184,51 @@ class MimosaCompilerModule
               errors.push "compilers.extensionOverrides must be an array."
 
     if validators.ifExistsIsObject(errors, "template config", config.template)
-      if config.template.outputFiles and config.template.outputFileName
+      if config.template.output and config.template.outputFileName
         delete config.template.outputFileName
 
       validTCompilers = ["handlebars", "dust", "hogan", "jade", "underscore", "lodash", "ejs", "html"]
 
       if config.template.outputFileName?
-        config.template.outputFiles = [{
-          folder:""
+        config.template.output = [{
+          folders:[""]
           outputFileName:config.template.outputFileName
         }]
 
-      if validators.ifExistsIsArrayOfObjects(errors, "template.outputFiles", config.template.outputFiles)
+      if validators.ifExistsIsArrayOfObjects(errors, "template.output", config.template.output)
         fileNames = []
+        for outputConfig in config.template.output
+          if validators.isArrayOfStringsMustExist errors, "template.templateFiles.folders", outputConfig.folders
 
-        for outputFilesConfig in config.template.outputFiles
-          if validators.stringMustExist errors, "template.templateFiles.folder", outputFilesConfig.folder
-            outputFilesConfig.folder = path.join config.watch.sourceDir, config.watch.javascriptDir, outputFilesConfig.folder
+            if outputConfig.folders.length is 0
+              errors.push "template.templateFiles.folders must have at least one entry"
+            else
+              newFolders = []
+              for folder in outputConfig.folders
+                folder = path.join config.watch.sourceDir, config.watch.javascriptDir, folder
+                unless fs.existsSync folder
+                  errors.push "template.templateFiles.folders must exist, folder resolved to [[ #{folder} ]]"
+                newFolders.push folder
+              outputConfig.folders = newFolders
 
-          if outputFilesConfig.outputFileName?
-            fName = outputFilesConfig.outputFileName
+          if outputConfig.outputFileName?
+            fName = outputConfig.outputFileName
             if typeof fName is "string"
               fileNames.push fName
             else if typeof fName is "object" and not Array.isArray(fName)
               for tComp in Object.keys(fName)
                 if validTCompilers.indexOf(tComp) is -1
-                  errors.push "template.outputFiles.outputFileName key [[ #{tComp} ]] does not match list of valid compilers: [[ #{validTCompilers.join(',')}]]"
+                  errors.push "template.output.outputFileName key [[ #{tComp} ]] does not match list of valid compilers: [[ #{validTCompilers.join(',')}]]"
                   break
                 else
                   fileNames.push fName[tComp]
             else
               errors.push "template.outputFileName must be an object or a string."
           else
-            errors.push "template.outputFiles.outputFileName must exist for each entry in array."
+            errors.push "template.output.outputFileName must exist for each entry in array."
 
         if fileNames.length isnt _.uniq(fileNames).length
-          errors.push "template.outputFiles.outputFileName names must be unique."
+          errors.push "template.output.outputFileName names must be unique."
 
       validators.ifExistsIsArrayOfStrings(errors, "template.helperFiles", config.template.helperFiles)
 

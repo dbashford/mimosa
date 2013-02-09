@@ -1,7 +1,27 @@
 # 0.9.0 - Feb ?? 2013
 
+Big release with three big new features.  Also a few minor breaking changes, so definitely check those out.  I've got a few high priority bugs I need to address after this release, but I expect the next large priority is to build a testing module.
+
 ### Major Changes
-* Mimosa now supports profile loading at startup for the `watch`, `build`, `clean` and `virgin` commands.  Those commands have a new `-P/--profile` flag that takes a string.  That string is the name of a Mimosa config file in a `profiles/` folder in the root of the project.  Profile files are simply `mimosa-config` files that override the main project `mimosa-config`.
+* mimosa #125, Mimosa will now allow you to take multiple folders worth of micro-templates and bundle them together into separate compiled and merged template files.  So, for example, if you've got two pages, `search` and `user`, which each have many templates of their own (inside `search` and `user` directories), but that also share common templates from a `shared` folder you can now configure that like so:
+
+```
+template:
+  output: [{
+    folders:["search","shared"]
+    outputFileName: "search_templates"
+  },
+  {
+    folders:["user","shared"]
+    outputFileName: "user_templates"
+  }]
+```
+
+  This will result in two template files being created, one for each page, each containing the page specific templates and those from the shared directory.
+
+  Note that the former `outputFiles` property, introduced a few releases ago, has changed to `output`, and `folder` is now `folders` and is an array as opposed to a string.  `folders` is relative to the `watch.javascriptDir` setting, and can be any number of folders.
+
+* mimosa #122, Mimosa now supports profile loading at startup for the `watch`, `build`, `clean` and `virgin` commands.  Those commands have a new `-P/--profile` flag that takes a string.  That string is the name of a Mimosa config file in a `profiles/` folder in the root of the project.  Profile files are simply `mimosa-config` files that override the main project `mimosa-config`.
 
   If this command,  `mimosa build -P jenkins`, is executed, Mimosa will look in the `profiles/` folder for a file named `jenkins.coffee` or `jenkins.js`, read that file in, and override the `mimosa-config` with the settings contained inside.
 
@@ -20,6 +40,10 @@
 ### Minor Changes
 * Mimosa will no longer look up the file structure attempting to find a mimosa-config.  If a mimosa-config isn't found in the current working directory, Mimosa will attempt to run in that directory using the default configuration.
 * mimosa #134, fixing scope issue in jade-runtime client library
+* Mimosa no longer checks every template that comprises a compiled and merged template file to determine if the template needs to be compiled.  Mimosa just performs the compilation for templates no matter what.  Previously, on startup, Mimosa would check every template file to see if it needed to compile the templates.  That was wasteful and a bit more complicated than it needed to be.  If someone clamors for it I can return to check it out, but I expect it won't be missed.
+
+### You'll need to...
+* If you were using the recently introduced `outputFiles` config, the name is now simply `output`.  And the `folder` configuration is now `folders` and is an array instead of a string.
 
 # 0.8.9 - Feb 01 2013
 

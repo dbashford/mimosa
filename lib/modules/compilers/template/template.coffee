@@ -22,44 +22,43 @@ module.exports = class TemplateCompiler
       @clientPath = path.join jsDir, 'vendor', "#{@clientLibrary}.js"
 
   registration: (config, register) ->
+    # need to put this before gatherFiles register
+    unless config.isVirgin
+      # TODO, TEST THIS
+      register ['remove'],                'init',         @_testForRemoveClientLibrary, [@extensions...]
 
     register ['buildExtension'],        'init',       @_gatherFiles,            [@extensions[0]]
     register ['add','update','remove'], 'init',       @_gatherFiles,            [@extensions...]
-    register ['buildExtension'],        'beforeRead', @_templateNeedsCompiling, [@extensions[0]]
-    register ['add','update'],          'beforeRead', @_templateNeedsCompiling, [@extensions...]
     register ['buildExtension'],        'compile',    @_compile,                [@extensions[0]]
     register ['add','update','remove'], 'compile',    @_compile,                [@extensions...]
 
     unless config.isVirgin
       register ['cleanFile'],             'init',         @_removeFiles, [@extensions...]
+
       register ['buildExtension'],        'afterCompile', @_merge,       [@extensions[0]]
       register ['add','update','remove'], 'afterCompile', @_merge,       [@extensions...]
-
-      # TODO, TEST THIS
-      register ['remove'],                'init',         @_testForRemoveClientLibrary, [@extensions...]
 
       register ['add','update'],   'afterCompile', @_readInClientLibrary,        [@extensions...]
       register ['buildExtension'], 'afterCompile', @_readInClientLibrary,        [@extensions[0]]
 
   _gatherFiles: (config, options, next) =>
     options.files = []
-    for outputFileConfig in config.template.outputFiles
+    for outputFileConfig in config.template.output
       if options.inputFile?
-        if options.inputFile.indexOf(path.join(outputFileConfig.folder, path.sep)) is 0
-          @__gatherFolderFilesForOutputFileConfig(config, options, outputFileConfig.folder)
+        for folder in outputFileConfig.folders
+          if options.inputFile.indexOf(path.join(folder, path.sep)) is 0
+            @__gatherFolderFilesForOutputFileConfig(config, options, outputFileConfig.folders)
+            break
       else
-        @__gatherFolderFilesForOutputFileConfig(config, options, outputFileConfig.folder)
+        @__gatherFolderFilesForOutputFileConfig(config, options, outputFileConfig.folders)
 
-    next()
+    next(options.files.length > 0)
 
-  __gatherFolderFilesForOutputFileConfig: (config, options, folder) =>
-    for folderFile in @__gatherFilesForFolder(config, options, folder)
-      found = false
-      for f in options.files
-        if f.inputFileName is folderFile.inputFileName
-          f.outputFolders = f.outputFolders.concat folderFile.outputFolders
-      unless found
-        options.files.push folderFile
+  __gatherFolderFilesForOutputFileConfig: (config, options, folders) =>
+    for folder in folders
+      for folderFile in @__gatherFilesForFolder(config, options, folder)
+        if _.pluck(options.files, 'inputFileName').indexOf(folderFile.inputFileName) is -1
+          options.files.push folderFile
 
   __gatherFilesForFolder: (config, options, folder) =>
     allFiles = fileUtils.readdirSyncRecursive(folder, config.watch.exclude, config.watch.excludeRegex)
@@ -78,7 +77,6 @@ module.exports = class TemplateCompiler
         inputFileName:file
         inputFileText:null
         outputFileText:null
-        outputFolders:[folder]
 
   _compile: (config, options, next) =>
     return next() if options.files?.length is 0
@@ -110,19 +108,31 @@ module.exports = class TemplateCompiler
     amdPrefix = @amdPrefix(config)
     amdSuffix = @amdSuffix()
 
-    for outputFileConfig in config.template.outputFiles
+    for outputFileConfig in config.template.output
+
+      # if post-build, need to check to see if the outputFileConfig is valid for this compile
+      if options.inputFile
+        found = false
+        for folder in outputFileConfig.folders
+          if options.inputFile.indexOf(folder) is 0
+            found = true
+            break
+        continue unless found
+
       mergedText = ""
       options.files.forEach (file) =>
-        if file.inputFileName?.indexOf(path.join(outputFileConfig.folder, path.sep)) is 0
-          unless config.isOptimize
-            mergedText += @templatePreamble file.inputFileName
-          mergedText += file.outputFileText
+        for folder in outputFileConfig.folders
+          if file.inputFileName?.indexOf(path.join(folder, path.sep)) is 0
+            unless config.isOptimize
+              mergedText += @templatePreamble file.inputFileName
+            mergedText += file.outputFileText
+            break
 
       continue if mergedText is ""
 
       options.files.push
         outputFileText: amdPrefix + mergedText + amdSuffix
-        outputFileName: options.destinationFile(@constructor.base, outputFileConfig.folder)
+        outputFileName: options.destinationFile(@constructor.base, outputFileConfig.folders)
         isTemplate:true
 
     next()
@@ -131,8 +141,8 @@ module.exports = class TemplateCompiler
     path.basename fileName, path.extname(fileName)
 
   _removeFiles: (config, options, next) =>
-    total = if config.template.outputFiles
-      config.template.outputFiles.length + 1
+    total = if config.template.output
+      config.template.output.length + 1
     else
       2
 
@@ -141,8 +151,8 @@ module.exports = class TemplateCompiler
       next() if ++i is total
 
     @removeClientLibrary(@clientPath, done)
-    for outputFileConfig in config.template.outputFiles
-      @removeClientLibrary(options.destinationFile(@constructor.base, outputFileConfig.folder), done)
+    for outputFileConfig in config.template.output
+      @removeClientLibrary(options.destinationFile(@constructor.base, outputFileConfig.folders), done)
 
   _testForRemoveClientLibrary: (config, options, next) =>
     if options.files?.length is 0
@@ -174,52 +184,8 @@ module.exports = class TemplateCompiler
       else
         templateHash[templateName] = fileName
 
-  __templateNeedsCompilingForOutput: (files, output, next) ->
-    fileNames = _.pluck(files, 'inputFileName')
-    numFiles = fileNames.length
-
-    i = 0
-    processFile = =>
-      if i < numFiles
-        fileUtils.isFirstFileNewer fileNames[i++], output, cb
-      else
-        next(false)
-
-    cb = (isNewer) =>
-      if isNewer
-        next(true)
-      else
-        processFile()
-
-    processFile()
-
-  _templateNeedsCompiling: (config, options, next) =>
-    return next(false) if options.files?.length is 0
-
-    keepFilesLog = {}
-    done = (folder, keep) ->
-      keepFilesLog[folder] = keep
-      if Object.keys(keepFilesLog).length is config.template.outputFiles.length
-        for folder, keep of keepFilesLog
-          unless keep
-            for f in options.files
-              if f.outputFolders
-                f.outputFolders = _.without(f.outputFolders, folder)
-
-        newFiles = []
-        for f in options.files
-          if f.outputFolders?.length > 0
-            newFiles.push f
-        options.files = newFiles
-        next()
-
-    config.template.outputFiles.forEach (outputFilesConfig) =>
-      destFile = options.destinationFile(@constructor.base, outputFilesConfig.folder)
-      files = options.files.filter (f) -> f.outputFolders?.indexOf(outputFilesConfig.folder) isnt -1
-      @__templateNeedsCompilingForOutput files, destFile, (keepFiles) ->
-        done(outputFilesConfig.folder, keepFiles)
-
   _readInClientLibrary: (config, options, next) =>
+
     if !@clientPath? or fs.existsSync @clientPath
       logger.debug "Not going to write template client library"
       return next()
