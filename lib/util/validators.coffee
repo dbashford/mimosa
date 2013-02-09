@@ -130,11 +130,15 @@ exports.isArrayOfStringsMustExist = (errors, fld, obj) ->
       for s in obj
         unless typeof s is "string"
           errors.push "#{fld} must be an array of strings."
-          break
+          return false
     else
       errors.push "#{fld} configuration must be an array."
+      return false
   else
     errors.push "#{fld} must be present."
+    return false
+
+  true
 
 exports.multiPathMustExist = (errors, fld, pathh, relTo) ->
   if typeof pathh is "string"
