@@ -28,7 +28,8 @@ locallyInstalled = if fs.existsSync projectPackageJsonPath
           require path.join projectNodeModules, dep
           true
         catch err
-          false
+          logger.error "Error pulling in local Mimosa module: #{err}"
+          process.exit 1
       .map (dep) ->
         local: true
         name: dep
