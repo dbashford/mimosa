@@ -1,5 +1,8 @@
 # 0.9.1 - Feb ?? 2013
 
+### Minor Changes
+* If a project scoped Mimosa module errors out upon requiring, Mimosa now exits.
+
 # 0.9.0 - Feb 12 2013
 
 Big release with three big new features.  Also a few minor breaking changes, so definitely check those out.  I've got a few high priority bugs I need to address after this release, but I expect the next large priority is to build a testing module.
