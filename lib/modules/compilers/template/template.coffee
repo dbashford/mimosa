@@ -25,12 +25,12 @@ module.exports = class TemplateCompiler
     # need to put this before gatherFiles register
     unless config.isVirgin
       # TODO, TEST THIS
-      register ['remove'],                'init',         @_testForRemoveClientLibrary, [@extensions...]
+      register ['remove'], 'init', @_testForRemoveClientLibrary, [@extensions...]
 
-    register ['buildExtension'],        'init',       @_gatherFiles,            [@extensions[0]]
-    register ['add','update','remove'], 'init',       @_gatherFiles,            [@extensions...]
-    register ['buildExtension'],        'compile',    @_compile,                [@extensions[0]]
-    register ['add','update','remove'], 'compile',    @_compile,                [@extensions...]
+    register ['buildExtension'],        'init',       @_gatherFiles, [@extensions[0]]
+    register ['add','update','remove'], 'init',       @_gatherFiles, [@extensions...]
+    register ['buildExtension'],        'compile',    @_compile,     [@extensions[0]]
+    register ['add','update','remove'], 'compile',    @_compile,     [@extensions...]
 
     unless config.isVirgin
       register ['cleanFile'],             'init',         @_removeFiles, [@extensions...]
@@ -38,8 +38,8 @@ module.exports = class TemplateCompiler
       register ['buildExtension'],        'afterCompile', @_merge,       [@extensions[0]]
       register ['add','update','remove'], 'afterCompile', @_merge,       [@extensions...]
 
-      register ['add','update'],   'afterCompile', @_readInClientLibrary,        [@extensions...]
-      register ['buildExtension'], 'afterCompile', @_readInClientLibrary,        [@extensions[0]]
+      register ['add','update'],   'afterCompile', @_readInClientLibrary, [@extensions...]
+      register ['buildExtension'], 'afterCompile', @_readInClientLibrary, [@extensions[0]]
 
   _gatherFiles: (config, options, next) =>
     options.files = []
@@ -72,7 +72,6 @@ module.exports = class TemplateCompiler
     if fileNames.length is 0
       []
     else
-      @_testForSameTemplateName(fileNames) unless fileNames.length is 1
       fileNames.map (file) ->
         inputFileName:file
         inputFileText:null
@@ -120,13 +119,17 @@ module.exports = class TemplateCompiler
         continue unless found
 
       mergedText = ""
+      mergedFiles = []
       options.files.forEach (file) =>
         for folder in outputFileConfig.folders
           if file.inputFileName?.indexOf(path.join(folder, path.sep)) is 0
+            mergedFiles.push file.inputFileName
             unless config.isOptimize
               mergedText += @templatePreamble file.inputFileName
             mergedText += file.outputFileText
             break
+
+      @__testForSameTemplateName(mergedFiles) unless mergedFiles.length <= 1
 
       continue if mergedText is ""
 
@@ -174,7 +177,7 @@ module.exports = class TemplateCompiler
     else
       cb()
 
-  _testForSameTemplateName: (fileNames) ->
+  __testForSameTemplateName: (fileNames) ->
     templateHash = {}
     fileNames.forEach (fileName) ->
       templateName = path.basename(fileName, path.extname(fileName))
