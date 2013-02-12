@@ -2,6 +2,7 @@
 
 ### Minor Changes
 * If a project scoped Mimosa module errors out upon requiring, Mimosa now exits.
+* mimosa-web-package, with `0.9.0` Mimosa modules can be in a project's package.json. Now Mimosa module dependencies are removed from the package.json before it is written into the `dist` directory.
 
 # 0.9.0 - Feb 12 2013
 
