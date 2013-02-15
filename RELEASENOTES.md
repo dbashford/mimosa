@@ -1,5 +1,8 @@
 # 0.9.1 - Feb ?? 2013
 
+### Major Changes
+* mimosa #140, Mimosa's template compilers will now allow combined/merged template file compilation without the AMD wrapper.  A new property `amdWrap` has been added to the `template` config.  It defaults to `true`.  When set to `false`, Mimosa will not AMD wrap the compiled template files.
+
 ### Minor Changes
 * mimosa, fixed template name collision issue
 * If a project scoped Mimosa module errors out upon requiring, Mimosa now exits.
