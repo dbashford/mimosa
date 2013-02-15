@@ -106,6 +106,7 @@ class MimosaCompilerModule
     compilers:
       extensionOverrides: {}
     template:
+      amdWrap:true
       outputFileName: "templates"
       helperFiles:["app/template/handlebars-helpers"]
     copy:
@@ -125,6 +126,8 @@ class MimosaCompilerModule
                                     # array of strings
 
       # template:
+        # amdWrap: true                   # Whether or not to wrap the compiled template files in
+                                          # an AMD wrapper for use with require.js
         # outputFileName: "templates"     # the file all templates are compiled into, is relative
                                           # to watch.javascriptDir.
 
@@ -186,6 +189,8 @@ class MimosaCompilerModule
     if validators.ifExistsIsObject(errors, "template config", config.template)
       if config.template.output and config.template.outputFileName
         delete config.template.outputFileName
+
+      validators.ifExistsIsBoolean(errors, "template.amdWrap", config.template.amdWrap)
 
       validTCompilers = ["handlebars", "dust", "hogan", "jade", "underscore", "lodash", "ejs", "html"]
 

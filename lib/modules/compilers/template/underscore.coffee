@@ -7,11 +7,17 @@ module.exports = class AbstractUnderscoreCompiler extends TemplateCompiler
   constructor: (config) ->
     super(config)
 
-  amdPrefix: ->
-    "define(['#{@libraryPath()}'], function (_) { var templates = {};\n"
+  prefix: (config) ->
+    if config.template.amdWrap
+      "define(['#{@libraryPath()}'], function (_) { var templates = {};\n"
+    else
+      "var templates = {};\n"
 
-  amdSuffix: ->
-    'return templates; });'
+  suffix: (config) ->
+    if config.template.amdWrap
+      'return templates; });'
+    else
+      ""
 
   compile: (file, templateName, cb) =>
     try

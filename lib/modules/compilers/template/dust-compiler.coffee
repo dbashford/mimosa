@@ -15,11 +15,17 @@ module.exports = class DustCompiler extends TemplateCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  amdPrefix: ->
-    "define(['#{@libraryPath()}'], function (dust){ "
+  prefix: (config) ->
+    if config.template.amdWrap
+      "define(['#{@libraryPath()}'], function (dust){ "
+    else
+      ""
 
-  amdSuffix: ->
-    'return dust; });'
+  suffix: (config) ->
+    if config.template.amdWrap
+      'return dust; });'
+    else
+      ""
 
   compile: (file, templateName, cb) ->
     try

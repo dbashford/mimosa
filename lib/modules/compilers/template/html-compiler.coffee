@@ -14,11 +14,17 @@ module.exports = class HTMLCompiler extends TemplateCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  amdPrefix: ->
-    "define(function () { var templates = {};\n"
+  prefix: (config) ->
+    if config.template.amdWrap
+      "define(function () { var templates = {};\n"
+    else
+      "var templates = {};\n"
 
-  amdSuffix: ->
-    'return templates; });'
+  suffix: (config) ->
+    if config.template.amdWrap
+      'return templates; });'
+    else
+      ""
 
   compile: (file, templateName, cb) =>
     # we don't want underscore to actually work, just to wrap stuff

@@ -104,8 +104,8 @@ module.exports = class TemplateCompiler
   _merge: (config, options, next) =>
     return next() unless options.files?.length > 0
 
-    amdPrefix = @amdPrefix(config)
-    amdSuffix = @amdSuffix()
+    prefix = @prefix config
+    suffix = @suffix config
 
     for outputFileConfig in config.template.output
 
@@ -134,7 +134,7 @@ module.exports = class TemplateCompiler
       continue if mergedText is ""
 
       options.files.push
-        outputFileText: amdPrefix + mergedText + amdSuffix
+        outputFileText: prefix + mergedText + suffix
         outputFileName: options.destinationFile(@constructor.base, outputFileConfig.folders)
         isTemplate:true
 

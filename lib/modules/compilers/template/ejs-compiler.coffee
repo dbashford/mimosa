@@ -11,12 +11,7 @@ module.exports = class EJSCompiler extends TemplateCompiler
   @prettyName        = "Embedded JavaScript Templates (EJS) - https://github.com/visionmedia/ejs"
   @defaultExtensions = ["ejs"]
 
-  constructor: (config, @extensions) ->
-    super(config)
-
-  amdPrefix: ->
-    """
-    define(['#{@libraryPath()}'], function (globalFilters){
+  boilerplate: """
     var templates = {};
     var globalEscape = function(html){
       return String(html)
@@ -25,10 +20,26 @@ module.exports = class EJSCompiler extends TemplateCompiler
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
     };
-    """
+  """
 
-  amdSuffix: ->
-    'return templates; });'
+  constructor: (config, @extensions) ->
+    super(config)
+
+  prefix: (config) ->
+    if config.template.amdWrap
+      """
+      define(['#{@libraryPath()}'], function (globalFilters){
+        #{@boilerplate}
+      """
+    else
+      @boilerplate
+
+
+  suffix: (config) ->
+    if config.template.amdWrap
+      'return templates; });'
+    else
+      ""
 
   compile: (file, templateName, cb) =>
     try
