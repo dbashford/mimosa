@@ -13,10 +13,11 @@
 
 ### You'll need to...
 * If you were using the `handlebarsHelpers` config, you'll need to change that config around.  `handlebarsHelpers:[]` should now look like this:
-```
-handlebars:
-  helpers:[]
-```
+
+  ```
+    handlebars:
+      helpers:[]
+  ```
 
 # 0.9.0 - Feb 12 2013
 
