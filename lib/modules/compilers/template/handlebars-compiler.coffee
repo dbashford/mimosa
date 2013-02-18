@@ -48,7 +48,7 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
       jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
       possibleHelperPaths = []
       for ext in config.extensions.javascript
-        for helperFile in config.template.helperFiles
+        for helperFile in config.template.handlebars.helpers
           possibleHelperPaths.push path.join(jsDir, "#{helperFile}.#{ext}")
       helperPaths = possibleHelperPaths.filter (p) -> fs.existsSync(p)
 

@@ -6,10 +6,17 @@
 ### Minor Changes
 * mimosa, fixed template name collision issue
 * If a project scoped Mimosa module errors out upon requiring, Mimosa now exits.
+* mimosa #142, moved `handlebarsHelpers:[]` into `handlebars:helpers:[]` to make way for more template specific config.
 * mimosa-web-package, with `0.9.0` Mimosa modules can be in a project's package.json. Now Mimosa module dependencies are removed from the package.json before it is written into the `dist` directory.
 * mimosa-require-commonjs #2, fixed issue with empty output from .d.ts files
 * mimosa-require-commonjs #3, fixed issue with excludes not working properly
 
+### You'll need to...
+* If you were using the `handlebarsHelpers` config, you'll need to change that config around.  `handlebarsHelpers:[]` should now look like this:
+```
+handlebars:
+  helpers:[]
+```
 
 # 0.9.0 - Feb 12 2013
 

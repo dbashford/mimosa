@@ -108,7 +108,8 @@ class MimosaCompilerModule
     template:
       amdWrap:true
       outputFileName: "templates"
-      helperFiles:["app/template/handlebars-helpers"]
+      handlebars:
+        helpers:["app/template/handlebars-helpers"]
     copy:
       extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd"]
     typescript:
@@ -153,9 +154,10 @@ class MimosaCompilerModule
                                           # provided for each output entry, and the names
                                           # must be unique.
 
-        # helperFiles:["app/template/handlebars-helpers"]  # relevant to handlebars only, the paths
-                                          # from watch.javascriptDir to the files containing
-                                          # handlebars helper/partial registrations
+        # handlebars:                     # handlebars specific configuration
+          # helpers:["app/template/handlebars-helpers"]  # the paths from watch.javascriptDir to
+                                          # the files containing handlebars helper/partial
+                                          # registrations
 
       ###
       # the extensions of files to copy from sourceDir to compiledDir. vendor js/css, images, etc.
@@ -235,7 +237,8 @@ class MimosaCompilerModule
         if fileNames.length isnt _.uniq(fileNames).length
           errors.push "template.output.outputFileName names must be unique."
 
-      validators.ifExistsIsArrayOfStrings(errors, "template.helperFiles", config.template.helperFiles)
+      if validators.ifExistsIsObject(errors, "template handlebars config", config.template.handlebars)
+        validators.ifExistsIsArrayOfStrings(errors, "handlebars.helpers", config.template.handlebars.helpers)
 
 
     if validators.ifExistsIsObject(errors, "copy config", config.copy)
