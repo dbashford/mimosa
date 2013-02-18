@@ -157,9 +157,10 @@ module.exports = class AbstractCSSCompiler
     logger.debug "Imports for file [[ #{file} ]]: #{imports}"
 
     for anImport in imports
+
       @importRegex.lastIndex = 0
       importPath = @importRegex.exec(anImport)[1]
-      fullImportFilePath = @_getImportFilePath(baseFile, importPath)
+      fullImportFilePath = @_getImportFilePath(file, importPath)
 
       includeFiles = @allFiles.filter (f) =>
         f = f.replace(path.extname(f), '') unless @partialKeepsExtension
