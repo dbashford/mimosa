@@ -110,6 +110,9 @@ class MimosaCompilerModule
       outputFileName: "templates"
       handlebars:
         helpers:["app/template/handlebars-helpers"]
+        ember:
+          enabled:false
+          path:"vendor/ember"
     copy:
       extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd"]
     typescript:
@@ -158,6 +161,12 @@ class MimosaCompilerModule
           # helpers:["app/template/handlebars-helpers"]  # the paths from watch.javascriptDir to
                                           # the files containing handlebars helper/partial
                                           # registrations
+          # ember:                        # Ember.js has its own Handlebars compilation needs,
+                                          # use this config block to provide Ember specific
+                                          # Handlebars configuration.
+            # enabled: false              # Whether or not to use the Ember Handlebars compiler
+            # path: "vendor/ember"        # location of the Ember library, this is used as
+                                          # as a dependency in the compiled templates.
 
       ###
       # the extensions of files to copy from sourceDir to compiledDir. vendor js/css, images, etc.
@@ -237,8 +246,12 @@ class MimosaCompilerModule
         if fileNames.length isnt _.uniq(fileNames).length
           errors.push "template.output.outputFileName names must be unique."
 
-      if validators.ifExistsIsObject(errors, "template handlebars config", config.template.handlebars)
+      if validators.ifExistsIsObject(errors, "template.handlebars", config.template.handlebars)
         validators.ifExistsIsArrayOfStrings(errors, "handlebars.helpers", config.template.handlebars.helpers)
+
+        if validators.ifExistsIsObject(errors, "template.handlebars.ember", config.template.handlebars.ember)
+          validators.ifExistsIsBoolean(errors, "template.handlebars.ember.enabled", config.template.handlebars.ember.enabled)
+          validators.ifExistsIsString(errors, "template.handlebars.ember.path", config.template.handlebars.ember.path)
 
 
     if validators.ifExistsIsObject(errors, "copy config", config.copy)

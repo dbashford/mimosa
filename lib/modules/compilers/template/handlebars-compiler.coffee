@@ -3,7 +3,7 @@
 fs =         require 'fs'
 path =       require 'path'
 
-handlebars = require 'handlebars'
+handlebars = null
 _ =          require 'lodash'
 logger =     require 'logmimosa'
 
@@ -17,7 +17,8 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
 
   clientLibrary: "handlebars"
 
-  boilerplate: """
+  boilerplate:
+    """
     if (!Handlebars) {
       console.log("Handlebars library has not been passed in successfully");
       return;
@@ -37,10 +38,28 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
     }
 
     var template = Handlebars.template, templates = {};\n
-  """
+    """
+
+  emberBoilerplate:
+    """
+    var template = Ember.Handlebars.template, templates = {};\n
+    """
+
+  boilerplate: =>
+    if @ember
+      @emberBoilerplate
+    else
+      @regularBoilerplate
 
   constructor: (config, @extensions) ->
     super(config)
+
+    @ember = config.template.handlebars.ember.enabled
+    handlebars = if @ember
+      @clientLibrary = null
+      require 'ember-precompile'
+    else
+      require 'handlebars'
 
   prefix: (config) =>
     if config.template.amdWrap
@@ -52,7 +71,11 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
           possibleHelperPaths.push path.join(jsDir, "#{helperFile}.#{ext}")
       helperPaths = possibleHelperPaths.filter (p) -> fs.existsSync(p)
 
-      defines = ["'#{@libraryPath()}'"]
+      {defines, params} = if @ember
+        {defines:["'#{config.template.handlebars.ember.path}'"], params:["Ember"]}
+      else
+        {defines:["'#{@libraryPath()}'"], params:["Handlebars"]}
+
       for helperPath in helperPaths
         helperDefine = helperPath.replace(config.watch.sourceDir, '').replace(/\\/g, '/').replace(/^\/?\w+\/|\.\w+$/g, '')
         defines.push "'#{helperDefine}'"
@@ -61,11 +84,11 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
       logger.debug "Define string for Handlebars templates [[ #{defineString} ]]"
 
       """
-      define([#{defineString}], function (Handlebars){
-        #{@boilerplate}
+      define([#{defineString}], function (#{params.join(',')}){
+        #{@boilerplate()}
       """
     else
-      @boilerplate
+      @boilerplate()
 
   suffix: (config) ->
     if config.template.amdWrap
@@ -75,10 +98,16 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
 
   compile: (file, templateName, cb) =>
     try
-      compiledOutput = handlebars.precompile file.inputFileText
-      compiledOutput = compiledOutput.replace("partials || Handlebars.partials;",
-        "partials || Handlebars.partials; if (Object.keys(partials).length == 0) {partials = templates;}")
-      output = "template(#{compiledOutput})"
+      output = if @ember
+        out = handlebars file.inputFileName
+        "Ember.TEMPLATES['#{templateName}'] = #{out}"
+      else
+        out = handlebars.precompile file.inputFileText
+        out = out.replace("partials || Handlebars.partials;",
+          "partials || Handlebars.partials; if (Object.keys(partials).length == 0) {partials = templates;}")
+        out += "template(#{compiledOutput})"
+        out
+
     catch err
       error = err
     cb(error, output)
