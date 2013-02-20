@@ -7,6 +7,7 @@
 * mimosa, fixed template name collision issue
 * If a project scoped Mimosa module errors out upon requiring, Mimosa now exits.
 * mimosa #133, complex folder structures for stylesheets no longer causing issues with proper stylesheets being compiled
+* mimosa #137, handling file extensions properly in mimosa-require for dependencies aliased by directory
 * mimosa #142, moved `handlebarsHelpers:[]` into `handlebars:helpers:[]` to make way for more template specific config.
 * mimosa #143, update client and server handlebars to latest version
 * mimosa-web-package, with `0.9.0` Mimosa modules can be in a project's package.json. Now Mimosa module dependencies are removed from the package.json before it is written into the `dist` directory.
