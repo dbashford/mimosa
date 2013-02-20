@@ -57,7 +57,7 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
     @ember = config.template.handlebars.ember.enabled
     handlebars = if @ember
       @clientLibrary = null
-      require 'ember-precompile'
+      require 'ember-template-precompile'
     else
       require 'handlebars'
 
@@ -97,17 +97,17 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
       ""
 
   compile: (file, templateName, cb) =>
-    try
-      output = if @ember
-        out = handlebars file.inputFileName
-        "Ember.TEMPLATES['#{templateName}'] = #{out}"
-      else
-        out = handlebars.precompile file.inputFileText
-        out = out.replace("partials || Handlebars.partials;",
+    if @ember
+      handlebars file.inputFileText, (error, out) ->
+        unless error
+          output = "Ember.TEMPLATES['#{templateName}'] = #{out}"
+        cb(error, output)
+    else
+      try
+        output = handlebars.precompile file.inputFileText
+        output = output.replace("partials || Handlebars.partials;",
           "partials || Handlebars.partials; if (Object.keys(partials).length == 0) {partials = templates;}")
-        out += "template(#{compiledOutput})"
-        out
-
-    catch err
-      error = err
-    cb(error, output)
+        output += "template(#{compiledOutput})"
+      catch err
+        error = err
+      cb(error, output)
