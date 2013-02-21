@@ -17,7 +17,7 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
 
   clientLibrary: "handlebars"
 
-  boilerplate:
+  regularBoilerplate:
     """
     if (!Handlebars) {
       console.log("Handlebars library has not been passed in successfully");
@@ -98,16 +98,22 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
 
   compile: (file, templateName, cb) =>
     if @ember
-      handlebars file.inputFileText, (error, out) ->
+      handlebars file.inputFileText, (error, out) =>
         unless error
-          output = "Ember.TEMPLATES['#{templateName}'] = #{out}"
+          output = @transformTemplate out
+          output = "Ember.TEMPLATES['#{templateName}'] = #{output}"
         cb(error, output)
     else
       try
         output = handlebars.precompile file.inputFileText
-        output = output.replace("partials || Handlebars.partials;",
-          "partials || Handlebars.partials; if (Object.keys(partials).length == 0) {partials = templates;}")
-        output += "template(#{compiledOutput})"
+        output = @transformTemplate output
       catch err
         error = err
       cb(error, output)
+
+  transformTemplate: (text) ->
+    text = text.replace("partials || Handlebars.partials;",
+      "partials || Handlebars.partials; if (Object.keys(partials).length == 0) {partials = templates;}")
+    "template(#{text})"
+
+
