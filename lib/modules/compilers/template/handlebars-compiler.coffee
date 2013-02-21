@@ -115,5 +115,3 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
     text = text.replace("partials || Handlebars.partials;",
       "partials || Handlebars.partials; if (Object.keys(partials).length == 0) {partials = templates;}")
     "template(#{text})"
-
-
