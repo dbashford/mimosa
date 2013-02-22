@@ -1,6 +1,17 @@
 # 0.9.1 - Feb ?? 2013
 
 ### Major Changes
+* mimosa #135, Mimosa's handlebars template compiler will now compile Ember.js templates. To enable Ember compiling, inside the `template.handlebars` config, place an `ember` object like so:
+
+  ```
+    template:
+      handlebars:
+        ember:
+          enabled:true
+          path:"vendor/ember"
+  ```
+
+  The `enabled` flag turns on Ember compiling, and the path string is the AMD location of the Ember library, which is built into the AMD wrapper for the compiled templates.
 * mimosa #140, Mimosa's template compilers will now allow combined/merged template file compilation without the AMD wrapper.  A new property `amdWrap` has been added to the `template` config.  It defaults to `true`.  When set to `false`, Mimosa will not AMD wrap the compiled template files.
 
 ### Minor Changes
