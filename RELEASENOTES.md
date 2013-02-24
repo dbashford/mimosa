@@ -1,4 +1,8 @@
-# 0.9.1 - Feb ?? 2013
+# 0.10.0 - Feb ?? 2013
+
+Jumping up to `0.10.0` as there are a few breaking changes, so check out the "You'll need to..." section below.
+
+Updates to how templating is handle has been a theme, and this release continues that. Added Ember.Handlebars and the ability to skip the AMD wrapping of compiled templates. Also added more robust routing capabilities to the default server.
 
 ### Major Changes
 * mimosa #135, Mimosa's handlebars template compiler will now compile Ember.js templates. To enable Ember compiling, inside the `template.handlebars` config, place an `ember` object like so:
@@ -13,6 +17,7 @@
 
   The `enabled` flag turns on Ember compiling, and the path string is the AMD location of the Ember library, which is built into the AMD wrapper for the compiled templates.
 * mimosa #140, Mimosa's template compilers will now allow combined/merged template file compilation without the AMD wrapper.  A new property `amdWrap` has been added to the `template` config.  It defaults to `true`.  When set to `false`, Mimosa will not AMD wrap the compiled template files.
+* mimosa #144, Mimosa's default server got a bit of an overhaul.  The `server.useDefaultServer` property is now `server.defaultServer.enable` to make way for more `defaultServer` config.  Added to `defaultServer` is a `onePager` boolean that defaults to `false`. When set to `true` Mimosa will route all traffic through the `index` view. This allows for complex URLs like `url:3000/user/steve` to route to the `index` view and then be handled by client routing code. When `onePager` is set to `false`, Mimosa will route all traffic to assumed view names. `url:3000/` will go to `index` as expected, but now `url:3000/foo` will go to `foo` and so on.
 
 ### Minor Changes
 * mimosa, fixed template name collision issue
@@ -28,9 +33,18 @@
 ### You'll need to...
 * If you were using the `helperFiles` config, you'll need to change that config around.  `helperFiles:[]` should now look like this:
 
-  ```
+  ```coffeescript
     handlebars:
       helpers:[]
+  ```
+
+* `server.useDefaultServer` is now `server.defaultServer.enabled`.  Also added is a `server.defaultServer.onePager` boolean which defaults to `false`. If you were relying on Mimosa's default server to route all paths through the index page, then you will want to set `onePager` to `true`. The default for this was essentially `true` prior to this release.
+
+  ```coffeescript
+    server:
+      defaultServer:
+        enabled: true
+        onePager: true
   ```
 
 # 0.9.0 - Feb 12 2013

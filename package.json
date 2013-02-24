@@ -46,7 +46,9 @@
     "hint",
     "brunch",
     "grunt",
-    "yeoman"
+    "yeoman",
+    "server",
+    "express"
   ],
   "dependencies": {
     "jade": "0.28.1",
@@ -54,8 +56,8 @@
     "ember-template-precompile": "0.2.0",
     "dustjs-linkedin": "1.1.1",
     "hogan.js": "2.0.0",
-    "lodash": "1.0.0-rc.3",
-    "underscore": "1.4.3",
+    "lodash": "1.0.1",
+    "underscore": "1.4.4",
     "ejs": "0.8.3",
     "coffee-script": "1.4.0",
     "iced-coffee-script": "1.4.0a",
@@ -68,7 +70,7 @@
     "commander": "1.1.1",
     "chokidar": "0.5.3",
     "logmimosa": "0.4.0",
-    "mimosa-server": "0.6.3",
+    "mimosa-server": "0.7.1",
     "mimosa-require": "0.6.5",
     "mimosa-minify": "0.6.2",
     "mimosa-lint": "0.5.2",

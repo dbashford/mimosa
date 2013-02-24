@@ -276,9 +276,11 @@ class NewCommand
     fs.unlinkSync path.join(@currPath, "package.json")
     wrench.rmdirSyncRecursive path.join(@currPath, "servers")
 
-    logger.debug "Altering configuration to not use server"
+# enabled: false           # whether
+
     @config = @config.replace "# server:", "server:"
-    @config = @config.replace "# useDefaultServer: false", "useDefaultServer: true"
+    @config = @config.replace "# defaultServer:", "defaultServer:"
+    @config = @config.replace "# enabled: false           # whether", "enabled: true              # whether"
     @_done()
 
   _usingOwnServer: (name, chosen) ->
