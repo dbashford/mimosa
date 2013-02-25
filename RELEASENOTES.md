@@ -1,4 +1,12 @@
+# 0.10.2 - Feb ?? 2013
+
+### Major Changes
+
+* Auto-installed modules, those discovered in the `modules` array but not discovered installed in any of Mimosa's module scopes, will now install into the project scope. This should alleviate permissions issues with installing modules into Mimosa itself.
+
 # 0.10.1 - Feb 25 2013
+
+### Major Changes
 
 * mimosa #145, added [Emblem](http://emblemjs.com/) compiler. Emblem is wicked cool, it is very Jade/HAML like and parses to a [Handlebars](http://handlebarsjs.com/) [AST](http://en.wikipedia.org/wiki/Abstract_syntax_tree) which can then be passed to Handlebars for precompilation. The output of precompilation is the same as the output for pure Handlebars precompilation. This is awesome for folks that need to use Handlebars (Ember.js folks) but prefer a terser syntax.
 

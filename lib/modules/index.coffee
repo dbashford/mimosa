@@ -16,12 +16,9 @@ configuredModules = null
 
 isMimosaModuleName = (str) -> str.indexOf('mimosa-') > -1
 
-projectPackageJsonPath = path.resolve process.cwd, 'package.json'
-locallyInstalled = if fs.existsSync projectPackageJsonPath
-    projectNodeModules = path.resolve process.cwd, 'node_modules'
-    projPack = require projectPackageJsonPath
-    _(projPack.dependencies)
-      .keys()
+projectNodeModules = path.resolve process.cwd, 'node_modules'
+locallyInstalled = if fs.existsSync projectNodeModules
+    _(fs.readdirSync projectNodeModules)
       .select(isMimosaModuleName)
       .select (dep) ->
         try
@@ -127,42 +124,37 @@ configured = (moduleNames, callback) ->
     if found
       processModule()
     else
-      logger.info "Module [[ #{fullModName} ]] not installed inside your Mimosa, attempting to install it from NPM into your Mimosa."
+      logger.info "Module [[ #{fullModName} ]] cannot be found, attempting to install it from NPM into your project."
 
       currentDir = process.cwd()
-      mimosaPath = path.join __dirname, '..', '..'
-      process.chdir mimosaPath
-
-      installString = "npm install #{fullModName} --save"
+      installString = "npm install #{fullModName}"
       exec installString, (err, sout, serr) =>
         if err
           console.log ""
           logger.error "Unable to install [[ #{fullModName} ]]\n"
           logger.info "Does the module exist in npm (https://npmjs.org/package/#{fullModName})?\n"
-          logger.info "Or, if your Mimosa is installed globally, might there be permissions issues with installing global npm packages? If you do not have the rights to do an 'npm install -g', modules will not install.\n"
           logger.error err
 
           process.exit 1
         else
-          logger.success "[[ #{fullModName} ]] successful installed into your Mimosa."
+          logger.success "[[ #{fullModName} ]] successfully installed into your project."
 
-          modPath = path.join mimosaPath, "node_modules", modName
+          modPath = path.join currentDir, "node_modules", modName
           Object.keys(require.cache).forEach (key) ->
             if key.indexOf(modPath) is 0
               delete require.cache[key]
 
           try
-            configuredModules.push(require modName)
+            configuredModules.push(require modPath)
           catch err
             logger.warn "There was an error attempting to include the newly installed module in the currently running Mimosa process," +
-              "but the install was successful. Mimosa is exiting. When it is restarted, Mimosa will use the newly installed module."
+              " but the install was successful. Mimosa is exiting. When it is restarted, Mimosa will use the newly installed module."
             logger.debug err
 
             process.exit 0
 
         logger.debug "NPM INSTALL standard out\n#{sout}"
         logger.debug "NPM INSTALL standard err\n#{serr}"
-        process.chdir currentDir
         processModule()
 
   processModule()
@@ -174,9 +166,6 @@ modulesWithCommands = ->
   for mod in all
     if mod.registerCommand?
       mods.push mod
-
-  #logger.info "There are #{mods.length} command mods"
-
   mods
 
 module.exports =
