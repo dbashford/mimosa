@@ -224,7 +224,7 @@ class NewCommand
             isSafe = false
 
         isSafe = false if filePath.indexOf('handlebars-helpers') >= 0 and
-          not comps.template.defaultExtensions.some (ext) -> ext is "hbs"
+          not comps.template.defaultExtensions.some (ext) -> ext is "hbs" or ext is "emblem"
 
       fs.unlink filePath unless isSafe
 
