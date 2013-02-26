@@ -8,7 +8,7 @@
 
 ### Major Changes
 
-* mimosa #145, added [Emblem](http://emblemjs.com/) compiler. Emblem is wicked cool, it is very Jade/HAML like and parses to a [Handlebars](http://handlebarsjs.com/) [AST](http://en.wikipedia.org/wiki/Abstract_syntax_tree) which can then be passed to Handlebars for precompilation. The output of precompilation is the same as the output for pure Handlebars precompilation. This is awesome for folks that need to use Handlebars (Ember.js folks) but prefer a terser syntax.
+* mimosa #145, added [Emblem](http://emblemjs.com/) compiler. Emblem is wicked cool, it is very Jade/HAML like and parses to a [Handlebars](http://handlebarsjs.com/) [AST](http://en.wikipedia.org/wiki/Abstract_syntax_tree) which can then be passed to Handlebars for precompilation. The output of precompilation is the same as the output for pure Handlebars precompilation. This is awesome for folks that need to use Handlebars (Ember.js) but prefer a terser syntax.
 
   The existing `template.handlebars` config is used by the Emblem compiler.  The Emblem compiler can output Ember compliant code by enabling ember the same way as with handlebars. So the snippet below from the `0.10.0` release applies to Emblem.  See the [Mimosa Ember Emblem project on github](https://github.com/dbashford/mimosa-ember-emblem-templates) for an example of this running.
 
