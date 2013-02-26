@@ -1,8 +1,8 @@
-# 0.10.2 - Feb ?? 2013
+# 0.10.2 - Feb 25 2013
 
 ### Major Changes
 
-* Auto-installed modules, those discovered in the `modules` array but not discovered installed in any of Mimosa's module scopes, will now install into the project scope. This should alleviate permissions issues with installing modules into Mimosa itself.
+* Auto-installed modules, those discovered in the `modules` array but not discovered installed in any of Mimosa's module scopes, will now install into the project scope. This should alleviate permissions issues with installing modules into Mimosa which is often installed in a global protected scope.
 
 # 0.10.1 - Feb 25 2013
 
