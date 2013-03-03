@@ -1,3 +1,10 @@
+# 0.10.3 - March 3 2013
+
+### Major Changes
+
+* Fixes #147, with the help of the Emblem author, refactored the Mimosa Emblem compiler to not depend on jsdom, which introduces some cross-platform issues.
+* Upgraded to the latest Emblem which also removes a Mimosa dependency on git introduced in the last release.
+
 # 0.10.2 - Feb 25 2013
 
 ### Major Changes
