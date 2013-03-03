@@ -13,25 +13,12 @@ module.exports = class EmblemCompiler extends HandlebarsCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-    if @ember
-      emblem.handlebarsVariant = require 'handlebars'
-
   compile: (file, templateName, cb) =>
-    if @ember
-      try
-        ast = emblem.parse file.inputFileText
-      catch err
-        return cb(err, output)
-
-      @handlebars.precompile ast, {}, (error, out) =>
-        unless error
-          output = @transformTemplate out
-          output = "Ember.TEMPLATES['#{templateName}'] = #{output}"
-        cb(error, output)
-    else
-      try
-        output = emblem.precompile @handlebars, file.inputFileText
-        output = @transformTemplate output
-      catch err
-        error = err
-      cb(error, output)
+    try
+      output = emblem.precompile @handlebars, file.inputFileText
+      output = @transformTemplate output.toString()
+      if @ember
+        output = "Ember.TEMPLATES['#{templateName}'] = #{output}"
+    catch err
+      error = err
+    cb(error, output)

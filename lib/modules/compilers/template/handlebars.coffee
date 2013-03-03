@@ -52,7 +52,7 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
     @ember = config.template.handlebars.ember.enabled
     @handlebars = if @ember
       @clientLibrary = null
-      require 'ember-template-precompile'
+      require('./resources/ember-compiler').EmberHandlebars
     else
       require 'handlebars'
 
