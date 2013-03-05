@@ -1,20 +1,22 @@
+# 0.10.4 - March ?? 2013
+
+### Major Changes
+* Fixes #138.  New mimosa-combine version defaults to removing the files that go into the combined file during `mimosa build` (not during `mimosa watch`).  This deprecates the old config.  For one minor version mimosa-combine will support both the old and new configs for mimosa-combine and will warn you when Mimosa starts to give you the change to make the necessary changes.  The deprecated config option will be removed the next time mimosa-combine has a significant release.
+
 # 0.10.3 - March 3 2013
 
 ### Major Changes
-
 * Fixes #147, with the help of the Emblem author, refactored the Mimosa Emblem compiler to not depend on jsdom, which introduces some cross-platform issues.
 * Upgraded to the latest Emblem which also removes a Mimosa dependency on git introduced in the last release.
 
 # 0.10.2 - Feb 25 2013
 
 ### Major Changes
-
 * Auto-installed modules, those discovered in the `modules` array but not discovered installed in any of Mimosa's module scopes, will now install into the project scope. This should alleviate permissions issues with installing modules into Mimosa which is often installed in a global protected scope.
 
 # 0.10.1 - Feb 25 2013
 
 ### Major Changes
-
 * mimosa #145, added [Emblem](http://emblemjs.com/) compiler. Emblem is wicked cool. Despite resembling jade/haml,it parses to [Handlebars](http://handlebarsjs.com/) [AST](http://en.wikipedia.org/wiki/Abstract_syntax_tree) which can then be passed to Handlebars for precompilation. The output of precompilation is the same as the output for pure Handlebars precompilation. This is awesome for folks that need to use Handlebars (Ember.js) but prefer a terser syntax.
 
   The existing `template.handlebars` config is used by the Emblem compiler.  The Emblem compiler can output Ember compliant code by enabling ember the same way as with handlebars. So the snippet below from the `0.10.0` release applies to Emblem.  See the [Mimosa Ember Emblem project on github](https://github.com/dbashford/mimosa-ember-emblem-templates) for an example of this running.
