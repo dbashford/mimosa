@@ -106,6 +106,8 @@ module.exports = class WorkflowManager
       # no registering the same extension twice
       for extension in _.uniq(extensions)
 
+        extension = extension.toLowerCase()
+
         if @registration[type][step][extension]?
           if @registration[type][step][extension].indexOf(callback) >= 0
             logger.debug "Callback already registered for this extension, ignoring:", type, step, extension
@@ -126,7 +128,7 @@ module.exports = class WorkflowManager
       @_executeWorkflowStep(@_buildAssetOptions(fileName), 'add')
 
   _buildAssetOptions: (fileName) ->
-    ext = path.extname(fileName)
+    ext = path.extname(fileName).toLowerCase()
     ext = if ext.length > 1 then ext.substring(1) else ''
     {inputFile:fileName, extension:ext}
 
