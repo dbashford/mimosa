@@ -5,6 +5,7 @@
 * mimosa #138.  New mimosa-combine version defaults to removing the files that go into the combined file during `mimosa build` (not during `mimosa watch`).  This deprecates the old config.  For one minor version mimosa-combine will support both the old and new configs for mimosa-combine and will warn you when Mimosa starts to give you the change to make the necessary changes.  The deprecated config option will be removed the next time mimosa-combine has a significant release.  See the [mimosa-combine github](https://github.com/dbashford/mimosa-combine) for config details.
 
 ### Minor Changes
+* mimosa #155. Fixed issue with new `mimosa-client-jade-static` module that wasn't letting modules update/delete after startup.
 * mimosa #154. Non JS will not get sent through require path verification, not a problem previously but will be a problem with any modules that turn what is typically a fully JS workflow (like template compiling) into a mixed workflow (like when jade templates are compiled to static HTML on the server as with mimosa-client-static-jade)
 * mimosa #150. Improved default server error messaging when a view is not found.
 
