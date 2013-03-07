@@ -7,6 +7,7 @@
 ### Minor Changes
 * mimosa #155. Fixed issue with new `mimosa-client-jade-static` module that wasn't letting modules update/delete after startup.
 * mimosa #154. Non JS will not get sent through require path verification, not a problem previously but will be a problem with any modules that turn what is typically a fully JS workflow (like template compiling) into a mixed workflow (like when jade templates are compiled to static HTML on the server as with mimosa-client-static-jade)
+* mimosa #152. Extension-to-compiler matching is now case-insensitive. So as far as Mimosa is concerned, PNG == png, and so on.
 * mimosa #150. Improved default server error messaging when a view is not found.
 
 # 0.10.3 - March 3 2013
