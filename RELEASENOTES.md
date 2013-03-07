@@ -1,6 +1,7 @@
 # 0.10.4 - March ?? 2013
 
 ### Major Changes
+* mimosa #146.  First new module in awhile.  `mimosa-client-jade-static` will take files that end in `.html.jade`, static jade templates, compile them, execute them, and write them as individual `.html` files. These jade templates cannot be dynamic in any way. The (initial) target use case is to have small template files to pull in using RequireJSs `text` plugin.
 * mimosa #138.  New mimosa-combine version defaults to removing the files that go into the combined file during `mimosa build` (not during `mimosa watch`).  This deprecates the old config.  For one minor version mimosa-combine will support both the old and new configs for mimosa-combine and will warn you when Mimosa starts to give you the change to make the necessary changes.  The deprecated config option will be removed the next time mimosa-combine has a significant release.  See the [mimosa-combine github](https://github.com/dbashford/mimosa-combine) for config details.
 
 ### Minor Changes
