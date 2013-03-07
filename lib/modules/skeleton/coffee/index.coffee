@@ -54,8 +54,8 @@ config = require './config'
 registration = (mimosaConfig, register) ->
   if mimosaConfig.isMinify
     e = mimosaConfig.extensions
-    register ['add','update','buildFile'],      'afterCompile', _minifyJS,  [e.javascript...]
-    register ['add','update','buildExtension'], 'beforeWrite',  _minifyJS,  [e.template...]
+    register ['add','update','buildFile'],      'afterCompile', _minifyJS, e.javascript
+    register ['add','update','buildExtension'], 'beforeWrite',  _minifyJS, e.template
 
 # The _minifyJS function here represents your workflow callback function.  This function will be called
 # during the workflow type and step you selected, if the file/extension being processed matches

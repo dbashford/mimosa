@@ -25,20 +25,20 @@ module.exports = class TemplateCompiler
     # need to put this before gatherFiles register
     unless config.isVirgin
       # TODO, TEST THIS
-      register ['remove'], 'init', @_testForRemoveClientLibrary, [@extensions...]
+      register ['remove'], 'init', @_testForRemoveClientLibrary, @extensions
 
     register ['buildExtension'],        'init',       @_gatherFiles, [@extensions[0]]
-    register ['add','update','remove'], 'init',       @_gatherFiles, [@extensions...]
+    register ['add','update','remove'], 'init',       @_gatherFiles, @extensions
     register ['buildExtension'],        'compile',    @_compile,     [@extensions[0]]
-    register ['add','update','remove'], 'compile',    @_compile,     [@extensions...]
+    register ['add','update','remove'], 'compile',    @_compile,     @extensions
 
     unless config.isVirgin
-      register ['cleanFile'],             'init',         @_removeFiles, [@extensions...]
+      register ['cleanFile'],             'init',         @_removeFiles, @extensions
 
       register ['buildExtension'],        'afterCompile', @_merge,       [@extensions[0]]
-      register ['add','update','remove'], 'afterCompile', @_merge,       [@extensions...]
+      register ['add','update','remove'], 'afterCompile', @_merge,       @extensions
 
-      register ['add','update'],   'afterCompile', @_readInClientLibrary, [@extensions...]
+      register ['add','update'],   'afterCompile', @_readInClientLibrary, @extensions
       register ['buildExtension'], 'afterCompile', @_readInClientLibrary, [@extensions[0]]
 
   _gatherFiles: (config, options, next) =>

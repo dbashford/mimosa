@@ -31,7 +31,7 @@ class MimosaCompilerModule
     for compiler in @configuredCompilers.compilers
       compiler.registration(config, register) if compiler.registration?
 
-    register ['buildExtension'], 'complete', @_testDifferentTemplateLibraries, [config.extensions.template...]
+    register ['buildExtension'], 'complete', @_testDifferentTemplateLibraries, config.extensions.template
 
   _testDifferentTemplateLibraries: (config, options, next) =>
     return next() unless options.files?.length > 0

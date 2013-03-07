@@ -5,7 +5,7 @@ logger = require 'logmimosa'
 module.exports = class JSCompiler
 
   registration: (config, register) ->
-    register ['add','update','buildFile'], 'compile', @_compile, [@extensions...]
+    register ['add','update','buildFile'], 'compile', @_compile, @extensions
 
   _compile: (config, options, next) =>
     i = 0
