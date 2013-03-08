@@ -3,6 +3,7 @@
 ### Major Changes
 * mimosa #146.  First new module in awhile.  `mimosa-client-jade-static` will take files that end in `.html.jade`, static jade templates, compile them, execute them, and write them as individual `.html` files. These jade templates cannot be dynamic in any way. The (initial) target use case is to have small template files to pull in using RequireJSs `text` plugin.
 * mimosa #138.  New mimosa-combine version defaults to removing the files that go into the combined file during `mimosa build` (not during `mimosa watch`).  This deprecates the old config.  For one minor version mimosa-combine will support both the old and new configs for mimosa-combine and will warn you when Mimosa starts to give you the change to make the necessary changes.  The deprecated config option will be removed the next time mimosa-combine has a significant release.  See the [mimosa-combine github](https://github.com/dbashford/mimosa-combine) for config details.
+* mimosa-require #10. Default support for requirejs source maps has been added. When `mimosa watch` is used with `--optimize` (and not also `--minify` which does minification outside of requirejs, Mimosa will generate source maps for easy debugging in browser dev tools. `mimosa build` does not generate source maps. All cleans performed by various Mimosa tasks will clean up the generated `.src` and `.map` files.  Because generation of source maps is configured via the r.js config, which can already be overridden in the `require` config, no additional config settings have been added to change the default behaviors.
 
 ### Minor Changes
 * mimosa #155. Fixed issue with new `mimosa-client-jade-static` module that wasn't letting modules update/delete after startup.
@@ -10,6 +11,7 @@
 * mimosa #152. Extension-to-compiler matching is now case-insensitive. So as far as Mimosa is concerned, PNG == png, and so on.
 * mimosa #150. Improved default server error messaging when a view is not found.
 * mimosa-require. Removed dependency on uglify.
+* mimosa-require. `uglify2` is now the default Uglifier for RequireJS. If needed this can be changed back to `uglify` by overriding the optimizer settings in the `require` config.
 
 # 0.10.3 - March 3 2013
 
