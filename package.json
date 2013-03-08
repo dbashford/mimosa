@@ -72,8 +72,8 @@
     "chokidar": "0.5.3",
     "logmimosa": "0.4.0",
     "mimosa-server": "0.7.2",
-    "mimosa-require": "0.6.8",
-    "mimosa-minify": "0.6.2",
+    "mimosa-require": "0.7.0",
+    "mimosa-minify": "0.6.3",
     "mimosa-lint": "0.5.2",
     "mimosa-live-reload": "0.6.2",
     "npm": "1.1.70"
