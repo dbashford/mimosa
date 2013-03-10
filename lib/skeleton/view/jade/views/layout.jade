@@ -1,8 +1,8 @@
-doctype 5
+!!! 5
 html
   head
-    title Mimosa
-    link(rel='stylesheet', href='/stylesheets/style.css' + cachebust)
+    block head
+      link(rel='stylesheet', href='/stylesheets/style.css' + cachebust)
 
     if reload
       script(src='/socket.io/socket.io.js')
