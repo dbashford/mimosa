@@ -12,6 +12,7 @@
 * mimosa #150. Improved default server error messaging when a view is not found.
 * mimosa-require. Removed dependency on uglify.
 * mimosa-require. `uglify2` is now the default Uglifier for RequireJS. If needed this can be changed back to `uglify` by overriding the optimizer settings in the `require` config.
+* mimosa-server-reload #3, improved error messaging for module not being in the same module space as other mimosa modules it depends on.
 
 # 0.10.3 - March 3 2013
 
