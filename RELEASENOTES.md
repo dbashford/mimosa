@@ -6,6 +6,7 @@
 * mimosa-require #10. Default support for requirejs source maps has been added. When `mimosa watch` is used with `--optimize` (and not also `--minify` which does minification outside of requirejs, Mimosa will generate source maps for easy debugging in browser dev tools. `mimosa build` does not generate source maps. All cleans performed by various Mimosa tasks will clean up the generated `.src` and `.map` files.  Because generation of source maps is configured via the r.js config, which can already be overridden in the `require` config, no additional config settings have been added to change the default behaviors.
 
 ### Minor Changes
+* mimosa #157. Fixed issue with css pre-compilers thinking directories were files.
 * mimosa #155. Fixed issue with new `mimosa-client-jade-static` module that wasn't letting modules update/delete after startup.
 * mimosa #154. Non JS will not get sent through require path verification, not a problem previously but will be a problem with any modules that turn what is typically a fully JS workflow (like template compiling) into a mixed workflow (like when jade templates are compiled to static HTML on the server as with mimosa-client-static-jade)
 * mimosa #152. Extension-to-compiler matching is now case-insensitive. So as far as Mimosa is concerned, PNG == png, and so on.
