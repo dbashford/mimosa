@@ -142,9 +142,9 @@ module.exports = class AbstractCSSCompiler
     files = fileUtils.readdirSyncRecursive(config.watch.sourceDir, config.watch.exclude, config.watch.excludeRegex)
       .filter (file) =>
         @extensions.some (ext) ->
-          file.slice(-ext.length) is ext
+          file.slice(-(ext.length+1)) is ".#{ext}"
 
-    logger.debug "All files for extensions [[ #{@extensions} ]]:\n#{files.join('\n')}"
+    # logger.debug "All files for extensions [[ #{@extensions} ]]:\n#{files.join('\n')}"
 
     files
 
