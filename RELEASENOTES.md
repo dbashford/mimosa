@@ -1,4 +1,4 @@
-# 0.11.0 - March ?? 2013
+# 0.10.4 - March ?? 2013
 
 ### Major Changes
 * mimosa #146.  First new module in awhile.  `mimosa-client-jade-static` will take files that end in `.html.jade`, static jade templates, compile them, execute them, and write them as individual `.html` files. These jade templates cannot be dynamic in any way. The (initial) target use case is to have small template files to pull in using RequireJSs `text` plugin.
