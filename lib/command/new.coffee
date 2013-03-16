@@ -276,8 +276,6 @@ class NewCommand
     fs.unlinkSync path.join(@currPath, "package.json")
     wrench.rmdirSyncRecursive path.join(@currPath, "servers")
 
-# enabled: false           # whether
-
     @config = @config.replace "# server:", "server:"
     @config = @config.replace "# defaultServer:", "defaultServer:"
     @config = @config.replace "# enabled: false           # whether", "enabled: true              # whether"
@@ -311,10 +309,14 @@ class NewCommand
     currentDir = process.cwd()
     process.chdir @currPath
     exec "npm install", (err, sout, serr) =>
-      logger.debug "Node module install err: #{err}"
+      if err
+        logger.error err
+
       logger.debug "Node module install sout: #{sout}"
       logger.debug "Node module install serr: #{serr}"
+
       process.chdir currentDir
+
       @_done()
 
   removeFromPackageDeps: (item, match, lib, json) =>
