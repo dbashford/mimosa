@@ -1,3 +1,8 @@
+# 0.10.6 - March 16 2013
+
+### Minor Changes
+* mimosa #160.  Log error if `mimosa new` `npm install` fails.
+
 # 0.10.5 - March 16 2013
 
 ### Minor Changes
