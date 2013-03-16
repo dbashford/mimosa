@@ -1,3 +1,8 @@
+# 0.10.5 - March 16 2013
+
+### Minor Changes
+* mimosa #159.  First and hopefully last node `v0.10.0` bug fix.
+
 # 0.10.4 - March 15 2013
 
 ### Major Changes

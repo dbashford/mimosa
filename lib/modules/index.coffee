@@ -16,7 +16,7 @@ configuredModules = null
 
 isMimosaModuleName = (str) -> str.indexOf('mimosa-') > -1
 
-projectNodeModules = path.resolve process.cwd, 'node_modules'
+projectNodeModules = path.resolve process.cwd(), 'node_modules'
 locallyInstalled = if fs.existsSync projectNodeModules
     _(fs.readdirSync projectNodeModules)
       .select(isMimosaModuleName)
