@@ -129,6 +129,10 @@ class MimosaCompilerModule
           # coffee: ["coff"]        # This is an example override, this is not a default, must be
                                     # array of strings
 
+      # typescript:                 # config settings for typescript
+        # module: null              # how compiled tyepscript is wrapped, defaults to no wrapping,
+                                    # can be "amd" or "commonjs"
+
       # template:
         # amdWrap: true                   # Whether or not to wrap the compiled template files in
                                           # an AMD wrapper for use with require.js
