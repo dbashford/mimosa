@@ -117,6 +117,8 @@ class MimosaCompilerModule
       extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd"]
     typescript:
       module:null
+    coffeescript:
+      sourceMap:true
 
   placeholder: ->
     """
@@ -132,6 +134,10 @@ class MimosaCompilerModule
       # typescript:                 # config settings for typescript
         # module: null              # how compiled tyepscript is wrapped, defaults to no wrapping,
                                     # can be "amd" or "commonjs"
+
+      # coffeescript:               # config settings for coffeescript
+        # sourceMap:true            # whether to generate source during "mimosa watch".  Source maps
+                                    # are not generated during "mimosa build" regardless of setting.
 
       # template:
         # amdWrap: true                   # Whether or not to wrap the compiled template files in
@@ -257,9 +263,15 @@ class MimosaCompilerModule
           validators.ifExistsIsBoolean(errors, "template.handlebars.ember.enabled", config.template.handlebars.ember.enabled)
           validators.ifExistsIsString(errors, "template.handlebars.ember.path", config.template.handlebars.ember.path)
 
-
     if validators.ifExistsIsObject(errors, "copy config", config.copy)
       validators.isArrayOfStrings(errors, "copy.extensions", config.copy.extensions)
+
+    if validators.ifExistsIsObject(errors, "coffeescript config", config.coffeescript)
+      if config.isBuild
+        config.coffeescript.sourceMap = false
+
+    if validators.ifExistsIsObject(errors, "typescript config", config.typescript)
+      validators.ifExistsIsString(errors, "typescript.module", config.typescript.module)
 
     errors
 
