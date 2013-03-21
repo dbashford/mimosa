@@ -1,6 +1,7 @@
 "use strict"
 
 iced = require 'iced-coffee-script'
+_ = require 'lodash'
 
 JSCompiler = require "./javascript"
 
@@ -10,11 +11,13 @@ module.exports = class IcedCompiler extends JSCompiler
   @defaultExtensions = ["iced"]
 
   constructor: (config, @extensions) ->
+    @icedConfig = config.iced
     super()
 
   compile: (file, cb) ->
     try
-      output = iced.compile file.inputFileText, {runtime:'inline'}
+      conf = _.extend {}, {runtime:'inline'}, @icedConfig
+      output = iced.compile file.inputFileText, conf
     catch err
       error = err
     cb(error, output)

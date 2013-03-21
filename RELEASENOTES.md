@@ -1,6 +1,7 @@
 # 0.11.0 - March ?? 2013
 
 ### Major Changes
+* mimosa #163. CoffeeScript files will now compile `bare` by default.
 * mimosa #161. CoffeeScript [source maps](http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/) ftw. Source maps are enabled by default for CoffeeScript files for `mimosa watch`.  A new `coffeescript` root level config allows for turning source maps off. Source maps are turned off during `mimosa build`. If you've not used source maps before, I highly encourage trying them out. Quickly fire up a new Mimosa project, `mimosa new foo -d`, and break some CoffeeScript. Then point at the project with Chrome developer tools on and bear witness to the source map goodness.
 
   ```coffeescript

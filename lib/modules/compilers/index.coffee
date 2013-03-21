@@ -120,6 +120,8 @@ class MimosaCompilerModule
     coffeescript:
       sourceMap:true
       bare:true
+    iced:
+      bare:true
 
   placeholder: ->
     """
@@ -132,16 +134,21 @@ class MimosaCompilerModule
           # coffee: ["coff"]        # This is an example override, this is not a default, must be
                                     # array of strings
 
-      # typescript:                 # config settings for typescript
-        # module: null              # how compiled tyepscript is wrapped, defaults to no wrapping,
-                                    # can be "amd" or "commonjs"
-
       # coffeescript:               # config settings for coffeescript
         # sourceMap:true            # whether to generate source during "mimosa watch".  Source maps
                                     # are not generated during "mimosa build" regardless of setting.
         # bare:true                 # whether or not to include the top level wrapper around each
                                     # compiled coffeescript file. Defaults to not wrapping as
                                     # wrapping with define/require is assumed.
+
+      # iced:                       # config settings for iced coffeescript
+        # bare:true                 # whether or not to include the top level wrapper around each
+                                    # compiled iced file. Defaults to not wrapping as wrapping with
+                                    # define/require is assumed.
+
+      # typescript:                 # config settings for typescript
+        # module: null              # how compiled tyepscript is wrapped, defaults to no wrapping,
+                                    # can be "amd" or "commonjs"
 
       # template:
         # amdWrap: true                   # Whether or not to wrap the compiled template files in
@@ -276,6 +283,8 @@ class MimosaCompilerModule
 
     if validators.ifExistsIsObject(errors, "typescript config", config.typescript)
       validators.ifExistsIsString(errors, "typescript.module", config.typescript.module)
+
+    validators.ifExistsIsObject(errors, "iced config", config.iced)
 
     errors
 
