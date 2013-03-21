@@ -1,16 +1,24 @@
 # 0.11.0 - March ?? 2013
 
+Source maps! Part of the changes for adding source maps opened up being able to configure coffeescript compiler from the `mimosa-config`, so defaulting `bare` compilation to `true`, which has been a rainy day thing I've wanted to do for awhile, became possible. That might break some applications that aren't wrapping code (if you aren't using AMD or CommonJS via AMD), hence the uptick to `0.11.0`. See the Breaking Changes section below.
+
 ### Major Changes
-* mimosa #163. CoffeeScript files will now compile `bare` by default.
+* mimosa #163. CoffeeScript and Iced CoffeeScript files will now compile `bare` by default. The assumption is that with Mimosa being opinionated towards the use of AMD or AMD wrapping of CommonJS modules, all code ought to be wrapped anyway. This can be set back with config. See the config snippet below.
 * mimosa #161. CoffeeScript [source maps](http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/) ftw. Source maps are enabled by default for CoffeeScript files for `mimosa watch`.  A new `coffeescript` root level config allows for turning source maps off. Source maps are turned off during `mimosa build`. If you've not used source maps before, I highly encourage trying them out. Quickly fire up a new Mimosa project, `mimosa new foo -d`, and break some CoffeeScript. Then point at the project with Chrome developer tools on and bear witness to the source map goodness.
 
   ```coffeescript
     coffeescript:
       sourceMap:true
+      bare:true
+    iced:
+      bare:true
   ```
 
 ### Minor Changes
 * mimosa #162. Added `map` to the list of default copy extensions.
+
+### Possible Breaking Changes
+* With `bare` now set to `true` by default (was previously `false`), you'll want to check your Coffee/Iced apps to make sure things still work alright. If they don't simply flip the setting back to `false` or address why unwrapped code and scope bleed might be causing trouble.
 
 # 0.10.6 - March 16 2013
 
