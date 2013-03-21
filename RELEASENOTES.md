@@ -1,6 +1,6 @@
-# 0.11.0 - March ?? 2013
+# 0.11.0 - March 21 2013
 
-Source maps! Part of the changes for adding source maps opened up being able to configure coffeescript compiler from the `mimosa-config`, so defaulting `bare` compilation to `true`, which has been a rainy day thing I've wanted to do for awhile, became possible. That might break some applications that aren't wrapping code (if you aren't using AMD or CommonJS via AMD), hence the uptick to `0.11.0`. See the Breaking Changes section below.
+Source maps! Part of the changes for adding source maps opened up being able to configure the coffeescript compiler from the `mimosa-config`, so defaulting `bare` compilation to `true`, which has been a rainy day thing I've wanted to do for awhile, became possible. That might break some applications that aren't wrapping code (if you aren't using AMD or CommonJS via AMD), hence the uptick to `0.11.0`. See the Breaking Changes section below.
 
 ### Major Changes
 * mimosa #163. CoffeeScript and Iced CoffeeScript files will now compile `bare` by default. The assumption is that with Mimosa being opinionated towards the use of AMD or AMD wrapping of CommonJS modules, all code ought to be wrapped anyway. This can be set back with config. See the config snippet below.
