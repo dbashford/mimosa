@@ -8,6 +8,9 @@
       sourceMap:true
   ```
 
+### Minor Changes
+* mimosa #162. Added `map` to the list of default copy extensions.
+
 # 0.10.6 - March 16 2013
 
 ### Minor Changes
