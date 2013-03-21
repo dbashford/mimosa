@@ -119,6 +119,7 @@ class MimosaCompilerModule
       module:null
     coffeescript:
       sourceMap:true
+      bare:true
 
   placeholder: ->
     """
@@ -138,6 +139,9 @@ class MimosaCompilerModule
       # coffeescript:               # config settings for coffeescript
         # sourceMap:true            # whether to generate source during "mimosa watch".  Source maps
                                     # are not generated during "mimosa build" regardless of setting.
+        # bare:true                 # whether or not to include the top level wrapper around each
+                                    # compiled coffeescript file. Defaults to not wrapping as
+                                    # wrapping with define/require is assumed.
 
       # template:
         # amdWrap: true                   # Whether or not to wrap the compiled template files in
