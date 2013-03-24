@@ -1,3 +1,11 @@
+# 0.11.1 - March 24 2013
+
+### Minor Changes
+* [mimosa-server #3](https://github.com/dbashford/mimosa-server/issues/3) - When not using the default server (when project has its own server), the config setting `server.views.path` is relative to `server.path` instead of relative to the root of the project. When using the default server `server.views.path` remains relative to the root of the project. The `server.views.path` is passed to the project's server.
+
+### Possible Breaking Changes
+* If you've got your own server and have configured specific (non-default) paths for `server.views.path` and `server.path`, you may need to tweak the `server.views.path`.
+
 # 0.11.0 - March 21 2013
 
 Source maps! Part of the changes for adding source maps opened up being able to configure the coffeescript compiler from the `mimosa-config`, so defaulting `bare` compilation to `true`, which has been a rainy day thing I've wanted to do for awhile, became possible. That might break some applications that aren't wrapping code (if you aren't using AMD or CommonJS via AMD), hence the uptick to `0.11.0`. See the Breaking Changes section below.
