@@ -71,7 +71,7 @@
     "commander": "1.1.1",
     "chokidar": "0.6.2",
     "logmimosa": "0.4.0",
-    "mimosa-server": "0.7.2",
+    "mimosa-server": "0.7.3",
     "mimosa-require": "0.7.0",
     "mimosa-minify": "0.6.3",
     "mimosa-lint": "0.5.2",
