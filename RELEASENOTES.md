@@ -1,3 +1,9 @@
+# 0.11.1 - March 2? 2013
+
+### Minor Changes
+* Upgraded the `require.js` and `jquery.js` delivered with `mimosa new`
+* Upgraded the `package.json` delivered with `mimosa new`
+
 # 0.11.1 - March 24 2013
 
 ### Minor Changes
