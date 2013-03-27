@@ -137,6 +137,7 @@ configured = (moduleNames, callback) ->
 
           process.exit 1
         else
+          console.log sout
           logger.success "[[ #{fullModName} ]] successfully installed into your project."
 
           modPath = path.join currentDir, "node_modules", modName

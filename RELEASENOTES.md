@@ -3,6 +3,8 @@
 ### Minor Changes
 * Upgraded the `require.js` and `jquery.js` delivered with `mimosa new`
 * Upgraded the `package.json` delivered with `mimosa new`
+* `mimosa new` will now output the `npm install` output on successful install.
+* Mimosa's auto-install of Mimosa modules on startup will now output the `npm install` output on successful install.
 
 # 0.11.1 - March 24 2013
 
