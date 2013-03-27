@@ -311,6 +311,8 @@ class NewCommand
     exec "npm install", (err, sout, serr) =>
       if err
         logger.error err
+      else
+        console.log sout
 
       logger.debug "Node module install sout: #{sout}"
       logger.debug "Node module install serr: #{serr}"
