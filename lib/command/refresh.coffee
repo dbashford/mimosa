@@ -42,7 +42,7 @@ _uninstallDependencies = (deps, clientDeps, callback) ->
   present = []
   for name, version of deps
     if clientDeps[name]
-      logger.info "Un-installing node package. #{name}:#{clientDeps[name]}"
+      logger.info "Un-installing node package: #{name}:#{clientDeps[name]}"
       present.push name
 
   if present.length > 0

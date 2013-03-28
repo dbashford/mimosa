@@ -1,10 +1,13 @@
-# 0.11.1 - March 2? 2013
+# 0.11.2 - March 28 2013
+
+Various lib updates.
 
 ### Minor Changes
 * Upgraded the `require.js` and `jquery.js` delivered with `mimosa new`
 * Upgraded the `package.json` delivered with `mimosa new`
 * `mimosa new` will now output the `npm install` output on successful install.
 * Mimosa's auto-install of Mimosa modules on startup will now output the `npm install` output on successful install.
+* npm updated to latest
 
 # 0.11.1 - March 24 2013
 
