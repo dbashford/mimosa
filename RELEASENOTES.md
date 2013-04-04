@@ -1,4 +1,4 @@
-# 0.11.3 - April 05 2013
+# 0.11.3 - April 04 2013
 
 Purely a `mimosa-require` related release. Enhanced requirejs/r.js support in many ways.
 
