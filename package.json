@@ -1,7 +1,7 @@
 {
   "name": "mimosa",
   "preferGlobal": "true",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "homepage": "http://www.mimosajs.com",
   "author": "David Bashford",
   "description": "A modern browser development toolkit and application assembler. Compile, lint, optimize, serve and more.",
@@ -72,7 +72,7 @@
     "chokidar": "0.6.2",
     "logmimosa": "0.4.0",
     "mimosa-server": "0.7.3",
-    "mimosa-require": "0.7.0",
+    "mimosa-require": "0.8.0",
     "mimosa-minify": "0.6.3",
     "mimosa-lint": "0.5.2",
     "mimosa-live-reload": "0.6.2",
