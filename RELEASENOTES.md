@@ -1,3 +1,23 @@
+# 0.11.4 - April 07 2013
+
+### Major Changes
+* Got a great pull request that upgraded TypeScript support to `0.8.3.0` and fixed some other TypeScript issues.
+
+
+# 0.11.3 - April 04 2013
+
+Purely a `mimosa-require` related release. Enhanced requirejs/r.js support in many ways.
+
+### Major Changes
+* [mimosa-require #9](https://github.com/dbashford/mimosa-require/issues/9) - Mimosa's requirejs support now includes recognition of common configuration. Now for multi-page applications, you can create a single requirejs configuration that gets referenced by your main modules. This support extends to the use of `r.js` and to Mimosa's requirejs path validation.
+
+  By default, Mimosa will look in `javascripts/common.js` for common config. For a good example of how a common require config works, check out the [the requirejs example](https://github.com/requirejs/example-multipage/tree/master/www/js) for that sort of project.  Pay special attention to the `common.js` file and how it is included and used in `page1/2.js`
+
+### Minor Changes
+* mimosa-require. Added detection of `require` calls embedded within the callbacks of other `require` calls.  Previous only `define` callbacks were scanned for `require` calls.
+* mimosa-require. Added detection of `require` calls that take arrays of dependencies that are embedded within other `define`/`require` callbacks. Previously only single string `require` calls (i.e. `require('foo')`) were detected.  Now requires with arrays and callbacks are detected.  i.e. `require(['foo', 'bar'], function(){})`
+* mimosa-require. Fixed issue with path validations caching references to aliased directories.
+
 # 0.11.2 - March 28 2013
 
 Various lib updates.
