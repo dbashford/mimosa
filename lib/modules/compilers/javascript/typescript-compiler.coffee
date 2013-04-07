@@ -29,7 +29,6 @@ module.exports = class TypeScriptCompiler extends JSCompiler
     @compilationSettings.codeGenTarget = TypeScript.CodeGenTarget.ES5
     @compilationSettings.errorRecovery = true    
 
-    TypeScript.codeGenTarget = TypeScript.CodeGenTarget.ES5
     if config.typescript?.module?
       if config.typescript.module is "commonjs"
         TypeScript.moduleGenTarget = TypeScript.ModuleGenTarget.Synchronous
