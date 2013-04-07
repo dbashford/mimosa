@@ -1,4 +1,4 @@
-# 0.11.4 - April 0? 2013
+# 0.11.4 - April 07 2013
 
 ### Major Changes
 * Got a great pull request that upgraded TypeScript support to `0.8.3.0` and fixed some other TypeScript issues.
