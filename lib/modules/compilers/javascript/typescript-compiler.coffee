@@ -93,12 +93,11 @@ module.exports = class TypeScriptCompiler extends JSCompiler
                 resolvedEnv.code.push(code)
                 resolvedPaths[path] = true    
 
-    for i in [0..preEnv.code.length - 1] by 1
-        path = TypeScript.switchToForwardSlashes(io.resolvePath(preEnv.code[i].path))
+    for code in preEnv.code
+        path = TypeScript.switchToForwardSlashes(io.resolvePath(code.path))
         resolver.resolveCode(path, "", false, resolutionDispatcher)
     
-    for iCode in [0..resolvedEnv.code.length - 1] by 1
-        code = resolvedEnv.code[iCode];
+    for code in resolvedEnv.code
         if (code.content != null)
             compiler.addUnit(code.content, code.path, false, code.referencedFiles)
 
