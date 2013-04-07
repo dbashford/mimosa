@@ -20,26 +20,26 @@ module.exports = class TypeScriptCompiler extends JSCompiler
   @prettyName        = "TypeScript - http://www.typescriptlang.org"
   @defaultExtensions = ["ts"]
 
-  constructor: (config, @extensions) ->
+  constructor: (@config, @extensions) ->
     super()
 
     @defaultLibPath = path.join __dirname, "assets", "lib.d.ts"
 
     @compilationSettings = new TypeScript.CompilationSettings()
     @compilationSettings.codeGenTarget = TypeScript.CodeGenTarget.ES5
-    @compilationSettings.errorRecovery = true    
+    @compilationSettings.errorRecovery = true
 
-    if config.typescript?.module?
-      if config.typescript.module is "commonjs"
+    if @config.typescript?.module?
+      if @config.typescript.module is "commonjs"
         TypeScript.moduleGenTarget = TypeScript.ModuleGenTarget.Synchronous
-      else if config.typescript.module is "amd"
+      else if @config.typescript.module is "amd"
         TypeScript.moduleGenTarget = TypeScript.ModuleGenTarget.Asynchronous
 
   compile: (file, cb) ->
 
-    targetJsFile = file.inputFileName.substr(0, file.inputFileName.length - 3) + '.js';
-    targetJsFile = io.resolvePath(targetJsFile);
-    targetJsFile = TypeScript.switchToForwardSlashes(targetJsFile);
+    targetJsFile = file.outputFileName.replace(@config.watch.compiledDir, @config.watch.sourceDir)
+    targetJsFile = io.resolvePath(targetJsFile)
+    targetJsFile = TypeScript.switchToForwardSlashes(targetJsFile)
 
     outText = ""
     targetScriptAssembler =
@@ -59,23 +59,23 @@ module.exports = class TypeScriptCompiler extends JSCompiler
       Close: ->
 
     emitterIOHost =
-        createFile: (fileName, useUTF8) ->
-            if fileName is targetJsFile
-              return targetScriptAssembler
-            else
-              return depScriptWriter
-        directoryExists: io.directoryExists
-        fileExists: io.fileExists
-        resolvePath: io.resolvePath
+      createFile: (fileName, useUTF8) ->
+        if fileName is targetJsFile
+          targetScriptAssembler
+        else
+          depScriptWriter
+      directoryExists: io.directoryExists
+      fileExists: io.fileExists
+      resolvePath: io.resolvePath
 
     preEnv = new TypeScript.CompilationEnvironment(@compilationSettings, io)
     resolver = new TypeScript.CodeResolver(preEnv)
     resolvedEnv = new TypeScript.CompilationEnvironment(@compilationSettings, io)
     compiler = new TypeScript.TypeScriptCompiler(stderr, new TypeScript.NullLogger(), @compilationSettings)
     compiler.setErrorOutput(stderr)
-    
+
     if @compilationSettings.errorRecovery
-        compiler.parser.setErrorRecovery(stderr)
+      compiler.parser.setErrorRecovery(stderr)
 
     code = new TypeScript.SourceUnit(@defaultLibPath, null)
     preEnv.code.push(code)
@@ -86,38 +86,38 @@ module.exports = class TypeScriptCompiler extends JSCompiler
     resolvedPaths = {}
 
     resolutionDispatcher =
-        postResolutionError: (errorFile, line, col, errorMessage) ->
-            stderr.WriteLine(errorFile + "(" + line + "," + col + ") " + (errorMessage == "" ? "" : ": " + errorMessage))
-        postResolution: (path, code) ->
-            if (!resolvedPaths[path])
-                resolvedEnv.code.push(code)
-                resolvedPaths[path] = true    
+      postResolutionError: (errorFile, line, col, errorMessage) ->
+        stderr.WriteLine("#{errorFile} (#{line}, #{col}) " + (errorMessage == "" ? "" : ": " + errorMessage))
+      postResolution: (path, code) ->
+        if !resolvedPaths[path]
+          resolvedEnv.code.push(code)
+          resolvedPaths[path] = true
 
     for i in [0..preEnv.code.length - 1] by 1
-        path = TypeScript.switchToForwardSlashes(io.resolvePath(preEnv.code[i].path))
-        resolver.resolveCode(path, "", false, resolutionDispatcher)
-    
+      path = TypeScript.switchToForwardSlashes(io.resolvePath(preEnv.code[i].path))
+      resolver.resolveCode(path, "", false, resolutionDispatcher)
+
     for iCode in [0..resolvedEnv.code.length - 1] by 1
-        code = resolvedEnv.code[iCode];
-        if (code.content != null)
-            compiler.addUnit(code.content, code.path, false, code.referencedFiles)
+      code = resolvedEnv.code[iCode];
+      unless code.content is null
+        compiler.addUnit(code.content, code.path, false, code.referencedFiles)
 
     try
       compiler.typeCheck()
       mapInputToOutput = (unitIndex, outFile) ->
-          preEnv.inputOutputMap[unitIndex] = outFile
+        preEnv.inputOutputMap[unitIndex] = outFile
       compiler.emit emitterIOHost, mapInputToOutput
     catch err
-        compiler.errorReporter.hasErrors = true;
-    
-    error = if errorMessage.length > 0 
+      compiler.errorReporter.hasErrors = true
+
+    error = if errorMessage.length > 0
       new Error(errorMessage)
     else
       null
 
     if /.d.ts$/.test(file.inputFileName) and outText is ""
-        outText = undefined
-        unless error
-          logger.success "Compiled [[ " + file.inputFileName + " ]]"       
-    
+      outText = undefined
+      unless error
+        logger.success "Compiled [[ " + file.inputFileName + " ]]"
+
     cb(error, outText)

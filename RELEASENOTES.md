@@ -1,3 +1,9 @@
+# 0.11.4 - April 0? 2013
+
+### Major Changes
+* Got a great pull request that upgraded TypeScript support to `0.8.3.0` and fixed some other TypeScript issues.
+
+
 # 0.11.3 - April 04 2013
 
 Purely a `mimosa-require` related release. Enhanced requirejs/r.js support in many ways.
