@@ -11,7 +11,8 @@ path = require "path"
 logger = require "logmimosa"
 
 io = require "./assets/io"
-TypeScript = require "./assets/tsc.js"
+
+TypeScript = require "./assets/typescript"
 JSCompiler = require "./javascript"
 
 module.exports = class TypeScriptCompiler extends JSCompiler
@@ -21,8 +22,12 @@ module.exports = class TypeScriptCompiler extends JSCompiler
 
   constructor: (config, @extensions) ->
     super()
-    @sourceUnitPath = path.join __dirname, "assets", "lib.d.ts"
-    @sourceUnitText = fs.readFileSync @sourceUnitPath, "utf-8"
+
+    @defaultLibPath = path.join __dirname, "assets", "lib.d.ts"
+
+    @compilationSettings = new TypeScript.CompilationSettings()
+    @compilationSettings.codeGenTarget = TypeScript.CodeGenTarget.ES5
+    @compilationSettings.errorRecovery = true    
 
     TypeScript.codeGenTarget = TypeScript.CodeGenTarget.ES5
     if config.typescript?.module?
@@ -32,54 +37,88 @@ module.exports = class TypeScriptCompiler extends JSCompiler
         TypeScript.moduleGenTarget = TypeScript.ModuleGenTarget.Asynchronous
 
   compile: (file, cb) ->
+
+    targetJsFile = file.inputFileName.substr(0, file.inputFileName.length - 3) + '.js';
+    targetJsFile = io.resolvePath(targetJsFile);
+    targetJsFile = TypeScript.switchToForwardSlashes(targetJsFile);
+
     outText = ""
-    outTextAssembler =
+    targetScriptAssembler =
       Write: (str) -> outText += str
       WriteLine: (str) -> outText += str + '\r\n'
+      Close: ->
+
+    depScriptWriter =
+      Write: (str) ->
+      WriteLine: (str) ->
       Close: ->
 
     errorMessage = ""
     stderr =
       Write: (str) -> errorMessage += str
-      WriteLine: (str) -> errorMessage += str
+      WriteLine: (str) -> errorMessage += str + '\r\n'
       Close: ->
 
-    compiler = new TypeScript.TypeScriptCompiler(outTextAssembler, outTextAssembler, new TypeScript.NullLogger())
-    compiler.setErrorOutput stderr
-    compiler.parser.errorRecovery = true
-    env = new TypeScript.CompilationEnvironment({resolve:true}, io)
-    resolver = new TypeScript.CodeResolver(env)
-    compiler.addUnit @sourceUnitText, @sourceUnitPath, false
-    compiler.addUnit file.inputFileText, file.inputFileName, false
+    emitterIOHost =
+        createFile: (fileName, useUTF8) ->
+            if fileName is targetJsFile
+              return targetScriptAssembler
+            else
+              return depScriptWriter
+        directoryExists: io.directoryExists
+        fileExists: io.fileExists
+        resolvePath: io.resolvePath
 
-    units = []
+    preEnv = new TypeScript.CompilationEnvironment(@compilationSettings, io)
+    resolver = new TypeScript.CodeResolver(preEnv)
+    resolvedEnv = new TypeScript.CompilationEnvironment(@compilationSettings, io)
+    compiler = new TypeScript.TypeScriptCompiler(stderr, new TypeScript.NullLogger(), @compilationSettings)
+    compiler.setErrorOutput(stderr)
+    
+    if @compilationSettings.errorRecovery
+        compiler.parser.setErrorRecovery(stderr)
 
-    inputFile = TypeScript.switchToForwardSlashes file.inputFileName
-    resolver.resolveCode inputFile, "", false,
-      postResolution: (f, code) =>
-        depPath = TypeScript.switchToForwardSlashes code.path
-        if(!(units.some (u) -> u.fileName is depPath))
-          units.push {fileName: depPath, code: code.content}
-      postResolutionError: (f, message) ->
-        errorMessage += "TypeScript Error: " + message + "\n File: " + f
+    code = new TypeScript.SourceUnit(@defaultLibPath, null)
+    preEnv.code.push(code)
 
-    units.forEach (u) =>
-      unless u.fileName is inputFile
-        u.code = fs.readFileSync(u.fileName, "utf8") unless u.code
-        compiler.addUnit u.code, u.fileName, false
+    code = new TypeScript.SourceUnit(file.inputFileName, null)
+    preEnv.code.push(code)
 
-    compiler.setErrorOutput stderr
-    compiler.typeCheck()
-    compiler.emit false
+    resolvedPaths = {}
 
-    error = if errorMessage.length > 0
+    resolutionDispatcher =
+        postResolutionError: (errorFile, line, col, errorMessage) ->
+            stderr.WriteLine(errorFile + "(" + line + "," + col + ") " + (errorMessage == "" ? "" : ": " + errorMessage))
+        postResolution: (path, code) ->
+            if (!resolvedPaths[path])
+                resolvedEnv.code.push(code)
+                resolvedPaths[path] = true    
+
+    for i in [0..preEnv.code.length - 1] by 1
+        path = TypeScript.switchToForwardSlashes(io.resolvePath(preEnv.code[i].path))
+        resolver.resolveCode(path, "", false, resolutionDispatcher)
+    
+    for iCode in [0..resolvedEnv.code.length - 1] by 1
+        code = resolvedEnv.code[iCode];
+        if (code.content != null)
+            compiler.addUnit(code.content, code.path, false, code.referencedFiles)
+
+    try
+      compiler.typeCheck()
+      mapInputToOutput = (unitIndex, outFile) ->
+          preEnv.inputOutputMap[unitIndex] = outFile
+      compiler.emit emitterIOHost, mapInputToOutput
+    catch err
+        compiler.errorReporter.hasErrors = true;
+    
+    error = if errorMessage.length > 0 
       new Error(errorMessage)
     else
       null
 
     if /.d.ts$/.test(file.inputFileName) and outText is ""
-      outText = undefined
-      unless error
-        logger.success "Compiled [[ #{file.inputFileName} ]]"
-
+        outText = undefined
+        unless error
+          logger.success "Compiled [[ " + file.inputFileName + " ]]"       
+    
     cb(error, outText)
