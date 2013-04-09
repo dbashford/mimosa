@@ -1,4 +1,4 @@
-# 0.11.5 - April ?? 2013
+# 0.11.5 - April 08 2013
 
 Doing some Heroku work, so making some changes to both Mimosa and mimosa-web-package to accommodate some Heroku learnings.
 
