@@ -5,12 +5,14 @@ routes  =        require './routes'
 
 exports.startServer = (config, callback) ->
 
+  port = process.env.PORT or config.server.port
+
   app = express()
-  server = app.listen config.server.port, ->
+  server = app.listen port, ->
     console.log "Express server listening on port %d in %s mode", server.address().port, app.settings.env
 
   app.configure ->
-    app.set 'port', config.server.port
+    app.set 'port', port
     app.set 'views', config.server.views.path
     app.engine config.server.views.extension, engines[config.server.views.compileWith]
     app.set 'view engine', config.server.views.extension
