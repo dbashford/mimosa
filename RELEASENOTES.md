@@ -1,8 +1,20 @@
+# 0.11.5 - April ?? 2013
+
+Doing some Heroku work, so making some changes to both Mimosa and mimosa-web-package to accommodate some Heroku learnings.
+
+### Minor Changes
+* Cleanup from previous TypeScript release
+* mimosa-web-package. Added `.gitignore` to the list of files not packaged.
+* mimosa-web-package. The output `config.json` which was a partially resolved `mimosa-config`, is now `config.js` as it contains some code. That code helps properly point the packaged web app at the location of the compiled assets. For instance, Heroku isn't happy with "public", it needs to be pointed at `path.join(__dirname, "public")`.
+* mimosa. Modified `mimosa new` delivered servers to set port in a way that makes Heroku happy.
+
+### Breaking Changes
+* Only possible breaking changes are minor and with `web-package`, and in most cases shouldn't be breaking at all.  Previously the `web-package` config file was output as `config.json`, now it is `config.js` as it contains some code to resolve the location of static assets properly.
+
 # 0.11.4 - April 07 2013
 
 ### Major Changes
 * Got a great pull request that upgraded TypeScript support to `0.8.3.0` and fixed some other TypeScript issues.
-
 
 # 0.11.3 - April 04 2013
 
