@@ -226,7 +226,7 @@ class NewCommand
         isSafe = false if filePath.indexOf('handlebars-helpers') >= 0 and
           not comps.template.defaultExtensions.some (ext) -> ext is "hbs" or ext is "emblem"
 
-      fs.unlink filePath unless isSafe
+      fs.unlinkSync filePath unless isSafe
 
     serverPath = path.join @currPath,  'servers'
     allItems = wrench.readdirSyncRecursive(serverPath)
@@ -241,12 +241,12 @@ class NewCommand
     .map (file) ->
       path.join(serverPath, file)
     .forEach (filePath) ->
-      fs.unlink filePath
+      fs.unlinkSync filePath
 
     # alter template view name and insert css framework
     if templateView?
       data = fs.readFileSync templateView, "ascii"
-      fs.unlink templateView
+      fs.unlinkSync templateView
       cssFramework = if comps.css.base is "none" then "pure CSS" else comps.css.base
       data = data.replace "CSSHERE", cssFramework
       templateView = templateView.replace /-\w+\./, "."
