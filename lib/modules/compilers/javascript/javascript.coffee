@@ -68,6 +68,3 @@ module.exports = class JSCompiler
               done()
           else
             done()
-
-
-
