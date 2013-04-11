@@ -1,3 +1,8 @@
+# 0.11.7 - April 11 2013
+
+### Minor Changes
+* [mimosa #170](https://github.com/dbashford/mimosa/issues/170). Fixed issue with live reload crashing mimosa on node v10 + windows 8.
+
 # 0.11.6 - April 10 2013
 
 ### Minor Changes
