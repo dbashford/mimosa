@@ -114,7 +114,7 @@ class MimosaCompilerModule
           enabled:false
           path:"vendor/ember"
     copy:
-      extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd","map"]
+      extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd","map","md"]
     typescript:
       module:null
     coffeescript:
@@ -193,7 +193,7 @@ class MimosaCompilerModule
       # the extensions of files to copy from sourceDir to compiledDir. vendor js/css, images, etc.
       ###
       # copy:
-        # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd","map"]
+        # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd","map","md"]
     """
 
   validate: (config, validators) ->
