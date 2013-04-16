@@ -2,6 +2,7 @@
 
 ### Minor Changes
 * [mimosa #171](https://github.com/dbashford/mimosa/issues/171). If using node 0.10 and starting mimosa in a directory with no mimosa-config, the output was a stack trace.  Now it should be a useful validation error message.
+* [mimosa #172](https://github.com/dbashford/mimosa/issues/172). On Windows, `npm install` requires a `node_modules` in the current directory or else it installs the package elsewhere. So creating empty `node_modules` when needed.
 
 # 0.11.7 - April 11 2013
 

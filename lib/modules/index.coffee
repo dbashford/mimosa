@@ -126,7 +126,11 @@ configured = (moduleNames, callback) ->
     else
       logger.info "Module [[ #{fullModName} ]] cannot be found, attempting to install it from NPM into your project."
 
-      currentDir = process.cwd()
+      nodeModules = path.join process.cwd(), "node_modules"
+      unless fs.existsSync nodeModules
+        logger.info "node_modules directory does not exist, creating one..."
+        fs.mkdirSync nodeModules
+
       installString = "npm install #{fullModName}"
       exec installString, (err, sout, serr) =>
         if err
@@ -140,7 +144,7 @@ configured = (moduleNames, callback) ->
           console.log sout
           logger.success "[[ #{fullModName} ]] successfully installed into your project."
 
-          modPath = path.join currentDir, "node_modules", modName
+          modPath = path.join nodeModules, modName
           Object.keys(require.cache).forEach (key) ->
             if key.indexOf(modPath) is 0
               delete require.cache[key]
