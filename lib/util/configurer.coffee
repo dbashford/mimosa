@@ -69,6 +69,8 @@ class MimosaConfigurer
 
     if errors.length is 0
       config = @_manipulateConfig(config)
+    else
+      return [errors, {}]
 
     for mod in @modules when mod.validate?
 
@@ -118,6 +120,8 @@ class MimosaConfigurer
         errors.push "minMimosaVersion must take the form 'number.number.number', ex: '0.7.0'"
 
     config.watch.sourceDir = validators.multiPathMustExist(errors, "watch.sourceDir", config.watch.sourceDir, config.root)
+
+    return errors if errors.length > 0
 
     unless config.isVirgin
       if typeof config.watch.compiledDir is "string"

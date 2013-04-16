@@ -1,3 +1,8 @@
+# 0.11.8 - April 1? 2013
+
+### Minor Changes
+* [mimosa #171](https://github.com/dbashford/mimosa/issues/171). If using node 0.10 and starting mimosa in a directory with no mimosa-config, the output was a stack trace.  Now it should be a useful validation error message.
+
 # 0.11.7 - April 11 2013
 
 ### Minor Changes
