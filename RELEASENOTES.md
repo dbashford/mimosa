@@ -1,3 +1,8 @@
+# 0.11.9 - April ?? 2013
+
+### Minor Changes
+* [mimosa-web-package #4](https://github.com/dbashford/mimosa-web-package/issues/4). `web-package` will no longer write an `app.js` or execute an `npm install` if the packaged application uses the default server. (published as `web-package` version `0.10.0` on 4/18)
+
 # 0.11.8 - April 17 2013
 
 ### Minor Changes
