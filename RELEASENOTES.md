@@ -1,7 +1,7 @@
-# 0.11.9 - April ?? 2013
+# 0.11.9 - April 23 2013
 
 ### Major Changes
-* mimosa-lint. mimosa-lint is now compiled to JavaScript prior to being published to NPM so that the delivered module is in the target language. This is the beginning of using Mimosa to compile Mimosa. I'll be cycling through all the Mimosa modules performing this change before eventually doing it with Mimosa itself.
+* mimosa-lint. mimosa-lint is now compiled to JavaScript prior to being published to NPM so that the delivered module is in the target language. This is the beginning of using Mimosa to compile Mimosa. I'll be cycling through all the Mimosa modules performing this change before eventually doing it with Mimosa core.
 * mimosa-lint. Upgraded to latest jshint version.
 
 ### Minor Changes
