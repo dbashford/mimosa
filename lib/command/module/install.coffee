@@ -17,14 +17,14 @@ install = (name, opts) ->
     unless name? and name.indexOf('mimosa-') is 0
       return logger.error "Can only install 'mimosa-' prefixed modules with mod:install (ex: mimosa-server)."
 
-    dirName =
-      if name.indexOf('@') > 7
-        name.substring(0, name.indexOf('@'))
-      else
-        name
-    prepareAndInstall(name, dirName)
+    dirName = if name.indexOf('@') > 7
+      name.substring(0, name.indexOf('@'))
+    else
+      name
 
+    _doNPMInstall name, dirName
   else
+
     try
       pack = require path.join currentDir, 'package.json'
     catch err
@@ -36,39 +36,47 @@ install = (name, opts) ->
     unless pack.name.indexOf('mimosa-') is 0
       return logger.error "package.json name is [[ #{pack.name} ]]. Can only install 'mimosa-' prefixed modules with mod:install (ex: mimosa-server). "
 
-    testLocalInstall ->
-      dirName = currentDir.replace(path.dirname(currentDir) + path.sep, '')
-      prepareAndInstall(currentDir, dirName)
+    _doLocalInstall()
 
-
-prepareAndInstall = (name, dirName) ->
-  process.chdir mimosaPath
-  oldVersion = moveThingsToPrepareForInstall dirName
-  installModule name, done(dirName, oldVersion)
-
-testLocalInstall = (callback) ->
-  exec "npm install", (err, sout, serr) =>
+_installModule = (name, done) ->
+  logger.info "Installing module [[ #{name} ]] into Mimosa."
+  installString = "npm install \"#{name}\" --save"
+  exec installString, (err, sout, serr) =>
     if err
-      return logger.error "Could not install module locally: \n #{err}"
+      logger.error "Error installing module"
+      logger.error err
+    else
+      console.log sout
+      console.log serr
+      logger.success "Install of '#{name}' successful"
 
     logger.debug "NPM INSTALL standard out\n#{sout}"
     logger.debug "NPM INSTALL standard err\n#{serr}"
 
-    try
-      require currentDir
-      callback()
-    catch err
-      logger.error "Attempted to use installed module and module failed\n#{err}"
+    done(err)
 
-done = (name, oldVersion) ->
+###
+NPM Install
+###
+
+_doNPMInstall = (name, dirName) ->
+  process.chdir mimosaPath
+  oldVersion = _prepareForNPMInstall dirName
+  _installModule name, _doneNPMInstall(dirName, oldVersion)
+
+_doneNPMInstall = (name, oldVersion) ->
   (err) ->
     if err
-      putThingsBack oldVersion, name
-    cleanUp(name)
+      _revertInstall oldVersion, name
+
+    backupPath = path.join mimosaPath, "node_modules", name + "_____backup"
+    if fs.existsSync backupPath
+      wrench.rmdirSyncRecursive backupPath
+
     process.chdir currentDir
     process.exit 0
 
-moveThingsToPrepareForInstall = (name) ->
+_prepareForNPMInstall = (name) ->
   beginPath = path.join mimosaPath, "node_modules", name
   oldVersion = null
   if fs.existsSync beginPath
@@ -84,12 +92,7 @@ moveThingsToPrepareForInstall = (name) ->
 
   oldVersion
 
-cleanUp = (name) ->
-  backupPath = path.join mimosaPath, "node_modules", name + "_____backup"
-  if fs.existsSync backupPath
-    wrench.rmdirSyncRecursive backupPath
-
-putThingsBack = (oldVersion, name) ->
+_revertInstall = (oldVersion, name) ->
   backupPath = path.join mimosaPath, "node_modules", name + "_____backup"
 
   # if backup path exists, put that code back, otherwise get rid of module
@@ -107,20 +110,38 @@ putThingsBack = (oldVersion, name) ->
     if fs.existsSync modPath
       wrench.rmdirSyncRecursive modPath
 
-installModule = (name, done) ->
-  installString = "npm install \"#{name}\" --save"
-  exec installString, (err, sout, serr) =>
+###
+Local Dev Install
+###
+
+_doLocalInstall = ->
+  _testLocalInstall ->
+    dirName = currentDir.replace(path.dirname(currentDir) + path.sep, '')
+    process.chdir mimosaPath
+    _installModule currentDir, ->
+      process.chdir currentDir
+      process.exit 0
+
+_testLocalInstall = (callback) ->
+  logger.info "Testing local install in place."
+  exec "npm install", (err, sout, serr) =>
     if err
-      logger.error "Error installing module"
-      logger.error err
-    else
-      console.log sout
-      logger.success "Install of '#{name}' successful"
+      return logger.error "Could not install module locally: \n #{err}"
 
     logger.debug "NPM INSTALL standard out\n#{sout}"
     logger.debug "NPM INSTALL standard err\n#{serr}"
 
-    done(err)
+    try
+      require currentDir
+      logger.info "Local install successful."
+      callback()
+    catch err
+      logger.error "Attempted to use installed module and module failed\n#{err}"
+      console.log err
+
+###
+Command
+###
 
 register = (program, callback) ->
   program
