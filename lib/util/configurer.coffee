@@ -60,7 +60,11 @@ class MimosaConfigurer
     @extend @_moduleDefaults(), config
 
   _manipulateConfig: (config) ->
-    config.extensions = {javascript: ['js'], css: ['css'], template: [], copy: []}
+    config.extensions =
+      javascript: ['js']
+      css: ['css']
+      template: []
+      copy: []
     config.watch.compiledJavascriptDir = validators.determinePath config.watch.javascriptDir, config.watch.compiledDir
     config
 
@@ -137,7 +141,11 @@ class MimosaConfigurer
       unless config.isVirgin
         validators.doesPathExist(errors,"watch.javascriptDir", jsDir)
     else
-      errors.push "watch.javascriptDir must be a string"
+      if config.watch.javascriptDir is null
+        # Allow to blank out javascriptDir when not strictly web app
+        config.watch.javascriptDir = ""
+      else
+        errors.push "watch.javascriptDir must be a string or null"
 
     validators.ifExistsFileExcludeWithRegexAndString(errors, "watch.exclude", config.watch, config.watch.sourceDir)
 
