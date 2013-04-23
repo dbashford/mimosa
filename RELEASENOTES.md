@@ -1,6 +1,11 @@
 # 0.11.9 - April ?? 2013
 
+### Major Changes
+* mimosa-lint. mimosa-lint is now compiled to JavaScript prior to being published to NPM so that the delivered module is in the target language. This is the beginning of using Mimosa to compile Mimosa. I'll be cycling through all the Mimosa modules performing this change before eventually doing it with Mimosa itself.
+* mimosa-lint. Upgraded to latest jshint version.
+
 ### Minor Changes
+* mimosa. `watch.javascriptDir` can be made `null`.  This allows for building apps that aren't strictly web apps.  Mimosa modules, for instance.
 * [mimosa-web-package #4](https://github.com/dbashford/mimosa-web-package/issues/4). `web-package` will no longer write an `app.js` or execute an `npm install` if the packaged application uses the default server. (published as `web-package` version `0.10.0` on 4/18)
 
 # 0.11.8 - April 17 2013
