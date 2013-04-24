@@ -122,6 +122,8 @@ class MimosaCompilerModule
       bare:true
     iced:
       bare:true
+    stylus:
+      use:['nib']
 
   placeholder: ->
     """
@@ -149,6 +151,10 @@ class MimosaCompilerModule
       # typescript:                 # config settings for typescript
         # module: null              # how compiled tyepscript is wrapped, defaults to no wrapping,
                                     # can be "amd" or "commonjs"
+
+      # stylus:                     # config settings for stylus
+        # use:['nib']               # names of libraries to use, should match the npm name for
+                                    # the desired libraries
 
       # template:
         # amdWrap: true                   # Whether or not to wrap the compiled template files in
@@ -283,6 +289,27 @@ class MimosaCompilerModule
 
     if validators.ifExistsIsObject(errors, "typescript config", config.typescript)
       validators.ifExistsIsString(errors, "typescript.module", config.typescript.module)
+
+    if validators.ifExistsIsObject(errors, "stylus config", config.stylus)
+      if validators.ifExistsIsArray(errors, "stylus.use", config.stylus.use)
+
+        config.stylus.resolvedUse = []
+        projectNodeModules = path.resolve process.cwd(), 'node_modules'
+        for imp in config.stylus.use
+          lib = null
+          try
+            lib = require imp
+          catch err
+            try
+              lib = require path.join projectNodeModules, imp
+            catch err
+              console.log err
+              # do nothing
+
+          if lib is null
+            errors.push "Error including stylus use [[ #{imp} ]]"
+          else
+            config.stylus.resolvedUse.push lib()
 
     validators.ifExistsIsObject(errors, "iced config", config.iced)
 

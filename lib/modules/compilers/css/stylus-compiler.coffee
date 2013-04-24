@@ -3,7 +3,6 @@
 fs = require 'fs'
 path = require 'path'
 
-nib = require 'nib'
 stylus = require 'stylus'
 _ = require 'lodash'
 logger = require 'logmimosa'
@@ -38,8 +37,8 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
       .set('compress', false)
       .set('firebug', config.isOptimize? and !config.isOptimize)
       .set('filename', fileName)
-      .use(nib())
-      .import('nib')
+      .use(config.stylus.resolvedUse...)
+      .import(config.stylus.use...)
       .render(cb)
 
   _isInclude: (fileName) ->
