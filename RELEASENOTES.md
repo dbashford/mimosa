@@ -1,3 +1,8 @@
+# 0.11.10 - April 24 2013
+
+### Minor Changes
+* [mimosa #173](https://github.com/dbashford/mimosa/issues/173). You can now use external stylus libraries during compilation of Stylus files without pulling in all the source for those libraries.
+
 # 0.11.9 - April 23 2013
 
 ### Major Changes
