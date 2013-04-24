@@ -8,7 +8,7 @@
       use:['nib']
   ```
 
-  Adding to the `use` array those libraries you have locally `npm install`ed and want to use with Stylus.  Mimosa will get snippy with you if you try to use something that isn't installed. =)
+  Add to the `use` array those libraries you have locally `npm install`ed and want to use with Stylus.  Mimosa will get snippy with you if you try to use something that isn't installed. =)
 
 # 0.11.9 - April 23 2013
 
