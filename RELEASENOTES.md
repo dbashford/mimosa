@@ -1,7 +1,14 @@
 # 0.11.10 - April 24 2013
 
 ### Minor Changes
-* [mimosa #173](https://github.com/dbashford/mimosa/issues/173). You can now use external stylus libraries during compilation of Stylus files without pulling in all the source for those libraries.
+* [mimosa #173](https://github.com/dbashford/mimosa/issues/173). You can now use external stylus libraries during compilation of Stylus files without pulling in all the source for those libraries.  A new Stylus configuration was added:
+
+  ```
+    stylus:
+      use:['nib']
+  ```
+
+  Adding to the `use` array those libraries you have locally `npm install`ed and want to use with Stylus.  Mimosa will get snippy with you if you try to use something that isn't installed. =)
 
 # 0.11.9 - April 23 2013
 
