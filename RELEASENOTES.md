@@ -1,3 +1,9 @@
+# 0.11.11 - April 25 2013
+
+### Minor Changes
+* [mimosa #175](https://github.com/dbashford/mimosa/issues/175).  Fixed node v0.10 related issue with creating new project without a project name.
+* mimosa. Updated SASS compiler to find imports that do not start with `_`.
+
 # 0.11.10 - April 24 2013
 
 ### Minor Changes
