@@ -159,7 +159,7 @@ class NewCommand
     @_moveDirectoryContents(skeletonPath)
     currPath
 
-  _moveDirectoryContents: (sourcePath, outPath) ->
+  _moveDirectoryContents: (sourcePath, outPath = "") ->
     for item in wrench.readdirSyncRecursive(sourcePath)
       fullSourcePath = path.join sourcePath, item
       fileStats = fs.statSync fullSourcePath
