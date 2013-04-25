@@ -32,7 +32,7 @@ module.exports = class AbstractCSSCompiler
 
   _findBasesToCompile: (config, options, next) =>
     options.files = []
-    if @_isInclude(options.inputFile)
+    if @__isInclude(options.inputFile)
       bases = @includeToBaseHash[options.inputFile]
       if bases?
         logger.debug "Bases files for [[ #{options.inputFile} ]]\n#{bases.join('\n')}"
@@ -137,6 +137,9 @@ module.exports = class AbstractCSSCompiler
     @__importsForFile(baseFile, baseFile) for baseFile in @baseFiles
 
     next()
+
+  __isInclude: (fileName) ->
+    @includeToBaseHash[fileName]?
 
   __getAllFiles: (config) =>
     files = fileUtils.readdirSyncRecursive(config.watch.sourceDir, config.watch.exclude, config.watch.excludeRegex)

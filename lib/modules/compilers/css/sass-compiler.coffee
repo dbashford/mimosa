@@ -53,6 +53,9 @@ module.exports = class SassCompiler extends AbstractCssCompiler
         setTimeout compileOnDelay, 100
     do compileOnDelay
 
+  __isInclude: (fileName) ->
+    @includeToBaseHash[fileName]? or path.basename(fileName).charAt(0) is '_'
+
   __compile: (file, config, options, done) =>
     text = file.inputFileText
     fileName = file.inputFileName
@@ -73,12 +76,9 @@ module.exports = class SassCompiler extends AbstractCssCompiler
       @initBaseFilesToCompile--
       done(error, result)
 
-  _isInclude: (fileName) ->
-    path.basename(fileName).charAt(0) is '_'
-
   _determineBaseFiles: =>
     baseFiles = @allFiles.filter (file) =>
-      (not @_isInclude(file)) and file.indexOf('compass') < 0
+      (not @__isInclude(file)) and file.indexOf('compass') < 0
     logger.debug "Base files for SASS are:\n#{baseFiles.join('\n')}"
     baseFiles
 

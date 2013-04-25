@@ -42,8 +42,6 @@ module.exports = class LessCompiler extends AbstractCssCompiler
 
       done(err, result)
 
-  _isInclude: (fileName) -> @includeToBaseHash[fileName]?
-
   _determineBaseFiles: =>
     imported = []
     for file in @allFiles

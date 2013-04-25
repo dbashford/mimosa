@@ -41,9 +41,6 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
       .import(config.stylus.use...)
       .render(cb)
 
-  _isInclude: (fileName) ->
-    @includeToBaseHash[fileName]?
-
   _determineBaseFiles: =>
     imported = []
     for file in @allFiles
