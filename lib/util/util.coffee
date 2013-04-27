@@ -8,6 +8,11 @@ _      = require 'lodash'
 configurer = require './configurer'
 compilerCentral = require '../modules/compilers'
 
+PRECOMPILE_FUN_REGION_START_RE         = /^(.*)\smimosa-config:\s*{/
+PRECOMPILE_FUN_REGION_END_RE           = /\smimosa-config:\s*}/
+PRECOMPILE_FUN_REGION_SEARCH_LINES_MAX = 5
+PRECOMPILE_FUN_REGION_LINES_MAX        = 100
+
 exports.projectPossibilities = (callback) ->
   compilers = compilerCentral.compilersByType()
 
@@ -92,3 +97,41 @@ _findConfigPath = (file) ->
     configJs = path.resolve("#{file}.js")
     if fs.existsSync configJs
       configJs
+
+# Get source of bootstrap function for precompiling mimosa-config file.
+#
+# Function region is bounded by required marker lines which aren't included
+# in returned function source. Prefix of start marker line is stripped from
+# every function source line.
+#
+# If function region wasn't found or exceeded limit of lines, empty string
+# is returned.
+_extractPrecompileFunctionSource = (configSource) ->
+  pos = configLinesRead = functionRegionLinesRead = 0
+
+  while (pos < configSource.length) and
+        (if functionRegionLinesRead
+          functionRegionLinesRead < PRECOMPILE_FUN_REGION_LINES_MAX
+        else
+          configLinesRead < PRECOMPILE_FUN_REGION_SEARCH_LINES_MAX)
+
+    # Find next source line.
+    newlinePos = configSource.indexOf "\n", pos
+    newlinePos = configSource.length if newlinePos == -1
+    sourceLine = configSource.substr pos, (newlinePos - pos)
+    pos = newlinePos + 1
+
+    unless functionRegionLinesRead
+      # Test read source line for being marker of function region start.
+      if markerLinePrefix = PRECOMPILE_FUN_REGION_START_RE.exec(sourceLine)?[1]
+        functionRegionLinesRead = 1
+        functionSource = ""
+      else
+        configLinesRead++
+    else
+      # Check if marker of function region end was just read.
+      return functionSource if PRECOMPILE_FUN_REGION_END_RE.test sourceLine
+      functionRegionLinesRead++
+      functionSource += "#{sourceLine.replace markerLinePrefix, ''}\n"
+
+  return ""
