@@ -27,6 +27,25 @@ exports.projectPossibilities = (callback) ->
         callback(compilers)
       break
 
+exports.requireConfig = requireConfig = (configPath) ->
+  if path.extname configPath
+    require configPath
+  else
+    raw = fs.readFileSync configPath, "utf8"
+    # Strip UTF-8 BOM.
+    config = if raw.charCodeAt(0) is 0xFEFF then raw.substring 1 else raw
+    precompileFunSource = _extractPrecompileFunctionSource config
+    if precompileFunSource.length > 0
+      try
+        config = eval("(#{precompileFunSource.replace /;\s*$/, ''})")(config)
+      catch err
+        if err instanceof SyntaxError
+          err.message = "[precompile region] " + err.message
+        throw err
+    configModule = new (require "module") configPath
+    configModule._compile config, configPath
+    configModule.exports
+
 exports.processConfig = (opts, callback) ->
 
   config = {}
@@ -97,6 +116,7 @@ _findConfigPath = (file) ->
     configJs = path.resolve("#{file}.js")
     if fs.existsSync configJs
       configJs
+
 
 # Get source of bootstrap function for precompiling mimosa-config file.
 #
