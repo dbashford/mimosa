@@ -56,7 +56,7 @@ exports.processConfig = (opts, callback) ->
     catch err
       return logger.fatal "Improperly formatted configuration file [[ #{mainConfigPath} ]]: #{err}"
   else
-    logger.warn "No configuration file found (mimosa-config.coffee/mimosa-config.js), running from current directory using Mimosa's defaults."
+    logger.warn "No configuration file found (mimosa-config.coffee/mimosa-config.js/mimosa-config), running from current directory using Mimosa's defaults."
     logger.warn "Run 'mimosa config' to copy the default Mimosa configuration to the current directory."
 
   logger.debug "Your mimosa config:\n#{JSON.stringify(config, null, 2)}"
@@ -109,14 +109,9 @@ exports.deepFreeze = (o) ->
         exports.deepFreeze o[prop]
 
 _findConfigPath = (file) ->
-  configCoffee = path.resolve("#{file}.coffee")
-  if fs.existsSync configCoffee
-    configCoffee
-  else
-    configJs = path.resolve("#{file}.js")
-    if fs.existsSync configJs
-      configJs
-
+  for ext in [".coffee", ".js", ""]
+    configPath = path.resolve("#{file}#{ext}")
+    return configPath if fs.existsSync configPath
 
 # Get source of bootstrap function for precompiling mimosa-config file.
 #
