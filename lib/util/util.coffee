@@ -52,7 +52,7 @@ exports.processConfig = (opts, callback) ->
   mainConfigPath = _findConfigPath "mimosa-config"
   if mainConfigPath?
     try
-      {config} = require mainConfigPath
+      {config} = requireConfig mainConfigPath
     catch err
       return logger.fatal "Improperly formatted configuration file [[ #{mainConfigPath} ]]: #{err}"
   else
@@ -68,7 +68,7 @@ exports.processConfig = (opts, callback) ->
     profileConfigPath = _findConfigPath path.join(config.profileLocation, opts.profile)
     if profileConfigPath?
       try
-        profileConfig = require(profileConfigPath).config
+        profileConfig = requireConfig(profileConfigPath).config
       catch err
         return logger.fatal "Improperly formatted configuration file [[ #{profileConfigPath} ]]: #{err}"
 
