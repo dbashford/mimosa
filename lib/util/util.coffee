@@ -1,5 +1,6 @@
 path   = require 'path'
 fs     = require 'fs'
+Module = require 'module'
 
 color  = require('ansi-color').set
 logger = require 'logmimosa'
@@ -42,8 +43,11 @@ exports.requireConfig = requireConfig = (configPath) ->
         if err instanceof SyntaxError
           err.message = "[precompile region] " + err.message
         throw err
-    configModule = new (require "module") configPath
+    configModule = new Module path.resolve(configPath)
+    configModule.filename = configModule.id
+    configModule.paths = Module._nodeModulePaths path.dirname(configModule.id)
     configModule._compile config, configPath
+    configModule.loaded = yes
     configModule.exports
 
 exports.processConfig = (opts, callback) ->
