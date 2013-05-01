@@ -1,3 +1,7 @@
+# 0.11.12 - May ?? 2013
+
+* [mimosa-web-package #4](https://github.com/dbashford/mimosa-web-package/issues/6). Added a new `appjs` option to `web-package`.  When set to `null`, Mimosa will not write the `app.js` application bootstrapper.  When set to a string, the string is the name `web-package` will use when writing the file.  So `appjs:"foo.js"` will write a `foo.js` file.  This setting defaults to `app.js`.
+
 # 0.11.11 - April 25 2013
 
 ### Minor Changes
