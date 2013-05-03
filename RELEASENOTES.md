@@ -1,7 +1,8 @@
-# 0.11.12 - May ?? 2013
+# 0.11.12 - May 03 2013
 
 ### Minor Changes
 * mimosa. Small refactors and fixes to module loading.
+* mimosa. [mimosa #177](https://github.com/dbashford/mimosa/pull/177).  Got a pull request that allows you to code up your mimosa-config in whichever language you want, whether mimosa supports it or not.  Details in the pull request.
 * [mimosa-web-package #4](https://github.com/dbashford/mimosa-web-package/issues/6). Added a new `appjs` option to `web-package`.  When set to `null`, Mimosa will not write the `app.js` application bootstrapper.  When set to a string, the string is the name `web-package` will use when writing the file.  So `appjs:"foo.js"` will write a `foo.js` file.  This setting defaults to `app.js`.
 * mimosa-web-package is now compiled to JavaScript with Mimosa prior to being published to NPM.
 
