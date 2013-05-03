@@ -1,5 +1,6 @@
 path   = require 'path'
 fs     = require 'fs'
+Module = require 'module'
 
 color  = require('ansi-color').set
 logger = require 'logmimosa'
@@ -7,6 +8,11 @@ _      = require 'lodash'
 
 configurer = require './configurer'
 compilerCentral = require '../modules/compilers'
+
+PRECOMPILE_FUN_REGION_START_RE         = /^(.*)\smimosa-config:\s*{/
+PRECOMPILE_FUN_REGION_END_RE           = /\smimosa-config:\s*}/
+PRECOMPILE_FUN_REGION_SEARCH_LINES_MAX = 5
+PRECOMPILE_FUN_REGION_LINES_MAX        = 100
 
 exports.projectPossibilities = (callback) ->
   compilers = compilerCentral.compilersByType()
@@ -22,17 +28,39 @@ exports.projectPossibilities = (callback) ->
         callback(compilers)
       break
 
+exports.requireConfig = requireConfig = (configPath) ->
+  if path.extname configPath
+    require configPath
+  else
+    raw = fs.readFileSync configPath, "utf8"
+    # Strip UTF-8 BOM.
+    config = if raw.charCodeAt(0) is 0xFEFF then raw.substring 1 else raw
+    precompileFunSource = _extractPrecompileFunctionSource config
+    if precompileFunSource.length > 0
+      try
+        config = eval("(#{precompileFunSource.replace /;\s*$/, ''})")(config)
+      catch err
+        if err instanceof SyntaxError
+          err.message = "[precompile region] " + err.message
+        throw err
+    configModule = new Module path.resolve(configPath)
+    configModule.filename = configModule.id
+    configModule.paths = Module._nodeModulePaths path.dirname(configModule.id)
+    configModule._compile config, configPath
+    configModule.loaded = yes
+    configModule.exports
+
 exports.processConfig = (opts, callback) ->
 
   config = {}
   mainConfigPath = _findConfigPath "mimosa-config"
   if mainConfigPath?
     try
-      {config} = require mainConfigPath
+      {config} = requireConfig mainConfigPath
     catch err
       return logger.fatal "Improperly formatted configuration file [[ #{mainConfigPath} ]]: #{err}"
   else
-    logger.warn "No configuration file found (mimosa-config.coffee/mimosa-config.js), running from current directory using Mimosa's defaults."
+    logger.warn "No configuration file found (mimosa-config.coffee/mimosa-config.js/mimosa-config), running from current directory using Mimosa's defaults."
     logger.warn "Run 'mimosa config' to copy the default Mimosa configuration to the current directory."
 
   logger.debug "Your mimosa config:\n#{JSON.stringify(config, null, 2)}"
@@ -44,7 +72,7 @@ exports.processConfig = (opts, callback) ->
     profileConfigPath = _findConfigPath path.join(config.profileLocation, opts.profile)
     if profileConfigPath?
       try
-        profileConfig = require(profileConfigPath).config
+        profileConfig = requireConfig(profileConfigPath).config
       catch err
         return logger.fatal "Improperly formatted configuration file [[ #{profileConfigPath} ]]: #{err}"
 
@@ -85,10 +113,44 @@ exports.deepFreeze = (o) ->
         exports.deepFreeze o[prop]
 
 _findConfigPath = (file) ->
-  configCoffee = path.resolve("#{file}.coffee")
-  if fs.existsSync configCoffee
-    configCoffee
-  else
-    configJs = path.resolve("#{file}.js")
-    if fs.existsSync configJs
-      configJs
+  for ext in [".coffee", ".js", ""]
+    configPath = path.resolve("#{file}#{ext}")
+    return configPath if fs.existsSync configPath
+
+# Get source of bootstrap function for precompiling mimosa-config file.
+#
+# Function region is bounded by required marker lines which aren't included
+# in returned function source. Prefix of start marker line is stripped from
+# every function source line.
+#
+# If function region wasn't found or exceeded limit of lines, empty string
+# is returned.
+_extractPrecompileFunctionSource = (configSource) ->
+  pos = configLinesRead = functionRegionLinesRead = 0
+
+  while (pos < configSource.length) and
+        (if functionRegionLinesRead
+          functionRegionLinesRead < PRECOMPILE_FUN_REGION_LINES_MAX
+        else
+          configLinesRead < PRECOMPILE_FUN_REGION_SEARCH_LINES_MAX)
+
+    # Find next source line.
+    newlinePos = configSource.indexOf "\n", pos
+    newlinePos = configSource.length if newlinePos == -1
+    sourceLine = configSource.substr pos, (newlinePos - pos)
+    pos = newlinePos + 1
+
+    unless functionRegionLinesRead
+      # Test read source line for being marker of function region start.
+      if markerLinePrefix = PRECOMPILE_FUN_REGION_START_RE.exec(sourceLine)?[1]
+        functionRegionLinesRead = 1
+        functionSource = ""
+      else
+        configLinesRead++
+    else
+      # Check if marker of function region end was just read.
+      return functionSource if PRECOMPILE_FUN_REGION_END_RE.test sourceLine
+      functionRegionLinesRead++
+      functionSource += "#{sourceLine.replace markerLinePrefix, ''}\n"
+
+  return ""
