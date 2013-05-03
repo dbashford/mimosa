@@ -35,10 +35,11 @@ locallyInstalled = if fs.existsSync projectNodeModules
   else
     []
 
+locallyInstalledNames = _.pluck locallyInstalled, 'name'
 standardlyInstalled = _(mimosaPackage.dependencies)
   .keys()
   .select (dir) ->
-    isMimosaModuleName(dir) and dir not in locallyInstalled
+    isMimosaModuleName(dir) and dir not in locallyInstalledNames
   .map (dep) ->
     name: dep
     nodeModulesDir: '../../node_modules'
@@ -49,7 +50,7 @@ independentlyInstalled = do ->
   standardlyResolvedModules = _.pluck standardlyInstalled, 'name'
   _(fs.readdirSync topLevelNodeModulesDir)
     .select (dir) ->
-      isMimosaModuleName(dir) and dir not in standardlyResolvedModules and dir not in locallyInstalled
+      isMimosaModuleName(dir) and dir not in standardlyResolvedModules and dir not in locallyInstalledNames
     .map (dir) ->
       name: dir
       nodeModulesDir: topLevelNodeModulesDir
@@ -73,24 +74,10 @@ meta = _.map allInstalled, (modInfo) ->
     logger.error "Unable to read file at [[ #{resolvedPath} ]], possibly a permission issue? \nsystem error : #{err}"
     process.exit 1
 
-allDefaults = true
-if builtIns.length isnt meta.length
-  allDefaults = false
-else
-  for builtIn in builtIns
-    found = false
-    for aMeta in meta
-      if aMeta.name is builtIn
-        found = true
-        break
-    if not found
-      allDefaults = false
-      break
-
-configModuleString = unless allDefaults
-  names = _.pluck(meta, 'name')
-  names = names.map (name) -> name.replace 'mimosa-', ''
-  JSON.stringify(names)
+metaNames = _.pluck meta, 'name'
+configModuleString = if _.difference(metaNames, builtIns).length > 0
+  names = metaNames.map (name) -> name.replace 'mimosa-', ''
+  JSON.stringify names
 
 configured = (moduleNames, callback) ->
   return configuredModules if configuredModules
