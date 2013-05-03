@@ -1,3 +1,8 @@
+# 0.11.13 - May 0? 2013
+
+### Minor Changes
+* mimosa-client-jade-static. Now compiled to JavaScript with Mimosa prior to being published to NPM.
+
 # 0.11.12 - May 03 2013
 
 ### Minor Changes
