@@ -1,7 +1,8 @@
 # 0.11.13 - May 0? 2013
 
-### Minor Changes
-* mimosa-client-jade-static. Now compiled to JavaScript with Mimosa prior to being published to NPM.
+### Major Changes
+* The following Mimosa modules are now compiled to JavaScript with Mimosa prior to being published to NPM: client-jade-static, combine, import-source, live-reload, minify, require-commonjs
+* All updated modules from previous bullet also had all their dependencies updated to the latest versions
 
 # 0.11.12 - May 03 2013
 
