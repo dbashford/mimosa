@@ -2,8 +2,9 @@
 
 ### Major Changes
 * New module: [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple), includes `testem ci` integration.  Runs during `mimosa build` and for every JS file save during `mimosa watch`.
-* The following Mimosa modules are now compiled to JavaScript with Mimosa prior to being published to NPM: client-jade-static, combine, import-source, live-reload, minify, require-commonjs, require, logmimosa, volo, skeleton, textplugin-include, server-template-compile, server-reload, server
+* All Mimosa modules are now compiled to JavaScript before publishing. Mimosa core is not, yet.
 * All updated modules from previous bullet also had all their dependencies updated to the latest versions
+* mimosa core has had all its libraries updated
 
 ### Minor Changes
 * Upgraded dust client library to latest version
