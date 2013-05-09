@@ -1,3 +1,8 @@
+# 0.12.1 - May ?? 2013
+
+### Minor Changes
+* mimosa. Added the ability to have Mimosa exclude certain coffeescript files from sourcemap generation.  A new `sourceMapExclude` property was added that can be a regex or relative to `watch.javascriptDir`.  It defaults to `[/\/spec\//]`, which means it excludes source map generation for any files contained inside a `/spec/` directory or subdirectory.
+
 # 0.12.0 - May 09 2013
 
 Soon, probably with `0.13.0`, all Mimosa modules will need to be JavaScript.  They can be coded in any language you want, but they must be published to NPM as JavaScript modules.  Or, at the very least, the `main` piece of code referred to by the `package.json` [main](http://package.json.nodejitsu.com/), or the modules root level `index` file must be JavaScript.

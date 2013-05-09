@@ -28,8 +28,15 @@ module.exports = class CoffeeCompiler extends JSCompiler
     register ['cleanFile'], 'delete', @_cleanUpSourceMaps, @extensions
 
   compile: (file, cb) ->
+    conf = _.extend {}, @coffeeConfig, sourceFiles:[path.basename(file.inputFileName) + ".src"]
+
+    if conf.sourceMap
+      if conf.sourceMapExclude?.indexOf(file.inputFileName) > -1
+        conf.sourceMap = false
+      else if conf.sourceMapExcludeRegex? and file.inputFileName.match(conf.sourceMapExcludeRegex)
+        conf.sourceMap = false
+
     try
-      conf = _.extend {}, @coffeeConfig, sourceFiles:[path.basename(file.inputFileName) + ".src"]
       output = coffee.compile file.inputFileText, conf
       if output.v3SourceMap
         sourceMap = output.v3SourceMap

@@ -125,6 +125,7 @@ class MimosaCompilerModule
       module:null
     coffeescript:
       sourceMap:true
+      sourceMapExclude:[/\/spec\//]
       bare:true
     iced:
       bare:true
@@ -142,12 +143,14 @@ class MimosaCompilerModule
           # coffee: ["coff"]        # This is an example override, this is not a default, must be
                                     # array of strings
 
-      # coffeescript:               # config settings for coffeescript
-        # sourceMap:true            # whether to generate source during "mimosa watch".  Source maps
-                                    # are not generated during "mimosa build" regardless of setting.
-        # bare:true                 # whether or not to include the top level wrapper around each
-                                    # compiled coffeescript file. Defaults to not wrapping as
-                                    # wrapping with define/require is assumed.
+      # coffeescript:                    # config settings for coffeescript
+        # sourceMap:true                 # whether to generate source during "mimosa watch".
+                                         # Source maps are not generated during "mimosa build"
+                                         # regardless of setting.
+        # sourceMapExclude: [/\/spec\//] # files to exclude from source map generation
+        # bare:true                      # whether or not to include the top level wrapper around
+                                         # each compiled coffeescript file. Defaults to not wrapping
+                                         # as wrapping with define/require is assumed.
 
       # iced:                       # config settings for iced coffeescript
         # bare:true                 # whether or not to include the top level wrapper around each
@@ -162,7 +165,8 @@ class MimosaCompilerModule
         # use:['nib']               # names of libraries to use, should match the npm name for
                                     # the desired libraries
 
-      # template:
+      # template:                         # overall template object can be set to null if no
+                                          # templates being used
         # amdWrap: true                   # Whether or not to wrap the compiled template files in
                                           # an AMD wrapper for use with require.js
         # outputFileName: "templates"     # the file all templates are compiled into, is relative
@@ -292,6 +296,9 @@ class MimosaCompilerModule
     if validators.ifExistsIsObject(errors, "coffeescript config", config.coffeescript)
       if config.isBuild
         config.coffeescript.sourceMap = false
+      else
+       validators.ifExistsFileExcludeWithRegexAndStringWithField(errors, "coffeescript.sourceMapExclude", config.coffeescript, 'sourceMapExclude', config.watch.javascriptDir)
+
 
     if validators.ifExistsIsObject(errors, "typescript config", config.typescript)
       validators.ifExistsIsString(errors, "typescript.module", config.typescript.module)

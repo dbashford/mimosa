@@ -1,6 +1,8 @@
 fs =   require 'fs'
 path = require 'path'
 
+logger = require 'logmimosa'
+
 windowsDrive = /^[A-Za-z]:\\/
 
 exports.isArrayOfStrings = (errors, fld, obj) ->
@@ -176,10 +178,15 @@ exports.ifExistsArrayOfMultiPaths = (errors, fld, arrayOfPaths, relTo) ->
 
 exports.ifExistsFileExcludeWithRegexAndString = (errors, fld, obj, relTo) ->
   if obj.exclude?
-    if Array.isArray(obj.exclude)
+    exports.ifExistsFileExcludeWithRegexAndStringWithField(errors, fld, obj, 'exclude', relTo)
+  else
+    logger.info "ifExistsFileExcludeWithRegexAndString method called with object that does not have exclude property"
+
+exports.ifExistsFileExcludeWithRegexAndStringWithField = (errors, fld, obj, name, relTo) ->
+    if Array.isArray(obj[name])
       regexes = []
       newExclude = []
-      for exclude in obj.exclude
+      for exclude in obj[name]
         if typeof exclude is "string"
           newExclude.push exports.determinePath exclude, relTo
         else if exclude instanceof RegExp
@@ -189,9 +196,9 @@ exports.ifExistsFileExcludeWithRegexAndString = (errors, fld, obj, relTo) ->
           return false
 
       if regexes.length > 0
-        obj.excludeRegex = new RegExp regexes.join("|"), "i"
+        obj[name + "Regex"] = new RegExp regexes.join("|"), "i"
 
-      obj.exclude = newExclude
+      obj[name] = newExclude
     else
       errors.push "#{fld} must be an array"
       return false
