@@ -42,6 +42,9 @@ class FileUtils
       callback(error)
 
   isFirstFileNewer: (file1, file2, cb) ->
+    return cb(false) unless file1?
+    return cb(true) unless file2?
+
     fs.exists file1, (exists1) ->
       unless exists1
         logger.warn "Detected change with file [[ #{file1} ]] but is no longer present."

@@ -1,4 +1,8 @@
-# 0.12.0 - May ?? 2013
+# 0.12.0 - May 09 2013
+
+Soon, probably with `0.13.0`, all Mimosa modules will need to be JavaScript.  They can be coded in any language you want, but they must be published to NPM as JavaScript modules.  Or, at the very least, the `main` piece of code referred to by the `package.json` [main](http://package.json.nodejitsu.com/), or the modules root level `index` file must be JavaScript.
+
+All Mimosa modules that I have developed are written in CoffeeScript and compiled to JavaScript using Mimosa as part of the NPM workflow.  For an example Mimosa module written in CoffeeScript and built using Mimosa, check out the [require-commonjs](https://github.com/dbashford/mimosa-require-commonjs) code. You are welcome to publish modules as CoffeeScript as long as you manage that dependency.
 
 ### Major Changes
 * New module: [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple), includes `testem ci` integration.  Runs during `mimosa build` and for every JS file save during `mimosa watch`.
@@ -7,7 +11,8 @@
 * mimosa core has had all its libraries updated
 
 ### Minor Changes
-* Upgraded dust client library to latest version
+* Upgraded dust and lodash client library to latest version
+* Setting `template:null` is now a shortcut to turning off all template compilers.
 
 # 0.11.12 - May 03 2013
 
