@@ -9,6 +9,14 @@ Soon, probably with `0.13.0`, all Mimosa modules will need to be JavaScript.  Th
 
 All Mimosa modules that I have developed are written in CoffeeScript and compiled to JavaScript using Mimosa as part of the NPM workflow.  For an example Mimosa module written in CoffeeScript and built using Mimosa, check out the [require-commonjs](https://github.com/dbashford/mimosa-require-commonjs) code. You are welcome to publish modules as CoffeeScript as long as you manage that dependency.
 
+__NOTE__ If you have trouble with your project after updating to `0.12.0`, specifically problems requiring Mimosa modules like `logmimosa`, do the following:
+
+* Delete your `node_modules` directory
+* Run `npm install` (if you have your own server)
+* Start Mimosa
+
+This should clear things up.
+
 ### Major Changes
 * New module: [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple), includes `testem ci` integration.  Runs during `mimosa build` and for every JS file save during `mimosa watch`.
 * All Mimosa modules are now compiled to JavaScript before publishing. Mimosa core is not, yet.
