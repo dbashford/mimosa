@@ -31,7 +31,8 @@ class MimosaCompilerModule
     for compiler in @configuredCompilers.compilers
       compiler.registration(config, register) if compiler.registration?
 
-    register ['buildExtension'], 'complete', @_testDifferentTemplateLibraries, config.extensions.template
+    if config.template
+      register ['buildExtension'], 'complete', @_testDifferentTemplateLibraries, config.extensions.template
 
   _testDifferentTemplateLibraries: (config, options, next) =>
     return next() unless options.files?.length > 0
@@ -50,9 +51,6 @@ class MimosaCompilerModule
   _compilersWithoutCopy: ->
     @all.filter (comp) -> comp.base isnt "copy"
 
-  _compilersWithoutNone: ->
-    @all.filter (comp) -> comp.base isnt "none"
-
   compilersByType: ->
     compilersByType = {css:[], javascript:[], template:[]}
     for comp in @_compilersWithoutCopy()
@@ -68,7 +66,15 @@ class MimosaCompilerModule
 
     allCompilers = []
     extHash = {}
-    for Compiler in @_compilersWithoutNone()
+
+    compilers = @all.filter (comp) ->
+      comp.base isnt "none"
+
+    if config.template is null
+      compilers = compilers.filter (comp) ->
+        comp.type isnt "template"
+
+    for Compiler in compilers
       extensions = if Compiler.base is "copy"
         config.copy.extensions
       else
