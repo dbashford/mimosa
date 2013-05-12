@@ -127,7 +127,7 @@ class NewCommand
   _create: (name, chosen) =>
     @config = configurer.buildConfigText()
 
-    skeletonPath = path.join __dirname, '..', 'skeleton'
+    skeletonPath = path.join __dirname, '..', 'skeleton', 'code'
 
     # if name provided, simply copy directory into directory by that name
     # if name not provided, copy all skeleton contents into current directory
