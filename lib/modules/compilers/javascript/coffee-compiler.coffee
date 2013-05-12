@@ -10,7 +10,7 @@ JSCompiler = require "./javascript"
 module.exports = class CoffeeCompiler extends JSCompiler
 
   @prettyName        = "(*) CoffeeScript - http://coffeescript.org/"
-  @defaultExtensions = ["coffee"]
+  @defaultExtensions = ["coffee", "litcoffee"]
   @isDefault         = true
 
   constructor: (config, @extensions) ->
@@ -29,6 +29,7 @@ module.exports = class CoffeeCompiler extends JSCompiler
 
   compile: (file, cb) ->
     conf = _.extend {}, @coffeeConfig, sourceFiles:[path.basename(file.inputFileName) + ".src"]
+    conf.literate = coffee.helpers.isLiterate(file.inputFileName)
 
     if conf.sourceMap
       if conf.sourceMapExclude?.indexOf(file.inputFileName) > -1
