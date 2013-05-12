@@ -16,20 +16,10 @@ init = (name, opts) ->
   moduleDirPath = path.resolve(name)
   fs.exists moduleDirPath, (exists) ->
     if exists
-      fs.stat moduleDirPath, (err, stats) ->
-        if stats.isDirectory()
-          logger.info "Directory/file already exists at [[ #{moduleDirPath} ]], placing skeleton inside that directory."
-          copySkeleton(name, opts.coffee, moduleDirPath)
-        else
-          logger.error "File already exists at [[ #{moduleDirPath} ]]"
-          process.exit 0
+      logger.warn "Directory/file already exists at [[ #{moduleDirPath} ]], will not overwrite it."
+      process.exit 0
     else
-      fs.mkdir moduleDirPath, (err) ->
-        if err
-          logger.error "Error creating directory: #{err}"
-          process.exit 1
-        else
-          copySkeleton(name, opts.coffee, moduleDirPath)
+      copySkeleton(name, opts.coffee, moduleDirPath)
 
 copySkeleton = (name, isCoffee, moduleDirPath) ->
   lang = if isCoffee then "coffee" else 'js'
@@ -43,7 +33,7 @@ copySkeleton = (name, isCoffee, moduleDirPath) ->
 
   packageJson = path.join(moduleDirPath, 'package.json')
   fs.readFile packageJson, 'ascii', (err, text) ->
-    text = text.replace '???', name
+    text = text.replace 'NAMENAMENAME', name
     fs.writeFile packageJson, text, (err) ->
 
       readme = path.join(moduleDirPath, 'README.md')
