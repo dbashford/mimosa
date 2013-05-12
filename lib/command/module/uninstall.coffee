@@ -10,6 +10,17 @@ deleteMod = (name, opts) ->
     logger.setDebug()
     process.env.DEBUG = true
 
+  unless name?
+    try
+      pack = require path.join process.cwd(), 'package.json'
+    catch err
+      return logger.error "Unable to find package.json, or badly formatted: #{err}"
+
+    unless pack.name?
+      return logger.error "package.json missing either name or version"
+
+    name = pack.name
+
   unless name.indexOf('mimosa-') is 0
     return logger.error "Can only delete 'mimosa-' prefixed modules with mod:delete (ex: mimosa-server)."
 
