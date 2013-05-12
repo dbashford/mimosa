@@ -1,8 +1,9 @@
-# 0.12.1 - May ?? 2013
+# 0.12.1 - May 12 2013
 
 ### Minor Changes
-* mimosa. [mimosa #186](https://github.com/dbashford/mimosa/issues/186). Can now run `mimosa mod:uninstall` without the name of the module if running command from inside the root directory of a module. So if inside `/yourMachine/modules/mimosa-foo`, running `mimosa mod:uninstall` will remove `mimosa-foo` from your Mimosa install.  This mimics the behavior of `mimosa mod:install`.
-* mimosa. [mimosa #184](https://github.com/dbashford/mimosa/issues/184). Fixing mimosa module creation problem.
+* [mimosa #188](https://github.com/dbashford/mimosa/pull/188). Via pull request. `litcoffee` is now a default coffeescript extension and the coffeescript compiler will compile your Literate CoffeeScript files.
+* [mimosa #186](https://github.com/dbashford/mimosa/issues/186). Can now run `mimosa mod:uninstall` without the name of the module if running command from inside the root directory of a module. So if inside `/yourMachine/modules/mimosa-foo`, running `mimosa mod:uninstall` will remove `mimosa-foo` from your Mimosa install.  This mimics the behavior of `mimosa mod:install`.
+* [mimosa #184](https://github.com/dbashford/mimosa/issues/184). Fixing mimosa module creation problem.
 * mimosa. Added the ability to have Mimosa exclude certain coffeescript files from sourcemap generation.  A new `sourceMapExclude` property was added that can be a regex or relative to `watch.javascriptDir`.  It defaults to `[/\/spec\//]`, which means it excludes source map generation for any files contained inside a `/spec/` directory or subdirectory.
 
 # 0.12.0 - May 09 2013
