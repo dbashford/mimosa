@@ -69,6 +69,15 @@ class NewCommand
 
     logger.debug "Project name: #{name}"
 
+    @skeletonOutPath = if name
+      outPath = path.join process.cwd(), name
+      if fs.existsSync outPath
+        logger.error "Directory/file exists at [[ #{outPath} ]], cannot continue."
+        process.exit 0
+      outPath
+    else
+      process.cwd()
+
     util.projectPossibilities (compilers) =>
       if opts.defaults
         @_createWithDefaults(compilers, name)
@@ -127,39 +136,25 @@ class NewCommand
   _create: (name, chosen) =>
     @config = configurer.buildConfigText()
 
-    skeletonPath = path.join __dirname, '..', 'skeleton', 'code'
+    @skeletonPath = path.join __dirname, '..', '..', 'skeleton'
 
-    # if name provided, simply copy directory into directory by that name
-    # if name not provided, copy all skeleton contents into current directory
-    @currPath = if name?.length > 0
-      @_copySkeletonToProvidedDirectory(skeletonPath, name)
-    else
-      @_copySkeletonToCurrentDirectory(skeletonPath)
-
-    @_makeChosenCompilerChanges(chosen)
-
-    @_postCopyCleanUp()
+    @_moveDirectoryContents @skeletonPath, @skeletonOutPath
+    @_makeChosenCompilerChanges chosen
 
     if chosen.server.name is "none"
       @_usingDefaultServer()
     else
-      @_usingOwnServer(name, chosen)
+      @_usingOwnServer name, chosen
 
-    @_usingOwnViews(chosen)
+    @_moveViews chosen
 
-  _copySkeletonToProvidedDirectory: (skeletonPath, name) ->
-    currPath = path.join path.resolve(''), name
-    logger.info "Copying skeleton project into #{currPath}"
-    wrench.copyDirSyncRecursive skeletonPath, currPath
-    currPath
+    logger.debug "Renaming .gitignore"
+    fs.renameSync (path.join @skeletonOutPath, ".ignore"), (path.join @skeletonOutPath, ".gitignore")
 
-  _copySkeletonToCurrentDirectory: (skeletonPath) ->
-    logger.info "A project name was not provided, copying skeleton into the current directory"
-    currPath = path.join path.resolve(''), path.sep
-    @_moveDirectoryContents(skeletonPath)
-    currPath
+  _moveDirectoryContents: (sourcePath, outPath) ->
+    unless fs.existsSync outPath
+      fs.mkdirSync outPath
 
-  _moveDirectoryContents: (sourcePath, outPath = "") ->
     for item in wrench.readdirSyncRecursive(sourcePath)
       fullSourcePath = path.join sourcePath, item
       fileStats = fs.statSync fullSourcePath
@@ -168,7 +163,7 @@ class NewCommand
         logger.debug "Copying directory: [[ #{fullOutPath} ]]"
         wrench.mkdirSyncRecursive fullOutPath, 0o0777
       if fileStats.isFile()
-        logger.debug "Copying file: [[ #{fullOutPath} ]]"
+        logger.debug "Copying file: [[ #{fullSourcePath} ]]"
         fileContents = fs.readFileSync fullSourcePath
         fs.writeFileSync fullOutPath, fileContents
 
@@ -207,7 +202,7 @@ class NewCommand
     safePaths.push "jquery\.js"
     safePaths.push "require\.js"
 
-    assetsPath = path.join @currPath,  'assets'
+    assetsPath = path.join @skeletonOutPath,  'assets'
     allItems = wrench.readdirSyncRecursive(assetsPath)
     files = allItems.filter (i) -> fs.statSync(path.join(assetsPath, i)).isFile()
 
@@ -228,7 +223,7 @@ class NewCommand
 
       fs.unlinkSync filePath unless isSafe
 
-    serverPath = path.join @currPath,  'servers'
+    serverPath = path.join @skeletonOutPath, 'servers'
     allItems = wrench.readdirSyncRecursive(serverPath)
     files = allItems.filter (i) -> fs.statSync(path.join(serverPath, i)).isFile()
 
@@ -252,29 +247,16 @@ class NewCommand
       templateView = templateView.replace /-\w+\./, "."
       fs.writeFile templateView, data
 
-  _postCopyCleanUp: =>
-    data = fs.readFileSync (path.join @currPath, '.npmignore'), 'ascii'
-    logger.debug "Writing .gitignore"
-    fs.writeFileSync path.join(@currPath, '.gitignore'), data, 'ascii'
-
-    wrench.readdirSyncRecursive(@currPath)
-      .filter (f) ->
-        f.indexOf(".gitkeep") > 0
-      .map (f) =>
-        path.join @currPath, f
-      .forEach (f) ->
-        fs.unlinkSync f
-
-  _usingOwnViews: (chosen) ->
+  _moveViews: (chosen) ->
     logger.debug "Moving views into place"
-    @_moveDirectoryContents(path.join(@currPath, "view", chosen.views.name), @currPath)
-    wrench.rmdirSyncRecursive path.join(@currPath, "view")
+    @_moveDirectoryContents(path.join(@skeletonOutPath, "view", chosen.views.name), @skeletonOutPath)
+    wrench.rmdirSyncRecursive path.join(@skeletonOutPath, "view")
 
   # remove express files/directories and update config to point to default server
   _usingDefaultServer: ->
     logger.debug "Using default server, so removing server resources"
-    fs.unlinkSync path.join(@currPath, "package.json")
-    wrench.rmdirSyncRecursive path.join(@currPath, "servers")
+    fs.unlinkSync path.join(@skeletonOutPath, "package.json")
+    wrench.rmdirSyncRecursive path.join(@skeletonOutPath, "servers")
 
     @config = @config.replace "# server:", "server:"
     @config = @config.replace "# defaultServer:", "defaultServer:"
@@ -283,7 +265,7 @@ class NewCommand
 
   _usingOwnServer: (name, chosen) ->
     logger.debug "Making package.json edits"
-    jPath = path.join @currPath, "package.json"
+    jPath = path.join @skeletonOutPath, "package.json"
     packageJson = require(jPath)
     packageJson.name = name if name?
 
@@ -302,12 +284,12 @@ class NewCommand
     fs.writeFileSync jPath, JSON.stringify(packageJson, null, 2)
 
     logger.debug "Moving server into place"
-    @_moveDirectoryContents(path.join(@currPath, "servers", chosen.server.name), @currPath)
-    wrench.rmdirSyncRecursive path.join(@currPath, "servers")
+    @_moveDirectoryContents(path.join(@skeletonOutPath, "servers", chosen.server.name), @skeletonOutPath)
+    wrench.rmdirSyncRecursive path.join(@skeletonOutPath, "servers")
 
     logger.info "Installing node modules"
     currentDir = process.cwd()
-    process.chdir @currPath
+    process.chdir @skeletonOutPath
     exec "npm install", (err, sout, serr) =>
       if err
         logger.error err
@@ -327,7 +309,7 @@ class NewCommand
       delete json.dependencies[lib]
 
   _done: =>
-    configPath = path.join @currPath, "mimosa-config.coffee"
+    configPath = path.join @skeletonOutPath, "mimosa-config.coffee"
     fs.writeFile configPath, @config, (err) ->
       logger.success "New project creation complete!  Execute 'mimosa watch --server' from inside your project to monitor the file system. Then start coding!"
       process.stdin.destroy()
