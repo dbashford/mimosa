@@ -1,3 +1,8 @@
+# 0.12.2 - May 1? 2013
+
+### Minor Changes
+* mimosa-require.  Bumped version of require.js to include the [newly introduced sourceMap support](http://jrburke.com/).
+
 # 0.12.1 - May 12 2013
 
 ### Minor Changes
