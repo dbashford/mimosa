@@ -1,7 +1,9 @@
-# 0.12.2 - May 1? 2013
+# 0.12.2 - May 14 2013
 
 ### Minor Changes
+* mimosa. Included dust helpers in provided vendor dust file
 * mimosa-require.  Bumped version of require.js to include the [newly introduced sourceMap support](http://jrburke.com/).
+* Small reorg/refactor of some `mimosa new` code
 
 # 0.12.1 - May 12 2013
 
