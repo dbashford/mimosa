@@ -180,7 +180,7 @@ exports.ifExistsFileExcludeWithRegexAndString = (errors, fld, obj, relTo) ->
   if obj.exclude?
     exports.ifExistsFileExcludeWithRegexAndStringWithField(errors, fld, obj, 'exclude', relTo)
   else
-    logger.info "ifExistsFileExcludeWithRegexAndString method called with object that does not have exclude property"
+    logger.debug "ifExistsFileExcludeWithRegexAndString method called with object that does not have exclude property"
 
 exports.ifExistsFileExcludeWithRegexAndStringWithField = (errors, fld, obj, name, relTo) ->
     if Array.isArray(obj[name])
