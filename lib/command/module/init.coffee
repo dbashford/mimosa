@@ -26,19 +26,18 @@ copySkeleton = (name, isCoffee, moduleDirPath) ->
   skeletonPath = path.join __dirname, '..', '..', 'modules', 'skeleton', lang
   wrench.copyDirSyncRecursive skeletonPath, moduleDirPath, {excludeHiddenUnix:false}
 
-  gitignore = path.join(moduleDirPath, '.npmignore')
-  if fs.existsSync gitignore
-    gitignoreText = fs.readFileSync gitignore, 'ascii'
-    fs.writeFileSync path.join(moduleDirPath, '.gitignore'), gitignoreText
+  npmignore = path.join moduleDirPath, 'npmignore'
+  if fs.existsSync npmignore
+    fs.renameSync npmignore, path.join(moduleDirPath, '.npmignore')
 
   packageJson = path.join(moduleDirPath, 'package.json')
   fs.readFile packageJson, 'ascii', (err, text) ->
-    text = text.replace 'NAMENAMENAME', name
+    text = text.replace '???', name
     fs.writeFile packageJson, text, (err) ->
 
       readme = path.join(moduleDirPath, 'README.md')
       fs.readFile readme, 'ascii', (err, text) ->
-        text = text.replace /NAMENAMENAME/g, name
+        text = text.replace /\?\?\?/g, name
         fs.writeFile readme, text, (err) ->
           logger.success "Module skeleton successfully placed in #{name} directory. The first thing you'll" +
                          " want to do is go into #{name}#{path.sep}package.json and replace the placeholders."

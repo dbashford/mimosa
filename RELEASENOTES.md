@@ -1,3 +1,8 @@
+# 0.12.4 - May 15 2013
+
+### Minor Changes
+* mimosa. `mimosa mod:init [name] -c` now outputs a proper skeleton for a CoffeeScript based module, with all the necessary bits for using Mimosa to compile the module pre-install and publish.
+
 # 0.12.3 - May 15 2013
 
 ### Minor Changes
