@@ -1,3 +1,8 @@
+# 0.12.3 - May 15 2013
+
+### Minor Changes
+* [mimosa #190](https://github.com/dbashford/mimosa/issues/190). Fixed issue with `mimosa refresh` and the previous release's `mimosa new` changes.
+
 # 0.12.2 - May 14 2013
 
 ### Minor Changes

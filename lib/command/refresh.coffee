@@ -16,7 +16,7 @@ update = (opts) ->
   logger.debug "client package.json path: [[ #{clientPackageJsonPath} ]]"
   clientPackageJson = require clientPackageJsonPath
 
-  mimosaPackageJsonPath = path.join __dirname, '..', 'skeleton', 'package.json'
+  mimosaPackageJsonPath = path.join __dirname, '..', '..', 'skeleton', 'package.json'
   logger.debug "mimosa package.json path: [[ #{mimosaPackageJsonPath} ]]"
   mimosaPackageJson = require mimosaPackageJsonPath
 
