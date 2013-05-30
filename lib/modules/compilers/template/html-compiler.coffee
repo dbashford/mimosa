@@ -26,7 +26,7 @@ module.exports = class HTMLCompiler extends TemplateCompiler
     else
       ""
 
-  compile: (file, templateName, cb) =>
+  compile: (file, cb) =>
     # we don't want underscore to actually work, just to wrap stuff
     _.templateSettings =
       evaluate    : /<%%%%%%%%([\s\S]+?)%%%%%%%>/g,

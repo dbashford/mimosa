@@ -19,7 +19,7 @@ module.exports = class AbstractUnderscoreCompiler extends TemplateCompiler
     else
       ""
 
-  compile: (file, templateName, cb) =>
+  compile: (file, cb) =>
     try
       compiledOutput = @getLibrary().template(file.inputFileText)
       output = compiledOutput.source

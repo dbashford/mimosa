@@ -26,10 +26,10 @@ module.exports = class HoganCompiler extends TemplateCompiler
     else
       ""
 
-  compile: (file, templateName, cb) ->
+  compile: (file, cb) ->
     try
       compiledOutput = hogan.compile(file.inputFileText, {asString:true})
-      output = "templates['#{templateName}'] = new Hogan.Template(#{compiledOutput});\n"
+      output = "templates['#{file.templateName}'] = new Hogan.Template(#{compiledOutput});\n"
     catch err
       error = err
     cb(error, output)

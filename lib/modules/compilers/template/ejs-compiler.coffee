@@ -41,7 +41,7 @@ module.exports = class EJSCompiler extends TemplateCompiler
     else
       ""
 
-  compile: (file, templateName, cb) =>
+  compile: (file, cb) =>
     try
       output = ejs.compile file.inputFileText,
         compileDebug: false,

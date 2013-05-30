@@ -26,7 +26,7 @@ module.exports = class JadeCompiler extends TemplateCompiler
     else
       ""
 
-  compile: (file, templateName, cb) =>
+  compile: (file, cb) =>
     try
       output = jade.compile file.inputFileText,
         compileDebug: false,

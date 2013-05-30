@@ -13,12 +13,12 @@ module.exports = class HBSCompiler extends HandlebarsCompiler
   constructor: (config, @extensions) ->
     super(config)
 
-  compile: (file, templateName, cb) =>
+  compile: (file, cb) =>
     try
       output = @handlebars.precompile file.inputFileText
       output = @transformTemplate output.toString()
       if @ember
-        output = "Ember.TEMPLATES['#{templateName}'] = #{output}"
+        output = "Ember.TEMPLATES['#{file.templateName}'] = #{output}"
     catch err
       error = err
     cb(error, output)

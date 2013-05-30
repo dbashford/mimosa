@@ -27,9 +27,9 @@ module.exports = class DustCompiler extends TemplateCompiler
     else
       ""
 
-  compile: (file, templateName, cb) ->
+  compile: (file, cb) ->
     try
-      output = dust.compile file.inputFileText, templateName
+      output = dust.compile file.inputFileText, file.templateName
     catch err
       error = err
     cb(error, output)

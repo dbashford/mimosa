@@ -84,12 +84,13 @@ module.exports = class TemplateCompiler
     newFiles = []
     options.files.forEach (file) =>
       logger.debug "Compiling HTML template [[ #{file.inputFileName} ]]"
-      templateName = @__generateTemplateName(file.inputFileName)
-      @compile file, templateName, (err, result) =>
+      file.templateName = @__generateTemplateName(file.inputFileName, config)
+      @compile file, (err, result) =>
         if err
           logger.error "Template [[ #{file.inputFileName} ]] failed to compile. Reason: #{err}"
         else
-          result = "templates['#{templateName}'] = #{result}\n" unless @handlesNamespacing
+          unless @handlesNamespacing
+            result = "templates['#{file.templateName}'] = #{result}\n"
           file.outputFileText = result
           newFiles.push file
 
@@ -125,7 +126,7 @@ module.exports = class TemplateCompiler
           if file.inputFileName?.indexOf(path.join(folder, path.sep)) is 0
             mergedFiles.push file.inputFileName
             unless config.isOptimize
-              mergedText += @templatePreamble file.inputFileName
+              mergedText += @__templatePreamble file
             mergedText += file.outputFileText
             break
 
@@ -140,7 +141,7 @@ module.exports = class TemplateCompiler
 
     next()
 
-  __generateTemplateName: (fileName) ->
+  __generateTemplateName: (fileName, config) ->
     path.basename fileName, path.extname(fileName)
 
   _removeFiles: (config, options, next) =>
@@ -210,10 +211,10 @@ module.exports = class TemplateCompiler
     libPath = "vendor/#{@clientLibrary}"
     requireRegister?.aliasForPath(libPath) ? libPath
 
-  templatePreamble: (fileName) ->
+  __templatePreamble: (file) ->
     """
     \n//
-    // Source file: [#{fileName}]
-    // Template name: [#{@__generateTemplateName(fileName)}]
+    // Source file: [#{file.inputFileName}]
+    // Template name: [#{file.templateName}]
     //\n
     """
