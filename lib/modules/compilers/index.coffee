@@ -112,6 +112,7 @@ class MimosaCompilerModule
     compilers:
       extensionOverrides: {}
     template:
+      nameTransform:"fileName"
       amdWrap:true
       outputFileName: "templates"
       handlebars:
@@ -167,6 +168,11 @@ class MimosaCompilerModule
 
       # template:                         # overall template object can be set to null if no
                                           # templates being used
+        # nameTransform: "fileName"       # means by which Mimosa creates the name for each
+                                          # template, options: default "fileName" is name of file,
+                                          # "filePath" is path of file after watch.javascriptDir,
+                                          # a regex can be used, or a function which takes the
+                                          # filePath as input and expects a string to be returned.
         # amdWrap: true                   # Whether or not to wrap the compiled template files in
                                           # an AMD wrapper for use with require.js
         # outputFileName: "templates"     # the file all templates are compiled into, is relative
@@ -241,6 +247,16 @@ class MimosaCompilerModule
       validators.ifExistsIsBoolean(errors, "template.amdWrap", config.template.amdWrap)
 
       validTCompilers = ["handlebars", "dust", "hogan", "jade", "underscore", "lodash", "ejs", "html"]
+
+
+      if config.template.nameTransform?
+        if typeof config.template.nameTransform is "string"
+          if ["fileName","filePath"].indexOf(config.template.nameTransform) is -1
+            errors.push "config.template.nameTransform valid string values are filePath or fileName"
+        else if typeof config.template.nameTransform is "function" or config.template.nameTransform instanceof RegExp
+          # do nothing
+        else
+          errors.push "config.template.nameTransform property must be a string, regex or function"
 
       if config.template.outputFileName?
         config.template.output = [{
