@@ -157,7 +157,7 @@ module.exports = class TemplateCompiler
         filePath
       else
         returnFilepath = if nameTransform instanceof RegExp
-          nameTransform.exec(filePath)[0]
+          filePath.replace nameTransform, ''
         else
           nameTransform filePath
 
