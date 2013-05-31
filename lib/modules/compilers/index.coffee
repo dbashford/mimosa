@@ -171,8 +171,9 @@ class MimosaCompilerModule
         # nameTransform: "fileName"       # means by which Mimosa creates the name for each
                                           # template, options: default "fileName" is name of file,
                                           # "filePath" is path of file after watch.javascriptDir,
-                                          # a regex can be used, or a function which takes the
-                                          # filePath as input and expects a string to be returned.
+                                          # a regex can be used, it will be applied to the
+                                          # "filePath" text, or a function which takes the filePath
+                                          # as input and expects a string to be returned.
         # amdWrap: true                   # Whether or not to wrap the compiled template files in
                                           # an AMD wrapper for use with require.js
         # outputFileName: "templates"     # the file all templates are compiled into, is relative

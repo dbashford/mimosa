@@ -142,7 +142,31 @@ module.exports = class TemplateCompiler
     next()
 
   __generateTemplateName: (fileName, config) ->
-    path.basename fileName, path.extname(fileName)
+    nameTransform = config.template.nameTransform
+    if nameTransform is "fileName"
+      path.basename fileName, path.extname(fileName)
+    else
+      fullJSDir = path.join config.watch.sourceDir, config.watch.javascriptDir
+      # only javascriptdir forward
+      filePath = fileName.replace fullJSDir, ''
+      # normalize to unix file seps, slice off first one
+      filePath = filePath.split(path.sep).join('/').substring(1)
+      # remove ext
+      filePath = filePath.replace(path.extname(filePath), '')
+      if nameTransform is "filePath"
+        filePath
+      else
+        returnFilepath = if nameTransform instanceof RegExp
+          nameTransform.exec(filePath)[0]
+        else
+          nameTransform filePath
+
+        if typeof returnFilepath isnt "string"
+          logger.error "Application of template.nameTransform for file [[ #{fileName} ]] did not result in string"
+          "nameTransformFailed"
+        else
+          returnFilepath
+
 
   _removeFiles: (config, options, next) =>
     total = if config.template.output
