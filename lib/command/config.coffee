@@ -2,7 +2,7 @@ path =   require 'path'
 fs =     require 'fs'
 
 logger = require 'logmimosa'
-configurer = require '../util/configurer'
+buildConfig = require '../util/config-builder'
 
 copyConfig = (opts) ->
   if opts.debug
@@ -13,7 +13,7 @@ copyConfig = (opts) ->
   if fs.existsSync currPath
     logger.warn "A mimosa-config.coffee already exists in this directory.  Will not overwrite.  Please navigate to a directory that does not contain a mimosa-config."
   else
-    configText = configurer.buildConfigText()
+    configText = buildConfig()
     logger.debug "Writing config file to #{currPath}"
     fs.writeFileSync currPath, configText, 'ascii'
     logger.success "Copied default config file into current directory."

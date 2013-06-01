@@ -1,12 +1,10 @@
 fs =      require 'fs'
-path   =  require 'path'
 
 wrench =  require 'wrench'
-_      =  require 'lodash'
 logger =  require 'logmimosa'
 
 Cleaner = require '../util/cleaner'
-util =    require '../util/util'
+configurer = require '../util/configurer'
 
 clean = (opts) ->
   if opts.debug
@@ -15,7 +13,7 @@ clean = (opts) ->
 
   opts.clean = true
 
-  util.processConfig opts, (config, modules) =>
+  configurer opts, (config, modules) =>
     if opts.force
       if fs.existsSync config.watch.compiledDir
         logger.info "Forcibly removing the entire directory [[ #{config.watch.compiledDir} ]]"

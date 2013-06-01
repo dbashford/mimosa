@@ -3,7 +3,8 @@ fs = require 'fs'
 logger =  require 'logmimosa'
 wrench =  require 'wrench'
 
-util =    require '../util/util'
+configurer = require '../util/configurer'
+
 Watcher = require '../util/watcher'
 Cleaner = require '../util/cleaner'
 
@@ -13,7 +14,7 @@ watch = (opts) =>
     process.env.DEBUG = true
 
   opts.watch = true
-  util.processConfig opts, (config, modules) =>
+  configurer opts, (config, modules) =>
     instWatcher = ->
       config.isClean = false
       new Watcher(config, modules, true)

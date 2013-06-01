@@ -8,7 +8,7 @@ logger =   require 'logmimosa'
 
 util =      require '../util/util'
 deps =      require('../../package.json').dependencies
-configurer = require '../util/configurer'
+buildConfig = require '../util/config-builder'
 
 class NewCommand
 
@@ -134,7 +134,7 @@ class NewCommand
     @_create(name, chosen)
 
   _create: (name, chosen) =>
-    @config = configurer.buildConfigText()
+    @config = buildConfig()
 
     @skeletonPath = path.join __dirname, '..', '..', 'skeleton'
 

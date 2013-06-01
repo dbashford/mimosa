@@ -1,6 +1,6 @@
 logger =   require 'logmimosa'
 
-util =     require '../util/util'
+configurer = require '../util/configurer'
 Watcher =  require '../util/watcher'
 
 virgin = (opts) =>
@@ -17,7 +17,7 @@ to keep it.
     process.env.DEBUG = true
 
   opts.virgin = true
-  util.processConfig opts, (config, modules) ->
+  configurer opts, (config, modules) ->
     new Watcher(config, modules, true)
 
 register = (program, callback) =>

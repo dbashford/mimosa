@@ -1,9 +1,6 @@
-fs = require 'fs'
-path = require 'path'
-
 logger = require 'logmimosa'
 
-util = require '../util/util'
+configurer = require '../util/configurer'
 Watcher =  require '../util/watcher'
 Cleaner = require '../util/cleaner'
 
@@ -15,7 +12,7 @@ build = (opts, foo, bar, baz, what) =>
   logger.info "Beginning build"
   opts.build = true
 
-  util.processConfig opts, (config, modules) =>
+  configurer opts, (config, modules) =>
     doBuild = ->
       config.isClean = false
       new Watcher config, modules, false, ->

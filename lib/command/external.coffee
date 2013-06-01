@@ -1,5 +1,5 @@
 modules = require '../modules'
-util =    require '../util/util'
+configurer = require '../util/configurer'
 Watcher =  require '../util/watcher'
 Cleaner = require '../util/cleaner'
 logger = require 'logmimosa'
@@ -8,7 +8,7 @@ module.exports = (program) ->
 
   for mod in modules.modulesWithCommands()
     mod.registerCommand program, (buildFirst, callback) ->
-      util.processConfig {}, (config, mods) =>
+      configurer {}, (config, mods) =>
 
         if buildFirst
           config.isClean = true
@@ -16,6 +16,6 @@ module.exports = (program) ->
             config.isClean = false
             new Watcher config, mods, false, ->
               logger.success "Finished build"
-              callback(config)
+              callback config
         else
-          callback(config)
+          callback config

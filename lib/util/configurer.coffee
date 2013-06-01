@@ -7,220 +7,262 @@ wrench = require 'wrench'
 logger = require 'logmimosa'
 _      = require 'lodash'
 
-util   = require './util'
-validators = require './validators'
+util   =        require './util'
+validators =    require './validators'
 moduleManager = require '../modules'
+Module =        require 'module'
 
-class MimosaConfigurer
+PRECOMPILE_FUN_REGION_START_RE         = /^(.*)\smimosa-config:\s*{/
+PRECOMPILE_FUN_REGION_END_RE           = /\smimosa-config:\s*}/
+PRECOMPILE_FUN_REGION_SEARCH_LINES_MAX = 5
+PRECOMPILE_FUN_REGION_LINES_MAX        = 100
 
-  # watch defaults, other defaults reside in modules
-  baseDefaults:
-    minMimosaVersion:null
-    modules: ['lint', 'server', 'require', 'minify', 'live-reload']
-    watch:
-      sourceDir: "assets"
-      compiledDir: "public"
-      javascriptDir: "javascripts"
-      exclude: [/[/\\](\.|~)[^/\\]+$/]
-      throttle: 0
+baseDefaults =
+  minMimosaVersion:null
+  modules: ['lint', 'server', 'require', 'minify', 'live-reload']
+  watch:
+    sourceDir: "assets"
+    compiledDir: "public"
+    javascriptDir: "javascripts"
+    exclude: [/[/\\](\.|~)[^/\\]+$/]
+    throttle: 0
 
-  applyAndValidateDefaults: (config, callback) =>
-    moduleNames = config.modules ? @baseDefaults.modules
-    moduleManager.getConfiguredModules moduleNames, (modules) =>
+_extend = (obj, props) ->
+  Object.keys(props).forEach (k) ->
+    val = props[k]
+    if val? and typeof val is 'object' and not Array.isArray(val) and typeof obj[k] is typeof val
+      _extend obj[k], val
+    else
+      obj[k] = val
+  obj
 
-      @modules = modules
-      config.root = process.cwd()
-      config = @_applyDefaults(config)
-      [errors, config] = @_validateSettings(config)
-      err = if errors.length is 0
-        logger.debug "No mimosa config errors"
-        null
+_findConfigPath = (file) ->
+  for ext in [".coffee", ".js", ""]
+    configPath = path.resolve("#{file}#{ext}")
+    return configPath if fs.existsSync configPath
+
+_validateWatchConfig = (config) ->
+  errors = []
+
+  if config.minMimosaVersion?
+    if config.minMimosaVersion.match(/^(\d+\.){2}(\d+)$/)
+      currVersion =  require('../../package.json').version
+      versionPieces = currVersion.split('.')
+      minVersionPieces = config.minMimosaVersion.split('.')
+
+      isHigher = false
+      for i in [0..2]
+        if +versionPieces[i] > +minVersionPieces[i]
+          isHigher = true
+
+        unless isHigher
+          if +versionPieces[i] < +minVersionPieces[i]
+            return ["Your version of Mimosa [[ #{currVersion} ]] is less than the required version for this project [[ #{config.minMimosaVersion} ]]"]
+    else
+      errors.push "minMimosaVersion must take the form 'number.number.number', ex: '0.7.0'"
+
+  config.watch.sourceDir = validators.multiPathMustExist(errors, "watch.sourceDir", config.watch.sourceDir, config.root)
+
+  return errors if errors.length > 0
+
+  unless config.isVirgin
+    if typeof config.watch.compiledDir is "string"
+      config.watch.compiledDir = validators.determinePath config.watch.compiledDir, config.root
+      if not fs.existsSync(config.watch.compiledDir) and not config.isForceClean
+        logger.info "Did not find compiled directory [[ #{config.watch.compiledDir} ]], so making it for you"
+        wrench.mkdirSyncRecursive config.watch.compiledDir, 0o0777
+    else
+      errors.push "watch.compiledDir must be a string"
+
+  if typeof config.watch.javascriptDir is "string"
+    jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
+    unless config.isVirgin
+      validators.doesPathExist(errors,"watch.javascriptDir", jsDir)
+  else
+    if config.watch.javascriptDir is null
+      # Allow to blank out javascriptDir when not strictly web app
+      config.watch.javascriptDir = ""
+    else
+      errors.push "watch.javascriptDir must be a string or null"
+
+  validators.ifExistsFileExcludeWithRegexAndString(errors, "watch.exclude", config.watch, config.watch.sourceDir)
+
+  unless typeof config.watch.throttle is "number"
+    errors.push "watch.throttle must be a number"
+
+  errors
+
+_requireConfig = (configPath) ->
+  if path.extname configPath
+    require configPath
+  else
+    raw = fs.readFileSync configPath, "utf8"
+    # Strip UTF-8 BOM.
+    config = if raw.charCodeAt(0) is 0xFEFF then raw.substring 1 else raw
+    precompileFunSource = _extractPrecompileFunctionSource config
+    if precompileFunSource.length > 0
+      try
+        config = eval("(#{precompileFunSource.replace /;\s*$/, ''})")(config)
+      catch err
+        if err instanceof SyntaxError
+          err.message = "[precompile region] " + err.message
+        throw err
+    configModule = new Module path.resolve(configPath)
+    configModule.filename = configModule.id
+    configModule.paths = Module._nodeModulePaths path.dirname(configModule.id)
+    configModule._compile config, configPath
+    configModule.loaded = yes
+    configModule.exports
+
+# Get source of bootstrap function for precompiling mimosa-config file.
+#
+# Function region is bounded by required marker lines which aren't included
+# in returned function source. Prefix of start marker line is stripped from
+# every function source line.
+#
+# If function region wasn't found or exceeded limit of lines, empty string
+# is returned.
+_extractPrecompileFunctionSource = (configSource) ->
+  pos = configLinesRead = functionRegionLinesRead = 0
+
+  while (pos < configSource.length) and
+        (if functionRegionLinesRead
+          functionRegionLinesRead < PRECOMPILE_FUN_REGION_LINES_MAX
+        else
+          configLinesRead < PRECOMPILE_FUN_REGION_SEARCH_LINES_MAX)
+
+    # Find next source line.
+    newlinePos = configSource.indexOf "\n", pos
+    newlinePos = configSource.length if newlinePos == -1
+    sourceLine = configSource.substr pos, (newlinePos - pos)
+    pos = newlinePos + 1
+
+    unless functionRegionLinesRead
+      # Test read source line for being marker of function region start.
+      if markerLinePrefix = PRECOMPILE_FUN_REGION_START_RE.exec(sourceLine)?[1]
+        functionRegionLinesRead = 1
+        functionSource = ""
       else
-        errors
+        configLinesRead++
+    else
+      # Check if marker of function region end was just read.
+      return functionSource if PRECOMPILE_FUN_REGION_END_RE.test sourceLine
+      functionRegionLinesRead++
+      functionSource += "#{sourceLine.replace markerLinePrefix, ''}\n"
 
-      callback(err, config, modules)
+  return ""
 
-  _moduleDefaults: ->
-    defs = {}
-    for mod in @modules when mod.defaults?
-      _.extend(defs, mod.defaults())
-    _.extend(defs, @baseDefaults)
-    defs
+_validateSettings = (config, modules) ->
+  errors = _validateWatchConfig(config)
 
-  extend: (obj, props) ->
-    Object.keys(props).forEach (k) =>
-      val = props[k]
-      if val? and typeof val is 'object' and not Array.isArray(val) and typeof obj[k] is typeof val
-        @extend obj[k], val
-      else
-        obj[k] = val
-    obj
-
-  _applyDefaults: (config) ->
-    @extend @_moduleDefaults(), config
-
-  _manipulateConfig: (config) ->
+  if errors.length is 0
     config.extensions =
       javascript: ['js']
       css: ['css']
       template: []
       copy: []
     config.watch.compiledJavascriptDir = validators.determinePath config.watch.javascriptDir, config.watch.compiledDir
-    config
+  else
+    return [errors, {}]
 
-  _validateSettings: (config) ->
-    errors = @_validateWatchConfig(config)
+  for mod in modules when mod.validate?
 
-    if errors.length is 0
-      config = @_manipulateConfig(config)
+    if mod.defaults?
+      config = _.clone(config, true)
+      allConfigKeys = Object.keys(config)
+      defaults = mod.defaults()
+      modKeys = if typeof defaults is "object" and not Array.isArray()
+        Object.keys(defaults)
+      else
+        []
+
+      allConfigKeys.forEach (key) ->
+        unless modKeys.indexOf(key) > -1
+          if typeof config[key] is "object"
+            util.deepFreeze config[key]
     else
-      return [errors, {}]
+      util.deepFreeze config
 
-    for mod in @modules when mod.validate?
+    moduleErrors = mod.validate config, validators
+    if moduleErrors
+      errors.push moduleErrors...
 
-      if mod.defaults?
-        config = _.clone(config, true)
-        allConfigKeys = Object.keys(config)
-        defaults = mod.defaults()
-        modKeys = if typeof defaults is "object" and not Array.isArray()
-          Object.keys(defaults)
-        else
-          []
+  # return to unfrozen
+  config = _.clone(config, true)
 
-        allConfigKeys.forEach (key) ->
-          unless modKeys.indexOf(key) > -1
-            if typeof config[key] is "object"
-              util.deepFreeze(config[key])
-      else
-        util.deepFreeze(config)
+  [errors, config]
 
-      moduleErrors = mod.validate(config, validators)
-      if moduleErrors
-        errors.push moduleErrors...
+_moduleDefaults = (modules) ->
+  defs = {}
+  for mod in modules when mod.defaults?
+    _.extend(defs, mod.defaults())
+  _.extend(defs, baseDefaults)
+  defs
 
-    # return to unfrozen
-    config = _.clone(config, true)
-
-    [errors, config]
-
-  _validateWatchConfig: (config) =>
-    errors = []
-
-    if config.minMimosaVersion?
-      if config.minMimosaVersion.match(/^(\d+\.){2}(\d+)$/)
-        currVersion =  require('../../package.json').version
-        versionPieces = currVersion.split('.')
-        minVersionPieces = config.minMimosaVersion.split('.')
-
-        isHigher = false
-        for i in [0..2]
-          if +versionPieces[i] > +minVersionPieces[i]
-            isHigher = true
-
-          unless isHigher
-            if +versionPieces[i] < +minVersionPieces[i]
-              return ["Your version of Mimosa [[ #{currVersion} ]] is less than the required version for this project [[ #{config.minMimosaVersion} ]]"]
-      else
-        errors.push "minMimosaVersion must take the form 'number.number.number', ex: '0.7.0'"
-
-    config.watch.sourceDir = validators.multiPathMustExist(errors, "watch.sourceDir", config.watch.sourceDir, config.root)
-
-    return errors if errors.length > 0
-
-    unless config.isVirgin
-      if typeof config.watch.compiledDir is "string"
-        config.watch.compiledDir = validators.determinePath config.watch.compiledDir, config.root
-        if not fs.existsSync(config.watch.compiledDir) and not config.isForceClean
-          logger.info "Did not find compiled directory [[ #{config.watch.compiledDir} ]], so making it for you"
-          wrench.mkdirSyncRecursive config.watch.compiledDir, 0o0777
-      else
-        errors.push "watch.compiledDir must be a string"
-
-    if typeof config.watch.javascriptDir is "string"
-      jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
-      unless config.isVirgin
-        validators.doesPathExist(errors,"watch.javascriptDir", jsDir)
+_applyAndValidateDefaults = (config, callback) ->
+  moduleNames = config.modules ? baseDefaults.modules
+  moduleManager.getConfiguredModules moduleNames, (modules) ->
+    config.root = process.cwd()
+    config = _extend _moduleDefaults(modules), config
+    [errors, config] = _validateSettings(config, modules)
+    err = if errors.length is 0
+      logger.debug "No mimosa config errors"
+      null
     else
-      if config.watch.javascriptDir is null
-        # Allow to blank out javascriptDir when not strictly web app
-        config.watch.javascriptDir = ""
-      else
-        errors.push "watch.javascriptDir must be a string or null"
+      errors
 
-    validators.ifExistsFileExcludeWithRegexAndString(errors, "watch.exclude", config.watch, config.watch.sourceDir)
+    callback(err, config, modules)
 
-    unless typeof config.watch.throttle is "number"
-      errors.push "watch.throttle must be a number"
+processConfig = (opts, callback) ->
+  config = {}
+  mainConfigPath = _findConfigPath "mimosa-config"
+  if mainConfigPath?
+    try
+      {config} = _requireConfig mainConfigPath
+    catch err
+      return logger.fatal "Improperly formatted configuration file [[ #{mainConfigPath} ]]: #{err}"
+  else
+    logger.warn "No configuration file found (mimosa-config.coffee/mimosa-config.js/mimosa-config), running from current directory using Mimosa's defaults."
+    logger.warn "Run 'mimosa config' to copy the default Mimosa configuration to the current directory."
 
-    errors
+  logger.debug "Your mimosa config:\n#{JSON.stringify(config, null, 2)}"
 
-  _configTop: ->
-    """
-    # All of the below are mimosa defaults and only need to be uncommented in the event you want
-    # to override them.
-    #
-    # IMPORTANT: Be sure to comment out all of the nodes from the base to the option you want to
-    # override. If you want to turn change the source directory you would need to uncomment watch
-    # and sourceDir. Also be sure to respect coffeescript indentation rules.  2 spaces per level
-    # please!
+  if opts.profile
+    unless config.profileLocation
+      config.profileLocation = "profiles"
 
-    exports.config = {
+    profileConfigPath = _findConfigPath path.join(config.profileLocation, opts.profile)
+    if profileConfigPath?
+      try
+        profileConfig = _requireConfig(profileConfigPath).config
+      catch err
+        return logger.fatal "Improperly formatted configuration file [[ #{profileConfigPath} ]]: #{err}"
 
-      # minMimosaVersion:null   # The minimum Mimosa version that must be installed to use the
-                                # project. Defaults to null, which means Mimosa will not check
-                                # the version.  This is a no-nonsense way for big teams to ensure
-                                # everyone stays up to date with the blessed Mimosa version for a
-                                # project.
+      logger.debug "Profile config:\n#{JSON.stringify(profileConfig, null, 2)}"
 
-      ###
-      The list of Mimosa modules to use for this application. The defaults (lint, server, require,
-      minify, live-reload) come bundled with Mimosa and do not need to be installed.  The 'mimosa-'
-      that preceeds all Mimosa module names is assumed, however you can use it if you want.  If a
-      module is listed here that Mimosa is unaware of, Mimosa will attempt to install it.
-      ###
-      # modules: ['lint', 'server', 'require', 'minify', 'live-reload']
+      config = _extend config, profileConfig
+      logger.debug "mimosa config after profile applied:\n#{JSON.stringify(config, null, 2)}"
+    else
+      return logger.fatal "Profile provided but not found at [[ #{path.join('profiles', opts.profile)} ]]"
 
-      # watch:
-        # sourceDir: "assets"                # directory location of web assets, can be relative to
-                                             # the project root, or absolute
-        # compiledDir: "public"              # directory location of compiled web assets, can be
-                                             # relative to the project root, or absolute
-        # javascriptDir: "javascripts"       # Location of precompiled javascript (i.e.
-                                             # coffeescript), must be relative to sourceDir
-        # exclude: [/[/\\\\](\\.|~)[^/\\\\]+$/]   # regexes or strings matching the files to be
-                                             # ignored by mimosa, the default matches all sorts of
-                                             # dot files and temp files. Strings are paths and can
-                                             # be relative to sourceDir or absolute.
-        # throttle: 0                        # number of file adds the watcher handles before
-                                             # taking a 100 millisecond pause to let those files
-                                             # finish their processing. This helps avoid EMFILE
-                                             # issues for projects containing large numbers of
-                                             # files that all get copied at once. If the throttle
-                                             # is set to 0, no throttling is performed. Recommended
-                                             # to leave this set at 0, thedefault, until you start
-                                             # encountering EMFILE problems.
+  config.isVirgin =     opts?.virgin
+  config.isServer =     opts?.server
+  config.isOptimize =   opts?.optimize
+  config.isMinify =     opts?.minify
+  config.isForceClean = opts?.force
+  config.isClean =      opts?.clean
+  config.isBuild =      opts?.build
+  config.isWatch =      opts?.watch
+  config.isPackage =    opts?.package
+  config.isInstall =    opts?.install
 
-    """
+  _applyAndValidateDefaults config, (err, newConfig, modules) ->
+    if err
+      logger.error "Unable to start Mimosa for the following reason(s):\n * #{err.join('\n * ')} "
+      process.exit 1
+    else
+      logger.debug "Full mimosa config:\n#{JSON.stringify(newConfig, null, 2)}"
+      logger.setConfig(newConfig)
+      callback(newConfig, modules)
 
-  _configBottom: -> "\n}"
-
-  buildConfigText: =>
-    modules = moduleManager.all
-    configText = @_configTop()
-    for mod in modules
-      if mod.placeholder?
-        ph = mod.placeholder()
-        configText += ph if ph?
-    configText += @_configBottom()
-
-    if moduleManager.configModuleString?
-      configText = configText.replace("  # modules: ['lint', 'server', 'require', 'minify', 'live-reload']", "  modules: " + moduleManager.configModuleString)
-
-    configText
-
-configurer = new MimosaConfigurer()
-
-module.exports =
-  applyAndValidateDefaults: configurer.applyAndValidateDefaults
-  buildConfigText:          configurer.buildConfigText
-  extend:                   configurer.extend
+module.exports = processConfig
