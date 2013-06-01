@@ -4,6 +4,14 @@ util =     require '../util/util'
 Watcher =  require '../util/watcher'
 
 virgin = (opts) =>
+
+  logger.warn """
+The virgin command has been deprecated and will be removed in a future release.
+If you use the virgin command and rather it not be removed, please travel over to
+https://github.com/dbashford/mimosa/issues/198 and let me know that you'd like
+to keep it.
+  """
+
   if opts.debug
     logger.setDebug()
     process.env.DEBUG = true

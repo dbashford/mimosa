@@ -1,3 +1,16 @@
+# 0.12.5 - May 31 2013
+
+Back at it after a bit of a break.  Plenty to knock out in the coming weeks.
+
+### Major Changes
+* [mimosa #198](https://github.com/dbashford/mimosa/issues/198). Soon the `virgin` command will be removed. As of this release it has been deprecated. If you use it and rather it not go, please comment as such on this issue.
+* [mimosa #191](https://github.com/dbashford/mimosa/issues/191). Mimosa now provides some flexibility in the naming of compiled templates. Previous to this release, templates would simply be named for the file they were in. So `foo.hbs` would be named `foo`. But certain frameworks, notably Ember, have conventions around the naming of templates that don't correspond with this, so a change we needed. A new property, `template.nameTransform` is now available for choosing how the template name is created. There are 4 possible settings.
+
+    * (Default) `fileName`, this is the current name-of-file option. This being the default means this change is backwards compatible and won't cause any problems for folks upgrading.
+    * `filePath`, this makes the name of the template the path of the file with 1) the `watch.javascriptDir` chopped off, 2) the slashes forced to `/`, and 3) the extension removed. No leading slash.
+    * A RegExp can be provided.  That RegExp is applied on the `filePath` string from above to __remove__ any unwanted pieces of text from the string. The RegExp is used as part of a `string.replace`
+    * A function can be provided.  That function is passed the `filePath` from above. The function must return a string that is the desired name of the template.
+
 # 0.12.4 - May 15 2013
 
 ### Minor Changes
