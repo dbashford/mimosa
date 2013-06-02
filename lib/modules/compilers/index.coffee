@@ -129,7 +129,7 @@ class MimosaCompilerModule
       sourceMapExclude:[/\/spec\//]
       bare:true
     iced:
-      bare:true
+      bare:false
     stylus:
       use:['nib']
 
@@ -154,9 +154,10 @@ class MimosaCompilerModule
                                          # as wrapping with define/require is assumed.
 
       # iced:                       # config settings for iced coffeescript
-        # bare:true                 # whether or not to include the top level wrapper around each
-                                    # compiled iced file. Defaults to not wrapping as wrapping with
-                                    # define/require is assumed.
+        # bare:false                # whether or not to include the top level wrapper around each
+                                    # compiled iced file. Defaults to wrapping as iced coffeescript
+                                    # adds code before the define/require that would otherwise leak
+                                    # into the global namespace.
 
       # typescript:                 # config settings for typescript
         # module: null              # how compiled tyepscript is wrapped, defaults to no wrapping,
