@@ -16,7 +16,7 @@ module.exports = class IcedCompiler extends JSCompiler
 
   compile: (file, cb) ->
     try
-      conf = _.extend {}, {runtime:'inline'}, @icedConfig
+      conf = _.extend {}, @icedConfig
       output = iced.compile file.inputFileText, conf
     catch err
       error = err

@@ -238,6 +238,11 @@ class NewCommand
     .forEach (filePath) ->
       fs.unlinkSync filePath
 
+    # Handle iced vendor file
+    if comps.javascript.base is "iced"
+      baseIcedPath = path.join(@skeletonOutPath, "assets", "javascripts", "vendor")
+      fs.renameSync path.join(baseIcedPath, "iced.js.iced"), path.join(baseIcedPath, "iced.js")
+
     # alter template view name and insert css framework
     if templateView?
       data = fs.readFileSync templateView, "ascii"

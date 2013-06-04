@@ -130,6 +130,7 @@ class MimosaCompilerModule
       bare:true
     iced:
       bare:true
+      runtime:'none'
     stylus:
       use:['nib']
 
@@ -157,6 +158,7 @@ class MimosaCompilerModule
         # bare:true                 # whether or not to include the top level wrapper around each
                                     # compiled iced file. Defaults to not wrapping as wrapping with
                                     # define/require is assumed.
+        # runtime:                  #
 
       # typescript:                 # config settings for typescript
         # module: null              # how compiled tyepscript is wrapped, defaults to no wrapping,

@@ -1,4 +1,13 @@
-# 0.12.5 - May 31 2013
+# 0.12.6 - Jun ?? 2013
+
+### Major Changes
+* [mimosa #201](https://github.com/dbashford/mimosa/issues/201), [mimosa #115](https://github.com/dbashford/mimosa/issues/115). IcedCoffeeScript boilerplate now pulled out into simple module that attaches `iced` to window. IcedCoffeeScript `runtime` compilation exposed via the `iced` config and defaults to `runtime:'none'`. You could choose, rather than going global with the `iced` object, to modify the `iced.js` library delivered with `mimosa new` to simply export `iced`, which would require you to pull in that module every time you need the async sugar IcedCoffeeScript provides.  The `mimosa new` boilerplate for IcedCoffeeScript projects shows how to use this.  But, with the `runtime` option opened up via the `iced` config, and the boilerplate code tossed into a file available via `mimosa new`, the power rests in the hands of the user to use the solution they feel is best.
+
+### Minor Changes
+* [mimosa #202](https://github.com/dbashford/mimosa/issues/202), [mimosa #203](https://github.com/dbashford/mimosa/issues/203). Pull request fixing some CoffeeScript error reporting issues.
+* mimosa. Various refactors and reorgs of codebase.
+
+# 0.12.5 - Jun 1 2013
 
 Back at it after a bit of a break.  Plenty to knock out in the coming weeks.
 
