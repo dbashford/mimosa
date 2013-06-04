@@ -43,5 +43,5 @@ module.exports = class CoffeeCompiler extends JSCompiler
         sourceMap = output.v3SourceMap
         output = output.js
     catch err
-      error = "#{err}, line #{err.location.first_line}, column #{err.location.first_column}"
+      error = "#{err}, line #{err.location?.first_line}, column #{err.location?.first_column}"
     cb error, output, sourceMap
