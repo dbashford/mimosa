@@ -53,8 +53,8 @@
   ],
   "dependencies": {
     "jade": "0.30.0",
-    "handlebars": "1.0.10",
-    "emblem": "0.2.6",
+    "handlebars": "1.0.12",
+    "emblem": "0.2.7",
     "dustjs-linkedin": "1.2.4",
     "hogan.js": "2.0.0",
     "lodash": "1.2.1",
