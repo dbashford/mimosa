@@ -1,4 +1,3 @@
 .template This is coming from a {{name}} template
 .helper {{example-helper}}
-= >example_partial
 .styled And it has all been styled (poorly) using {{css}}
