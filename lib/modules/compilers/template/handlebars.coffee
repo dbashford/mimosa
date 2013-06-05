@@ -32,7 +32,8 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
        };
     }
 
-    var template = Handlebars.template, templates = {};\n
+    var template = Handlebars.template, templates = {};
+    Handlebars.partials = templates;\n
     """
 
   emberBoilerplate:
@@ -50,11 +51,17 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
     super(config)
 
     @ember = config.template.handlebars.ember.enabled
-    @handlebars = if @ember
-      @clientLibrary = null
-      require('./resources/ember-compiler').EmberHandlebars
+    hbs = if config.template.handlebars.lib
+      config.template.handlebars.lib
     else
       require 'handlebars'
+
+    @handlebars = if @ember
+      @clientLibrary = null
+      ec = require './resources/ember-compiler'
+      ec.makeHandlebars hbs
+    else
+      hbs
 
   prefix: (config) =>
     if config.template.amdWrap
@@ -92,6 +99,4 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
       ""
 
   transformTemplate: (text) ->
-    text = text.replace("partials || Handlebars.partials;",
-      "partials || Handlebars.partials; if (Object.keys(partials).length == 0) {partials = templates;}")
     "template(#{text})"
