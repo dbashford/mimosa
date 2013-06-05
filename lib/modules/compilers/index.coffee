@@ -158,7 +158,7 @@ class MimosaCompilerModule
         # bare:true                 # whether or not to include the top level wrapper around each
                                     # compiled iced file. Defaults to not wrapping as wrapping with
                                     # define/require is assumed.
-        # runtime:                  #
+        # runtime:"none"            # No runtime boilerplate is included
 
       # typescript:                 # config settings for typescript
         # module: null              # how compiled tyepscript is wrapped, defaults to no wrapping,
@@ -205,6 +205,10 @@ class MimosaCompilerModule
                                           # must be unique.
 
         # handlebars:                     # handlebars specific configuration
+          # lib: null                     # an opportuntity to provide a specific version of the
+                                          # handlebars compiler for template compilation. Use
+                                          # node's require syntax to include a version that you
+                                          # have included in your project.
           # helpers:["app/template/handlebars-helpers"]  # the paths from watch.javascriptDir to
                                           # the files containing handlebars helper/partial
                                           # registrations
