@@ -2,6 +2,15 @@
 
 ### Major Changes
 * [mimosa #201](https://github.com/dbashford/mimosa/issues/201), [mimosa #115](https://github.com/dbashford/mimosa/issues/115). IcedCoffeeScript boilerplate now pulled out into simple module that attaches `iced` to window. IcedCoffeeScript `runtime` compilation exposed via the `iced` config and defaults to `runtime:'none'`. You could choose, rather than going global with the `iced` object, to modify the `iced.js` library delivered with `mimosa new` to simply export `iced`, which would require you to pull in that module every time you need the async sugar IcedCoffeeScript provides.  The `mimosa new` boilerplate for IcedCoffeeScript projects shows how to use this.  But, with the `runtime` option opened up via the `iced` config, and the boilerplate code tossed into a file available via `mimosa new`, the power rests in the hands of the user to use the solution they feel is best.
+* [mimosa #204](https://github.com/dbashford/mimosa/issues/204). Mimosa now allows for swapping out the version of Handlebars being used for compilation. This is useful for those building Ember apps who need versions of libraries to match. A new configuration parameter, `template.handlebars.lib`, takes the version of the handlebars compiler you'd like to use.  For example:
+
+  ```
+    template:
+      handlebars:
+        lib: require('handlebars')
+  ```
+
+  The project using this will need to have the desired version of Handlebars installed locally using npm.  For example: `npm install handlebars@1.0.11`.
 
 ### Minor Changes
 * [mimosa #202](https://github.com/dbashford/mimosa/issues/202), [mimosa #203](https://github.com/dbashford/mimosa/issues/203). Pull request fixing some CoffeeScript error reporting issues.
