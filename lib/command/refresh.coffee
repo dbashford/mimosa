@@ -5,6 +5,13 @@ fs =     require 'fs'
 logger = require 'logmimosa'
 
 update = (opts) ->
+  logger.warn """
+The refresh command has been deprecated and will be removed in a future release.
+If you use the refresh command and rather it not be removed, please travel over to
+https://github.com/dbashford/mimosa/issues/205 and let me know that you'd like
+to keep it.
+    """
+
   if opts.debug
     logger.setDebug()
     process.env.DEBUG = true
