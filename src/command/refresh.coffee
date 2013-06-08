@@ -23,7 +23,7 @@ to keep it.
   logger.debug "client package.json path: [[ #{clientPackageJsonPath} ]]"
   clientPackageJson = require clientPackageJsonPath
 
-  mimosaPackageJsonPath = path.join __dirname, '..', '..', 'skeleton', 'package.json'
+  mimosaPackageJsonPath = path.join __dirname, '..', '..', 'skeletons', 'project', 'package.json'
   logger.debug "mimosa package.json path: [[ #{mimosaPackageJsonPath} ]]"
   mimosaPackageJson = require mimosaPackageJsonPath
 
