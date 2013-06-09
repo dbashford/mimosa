@@ -5,6 +5,10 @@
 
 ### Minor Changes
 * [mimosa #212](https://github.com/dbashford/mimosa/pull/212). PR fixed issue with directories occasionally being deleted in the wrong order.  Generally effected only Windows but purely by circumstance. Theoretically should have effected all platforms.
+* [mimosa #207](https://github.com/dbashford/mimosa/issues/207). Fixed validation issue with using Emblem along side other templating libraries.
+* [mimosa #207](https://github.com/dbashford/mimosa/issues/207). Adjusted `mimosa-config` boilerplate comments for templates for correctness.
+* mimosa. Upgraded jquery and requirejs libs in skeleton.
+* mimosa. Fixed issue with Mimosa's hosted Express reporting a phantom 404 when refreshing the page.
 
 # 0.12.6 - Jun 06 2013
 
