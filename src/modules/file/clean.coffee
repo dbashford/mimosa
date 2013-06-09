@@ -26,17 +26,15 @@ class MimosaCleanModule
       dirPath = path.join(config.watch.compiledDir, dir)
       if fs.existsSync dirPath
         logger.debug "Deleting directory [[ #{dirPath} ]]"
-        fs.rmdir dirPath, (err) ->
-          if err?
-            if err.code is "ENOTEMPTY"
-              logger.info "Unable to delete directory [[ #{dirPath} ]] because directory not empty"
-            else
-              logger.error "Unable to delete directory, [[ #{dirPath} ]]"
-              logger.error err
+        try
+          fs.rmdirSync dirPath
+          logger.success "Deleted empty directory [[ #{dirPath} ]]"
+        catch err
+          if err.code is 'ENOTEMPTY'
+            logger.info "Unable to delete directory [[ #{dirPath} ]] because directory not empty"
           else
-            logger.success "Deleted empty directory [[ #{dirPath} ]]"
-          done()
-      else
-        done()
+            logger.error "Unable to delete directory, [[ #{dirPath} ]]"
+            logger.error err
+      done()
 
 module.exports = new MimosaCleanModule()
