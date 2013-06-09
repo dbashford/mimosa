@@ -1,3 +1,11 @@
+# 0.13.0 - Jun ?? 2013
+
+### Major Changes
+* [mimosa #187](https://github.com/dbashford/mimosa/issues/187). Mimosa is now compiled to JavaScript prior to being published to NPM. This should improve performance in a small way, but is also generally the right thing to do. The compiling of Mimosa pre-publish is performed by Mimosa.  Mimosa now has its own [mimosa-config](https://github.com/dbashford/mimosa/blob/master/mimosa-config.coffee). Mimosa has plenty of mostly CoffeeScript related lint errors that I'll be ironing out over time.
+
+### Minor Changes
+* [mimosa #212](https://github.com/dbashford/mimosa/pull/212). PR fixed issue with directories occasionally being deleted in the wrong order.  Generally effected only Windows but purely by circumstance. Theoretically should have effected all platforms.
+
 # 0.12.6 - Jun 06 2013
 
 ### Major Changes
