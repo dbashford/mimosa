@@ -1,4 +1,4 @@
-# 0.13.0 - Jun ?? 2013
+# 0.13.0 - Jun 10 2013
 
 ### Major Changes
 * [mimosa #213](https://github.com/dbashford/mimosa/issues/213). Mimosa now comes with [ECO](https://github.com/sstephenson/eco) template compiling built in.  `mimosa new` also includes scaffolded ECO.
