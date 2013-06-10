@@ -1,3 +1,8 @@
+# 0.13.1 - Jun 10 2013
+
+### Minor Changes
+* mimosa. Fixing ECO scaffold templates
+
 # 0.13.0 - Jun 10 2013
 
 ### Major Changes
