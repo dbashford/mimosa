@@ -60,6 +60,7 @@
     "lodash": "1.2.1",
     "underscore": "1.4.4",
     "ejs": "0.8.4",
+    "eco": "1.1.0-rc-3",
     "coffee-script": "1.6.2",
     "iced-coffee-script": "1.6.2b",
     "LiveScript": "1.1.1",
