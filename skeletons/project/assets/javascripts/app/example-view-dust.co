@@ -1,0 +1,11 @@
+$, templates <- define <[jquery templates]>
+
+class ExampleView
+
+  render: (element)->
+    templates.render 'example', {name:'Dust', css:'CSSHERE'}, (err, out)->
+      throw that if err
+      ($ element)append out
+    templates.render 'another-example', {name:'Dust'}, (err, out)->
+      throw that if err
+      ($ element)append out
