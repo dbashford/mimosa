@@ -1,0 +1,31 @@
+express = require \express
+engines = require \consolidate
+
+routes  = require './routes'
+
+exports.startServer = (config, callback)->
+
+  port = process.env.PORT || config.server.port
+
+  app = express!
+    server = &listen port, ->
+      console.log "Express server listening on port %d in %s mode", server.address().port, &settings.env
+
+    &configure ->
+      &set 'port', port
+      &set 'views', config.server.views.path
+      &engine config.server.views.extension, engines[config.server.views.compileWith]
+      &set 'view engine', config.server.views.extension
+      &use express.favicon!
+      &use express.bodyParser!
+      &use express.methodOverride!
+      &use express.compress!
+      &use config.server.base, &router
+      &use express.static config.watch.compiledDir
+
+    &configure 'development', ->
+      &use express.errorHandler!
+
+    &get '/', routes.index config
+
+  callback server

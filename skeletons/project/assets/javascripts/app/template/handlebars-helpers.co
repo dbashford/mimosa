@@ -1,0 +1,4 @@
+Handlebars <- define ['vendor/handlebars']
+
+Handlebars.registerHelper 'example-helper', ->
+  new Handlebars.SafeString "This is coming from a Handlebars helper function written in Coco"
