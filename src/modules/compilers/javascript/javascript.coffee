@@ -15,6 +15,12 @@ module.exports = class JSCompiler
     i = 0
     newFiles = []
 
+    whenDone = options.files.length
+    done = ->
+      if ++i is whenDone
+        options.files = newFiles
+        next()
+
     options.files.forEach (file) =>
       @compile file, (err, output, sourceMap) =>
         if err
@@ -24,28 +30,32 @@ module.exports = class JSCompiler
             logger.success "Compiled/copied [[ #{file.outputFileName} ]]", options
 
           if sourceMap
-            mapFileName = @_genMapFileName(config, file)
-            fileUtils.writeFile mapFileName, sourceMap, (err) ->
+            # writing 2 more files for source maps
+            whenDone += 2
+            file.sourceMap = sourceMap
+            file.sourceMapName = @_genMapFileName(config, file)
+            fileUtils.writeFile file.sourceMapName, sourceMap, (err) ->
               if err
-                logger.error "Error writing map file [[ #{mapFileName} ]], #{err}"
+                logger.error "Error writing map file [[ #{file.sourceMapName} ]], #{err}"
+              done()
 
             sourceName = @_genSourceName(config, file)
             fileUtils.writeFile sourceName, file.inputFileText, (err) ->
               if err
                 logger.error "Error writing source file [[ #{sourceName} ]], #{err}"
+              done()
 
-            output = "#{output}\n/*\n//@ sourceMappingURL=#{path.basename(mapFileName)}\n*/\n"
+            output = "#{output}\n/*\n//@ sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
+
 
           file.outputFileText = output
           newFiles.push file
 
-        if ++i is options.files.length
-          options.files = newFiles
-          next()
+        done()
 
   _genMapFileName: (config, file) =>
     extName = path.extname file.inputFileName
-    file.inputFileName.replace(extName, ".map").replace(config.watch.sourceDir, config.watch.compiledDir)
+    file.inputFileName.replace(extName, ".js.map").replace(config.watch.sourceDir, config.watch.compiledDir)
 
   _genSourceName: (config, file) =>
     file.inputFileName.replace(config.watch.sourceDir, config.watch.compiledDir) + ".src"
