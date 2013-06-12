@@ -1,6 +1,20 @@
-# 0.13.0 - Jun ?? 2013
+# 0.13.2 - Jun ?? 2013
 
 ### Major Changes
+* mimosa/mimosa-minify. A bit of a toy feature, but the `mimosa-minify` module now supports two-step source maps with CoffeeScript.  CoffeeScript -> JavaScript -> minified/mangled JS, with source maps all the way back to the CoffeeScript.  Try it out!  In a CoffeeScript project run `mimosa watch -sm`, notice minified/mangled JS gets delivered to the client.  Break some CoffeeScript, go back to the browser, check the console and notice that the error points you back to the original line of CoffeeScript that caused the breakage.  Good stuff!
+
+### Minor Changes
+* mimosa. Source map names now follow the `.js.map` convention.  Previously they were named simply `.map`
+
+# 0.13.1 - Jun 10 2013
+
+### Minor Changes
+* mimosa. Fixing ECO scaffold templates
+
+# 0.13.0 - Jun 10 2013
+
+### Major Changes
+* [mimosa #213](https://github.com/dbashford/mimosa/issues/213). Mimosa now comes with [ECO](https://github.com/sstephenson/eco) template compiling built in.  `mimosa new` also includes scaffolded ECO.
 * [mimosa #187](https://github.com/dbashford/mimosa/issues/187). Mimosa is now compiled to JavaScript prior to being published to NPM. This should improve performance in a small way, but is also generally the right thing to do. The compiling of Mimosa pre-publish is performed by Mimosa.  Mimosa now has its own [mimosa-config](https://github.com/dbashford/mimosa/blob/master/mimosa-config.coffee). Mimosa has plenty of mostly CoffeeScript related lint errors that I'll be ironing out over time.
 
 ### Minor Changes

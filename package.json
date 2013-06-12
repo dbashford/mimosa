@@ -1,7 +1,7 @@
 {
   "name": "mimosa",
   "preferGlobal": "true",
-  "version": "0.13.0",
+  "version": "0.13.2",
   "homepage": "http://www.mimosajs.com",
   "author": "David Bashford",
   "description": "A modern browser development toolkit and application assembler. Compile, lint, optimize, serve and more.",
@@ -60,6 +60,7 @@
     "lodash": "1.2.1",
     "underscore": "1.4.4",
     "ejs": "0.8.4",
+    "eco": "1.1.0-rc-3",
     "coffee-script": "1.6.2",
     "iced-coffee-script": "1.6.2b",
     "LiveScript": "1.1.1",
@@ -74,7 +75,7 @@
     "logmimosa": "0.5.0",
     "mimosa-server": "0.8.1",
     "mimosa-require": "0.10.0",
-    "mimosa-minify": "0.7.1",
+    "mimosa-minify": "0.8.0",
     "mimosa-lint": "0.6.2",
     "mimosa-live-reload": "0.8.1",
     "npm": "1.2.19"
