@@ -87,17 +87,11 @@ class NewCommand
   _prompting: (compilers, name) =>
     logger.debug "Compilers :\n#{JSON.stringify(compilers, null, 2)}"
 
-    logger.green "\n  Mimosa will guide you through project creation. You will be prompted to"
-    logger.green "  pick the JavaScript meta-language, CSS meta-language, and micro-templating"
-    logger.green "  library you would like to use. For more about those choices, see"
-    logger.green "  http://mimosajs.com/compilers.html. You will also be prompted to pick the"
-    logger.green "  server and server-side view technologies you would like to use. If you pick"
-    logger.green "  no server, Mimosa will serve your assets for you.\n"
+    logger.green "\n  Mimosa will guide you through technology selection and project creation. For"
+    logger.green "  all of the selections, if your favorite is not an option, you can add a"
+    logger.green "  GitHub issue and we'll look into adding it."
 
-    logger.green "  For all of the technologies, if your favorite is not an option, you can add"
-    logger.green "  a GitHub issue and we'll look into adding it.\n"
-
-    logger.green "  If you are unsure which options to pick, the ones with asterisks are Mimosa"
+    logger.green "\n  If you are unsure which options to pick, the ones with asterisks are Mimosa"
     logger.green "  favorites. Feel free to hit the web to research your selections, Mimosa will"
     logger.green "  be here when you get back."
 
@@ -113,7 +107,7 @@ class NewCommand
         @program.choose _.pluck(compilers.template, 'prettyName'),(i) =>
           logger.blue "\n  You chose #{compilers.template[i].prettyName}."
           chosen.template = compilers.template[i]
-          logger.green "\n  Choose your server technology:\n"
+          logger.green "\n  Choose your server technology, if you pick no server, Mimosa will serve your assets for you:\n"
           @program.choose _.pluck(@servers, 'prettyName'),(i) =>
             logger.blue "\n  You chose #{@servers[i].prettyName}."
             chosen.server = @servers[i]
