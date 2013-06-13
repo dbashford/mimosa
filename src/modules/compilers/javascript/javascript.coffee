@@ -45,6 +45,8 @@ module.exports = class JSCompiler
                 logger.error "Error writing source file [[ #{sourceName} ]], #{err}"
               done()
 
+            # @ is deprecated but # not widely supported in current release browsers
+            # output = "#{output}\n/*\n//# sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
             output = "#{output}\n/*\n//@ sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
 
 
