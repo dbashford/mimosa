@@ -52,7 +52,7 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
 
     @ember = config.template.handlebars.ember.enabled
     hbs = if config.template.handlebars.lib
-      _.cloneDeep config.template.handlebars.lib
+      config.template.handlebars.lib
     else
       require 'handlebars'
 

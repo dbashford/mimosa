@@ -6,7 +6,7 @@ wrench =   require 'wrench'
 _ =        require 'lodash'
 logger =   require 'logmimosa'
 
-util =      require '../util/util'
+compilerCentral = require '../modules/compilers'
 deps =      require('../../package.json').dependencies
 buildConfig = require '../util/config-builder'
 
@@ -78,11 +78,25 @@ class NewCommand
     else
       process.cwd()
 
-    util.projectPossibilities (compilers) =>
+    @_projectPossibilities (compilers) =>
       if opts.defaults
         @_createWithDefaults(compilers, name)
       else
         @_prompting(compilers, name)
+
+  _projectPossibilities: (callback) ->
+    compilers = compilerCentral.compilersByType()
+
+    # just need to check SASS
+    for comp in compilers.css
+      # this won't work as is if a second compiler needs to shell out
+      if comp.checkIfExists?
+        comp.checkIfExists (exists) =>
+          unless exists
+            logger.debug "Compiler for file [[ #{comp.fileName} ]], is not installed/available"
+            comp.prettyName = comp.prettyName + color(" (This is not installed and would need to be before use)", "yellow+bold")
+          callback(compilers)
+        break
 
   _prompting: (compilers, name) =>
     logger.debug "Compilers :\n#{JSON.stringify(compilers, null, 2)}"

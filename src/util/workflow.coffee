@@ -33,8 +33,6 @@ module.exports = class WorkflowManager
   constructor: (@config, modules, @buildDoneCallback) ->
     compilers.setupCompilers(@config)
 
-    util.deepFreeze(@config)
-
     @types = _.clone(@masterTypes, true)
     for type, steps of @types
       @registration[type] = {}

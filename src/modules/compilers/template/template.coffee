@@ -8,11 +8,6 @@ logger =           require 'logmimosa'
 
 fileUtils =        require '../../../util/file'
 
-try
-  requireRegister =  require 'mimosa-require'
-catch err
-  logger.debug "mimosa-require not installed, so cannot use inside template compiler"
-
 module.exports = class TemplateCompiler
 
   constructor: (config) ->
@@ -22,6 +17,8 @@ module.exports = class TemplateCompiler
       @clientPath = path.join jsDir, 'vendor', "#{@clientLibrary}.js"
 
   registration: (config, register) ->
+    @requireRegister = config.installedModules['mimosa-require']
+
     # need to put this before gatherFiles register
     unless config.isVirgin
       # TODO, TEST THIS
@@ -233,9 +230,9 @@ module.exports = class TemplateCompiler
 
       next()
 
-  libraryPath: ->
+  libraryPath: =>
     libPath = "vendor/#{@clientLibrary}"
-    requireRegister?.aliasForPath(libPath) ? libPath
+    @requireRegister?.aliasForPath(libPath) ? libPath
 
   __templatePreamble: (file) ->
     """

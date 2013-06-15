@@ -169,27 +169,9 @@ _validateSettings = (config, modules) ->
   for mod in modules
     continue unless mod.validate?
 
-    if mod.defaults?
-      config = _.clone(config, true)
-      allConfigKeys = Object.keys(config)
-      defaults = mod.defaults()
-      modKeys = if typeof defaults is "object" and not Array.isArray()
-        Object.keys(defaults)
-      else
-        []
-
-      allConfigKeys.forEach (key) ->
-        if modKeys.indexOf(key) < 0 and typeof config[key] is "object"
-          util.deepFreeze config[key]
-    else
-      util.deepFreeze config
-
     moduleErrors = mod.validate config, validators
     if moduleErrors
       errors.push moduleErrors...
-
-  # return to unfrozen
-  config = _.clone(config, true)
 
   [errors, config]
 
@@ -262,8 +244,15 @@ processConfig = (opts, callback) ->
       logger.error "Unable to start Mimosa for the following reason(s):\n * #{err.join('\n * ')} "
       process.exit 1
     else
+      _setModulesIntoConfig newConfig
       logger.debug "Full mimosa config:\n#{JSON.stringify(newConfig, null, 2)}"
-      logger.setConfig(newConfig)
-      callback(newConfig, modules)
+      logger.setConfig newConfig
+      callback newConfig, modules
+
+
+_setModulesIntoConfig = (config) ->
+  config.installedModules = {}
+  for mod in moduleManager.installedMetadata
+    config.installedModules[mod.name] = mod.mod
 
 module.exports = processConfig
