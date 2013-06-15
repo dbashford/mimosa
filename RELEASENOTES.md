@@ -1,3 +1,11 @@
+# 0.13.3 - Jun ?? 2013
+
+### Major Changes
+* mimosa. Mimosa now places modules into config more easily allowing modules to use one another.
+
+### Minor Changes
+* mimosa. Mimosa no longer freezes the configuration at any point.  Proved to be more trouble than it was worth.
+
 # 0.13.2 - Jun 13 2013
 
 ### Major Changes
