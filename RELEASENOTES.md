@@ -1,4 +1,4 @@
-# 0.13.3 - Jun ?? 2013
+# 0.13.3 - Jun 20 2013
 
 ### Major Changes
 * mimosa. Mimosa now places modules into the config more easily allowing modules to use one another.
