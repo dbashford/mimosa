@@ -1,10 +1,12 @@
 # 0.13.3 - Jun ?? 2013
 
 ### Major Changes
-* mimosa. Mimosa now places modules into config more easily allowing modules to use one another.
+* mimosa. Mimosa now places modules into the config more easily allowing modules to use one another.
 
 ### Minor Changes
+* mimosa-server-reload. Updated to refer to other modules via config.
 * mimosa. Mimosa no longer freezes the configuration at any point.  Proved to be more trouble than it was worth.
+* [mimosa #217](https://github.com/dbashford/mimosa/pull/217). Via PR added Travis, and using Mimosa to build withing having it installed.
 
 # 0.13.2 - Jun 13 2013
 
