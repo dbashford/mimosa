@@ -5,7 +5,6 @@ _ =      require 'lodash'
 logger = require 'logmimosa'
 
 compilers = require '../modules/compilers'
-util      = require './util'
 fileUtils = require './file'
 
 module.exports = class WorkflowManager
