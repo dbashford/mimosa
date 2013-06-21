@@ -44,6 +44,9 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
     if config.stylus.import.length > 0
       stylusSetup.import config.stylus.import...
 
+    Object.keys(config.stylus.define).forEach (define) ->
+      stylusSetup.define define, config.stylus.define[define]
+
     stylusSetup.render cb
 
   _determineBaseFiles: =>
