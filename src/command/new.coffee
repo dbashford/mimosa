@@ -5,6 +5,7 @@ fs =     require 'fs'
 wrench =   require 'wrench'
 _ =        require 'lodash'
 logger =   require 'logmimosa'
+color  =   require('ansi-color').set
 
 compilerCentral = require '../modules/compilers'
 deps =      require('../../package.json').dependencies
