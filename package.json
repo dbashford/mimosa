@@ -86,6 +86,6 @@
   },
   "main": "./lib/index",
   "scripts": {
-    "prepublish": "./bin/mimosa build"
+    "prepublish": "node build.js"
   }
 }
