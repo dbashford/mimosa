@@ -136,6 +136,7 @@ class MimosaCompilerModule
       bare:true
     stylus:
       use:['nib']
+      import:['nib']
 
   placeholder: ->
     """
@@ -171,10 +172,11 @@ class MimosaCompilerModule
         # bare:true                      # whether or not to include the top level wrapper around
                                          # each compiled coffeescript file. Defaults to not wrapping
                                          # as wrapping with define/require is assumed.
-                                    
+
       # stylus:                     # config settings for stylus
         # use:['nib']               # names of libraries to use, should match the npm name for
                                     # the desired libraries
+        # import:['nib']            # Files to import for compilation
 
       # template:                         # overall template object can be set to null if no
                                           # templates being used
@@ -335,6 +337,8 @@ class MimosaCompilerModule
       validators.ifExistsIsString(errors, "typescript.module", config.typescript.module)
 
     if validators.ifExistsIsObject(errors, "stylus config", config.stylus)
+      validators.ifExistsIsArrayOfStrings(errors, "stylus.import", config.stylus.import)
+
       if validators.ifExistsIsArray(errors, "stylus.use", config.stylus.use)
 
         config.stylus.resolvedUse = []

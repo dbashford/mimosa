@@ -40,7 +40,9 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
 
     if config.stylus.resolvedUse.length > 0
       stylusSetup.use config.stylus.resolvedUse...
-      stylusSetup.import config.stylus.use...
+
+    if config.stylus.import.length > 0
+      stylusSetup.import config.stylus.import...
 
     stylusSetup.render cb
 
