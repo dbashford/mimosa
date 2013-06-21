@@ -1,3 +1,8 @@
+# 0.13.4 - Jun 20 2013
+
+### Minor Changes
+* [mimosa #220](https://github.com/dbashford/mimosa/pull/220), [mimosa #218](https://github.com/dbashford/mimosa/issues/218). Adding back ansi-color require which got dropped this morning and was causing issues for folks who didn't have SASS installed.
+
 # 0.13.3 - Jun 20 2013
 
 ### Major Changes
