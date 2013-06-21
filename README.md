@@ -1,6 +1,6 @@
 [Visit the Mimosa Website](http://www.mimosajs.com)
 
-[![Build Status](https://travis-ci.org/tlpinney/mimosa.png?branch=master)](https://travis-ci.org/tlpinney/mimosa)
+[![Build Status](https://travis-ci.org/dbashford/mimosa.png?branch=master)](https://travis-ci.org/dbashford/mimosa)
 
 ## License
 
