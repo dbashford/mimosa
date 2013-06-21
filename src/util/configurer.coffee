@@ -8,7 +8,6 @@ logger = require 'logmimosa'
 _      = require 'lodash'
 require 'coffee-script'
 
-util   =        require './util'
 validators =    require './validators'
 moduleManager = require '../modules'
 Module =        require 'module'
