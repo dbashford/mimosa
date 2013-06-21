@@ -31,15 +31,18 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
 
     logger.debug "Compiling Stylus file [[ #{fileName} ]]"
 
-    stylus(text)
+    stylusSetup = stylus(text)
       .include(path.dirname(fileName))
       .include(config.watch.sourceDir)
       .set('compress', false)
       .set('firebug', config.isOptimize? and !config.isOptimize)
       .set('filename', fileName)
-      .use(config.stylus.resolvedUse...)
-      .import(config.stylus.use...)
-      .render(cb)
+
+    if config.stylus.resolvedUse.length > 0
+      stylusSetup.use config.stylus.resolvedUse...
+      stylusSetup.import config.stylus.use...
+
+    stylusSetup.render cb
 
   _determineBaseFiles: =>
     imported = []
