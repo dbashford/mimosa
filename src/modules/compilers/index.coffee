@@ -138,6 +138,7 @@ class MimosaCompilerModule
       use:['nib']
       import:['nib']
       define:{}
+      includes:[]
 
   placeholder: ->
     """
@@ -179,6 +180,7 @@ class MimosaCompilerModule
                                     # the desired libraries
         # import:['nib']            # Files to import for compilation
         # define: {}                # An object containing stylus variable defines
+        # includes: []               # Files to include for compilation
 
       # template:                         # overall template object can be set to null if no
                                           # templates being used
@@ -343,8 +345,9 @@ class MimosaCompilerModule
       validators.ifExistsIsObject(errors, "stylus.define", config.stylus.define)
 
       validators.ifExistsIsArrayOfStrings(errors, "stylus.import", config.stylus.import)
+      validators.ifExistsIsArrayOfStrings(errors, "stylus.includes", config.stylus.includes)
 
-      if validators.ifExistsIsArray(errors, "stylus.use", config.stylus.use)
+      if validators.ifExistsIsArrayOfStrings(errors, "stylus.use", config.stylus.use)
 
         config.stylus.resolvedUse = []
         projectNodeModules = path.resolve process.cwd(), 'node_modules'

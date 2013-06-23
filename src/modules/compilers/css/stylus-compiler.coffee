@@ -38,11 +38,14 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
       .set('firebug', config.isOptimize? and !config.isOptimize)
       .set('filename', fileName)
 
-    if config.stylus.resolvedUse.length > 0
-      stylusSetup.use config.stylus.resolvedUse...
+    config.stylus.includes?.forEach (inc) ->
+      stylusSetup.include inc
 
-    if config.stylus.import.length > 0
-      stylusSetup.import config.stylus.import...
+    config.stylus.resolvedUse?.forEach (ru) ->
+      stylusSetup.use ru
+
+    config.stylus.import?.forEach (imp) ->
+      stylusSetup.import imp
 
     Object.keys(config.stylus.define).forEach (define) ->
       stylusSetup.define define, config.stylus.define[define]
