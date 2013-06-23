@@ -3,7 +3,7 @@
 Big changes/additions/fixes to the Stylus compiler with this release.
 
 ### Minor Changes
-# [mimosa #224](https://github.com/dbashford/mimosa/issues/224). Better error message when cannot parse `.jshintrc` file
+* [mimosa #224](https://github.com/dbashford/mimosa/issues/224). Better error message when cannot parse `.jshintrc` file
 * [mimosa #221](https://github.com/dbashford/mimosa/issues/221). Mimosa now builds locally on Windows.
 * [mimosa #216](https://github.com/dbashford/mimosa/issues/216), [mimosa #173](https://github.com/dbashford/mimosa/issues/173). Stylus `import` config is now available to be tweaked by the `stylus` root level config.  Previously the `import` config was automatically set to the same libraries as `use` was.  By default, the `import` config, an array, is set to `['nib']`.
 * [mimosa #216](https://github.com/dbashford/mimosa/issues/216). Stylus `define` config available via the `stylus` root level config.
