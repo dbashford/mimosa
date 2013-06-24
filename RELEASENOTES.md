@@ -1,3 +1,9 @@
+# 0.13.6 - Jun ?? 2013
+
+### Minor Changes
+* [mimosa-combine #7](https://github.com/dbashford/mimosa-combine/issues/7). Fixed bug causing ordered files to not be cleaned up. (released on 6/24)
+* [mimosa-combine #8](https://github.com/dbashford/mimosa-combine/issues/8). Fixed bug causing empty directories as result of combine cleanup not being cleaned up. (released on 6/24)
+
 # 0.13.5 - Jun 23 2013
 
 Big changes/additions/fixes to the Stylus compiler with this release.
