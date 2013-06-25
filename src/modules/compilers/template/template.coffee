@@ -19,24 +19,20 @@ module.exports = class TemplateCompiler
   registration: (config, register) ->
     @requireRegister = config.installedModules['mimosa-require']
 
-    # need to put this before gatherFiles register
-    unless config.isVirgin
-      # TODO, TEST THIS
-      register ['remove'], 'init', @_testForRemoveClientLibrary, @extensions
+    register ['remove'], 'init', @_testForRemoveClientLibrary, @extensions
 
     register ['buildExtension'],        'init',       @_gatherFiles, [@extensions[0]]
     register ['add','update','remove'], 'init',       @_gatherFiles, @extensions
     register ['buildExtension'],        'compile',    @_compile,     [@extensions[0]]
     register ['add','update','remove'], 'compile',    @_compile,     @extensions
 
-    unless config.isVirgin
-      register ['cleanFile'],             'init',         @_removeFiles, @extensions
+    register ['cleanFile'],             'init',         @_removeFiles, @extensions
 
-      register ['buildExtension'],        'afterCompile', @_merge,       [@extensions[0]]
-      register ['add','update','remove'], 'afterCompile', @_merge,       @extensions
+    register ['buildExtension'],        'afterCompile', @_merge,       [@extensions[0]]
+    register ['add','update','remove'], 'afterCompile', @_merge,       @extensions
 
-      register ['add','update'],   'afterCompile', @_readInClientLibrary, @extensions
-      register ['buildExtension'], 'afterCompile', @_readInClientLibrary, [@extensions[0]]
+    register ['add','update'],   'afterCompile', @_readInClientLibrary, @extensions
+    register ['buildExtension'], 'afterCompile', @_readInClientLibrary, [@extensions[0]]
 
   _gatherFiles: (config, options, next) =>
     options.files = []
@@ -93,10 +89,6 @@ module.exports = class TemplateCompiler
           newFiles.push file
 
         if ++i is options.files.length
-          # end of the road for virgin, log it
-          if config.isVirgin and options.files.length is newFiles.length
-            logger.success "All templates compiled successfully.", options
-
           options.files = newFiles
           next()
 

@@ -9,12 +9,10 @@ fileUtils = require '../../util/file'
 class MimosaFileWriteModule
 
   registration: (config, register) ->
-
-    unless config.isVirgin
-      e = config.extensions
-      cExts = config.copy.extensions
-      register ['add','update','remove','buildExtension'], 'write', @_write, [e.template..., e.css...]
-      register ['add','update','buildFile'],               'write', @_write, [e.javascript..., cExts...]
+    e = config.extensions
+    cExts = config.copy.extensions
+    register ['add','update','remove','buildExtension'], 'write', @_write, [e.template..., e.css...]
+    register ['add','update','buildFile'],               'write', @_write, [e.javascript..., cExts...]
 
   _write: (config, options, next) =>
     hasFiles = options.files?.length > 0

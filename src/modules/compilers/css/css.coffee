@@ -73,8 +73,6 @@ module.exports = class AbstractCSSCompiler
             if err
               logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}"
             else
-              if config.isVirgin
-                logger.success "Compiled/copied [[ #{file.outputFileName} ]]", options
               file.outputFileText = result
 
             done(file)

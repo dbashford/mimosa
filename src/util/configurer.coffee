@@ -65,19 +65,17 @@ _validateWatchConfig = (config) ->
 
   return errors if errors.length > 0
 
-  unless config.isVirgin
-    if typeof config.watch.compiledDir is "string"
-      config.watch.compiledDir = validators.determinePath config.watch.compiledDir, config.root
-      if not fs.existsSync(config.watch.compiledDir) and not config.isForceClean
-        logger.info "Did not find compiled directory [[ #{config.watch.compiledDir} ]], so making it for you"
-        wrench.mkdirSyncRecursive config.watch.compiledDir, 0o0777
-    else
-      errors.push "watch.compiledDir must be a string"
+  if typeof config.watch.compiledDir is "string"
+    config.watch.compiledDir = validators.determinePath config.watch.compiledDir, config.root
+    if not fs.existsSync(config.watch.compiledDir) and not config.isForceClean
+      logger.info "Did not find compiled directory [[ #{config.watch.compiledDir} ]], so making it for you"
+      wrench.mkdirSyncRecursive config.watch.compiledDir, 0o0777
+  else
+    errors.push "watch.compiledDir must be a string"
 
   if typeof config.watch.javascriptDir is "string"
     jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
-    unless config.isVirgin
-      validators.doesPathExist(errors,"watch.javascriptDir", jsDir)
+    validators.doesPathExist(errors,"watch.javascriptDir", jsDir)
   else
     if config.watch.javascriptDir is null
       # Allow to blank out javascriptDir when not strictly web app
@@ -227,7 +225,6 @@ processConfig = (opts, callback) ->
     else
       return logger.fatal "Profile provided but not found at [[ #{path.join('profiles', opts.profile)} ]]"
 
-  config.isVirgin =     opts?.virgin
   config.isServer =     opts?.server
   config.isOptimize =   opts?.optimize
   config.isMinify =     opts?.minify

@@ -26,9 +26,6 @@ module.exports = class JSCompiler
         if err
           logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}"
         else
-          if config.isVirgin
-            logger.success "Compiled/copied [[ #{file.outputFileName} ]]", options
-
           if sourceMap
             # writing 2 more files for source maps
             whenDone += 2

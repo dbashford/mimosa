@@ -1,8 +1,11 @@
 # 0.13.6 - Jun ?? 2013
 
+### Major Changes
+* [mimosa #198](https://github.com/dbashford/mimosa/issues/198). `virgin` command has been removed.  New versions of `mimosa-client-jade-static` and `mimosa-require` released after removing `virgin` references.
+
 ### Minor Changes
-* [mimosa-combine #7](https://github.com/dbashford/mimosa-combine/issues/7). Fixed bug causing ordered files to not be cleaned up. (released on 6/24)
-* [mimosa-combine #8](https://github.com/dbashford/mimosa-combine/issues/8). Fixed bug causing empty directories as result of combine cleanup not being cleaned up. (released on 6/24)
+* [mimosa-combine #7](https://github.com/dbashford/mimosa-combine/issues/7). Fixed bug causing ordered files to not be cleaned up.
+* [mimosa-combine #8](https://github.com/dbashford/mimosa-combine/issues/8). Fixed bug causing empty directories as result of combine cleanup not being cleaned up.
 
 # 0.13.5 - Jun 23 2013
 
