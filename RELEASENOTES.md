@@ -1,4 +1,4 @@
-# 0.13.6 - Jun ?? 2013
+# 0.13.6 - Jun 25 2013
 
 ### Major Changes
 * [mimosa #198](https://github.com/dbashford/mimosa/issues/198). `virgin` command has been removed.  New versions of `mimosa-client-jade-static` and `mimosa-require` released after removing `virgin` references.
