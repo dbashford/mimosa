@@ -1,3 +1,8 @@
+# 0.13.7 - Jun 26 2013
+
+### Minor Changes
+* Dependent library updates
+
 # 0.13.6 - Jun 25 2013
 
 ### Major Changes
