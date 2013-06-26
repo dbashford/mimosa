@@ -1,6 +1,7 @@
-# 0.13.8 - Jun ?? 2013
+# 0.13.8 - Jun 26 2013
 
 ### Minor Changes
+* [mimosa #222](https://github.com/dbashford/mimosa/issues/222). Using new iced-coffee-script with proper semver-sioning.
 * [mimosa-combine #9](https://github.com/dbashford/mimosa-combine/issues/9). Fixed bug with error being thrown for files inside directories. Released June 26.
 
 # 0.13.7 - Jun 26 2013
