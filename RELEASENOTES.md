@@ -1,3 +1,8 @@
+# 0.13.9 - Jun 27 2013
+
+### Minor Changes
+* [mimosa #225](https://github.com/dbashford/mimosa/issues/225). Now recognizing amd/requirejs depedencies declared in `require`/`require.config` `deps` property.
+
 # 0.13.8 - Jun 26 2013
 
 ### Minor Changes
