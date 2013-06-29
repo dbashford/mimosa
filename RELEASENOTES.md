@@ -1,3 +1,8 @@
+# 0.13.10 - Jun 29 2013
+
+### Major Changes
+* [mimosa #205](https://github.com/dbashford/mimosa/issues/205). `refresh` command has been removed.
+
 # 0.13.9 - Jun 27 2013
 
 ### Minor Changes

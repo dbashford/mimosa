@@ -10,7 +10,6 @@ all = ->
   require('./command/config')(program)
   require('./command/build')(program)
   require('./command/clean')(program)
-  require('./command/refresh')(program)
   require('./command/external')(program)
   require('./command/module/install')(program)
   require('./command/module/init')(program)
