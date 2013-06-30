@@ -1,3 +1,8 @@
+# 0.13.11 - Jun 30 2013
+
+### Minor Changes
+* [mimosa #226](https://github.com/dbashford/mimosa/issues/226). No longer referencing localhost in the delivered `reload-client.js`, which solves problem with live reload not working when it is running elsewhere.
+
 # 0.13.10 - Jun 29 2013
 
 ### Major Changes
