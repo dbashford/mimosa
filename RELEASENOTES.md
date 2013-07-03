@@ -1,7 +1,7 @@
 # 0.13.12 - Jul 03 2013
 
 ### Minor Changes
-* mimosa-require. Module now exposts some requirejs configuration it has collected to be used by other modules.
+* mimosa-require. Module now exports some requirejs configuration it has collected to be used by other modules.
 * mimosa. `coffeescript.sourceMapExclude` has been updated: `[/\/specs?\//, /_spec.js$/]`
 * mimosa-testem-simple. Updated testem to latest version.
 
