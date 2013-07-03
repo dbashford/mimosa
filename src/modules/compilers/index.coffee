@@ -127,7 +127,7 @@ class MimosaCompilerModule
       module:null
     coffeescript:
       sourceMap:true
-      sourceMapExclude:[/\/spec\//]
+      sourceMapExclude:[/\/specs?\//, /_spec.js$/]
       bare:true
     iced:
       bare:true
@@ -155,7 +155,7 @@ class MimosaCompilerModule
         # sourceMap:true                 # whether to generate source during "mimosa watch".
                                          # Source maps are not generated during "mimosa build"
                                          # regardless of setting.
-        # sourceMapExclude: [/\/spec\//] # files to exclude from source map generation
+        # sourceMapExclude: [/\\/specs?\\//, /_spec.js$/] # files to exclude from source map generation
         # bare:true                      # whether or not to include the top level wrapper around
                                          # each compiled coffeescript file. Defaults to not wrapping
                                          # as wrapping with define/require is assumed.
