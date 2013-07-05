@@ -1,5 +1,8 @@
 # 0.13.13 - Jul ?? 2013
 
+### Minor Changes
+* mimosa-combine.  Fixed encoding issue causing issues at tops of files being concatenated. (Released as `v0.8.2` on July 05)
+
 ### Major Changes
 * mimosa-testem-simple has had its cross-platform issues ironed out. It should function properly on Windows now. (Released as `v0.3.0` on July 04)
 
