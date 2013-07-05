@@ -1,3 +1,8 @@
+# 0.13.13 - Jul ?? 2013
+
+### Major Changes
+* mimosa-testem-simple has had its cross-platform issues ironed out. It should function properly on Windows now. (Released as `v0.3.0` on July 04)
+
 # 0.13.12 - Jul 03 2013
 
 ### Minor Changes
