@@ -1,10 +1,17 @@
 # 0.13.13 - Jul ?? 2013
 
-### Minor Changes
-* mimosa-combine.  Fixed encoding issue causing issues at tops of files being concatenated. (Released as `v0.8.2` on July 05)
+## New module
+[mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). This module, when included, manages all your testing needs. It incorporates [Sinon](http://sinonjs.org/), [Chia](http://chaijs.com/), [Mocha](http://visionmedia.github.io/mocha/), [Testem](https://github.com/airportyh/testem) and [PhantomJS](http://phantomjs.org/) into a cohesive browser testing solution that reduces/removes the need to configure anything.  Simply put your spec files inside `watch.sourceDir` with a name that ends in `_spec` and testem-require will pick it up and execute it on startup or when JavaScript files are saved.
+
+testem-require will also pull in your requirejs config and use it to resolve AMD paths. Complex requirejs configurations may require some additional configuration, but in most cases you'll just include the module and start writing tests!
+
+A demo app has been put together with the module included.  Go [clone the repo](https://github.com/dbashford/MimosaTestem) and check it out!
 
 ### Major Changes
 * mimosa-testem-simple has had its cross-platform issues ironed out. It should function properly on Windows now. (Released as `v0.3.0` on July 04)
+
+### Minor Changes
+* mimosa-combine.  Fixed encoding issue causing issues at tops of files being concatenated. (Released as `v0.8.2` on July 05)
 
 # 0.13.12 - Jul 03 2013
 

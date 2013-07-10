@@ -139,6 +139,8 @@ class MimosaCompilerModule
       import:['nib']
       define:{}
       includes:[]
+    sass:
+      node:false
 
   placeholder: ->
     """
@@ -170,17 +172,21 @@ class MimosaCompilerModule
         # module: null              # how compiled tyepscript is wrapped, defaults to no wrapping,
                                     # can be "amd" or "commonjs"
 
-      # coco:                    # config settings for coco
-        # bare:true                      # whether or not to include the top level wrapper around
-                                         # each compiled coffeescript file. Defaults to not wrapping
-                                         # as wrapping with define/require is assumed.
+      # coco:                       # config settings for coco
+        # bare:true                 # whether or not to include the top level wrapper around
+                                    # each compiled coffeescript file. Defaults to not wrapping
+                                    # as wrapping with define/require is assumed.
 
       # stylus:                     # config settings for stylus
         # use:['nib']               # names of libraries to use, should match the npm name for
                                     # the desired libraries
         # import:['nib']            # Files to import for compilation
         # define: {}                # An object containing stylus variable defines
-        # includes: []               # Files to include for compilation
+        # includes: []              # Files to include for compilation
+
+      # sass:                       # config settings for sass
+        # node: false               # whether or not to use the node SASS compiler instead of the
+                                    # Ruby one, which must be installed with Ruby.
 
       # template:                         # overall template object can be set to null if no
                                           # templates being used
@@ -339,6 +345,9 @@ class MimosaCompilerModule
 
     if validators.ifExistsIsObject(errors, "typescript config", config.typescript)
       validators.ifExistsIsString(errors, "typescript.module", config.typescript.module)
+
+    if validators.ifExistsIsObject(errors, "sass config", config.sass)
+      validators.ifExistsIsBoolean(errors, "sass.node", config.sass.node)
 
     if validators.ifExistsIsObject(errors, "stylus config", config.stylus)
 
