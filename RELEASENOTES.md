@@ -1,4 +1,4 @@
-# 0.13.13 - Jul 10 2013
+# 0.13.13 - Jul ?? 2013 (Waiting on NPM fix to deploy)
 
 ## New module
 [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). This module manages all your testing needs. It incorporates [Sinon](http://sinonjs.org/), [Chia](http://chaijs.com/), [Mocha](http://visionmedia.github.io/mocha/), [Testem](https://github.com/airportyh/testem) and [PhantomJS](http://phantomjs.org/) into a cohesive browser testing solution that reduces/removes the need to configure anything.  Simply put your spec files inside `watch.sourceDir` with a name that ends in `_spec` and testem-require will pick it up and execute it on startup or when JavaScript files are saved.
