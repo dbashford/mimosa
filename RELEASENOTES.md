@@ -1,3 +1,8 @@
+# 0.13.14 - Jul ?? 2013
+
+### Major Changes
+* mimosa.  Iced CoffeeScript += Source Maps.
+
 # 0.13.13 - Jul 11 2013
 
 ## New module

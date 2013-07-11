@@ -130,6 +130,8 @@ class MimosaCompilerModule
       sourceMapExclude:[/\/specs?\//, /_spec.js$/]
       bare:true
     iced:
+      sourceMap:true
+      sourceMapExclude:[/\/specs?\//, /_spec.js$/]
       bare:true
       runtime:'none'
     coco:
@@ -153,16 +155,20 @@ class MimosaCompilerModule
           # coffee: ["coff"]        # This is an example override, this is not a default, must be
                                     # array of strings
 
-      # coffeescript:                    # config settings for coffeescript
-        # sourceMap:true                 # whether to generate source during "mimosa watch".
-                                         # Source maps are not generated during "mimosa build"
-                                         # regardless of setting.
+      # coffeescript:               # config settings for coffeescript
+        # sourceMap:true            # whether to generate source during "mimosa watch".
+                                    # Source maps are not generated during "mimosa build"
+                                    # regardless of setting.
         # sourceMapExclude: [/\\/specs?\\//, /_spec.js$/] # files to exclude from source map generation
-        # bare:true                      # whether or not to include the top level wrapper around
-                                         # each compiled coffeescript file. Defaults to not wrapping
-                                         # as wrapping with define/require is assumed.
+        # bare:true                 # whether or not to include the top level wrapper around
+                                    # each compiled coffeescript file. Defaults to not wrapping
+                                    # as wrapping with define/require is assumed.
 
       # iced:                       # config settings for iced coffeescript
+        # sourceMap:true            # whether to generate source during "mimosa watch".
+                                    # Source maps are not generated during "mimosa build"
+                                    # regardless of setting.
+        # sourceMapExclude: [/\\/specs?\\//, /_spec.js$/] # files to exclude from source map generation
         # bare:true                 # whether or not to include the top level wrapper around each
                                     # compiled iced file. Defaults to not wrapping as wrapping with
                                     # define/require is assumed.
@@ -342,6 +348,11 @@ class MimosaCompilerModule
       else
        validators.ifExistsFileExcludeWithRegexAndStringWithField(errors, "coffeescript.sourceMapExclude", config.coffeescript, 'sourceMapExclude', config.watch.javascriptDir)
 
+    if validators.ifExistsIsObject(errors, "iced config", config.iced)
+      if config.isBuild
+        config.iced.sourceMap = false
+      else
+       validators.ifExistsFileExcludeWithRegexAndStringWithField(errors, "iced.sourceMapExclude", config.iced, 'sourceMapExclude', config.watch.javascriptDir)
 
     if validators.ifExistsIsObject(errors, "typescript config", config.typescript)
       validators.ifExistsIsString(errors, "typescript.module", config.typescript.module)

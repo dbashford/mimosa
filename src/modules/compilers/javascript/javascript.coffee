@@ -4,6 +4,7 @@ path = require 'path'
 fs = require 'fs'
 fileUtils = require '../../../util/file'
 
+_ = require "lodash"
 logger = require 'logmimosa'
 
 module.exports = class JSCompiler
@@ -59,6 +60,14 @@ module.exports = class JSCompiler
   _genSourceName: (config, file) =>
     file.inputFileName.replace(config.watch.sourceDir, config.watch.compiledDir) + ".src"
 
+  _cleanUpSourceMapsRegister: (register, extensions, compilerConfig) =>
+    # register remove only if sourcemap as remove is watch workflow
+    if compilerConfig.sourceMap
+      register ['remove'], 'delete', @_cleanUpSourceMaps, extensions
+
+    # register clean regardless to ensure any existing source maps are removed during build/clean
+    register ['cleanFile'], 'delete', @_cleanUpSourceMaps, extensions
+
   _cleanUpSourceMaps: (config, options, next) =>
     i = 0
     done = -> next() if ++i is 2
@@ -77,3 +86,23 @@ module.exports = class JSCompiler
               done()
           else
             done()
+
+  _icedAndCoffeeCompile: (file, cb, coffeeConfig, compiler) ->
+
+    conf = _.extend {}, coffeeConfig, sourceFiles:[path.basename(file.inputFileName) + ".src"]
+    conf.literate = compiler.helpers.isLiterate(file.inputFileName)
+
+    if conf.sourceMap
+      if conf.sourceMapExclude?.indexOf(file.inputFileName) > -1
+        conf.sourceMap = false
+      else if conf.sourceMapExcludeRegex? and file.inputFileName.match(conf.sourceMapExcludeRegex)
+        conf.sourceMap = false
+
+    try
+      output = compiler.compile file.inputFileText, conf
+      if output.v3SourceMap
+        sourceMap = output.v3SourceMap
+        output = output.js
+    catch err
+      error = "#{err}, line #{err.location?.first_line}, column #{err.location?.first_column}"
+    cb error, output, sourceMap

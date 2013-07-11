@@ -1,8 +1,6 @@
 "use strict"
 
 iced = require 'iced-coffee-script'
-_ = require 'lodash'
-
 JSCompiler = require "./javascript"
 
 module.exports = class IcedCompiler extends JSCompiler
@@ -14,10 +12,9 @@ module.exports = class IcedCompiler extends JSCompiler
     @icedConfig = config.iced
     super()
 
+  registration: (config, register) ->
+    super config, register
+    @_cleanUpSourceMapsRegister register, @extensions, @icedConfig
+
   compile: (file, cb) ->
-    try
-      conf = _.extend {}, @icedConfig
-      output = iced.compile file.inputFileText, conf
-    catch err
-      error = err
-    cb(error, output)
+    @_icedAndCoffeeCompile file, cb, @icedConfig, iced
