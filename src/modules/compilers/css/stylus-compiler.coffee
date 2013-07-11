@@ -35,7 +35,8 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
       .include(path.dirname(fileName))
       .include(config.watch.sourceDir)
       .set('compress', false)
-      .set('firebug', config.isOptimize? and !config.isOptimize)
+      #.set('firebug', not config.isOptimize)
+      #.set('linenos', not config.isOptimize and not config.isBuild)
       .set('filename', fileName)
 
     config.stylus.includes?.forEach (inc) ->
