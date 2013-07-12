@@ -1,3 +1,8 @@
+# 0.13.15 - Jul 12 2013
+
+### Minor Changes
+* [mimosa-require #11](https://github.com/dbashford/mimosa-require/issues/11). mimosa-require now has an `exclude` setting which allows you to have specific files opt out of processing by the module. Use this setting to not have specific files be verified or optimized. This doesn't prevent files from being optimized, but it prevents them from being registered as main optimization modules.
+
 # 0.13.14 - Jul 11 2013
 
 ### Major Changes
