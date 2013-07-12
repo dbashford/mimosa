@@ -1,4 +1,4 @@
-# 0.13.14 - Jul ?? 2013
+# 0.13.14 - Jul 11 2013
 
 ### Major Changes
 * mimosa.  Iced CoffeeScript += Source Maps.
