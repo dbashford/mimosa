@@ -1,3 +1,7 @@
+# 0.13.17 - Jul 12 2013
+
+* [mimosa #229](https://github.com/dbashford/mimosa/issues/229). Fixing windows install issues related to node-sass inclusion.
+
 # 0.13.16 - Jul 12 2013
 
 * mimosa. Updating to latest NPM to get around NPM bug

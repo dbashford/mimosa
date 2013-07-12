@@ -1,7 +1,7 @@
 {
   "name": "mimosa",
   "preferGlobal": "true",
-  "version": "0.13.16",
+  "version": "0.13.17",
   "homepage": "http://www.mimosajs.com",
   "author": "David Bashford",
   "description": "A modern browser development toolkit and application assembler. Compile, lint, optimize, serve and more.",
@@ -70,7 +70,7 @@
     "less": "1.4.0",
     "nib": "0.9.2",
     "stylus": "0.33.1",
-    "node-sass":"0.5.3",
+    "node-sass":"0.5.2",
     "ansi-color": "0.2.1",
     "wrench": "1.5.1",
     "commander": "1.2.0",
