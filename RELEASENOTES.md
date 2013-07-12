@@ -1,3 +1,7 @@
+# 0.13.16 - Jul 12 2013
+
+* mimosa. Updating to latest NPM to get around NPM bug
+
 # 0.13.15 - Jul 12 2013
 
 ### Minor Changes
