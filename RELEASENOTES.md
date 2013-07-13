@@ -1,3 +1,25 @@
+# 0.14.0 - Jul ?? 2013
+
+I had mentioned that `0.13.0` would be the last minor version before `1.0`, but with a small/minor breaking change coming up I'm going to push that out one version.
+
+To prepare for upcoming [Bower](http://bower.io/) integration, the last big missing piece pre 1.0, I'll be creating a `vendor` config that indicates where vendor scripts and css are contained. Currently Mimosa has the concept of vendor assets, but there is no way to configure where those assets are. Mimosa treats anything with `/vendor/` in its file path as being a vendor asset. So if you prefer to keep your vendor scripts someplace else, like, for instance, a `scripts` folder, then you miss out on the special treatment vendor scripts get (like having their own lint config or bypassing AMD scrutiny).
+
+Including Bower places an even bigger emphasis on vendor assets, so something I've been thinking about for awhile, making a `vendor` config, will be coming up shortly. So expect a root level config like this to pop up with `0.14.0`
+
+```javascript
+vendor:
+  javascripts:"javascripts/vendor"
+  stylesheets:"stylesheets/vendor"
+```
+
+What will this break? It depends...
+
+* __Possibly nothing__ if you already have a file structure like that.
+* __It may actually help__ if you don't keep your vendor assets in a `vendor` directory at all. Now you'll be able to let Mimosa know where they are and take advantage of vendor assets' special treatment.
+* __It'll only cause you trouble if__ you had vendor assets in a `vendor` directory, but not right at the root of `javascripts` or `stylesheets`, you'll just need to add this config.  I hope that isn't too much of an inconvenience! =)
+
+There may be a few more `0.13` releases before `0.14` drops, but wanted to get this heads up out there!
+
 # 0.13.17 - Jul 12 2013
 
 * [mimosa #229](https://github.com/dbashford/mimosa/issues/229). Fixing windows install issues related to node-sass inclusion.
