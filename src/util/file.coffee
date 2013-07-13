@@ -9,8 +9,11 @@ exports.isCSS = (fileName) ->
 exports.isJavascript = (fileName) ->
   path.extname(fileName) is ".js"
 
-exports.isVendor = (fileName) ->
-  fileName.split(path.sep).indexOf('vendor') > -1
+exports.isVendorCSS = (config, fileName) ->
+  fileName.indexOf(config.vendor.stylesheets) is 0
+
+exports.isVendorJS = (config, fileName) ->
+  fileName.indexOf(config.vendor.javascripts) is 0
 
 exports.mkdirRecursive = mkdirRecursive = (p, made) ->
   if !made then made = null

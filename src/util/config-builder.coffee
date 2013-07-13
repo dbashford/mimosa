@@ -46,6 +46,12 @@ _configTop = ->
                                            # to leave this set at 0, thedefault, until you start
                                            # encountering EMFILE problems.
 
+    # vendor:                              # settings for vendor assets
+      # javascripts: "javascripts/vendor"  # location, relative to the watch.sourceDir, of vendor
+                                           # javascript assets. Unix style slashes please.
+      # stylesheets: "stylesheets/vendor"  # location, relative to the watch.sourceDir, of vendor
+                                           # stylesheet assets. Unix style slashes please.
+
   """
 
 _configBottom = -> "\n}"

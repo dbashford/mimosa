@@ -26,6 +26,9 @@ baseDefaults =
     javascriptDir: "javascripts"
     exclude: [/[/\\](\.|~)[^/\\]+$/]
     throttle: 0
+  vendor:
+    javascripts: "javascripts/vendor"
+    stylesheets: "stylesheets/vendor"
 
 _extend = (obj, props) ->
   Object.keys(props).forEach (k) ->
@@ -87,6 +90,15 @@ _validateWatchConfig = (config) ->
 
   unless typeof config.watch.throttle is "number"
     errors.push "watch.throttle must be a number"
+
+  if validators.ifExistsIsObject(errors, "vendor config", config.vendor)
+    if validators.ifExistsIsString(errors, "vendor.javascripts", config.vendor.javascripts)
+      js = config.vendor.javascripts.split('/').join(path.sep)
+      config.vendor.javascripts = path.join config.watch.sourceDir, js
+
+    if validators.ifExistsIsString(errors, "vendor.stylesheets", config.vendor.stylesheets)
+      ss = config.vendor.stylesheets.split('/').join(path.sep)
+      config.vendor.stylesheets = path.join config.watch.sourceDir, ss
 
   errors
 

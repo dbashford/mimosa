@@ -113,7 +113,7 @@ module.exports = class AbstractCSSCompiler
       @__baseOptionsObject(base, options)
 
     if options.files.length > 0
-      options.isVendor = fileUtils.isVendor(options.files[0].outputFileName)
+      options.isVendor = fileUtils.isVendorCSS(config, options.files[0].inputFileName)
 
     options.isCSS = true
 
