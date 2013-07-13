@@ -1,4 +1,4 @@
-# Note on Next Major Release: 0.14.0 - Jul ?? 2013
+## Note on Next Major Release: 0.14.0 - Jul ?? 2013
 
 I had mentioned that `0.13.0` would be the last minor version before `1.0`, but with a small/minor breaking change coming up I'm going to push that out one version.
 
@@ -20,25 +20,25 @@ What will this break? It depends...
 
 There may be a few more `0.13` releases before `0.14` drops, but wanted to get this heads up out there!
 
-# 0.13.17 - Jul 12 2013
+## 0.13.17 - Jul 12 2013
 
 * [mimosa #229](https://github.com/dbashford/mimosa/issues/229). Fixing windows install issues related to node-sass inclusion.
 
-# 0.13.16 - Jul 12 2013
+## 0.13.16 - Jul 12 2013
 
 * mimosa. Updating to latest NPM to get around NPM bug
 
-# 0.13.15 - Jul 12 2013
+## 0.13.15 - Jul 12 2013
 
 ### Minor Changes
 * [mimosa-require #11](https://github.com/dbashford/mimosa-require/issues/11). mimosa-require now has an `exclude` setting which allows you to have specific files opt out of processing by the module. Use this setting to not have specific files be verified or optimized. This doesn't prevent files from being optimized, but it prevents them from being registered as main optimization modules.
 
-# 0.13.14 - Jul 11 2013
+## 0.13.14 - Jul 11 2013
 
 ### Major Changes
 * mimosa.  Iced CoffeeScript += Source Maps.
 
-# 0.13.13 - Jul 11 2013
+## 0.13.13 - Jul 11 2013
 
 ## New module
 [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). This module manages all your testing needs. It incorporates [Sinon](http://sinonjs.org/), [Chia](http://chaijs.com/), [Mocha](http://visionmedia.github.io/mocha/), [Testem](https://github.com/airportyh/testem) and [PhantomJS](http://phantomjs.org/) into a cohesive browser testing solution that reduces/removes the need to configure anything.  Simply put your spec files inside `watch.sourceDir` with a name that ends in `_spec` and testem-require will pick it up and execute it on startup or when JavaScript files are saved.
@@ -61,40 +61,40 @@ This setting is false by default to keep things backwards compatible.
 ### Minor Changes
 * mimosa-combine.  Fixed encoding issue causing issues at tops of files being concatenated. (Released as `v0.8.2` on July 05)
 
-# 0.13.12 - Jul 03 2013
+## 0.13.12 - Jul 03 2013
 
 ### Minor Changes
 * mimosa-require. Module now exports some requirejs configuration it has collected to be used by other modules.
 * mimosa. `coffeescript.sourceMapExclude` has been updated: `[/\/specs?\//, /_spec.js$/]`
 * mimosa-testem-simple. Updated testem to latest version.
 
-# 0.13.11 - Jun 30 2013
+## 0.13.11 - Jun 30 2013
 
 ### Minor Changes
 * [mimosa #226](https://github.com/dbashford/mimosa/issues/226). No longer referencing localhost in the delivered `reload-client.js`, which solves problem with live reload not working when it is running elsewhere.
 
-# 0.13.10 - Jun 29 2013
+## 0.13.10 - Jun 29 2013
 
 ### Major Changes
 * [mimosa #205](https://github.com/dbashford/mimosa/issues/205). `refresh` command has been removed.
 
-# 0.13.9 - Jun 27 2013
+## 0.13.9 - Jun 27 2013
 
 ### Minor Changes
 * [mimosa #225](https://github.com/dbashford/mimosa/issues/225). Now recognizing amd/requirejs dependencies declared in `require`/`require.config` `deps` property.
 
-# 0.13.8 - Jun 26 2013
+## 0.13.8 - Jun 26 2013
 
 ### Minor Changes
 * [mimosa #222](https://github.com/dbashford/mimosa/issues/222). Using new iced-coffee-script with proper semver-sioning.
 * [mimosa-combine #9](https://github.com/dbashford/mimosa-combine/issues/9). Fixed bug with error being thrown for files inside directories. Released June 26.
 
-# 0.13.7 - Jun 26 2013
+## 0.13.7 - Jun 26 2013
 
 ### Minor Changes
 * Dependent library updates
 
-# 0.13.6 - Jun 25 2013
+## 0.13.6 - Jun 25 2013
 
 ### Major Changes
 * [mimosa #198](https://github.com/dbashford/mimosa/issues/198). `virgin` command has been removed.  New versions of `mimosa-client-jade-static` and `mimosa-require` released after removing `virgin` references.
@@ -103,7 +103,7 @@ This setting is false by default to keep things backwards compatible.
 * [mimosa-combine #7](https://github.com/dbashford/mimosa-combine/issues/7). Fixed bug causing ordered files to not be cleaned up.
 * [mimosa-combine #8](https://github.com/dbashford/mimosa-combine/issues/8). Fixed bug causing empty directories as result of combine cleanup not being cleaned up.
 
-# 0.13.5 - Jun 23 2013
+## 0.13.5 - Jun 23 2013
 
 Big changes/additions/fixes to the Stylus compiler with this release.
 
@@ -115,12 +115,12 @@ Big changes/additions/fixes to the Stylus compiler with this release.
 * [mimosa #216](https://github.com/dbashford/mimosa/issues/216). Stylus `include` config available via the `stylus` root level config.
 * [mimosa #215](https://github.com/dbashford/mimosa/issues/215).  Fixed issue where `stylus.use` could not be set to an empty array.
 
-# 0.13.4 - Jun 20 2013
+## 0.13.4 - Jun 20 2013
 
 ### Minor Changes
 * [mimosa #220](https://github.com/dbashford/mimosa/pull/220), [mimosa #218](https://github.com/dbashford/mimosa/issues/218). Adding back ansi-color require which got dropped this morning and was causing issues for folks who didn't have SASS installed.
 
-# 0.13.3 - Jun 20 2013
+## 0.13.3 - Jun 20 2013
 
 ### Major Changes
 * mimosa. Mimosa now places modules into the config more easily allowing modules to use one another.
@@ -130,7 +130,7 @@ Big changes/additions/fixes to the Stylus compiler with this release.
 * mimosa. Mimosa no longer freezes the configuration at any point.  Proved to be more trouble than it was worth.
 * [mimosa #217](https://github.com/dbashford/mimosa/pull/217). Via PR added Travis, and using Mimosa to build withing having it installed.
 
-# 0.13.2 - Jun 13 2013
+## 0.13.2 - Jun 13 2013
 
 ### Major Changes
 * mimosa/mimosa-minify. A bit of a toy feature, but the `mimosa-minify` module now supports two-step source maps with CoffeeScript.  CoffeeScript -> JavaScript -> minified/mangled JS, with source maps all the way back to the CoffeeScript.  Try it out!  In a CoffeeScript project run `mimosa watch -sm`, notice minified/mangled JS gets delivered to the client.  Break some CoffeeScript, go back to the browser, check the console and notice that the error points you back to the original line of CoffeeScript that caused the breakage.  Good stuff!
@@ -139,12 +139,12 @@ Big changes/additions/fixes to the Stylus compiler with this release.
 ### Minor Changes
 * mimosa. Source map names now follow the `.js.map` convention.  Previously they were named simply `.map`
 
-# 0.13.1 - Jun 10 2013
+## 0.13.1 - Jun 10 2013
 
 ### Minor Changes
 * mimosa. Fixing ECO scaffold templates
 
-# 0.13.0 - Jun 10 2013
+## 0.13.0 - Jun 10 2013
 
 ### Major Changes
 * [mimosa #213](https://github.com/dbashford/mimosa/issues/213). Mimosa now comes with [ECO](https://github.com/sstephenson/eco) template compiling built in.  `mimosa new` also includes scaffolded ECO.
@@ -157,7 +157,7 @@ Big changes/additions/fixes to the Stylus compiler with this release.
 * mimosa. Upgraded jquery and requirejs libs in skeleton.
 * mimosa. Fixed issue with Mimosa's hosted Express reporting a phantom 404 when refreshing the page.
 
-# 0.12.6 - Jun 06 2013
+## 0.12.6 - Jun 06 2013
 
 ### Major Changes
 * [mimosa #201](https://github.com/dbashford/mimosa/issues/201), [mimosa #115](https://github.com/dbashford/mimosa/issues/115). IcedCoffeeScript boilerplate now pulled out into simple module that attaches `iced` to window. IcedCoffeeScript `runtime` compilation exposed via the `iced` config and defaults to `runtime:'none'`. You could choose, rather than going global with the `iced` object, to modify the `iced.js` library delivered with `mimosa new` to simply export `iced`, which would require you to pull in that module every time you need the async sugar IcedCoffeeScript provides.  The `mimosa new` boilerplate for IcedCoffeeScript projects shows how to use this.  But, with the `runtime` option opened up via the `iced` config, and the boilerplate code tossed into a file available via `mimosa new`, the power rests in the hands of the user to use the solution they feel is best.
@@ -176,7 +176,7 @@ Big changes/additions/fixes to the Stylus compiler with this release.
 * [mimosa #202](https://github.com/dbashford/mimosa/issues/202), [mimosa #203](https://github.com/dbashford/mimosa/issues/203). Pull request fixing some CoffeeScript error reporting issues.
 * mimosa. Various refactors and reorgs of codebase.
 
-# 0.12.5 - Jun 1 2013
+## 0.12.5 - Jun 1 2013
 
 Back at it after a bit of a break.  Plenty to knock out in the coming weeks.
 
@@ -189,24 +189,24 @@ Back at it after a bit of a break.  Plenty to knock out in the coming weeks.
     * A RegExp can be provided.  That RegExp is applied on the `filePath` string from above to __remove__ any unwanted pieces of text from the string. The RegExp is used as part of a `string.replace`
     * A function can be provided.  That function is passed the `filePath` from above. The function must return a string that is the desired name of the template.
 
-# 0.12.4 - May 15 2013
+## 0.12.4 - May 15 2013
 
 ### Minor Changes
 * mimosa. `mimosa mod:init [name] -c` now outputs a proper skeleton for a CoffeeScript based module, with all the necessary bits for using Mimosa to compile the module pre-install and publish.
 
-# 0.12.3 - May 15 2013
+## 0.12.3 - May 15 2013
 
 ### Minor Changes
 * [mimosa #190](https://github.com/dbashford/mimosa/issues/190). Fixed issue with `mimosa refresh` and the previous release's `mimosa new` changes.
 
-# 0.12.2 - May 14 2013
+## 0.12.2 - May 14 2013
 
 ### Minor Changes
 * mimosa. Included dust helpers in provided vendor dust file
 * mimosa-require.  Bumped version of require.js to include the [newly introduced sourceMap support](http://jrburke.com/).
 * Small reorg/refactor of some `mimosa new` code
 
-# 0.12.1 - May 12 2013
+## 0.12.1 - May 12 2013
 
 ### Minor Changes
 * [mimosa #188](https://github.com/dbashford/mimosa/pull/188). Via pull request. `litcoffee` is now a default coffeescript extension and the coffeescript compiler will compile your Literate CoffeeScript files.
@@ -214,7 +214,7 @@ Back at it after a bit of a break.  Plenty to knock out in the coming weeks.
 * [mimosa #184](https://github.com/dbashford/mimosa/issues/184). Fixing mimosa module creation problem.
 * mimosa. Added the ability to have Mimosa exclude certain coffeescript files from sourcemap generation.  A new `sourceMapExclude` property was added that can be a regex or relative to `watch.javascriptDir`.  It defaults to `[/\/spec\//]`, which means it excludes source map generation for any files contained inside a `/spec/` directory or subdirectory.
 
-# 0.12.0 - May 09 2013
+## 0.12.0 - May 09 2013
 
 Soon, probably with `0.13.0`, all Mimosa modules will need to be JavaScript.  They can be coded in any language you want, but they must be published to NPM as JavaScript modules.  Or, at the very least, the `main` piece of code referred to by the `package.json` [main](http://package.json.nodejitsu.com/), or the modules root level `index` file must be JavaScript.
 
@@ -238,7 +238,7 @@ This should clear things up.
 * Upgraded dust and lodash client library to latest version
 * Setting `template:null` is now a shortcut to turning off all template compilers.
 
-# 0.11.12 - May 03 2013
+## 0.11.12 - May 03 2013
 
 ### Minor Changes
 * mimosa. Small refactors and fixes to module loading.
@@ -246,13 +246,13 @@ This should clear things up.
 * [mimosa-web-package #4](https://github.com/dbashford/mimosa-web-package/issues/6). Added a new `appjs` option to `web-package`.  When set to `null`, Mimosa will not write the `app.js` application bootstrapper.  When set to a string, the string is the name `web-package` will use when writing the file.  So `appjs:"foo.js"` will write a `foo.js` file.  This setting defaults to `app.js`.
 * mimosa-web-package is now compiled to JavaScript with Mimosa prior to being published to NPM.
 
-# 0.11.11 - April 25 2013
+## 0.11.11 - April 25 2013
 
 ### Minor Changes
 * [mimosa #175](https://github.com/dbashford/mimosa/issues/175).  Fixed node v0.10 related issue with creating new project without a project name.
 * mimosa. Updated SASS compiler to find imports that do not start with `_`.
 
-# 0.11.10 - April 24 2013
+## 0.11.10 - April 24 2013
 
 ### Minor Changes
 * [mimosa #173](https://github.com/dbashford/mimosa/issues/173). You can now use external stylus libraries during compilation of Stylus files without pulling in all the source for those libraries.  A new Stylus configuration was added:
@@ -264,7 +264,7 @@ This should clear things up.
 
   Add to the `use` array those libraries you have locally `npm install`ed and want to use with Stylus.  Mimosa will get snippy with you if you try to use something that isn't installed. =)
 
-# 0.11.9 - April 23 2013
+## 0.11.9 - April 23 2013
 
 ### Major Changes
 * mimosa-lint. mimosa-lint is now compiled to JavaScript prior to being published to NPM so that the delivered module is in the target language. This is the beginning of using Mimosa to compile Mimosa. I'll be cycling through all the Mimosa modules performing this change before eventually doing it with Mimosa core.
@@ -274,25 +274,25 @@ This should clear things up.
 * mimosa. `watch.javascriptDir` can be made `null`.  This allows for building apps that aren't strictly web apps.  Mimosa modules, for instance.
 * [mimosa-web-package #4](https://github.com/dbashford/mimosa-web-package/issues/4). `web-package` will no longer write an `app.js` or execute an `npm install` if the packaged application uses the default server. (published as `web-package` version `0.10.0` on 4/18)
 
-# 0.11.8 - April 17 2013
+## 0.11.8 - April 17 2013
 
 ### Minor Changes
 * [mimosa #171](https://github.com/dbashford/mimosa/issues/171). If using node 0.10 and starting mimosa in a directory with no mimosa-config, the output was a stack trace.  Now it should be a useful validation error message.
 * [mimosa #172](https://github.com/dbashford/mimosa/issues/172). On Windows, `npm install` requires a `node_modules` in the current directory or else it installs the package elsewhere. So creating empty `node_modules` when needed.
 
-# 0.11.7 - April 11 2013
+## 0.11.7 - April 11 2013
 
 ### Minor Changes
 * [mimosa #170](https://github.com/dbashford/mimosa/issues/170). Fixed issue with live reload crashing mimosa on node v10 + windows 8.
 
-# 0.11.6 - April 10 2013
+## 0.11.6 - April 10 2013
 
 ### Minor Changes
 * [mimosa #168](https://github.com/dbashford/mimosa/issues/168). Added `md` as a default copy extension.
 * [mimosa #169](https://github.com/dbashford/mimosa/issues/169). Fixing CoffeeScript compile error messages. Adding line numbers.
 * [mimosa-web-package #2](https://github.com/dbashford/mimosa-web-package/issues/2). Config paths generated by `mimosa-web-package` are now target environment agnostic. Previously the paths matched the build environment.  So if you were building on Windows and deploying to *nix, there would be path work to do.  Now that is not a problem as the paths are calculated in the `config.js` that `mimosa-web-package` generates.
 
-# 0.11.5 - April 08 2013
+## 0.11.5 - April 08 2013
 
 Doing some Heroku work, so making some changes to both Mimosa and mimosa-web-package to accommodate some Heroku learnings.
 
@@ -306,12 +306,12 @@ Doing some Heroku work, so making some changes to both Mimosa and mimosa-web-pac
 ### Breaking Changes
 * Only possible breaking changes are minor and with `web-package`, and in most cases shouldn't be breaking at all.  Previously the `web-package` config file was output as `config.json`, now it is `config.js` as it contains some code to resolve the location of static assets properly.
 
-# 0.11.4 - April 07 2013
+## 0.11.4 - April 07 2013
 
 ### Major Changes
 * Got a great pull request that upgraded TypeScript support to `0.8.3.0` and fixed some other TypeScript issues.
 
-# 0.11.3 - April 04 2013
+## 0.11.3 - April 04 2013
 
 Purely a `mimosa-require` related release. Enhanced requirejs/r.js support in many ways.
 
@@ -325,7 +325,7 @@ Purely a `mimosa-require` related release. Enhanced requirejs/r.js support in ma
 * mimosa-require. Added detection of `require` calls that take arrays of dependencies that are embedded within other `define`/`require` callbacks. Previously only single string `require` calls (i.e. `require('foo')`) were detected.  Now requires with arrays and callbacks are detected.  i.e. `require(['foo', 'bar'], function(){})`
 * mimosa-require. Fixed issue with path validations caching references to aliased directories.
 
-# 0.11.2 - March 28 2013
+## 0.11.2 - March 28 2013
 
 Various lib updates.
 
@@ -336,7 +336,7 @@ Various lib updates.
 * Mimosa's auto-install of Mimosa modules on startup will now output the `npm install` output on successful install.
 * npm updated to latest
 
-# 0.11.1 - March 24 2013
+## 0.11.1 - March 24 2013
 
 ### Minor Changes
 * [mimosa-server #3](https://github.com/dbashford/mimosa-server/issues/3) - When not using the default server (when project has its own server), the config setting `server.views.path` is relative to `server.path` instead of relative to the root of the project. When using the default server `server.views.path` remains relative to the root of the project. The `server.views.path` is passed to the project's server.
@@ -344,7 +344,7 @@ Various lib updates.
 ### Possible Breaking Changes
 * If you've got your own server and have configured specific (non-default) paths for `server.views.path` and `server.path`, you may need to tweak the `server.views.path`.
 
-# 0.11.0 - March 21 2013
+## 0.11.0 - March 21 2013
 
 Source maps! Part of the changes for adding source maps opened up being able to configure the coffeescript compiler from the `mimosa-config`, so defaulting `bare` compilation to `true`, which has been a rainy day thing I've wanted to do for awhile, became possible. That might break some applications that aren't wrapping code (if you aren't using AMD or CommonJS via AMD), hence the uptick to `0.11.0`. See the Breaking Changes section below.
 
@@ -366,17 +366,17 @@ Source maps! Part of the changes for adding source maps opened up being able to 
 ### Possible Breaking Changes
 * With `bare` now set to `true` by default (was previously `false`), you'll want to check your Coffee/Iced apps to make sure things still work alright. If they don't simply flip the setting back to `false` or address why unwrapped code and scope bleed might be causing trouble.
 
-# 0.10.6 - March 16 2013
+## 0.10.6 - March 16 2013
 
 ### Minor Changes
 * mimosa #160.  Log error if `mimosa new` `npm install` fails.
 
-# 0.10.5 - March 16 2013
+## 0.10.5 - March 16 2013
 
 ### Minor Changes
 * mimosa #159.  First and hopefully last node `v0.10.0` bug fix.
 
-# 0.10.4 - March 15 2013
+## 0.10.4 - March 15 2013
 
 ### Major Changes
 * mimosa #146.  First new module in awhile.  [mimosa-client-jade-static](https://github.com/dbashford/mimosa-client-jade-static) will take files that end in `.html.jade`, static jade templates, compile them, execute them, and write them as individual `.html` files. These jade templates cannot be dynamic in any way. The (initial) target use case is to have small template files to pull in using RequireJSs `text` plugin.
@@ -393,25 +393,25 @@ Source maps! Part of the changes for adding source maps opened up being able to 
 * mimosa-require. `uglify2` is now the default Uglifier for RequireJS. If needed this can be changed back to `uglify` by overriding the optimizer settings in the `require` config.
 * mimosa-server-reload #3, improved error messaging for module not being in the same module space as other mimosa modules it depends on.
 
-# 0.10.3 - March 3 2013
+## 0.10.3 - March 3 2013
 
 ### Major Changes
 * Fixes #147, with the help of the Emblem author, refactored the Mimosa Emblem compiler to not depend on jsdom, which introduces some cross-platform issues.
 * Upgraded to the latest Emblem which also removes a Mimosa dependency on git introduced in the last release.
 
-# 0.10.2 - Feb 25 2013
+## 0.10.2 - Feb 25 2013
 
 ### Major Changes
 * Auto-installed modules, those discovered in the `modules` array but not discovered installed in any of Mimosa's module scopes, will now install into the project scope. This should alleviate permissions issues with installing modules into Mimosa which is often installed in a global protected scope.
 
-# 0.10.1 - Feb 25 2013
+## 0.10.1 - Feb 25 2013
 
 ### Major Changes
 * mimosa #145, added [Emblem](http://emblemjs.com/) compiler. Emblem is wicked cool. Despite resembling jade/haml,it parses to [Handlebars](http://handlebarsjs.com/) [AST](http://en.wikipedia.org/wiki/Abstract_syntax_tree) which can then be passed to Handlebars for precompilation. The output of precompilation is the same as the output for pure Handlebars precompilation. This is awesome for folks that need to use Handlebars (Ember.js) but prefer a terser syntax.
 
   The existing `template.handlebars` config is used by the Emblem compiler.  The Emblem compiler can output Ember compliant code by enabling ember the same way as with handlebars. So the snippet below from the `0.10.0` release applies to Emblem.  See the [Mimosa Ember Emblem project on github](https://github.com/dbashford/mimosa-ember-emblem-templates) for an example of this running.
 
-# 0.10.0 - Feb 23 2013
+## 0.10.0 - Feb 23 2013
 
 Jumping up to `0.10.0` as there are a few breaking changes, so check out the "You'll need to..." section below.
 
@@ -460,7 +460,7 @@ Updates to how templating is handled has been a theme, and this release continue
         onePager: true
   ```
 
-# 0.9.0 - Feb 12 2013
+## 0.9.0 - Feb 12 2013
 
 Big release with three big new features.  Also a few minor breaking changes, so definitely check those out.  I've got a few high priority bugs I need to address after this release, but I expect the next large priority is to build a testing module.
 
@@ -507,7 +507,7 @@ Big release with three big new features.  Also a few minor breaking changes, so 
 ### You'll need to...
 * If you were using the recently introduced `outputFiles` config, the name is now simply `output`.  And the `folder` configuration is now `folders` and is an array instead of a string.
 
-# 0.8.9 - Feb 01 2013
+## 0.8.9 - Feb 01 2013
 
 ### Major Changes
 * mimosa #129, TypeScript should now compile properly on Windows.
@@ -515,7 +515,7 @@ Big release with three big new features.  Also a few minor breaking changes, so 
 ### Minor Changes
 * mimosa #132, mimosa no longer writing empty compiled .d.ts files
 
-# 0.8.8 - Feb 01 2013
+## 0.8.8 - Feb 01 2013
 
 ### Major Changes
 * Every mimosa module has been incremented, in most cases just to get the latest version of logmimosa
@@ -539,7 +539,7 @@ Big release with three big new features.  Also a few minor breaking changes, so 
 * mimosa-require, moved require based cleaning logic to mimosa-require module from core
 * mimosa-skeleton #4, fixed issue with github clones not properly landing in the current directory.
 
-# 0.8.7 - January 24 2013
+## 0.8.7 - January 24 2013
 
 ### Major Changes
 * mimosa #108, you are now no longer limited to bundling together all micro-template files into the same output file.  Bundling them all together makes perfect sense for a one page app, but once a 2nd page is introduced, you don't want all the templates in one place because you don't want to have to load every template everywhere.  An alternate config for the `templates` has been introduced.
@@ -569,7 +569,7 @@ Future releases will allow multiple folders to be configured per output file to 
 * Update to mimosa module handling to more gracefully error out/message when permission issues stop a Mimosa process from reading module files.
 * A few library updates
 
-# 0.8.6 - January 21 2013
+## 0.8.6 - January 21 2013
 
 ### Major Changes
 * mimosa-skeleton module released on 1/19. Now it just needs actual skeletons.  I'll probably create one or two, but will rely on skeletons being contributed down the road. If you build it they will hopefully come? mimosa-skeleton will become a default module once it has a few skeletons.
@@ -582,23 +582,23 @@ Future releases will allow multiple folders to be configured per output file to 
 * mimosa #119, handling directories properly when determining initial file counts
 * mimosa #124, allow any extension that has been registered for to pass through mimosas workflows
 
-# 0.8.5 - January 15 2013
+## 0.8.5 - January 15 2013
 
 ### Major Changes
 * mimosa #123, got a pretty awesome pull request that will allow Mimosa to find and use Mimosa modules that are 1) installed globally if Mimosa is installed globally or 2) installed locally if Mimosa is installed locally.  Now you can install modules using `npm install` if you wish.  Mimosa will still auto-install any modules listed in the `mimosa-config` if Mimosa cannot find them.
 
-# 0.8.4 - January 14 2013
+## 0.8.4 - January 14 2013
 
 ### Minor Changes
 * mimosa #121, handling spaces in the path for `mod:install` command.
 
-# 0.8.3 - January 13 2013
+## 0.8.3 - January 13 2013
 
 ### Minor Changes
 * mimosa-import-source #1, handling problem in mimosa core where source file counts were not being updated after code was imported from mimosa-import-source.  Also fixing issue where orphan imported folders were preventing non-imported folders from being cleaned up.
 * mimosa-web-package #1, fixed web-package code dependency on mimosa-server
 
-# 0.8.2 - January 12 2013
+## 0.8.2 - January 12 2013
 
 ### Minor Changes
 * mimosa #113, logmimosa logging functions now take varargs, much like console.log, ex: `logger.info("foo", bar, false)`
@@ -607,12 +607,12 @@ Future releases will allow multiple folders to be configured per output file to 
 * mimosa #118, removed `preferGlobal` setting from all the modules and from module skeletons, all modules have been released with bumped versions
 * mimosa-server #2, for the default server, allowing any and every path not to static assets to route to the app's index
 
-# 0.8.1 - January 10 2013
+## 0.8.1 - January 10 2013
 
 ### Minor Change
 * Fixed pathing issue introduced with `0.8.0`
 
-# 0.8.0 - January 10 2013
+## 0.8.0 - January 10 2013
 
 This update is shallow, but wide.  Every module has been updated, and there are a few breaking changes, so check the "You'll need to..." section below.  Big updates to mimosa-lint, big reduction in module code overall as validation logic for module configuration has been centralized.
 
