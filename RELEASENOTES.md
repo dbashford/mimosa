@@ -1,4 +1,4 @@
-# 0.14.0 - Jul ?? 2013
+# Note on Next Major Release: 0.14.0 - Jul ?? 2013
 
 I had mentioned that `0.13.0` would be the last minor version before `1.0`, but with a small/minor breaking change coming up I'm going to push that out one version.
 
