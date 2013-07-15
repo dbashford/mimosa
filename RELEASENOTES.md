@@ -20,12 +20,21 @@ What will this break? It depends...
 
 There may be a few more `0.13` releases before `0.14` drops, but wanted to get this heads up out there!
 
+# CURRENT RELEASES
+
+## 0.13.18 - Jul ?? 2013
+
+### Minor Changes
+* mimosa-require. Updated mimosa-require to expose its resolved depedency graph information for use by other modules.
+
 ## 0.13.17 - Jul 12 2013
 
+### Minor Changes
 * [mimosa #229](https://github.com/dbashford/mimosa/issues/229). Fixing windows install issues related to node-sass inclusion.
 
 ## 0.13.16 - Jul 12 2013
 
+### Minor Changes
 * mimosa. Updating to latest NPM to get around NPM bug
 
 ## 0.13.15 - Jul 12 2013
