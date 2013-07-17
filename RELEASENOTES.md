@@ -24,6 +24,11 @@ There may be a few more `0.13` releases before `0.14` drops, but wanted to get t
 
 # CURRENT RELEASES
 
+## 0.13.18 - Jul ?? 2013
+
+### Minor Changes
+* mimosa-testem-require. Updated default `specConvention` again to allow for tests to also end in either `-test.js` or `_test.js`.
+
 ## 0.13.18 - Jul 16 2013
 
 ### Minor Changes
