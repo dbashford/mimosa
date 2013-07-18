@@ -1,5 +1,7 @@
 ## Note on Next Major Release: 0.14.0 - Jul ?? 2013
 
+(See below for current releases)
+
 I had mentioned that `0.13.0` would be the last minor version before `1.0`, but with a small/minor breaking change coming up I'm going to push that out one version.
 
 To prepare for upcoming [Bower](http://bower.io/) integration, the last big missing piece pre 1.0, I'll be creating a `vendor` config that indicates where vendor scripts and css are contained. Currently Mimosa has the concept of vendor assets, but there is no way to configure where those assets are. Mimosa treats anything with `/vendor/` in its file path as being a vendor asset. So if you prefer to keep your vendor scripts someplace else, like, for instance, a `scripts` folder, then you miss out on the special treatment vendor scripts get (like having their own lint config or bypassing AMD scrutiny).
@@ -22,10 +24,19 @@ There may be a few more `0.13` releases before `0.14` drops, but wanted to get t
 
 # CURRENT RELEASES
 
-## 0.13.18 - Jul ?? 2013
+## 0.13.19 - Jul ?? 2013
 
 ### Minor Changes
+* mimosa-testem-require. Updated default `specConvention` again to allow for tests to also end in either `-test.js` or `_test.js`.
+
+## 0.13.18 - Jul 16 2013
+
+### Minor Changes
+* [mimosa #231](https://github.com/dbashford/mimosa/issues/231). Fixed bug with overwriting of RegExp properties in mimosa-config.
+* mimosa. Bumped node-sass version.
 * mimosa-require. Updated mimosa-require to expose its resolved depedency graph information for use by other modules.
+* mimosa-testem-require. Updated default `specConvention` to allow for specs to end with either `_spec.js` OR `-spec.js`.  Previously it was just `_spec.js`.
+>>>>>>> aba2bee182e904617fd6c2cd89195c14bdb0798f
 
 ## 0.13.17 - Jul 12 2013
 
