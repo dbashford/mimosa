@@ -13,8 +13,11 @@ module.exports = class TemplateCompiler
   constructor: (config) ->
     if @clientLibrary?
       @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
-      jsDir = path.join config.watch.compiledDir, config.watch.javascriptDir
-      @clientPath = path.join jsDir, 'vendor', "#{@clientLibrary}.js"
+      @clientPath = path.join config.vendor.javascripts, "#{@clientLibrary}.js"
+      @clientPath = @clientPath.replace config.watch.sourceDir, config.watch.compiledDir
+      compiledJs = path.join config.watch.compiledDir, config.watch.javascriptDir
+      @libPath = @clientPath.replace(compiledJs, '').substring(1).split(path.sep).join('/')
+      @libPath = @libPath.replace(path.extname(@libPath), '')
 
   registration: (config, register) ->
     @requireRegister = config.installedModules['mimosa-require']
@@ -223,8 +226,7 @@ module.exports = class TemplateCompiler
       next()
 
   libraryPath: =>
-    libPath = "vendor/#{@clientLibrary}"
-    @requireRegister?.aliasForPath(libPath) ? libPath
+    @requireRegister?.aliasForPath(@libPath) ? @libPath
 
   __templatePreamble: (file) ->
     """

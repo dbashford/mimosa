@@ -82,7 +82,13 @@ class MimosaFileInitModule
       destinationFile = options.destinationFile(options.inputFile)
       options.isJavascript = fileUtils.isJavascript(destinationFile) unless options.isJavascript?
       options.isCSS = fileUtils.isCSS(destinationFile) unless options.isCSS?
-      options.isVendor = fileUtils.isVendor(destinationFile)
+
+      if options.isJavascript
+        options.isVendor = fileUtils.isVendorJS(config, options.inputFile)
+
+      if options.isCSS
+        options.isVendor = fileUtils.isVendorCSS(config, options.inputFile)
+
       options.isJSNotVendor = options.isJavascript and not options.isVendor
 
 module.exports = new MimosaFileInitModule()
