@@ -1,28 +1,29 @@
 ## 0.14.0 - Jul ?? 2013
 
+I had mentioned that `0.13.0` would be the last minor version before `1.0`, but with a small/minor breaking change coming up I'm going to push that out one version.
+
 ### Major Changes
 * Bumped node version required for Mimosa to 10.0+
+* To prepare for [Bower](http://bower.io/) integration, the last big missing piece pre 1.0, I've created a `vendor` config that indicates where vendor scripts and css are contained. Previously Mimosa had the concept of vendor assets, but there was no way to configure where those assets were. Mimosa treated anything with `/vendor/` in its path as being a vendor asset. So if you prefered to keep your vendor scripts someplace else, like, for instance, a `scripts` folder, then you missed out on the special treatment vendor scripts got (like having their own lint config or bypassing AMD scrutiny).
+
+  Including Bower places an even bigger emphasis on vendor assets, so something I've been thinking about for awhile, making a `vendor` config, hits with this release.
+
+  ```javascript
+  vendor:
+    javascripts:"javascripts/vendor"
+    stylesheets:"stylesheets/vendor"
+  ```
 
 ### Minor Changes
 * mimosa-testem-require. Updated default `specConvention` again to allow for tests to also end in either `-test.js` or `_test.js`.
+* [mimosa #235](https://github.com/dbashford/mimosa/issues/235). mimosa-require will now recognize `//` as the beginning of a CDN path.  Previously it just recognized paths beginning with `http`.
+* [mimosa-require #12](https://github.com/dbashford/mimosa-require/issues/12). mimosa-require will now log as an error when an alias path isn't used. So if a `backbone:'vendor/backbone'` alias exists, and you try to use `vendor/backbone` (which is not allowed), an error will be written.
 
-### Breaking Changes
+### 0.14.0 Breaking Change
 
-I had mentioned that `0.13.0` would be the last minor version before `1.0`, but with a small/minor breaking change coming up I'm going to push that out one version.
+Details on possible breaking changes from the `vendor` config change:
 
-To prepare for [Bower](http://bower.io/) integration, the last big missing piece pre 1.0, I've created a `vendor` config that indicates where vendor scripts and css are contained. Previously Mimosa had the concept of vendor assets, but there was no way to configure where those assets were. Mimosa treated anything with `/vendor/` in its path as being a vendor asset. So if you prefered to keep your vendor scripts someplace else, like, for instance, a `scripts` folder, then you missed out on the special treatment vendor scripts got (like having their own lint config or bypassing AMD scrutiny).
-
-Including Bower places an even bigger emphasis on vendor assets, so something I've been thinking about for awhile, making a `vendor` config, hits with this release.
-
-```javascript
-vendor:
-  javascripts:"javascripts/vendor"
-  stylesheets:"stylesheets/vendor"
-```
-
-What does this break? It depends...
-
-* __Possibly nothing__ if you already have a file structure like that.
+* __Possibly no effect__ if you already have a file structure like that.
 * __It may actually help__ if you don't keep your vendor assets in a `vendor` directory at all. Now you'll be able to let Mimosa know where they are and take advantage of vendor assets' special treatment.
 * __It'll only cause you trouble if__ you had vendor assets in a `vendor` directory, but not right at the root of `javascripts` or `stylesheets`, you'll just need to add this config
 
