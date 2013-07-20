@@ -1,12 +1,18 @@
-## Note on Next Major Release: 0.14.0 - Jul ?? 2013
+## 0.14.0 - Jul ?? 2013
 
-(See below for current releases)
+### Major Changes
+* Bumped node version required for Mimosa to 10.0+
+
+### Minor Changes
+* mimosa-testem-require. Updated default `specConvention` again to allow for tests to also end in either `-test.js` or `_test.js`.
+
+### Breaking Changes
 
 I had mentioned that `0.13.0` would be the last minor version before `1.0`, but with a small/minor breaking change coming up I'm going to push that out one version.
 
-To prepare for upcoming [Bower](http://bower.io/) integration, the last big missing piece pre 1.0, I'll be creating a `vendor` config that indicates where vendor scripts and css are contained. Currently Mimosa has the concept of vendor assets, but there is no way to configure where those assets are. Mimosa treats anything with `/vendor/` in its file path as being a vendor asset. So if you prefer to keep your vendor scripts someplace else, like, for instance, a `scripts` folder, then you miss out on the special treatment vendor scripts get (like having their own lint config or bypassing AMD scrutiny).
+To prepare for [Bower](http://bower.io/) integration, the last big missing piece pre 1.0, I've created a `vendor` config that indicates where vendor scripts and css are contained. Previously Mimosa had the concept of vendor assets, but there was no way to configure where those assets were. Mimosa treated anything with `/vendor/` in its path as being a vendor asset. So if you prefered to keep your vendor scripts someplace else, like, for instance, a `scripts` folder, then you missed out on the special treatment vendor scripts got (like having their own lint config or bypassing AMD scrutiny).
 
-Including Bower places an even bigger emphasis on vendor assets, so something I've been thinking about for awhile, making a `vendor` config, will be coming up shortly. So expect a root level config like this to pop up with `0.14.0`
+Including Bower places an even bigger emphasis on vendor assets, so something I've been thinking about for awhile, making a `vendor` config, hits with this release.
 
 ```javascript
 vendor:
@@ -14,20 +20,11 @@ vendor:
   stylesheets:"stylesheets/vendor"
 ```
 
-What will this break? It depends...
+What does this break? It depends...
 
 * __Possibly nothing__ if you already have a file structure like that.
 * __It may actually help__ if you don't keep your vendor assets in a `vendor` directory at all. Now you'll be able to let Mimosa know where they are and take advantage of vendor assets' special treatment.
-* __It'll only cause you trouble if__ you had vendor assets in a `vendor` directory, but not right at the root of `javascripts` or `stylesheets`, you'll just need to add this config.  I hope that isn't too much of an inconvenience! =)
-
-There may be a few more `0.13` releases before `0.14` drops, but wanted to get this heads up out there!
-
-# CURRENT RELEASES
-
-## 0.13.19 - Jul ?? 2013
-
-### Minor Changes
-* mimosa-testem-require. Updated default `specConvention` again to allow for tests to also end in either `-test.js` or `_test.js`.
+* __It'll only cause you trouble if__ you had vendor assets in a `vendor` directory, but not right at the root of `javascripts` or `stylesheets`, you'll just need to add this config
 
 ## 0.13.18 - Jul 16 2013
 
