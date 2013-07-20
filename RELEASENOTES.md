@@ -33,7 +33,6 @@ What does this break? It depends...
 * mimosa. Bumped node-sass version.
 * mimosa-require. Updated mimosa-require to expose its resolved depedency graph information for use by other modules.
 * mimosa-testem-require. Updated default `specConvention` to allow for specs to end with either `_spec.js` OR `-spec.js`.  Previously it was just `_spec.js`.
->>>>>>> aba2bee182e904617fd6c2cd89195c14bdb0798f
 
 ## 0.13.17 - Jul 12 2013
 
