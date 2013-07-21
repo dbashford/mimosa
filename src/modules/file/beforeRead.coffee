@@ -14,7 +14,7 @@ class MimosaFileBeforeReadModule
 
   _fileNeedsCompiling: (config, options, next) ->
     hasFiles = options.files?.length > 0
-    return next(false) unless hasFiles
+    return next() unless hasFiles
 
     i = 0
     newFiles = []
@@ -22,10 +22,7 @@ class MimosaFileBeforeReadModule
       if ++i is options.files.length
         if newFiles.length > 0
           options.files = newFiles
-          next()
-        else
-          logger.debug "No files need compiling, exiting workflow"
-          next(false)
+        next()
 
     options.files.forEach (file) =>
       # if using require verification, forcing compile to assemble require information
