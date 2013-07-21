@@ -24,7 +24,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=0.8"
+    "node": ">=0.10"
   },
   "main": "./lib/index",
   "scripts": {
