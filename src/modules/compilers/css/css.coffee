@@ -57,7 +57,9 @@ module.exports = class AbstractCSSCompiler
     outputFileText:null
 
   _compile: (config, options, next) =>
-    return next() if options.files?.length is 0
+    hasFiles = options.files?.length > 0
+    return next() unless hasFiles
+
     i = 0
     newFiles = []
     done = (file) ->

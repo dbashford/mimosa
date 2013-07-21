@@ -13,6 +13,9 @@ module.exports = class JSCompiler
     register ['add','update','buildFile'], 'compile', @_compile, @extensions
 
   _compile: (config, options, next) =>
+    hasFiles = options.files?.length > 0
+    return next() unless hasFiles
+
     i = 0
     newFiles = []
 
