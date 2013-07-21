@@ -15,8 +15,9 @@ I had mentioned that `0.13.0` would be the last minor version before `1.0`, but 
   ```
 
 ### Minor Changes
-* mimosa-testem-require. Updated default `specConvention` again to allow for tests to also end in either `-test.js` or `_test.js`.
 * [mimosa #235](https://github.com/dbashford/mimosa/issues/235). mimosa-require will now recognize `//` as the beginning of a CDN path.  Previously it just recognized paths beginning with `http`.
+* [mimosa #237](https://github.com/dbashford/mimosa/issues/237). `next` is now called in JS compiler if no files are in `options.files`.
+* mimosa-testem-require. Updated default `specConvention` again to allow for tests to also end in either `-test.js` or `_test.js`.
 * [mimosa-require #12](https://github.com/dbashford/mimosa-require/issues/12). mimosa-require will now log as an error when an alias path isn't used. So if a `backbone:'vendor/backbone'` alias exists, and you try to use `vendor/backbone` (which is not allowed), an error will be written.
 
 ### 0.14.0 Breaking Change
