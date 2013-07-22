@@ -1,4 +1,16 @@
-## 0.14.0 - Jul ?? 2013
+## 1.0.0 Roadmap
+
+1.0 is a short bit away now, the following summarizes all that remains.
+
+* Bug fixes
+* Possible inclusion of modules like `skeleton` and `bower` as default Mimosa modules
+* General code tightening/testing
+* Documentation and site updates
+
+
+## 0.14.0 - Jul 22 2013
+
+Big release!  Two new modules and improvements to mimosa core to accommodate those modules.  Also some improvements to mimosa-require.
 
 ### New Modules
 * [mimosa-bower](https://github.com/dbashford/mimosa-bower). Bower integration. Allows for importing and version/dependency management for vendor scripts. Details on the [GitHub page](https://github.com/dbashford/mimosa-bower#overview).
