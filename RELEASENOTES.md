@@ -1,6 +1,8 @@
 ## 0.14.0 - Jul ?? 2013
 
-I had mentioned that `0.13.0` would be the last minor version before `1.0`, but with a small/minor breaking change coming up I'm going to push that out one version.
+### New Modules
+* [mimosa-bower](https://github.com/dbashford/mimosa-bower). Bower integration. Allows for importing and version/dependency management for vendor scripts. Details on the [GitHub page](https://github.com/dbashford/mimosa-bower#overview).
+* [mimosa-just-copy](https://github.com/dbashford/mimosa-just-copy). Allows particular assets being watched by Mimosa to bypass being processed by other Mimosa modules, instead just being read and written.
 
 ### Major Changes
 * Bumped node version required for Mimosa to 10.0+
