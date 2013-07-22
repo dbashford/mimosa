@@ -10,11 +10,11 @@
 
   Including Bower places an even bigger emphasis on vendor assets, so something I've been thinking about for awhile, making a `vendor` config, hits with this release.
 
-  ```javascript
-  vendor:
-    javascripts:"javascripts/vendor"
-    stylesheets:"stylesheets/vendor"
-  ```
+    ```javascript
+    vendor:
+      javascripts:"javascripts/vendor"
+      stylesheets:"stylesheets/vendor"
+    ```
 
 ### Minor Changes
 * [mimosa #235](https://github.com/dbashford/mimosa/issues/235). mimosa-require will now recognize `//` as the beginning of a CDN path.  Previously it just recognized paths beginning with `http`.
