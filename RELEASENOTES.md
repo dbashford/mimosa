@@ -6,9 +6,7 @@
 
 ### Major Changes
 * Bumped node version required for Mimosa to 10.0+
-* To prepare for [Bower](http://bower.io/) integration, the last big missing piece pre 1.0, I've created a `vendor` config that indicates where vendor scripts and css are contained. Previously Mimosa had the concept of vendor assets, but there was no way to configure where those assets were. Mimosa treated anything with `/vendor/` in its path as being a vendor asset. So if you prefered to keep your vendor scripts someplace else, like, for instance, a `scripts` folder, then you missed out on the special treatment vendor scripts got (like having their own lint config or bypassing AMD scrutiny).
-
-  Including Bower places an even bigger emphasis on vendor assets, so something I've been thinking about for awhile, making a `vendor` config, hits with this release.
+* To prepare for [Bower](http://bower.io/) integration a `vendor` config has been added that indicates where vendor scripts and css are contained. Previously Mimosa had the concept of vendor assets, but there was no way to configure where those assets were. Mimosa treated anything with `/vendor/` in its path as being a vendor asset. So if you preferred to keep your vendor scripts someplace else, like, for instance, a `scripts` folder, then you missed out on the special treatment vendor scripts got (like having their own lint config or bypassing AMD scrutiny).
 
     ```javascript
     vendor:
