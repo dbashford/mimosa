@@ -6,7 +6,7 @@ path = require 'path'
 
 _ = require 'lodash'
 logger = require 'logmimosa'
-nodesass = require 'node-sass'
+nodesass = null
 
 AbstractCssCompiler = require './css'
 
@@ -73,6 +73,15 @@ module.exports = class SassCompiler extends AbstractCssCompiler
     @includeToBaseHash[fileName]? or path.basename(fileName).charAt(0) is '_'
 
   _compileNode: (file, config, options, done) =>
+
+    unless nodesass
+      try
+        nodesass = require 'node-sass'
+      catch err
+        logger.fatal "Cannot use node-sass. Error:"
+        logger.fatal err
+        process.exit 1
+
     logger.debug "Beginning node compile of SASS file [[ #{file.inputFileName} ]]"
 
     finished = (error, text) =>
