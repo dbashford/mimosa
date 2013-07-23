@@ -7,6 +7,10 @@
 * General code tightening/testing
 * Documentation and site updates
 
+## 0.14.1 - Jul ?? 2013
+
+### Minor Changes
+* [mimosa-bower #1](https://github.com/dbashford/mimosa-bower/issues/1). mimosa-bower was using the wrong metadata data point to determine which folder Bower was placing its installed assets.
 
 ## 0.14.0 - Jul 22 2013
 
