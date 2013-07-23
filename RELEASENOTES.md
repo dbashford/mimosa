@@ -7,6 +7,10 @@
 * General code tightening/testing
 * Documentation and site updates
 
+## 0.14.2 - Jul ?? 2013
+### Minor Changes
+* [mimosa-testem-require #2](https://github.com/dbashford/mimosa-testem-require/issues/2). Sorting specs before writing to avoid random file diffs.
+
 ## 0.14.1 - Jul 23 2013
 
 ### Minor Changes
