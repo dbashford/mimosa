@@ -13,6 +13,7 @@
 * [mimosa-testem-require #2](https://github.com/dbashford/mimosa-testem-require/issues/2). Sorting specs before writing to avoid random file diffs.
 * [mimosa-bower](https://github.com/dbashford/mimosa-bower/). Any `mainOverride` files or paths that do not exist for a package will generate a log message.
 * [mimosa-bower #3](https://github.com/dbashford/mimosa-bower/issues/3).  `mainOverride` paths can now be folders and all the folders contents will be copied.
+* [mimosa #240](https://github.com/dbashford/mimosa/issues/240). Made default `package.json` name meet npm standards.
 
 ## 0.14.1 - Jul 23 2013
 
