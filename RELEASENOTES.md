@@ -12,6 +12,9 @@
 ### Minor Changes
 * [mimosa-testem-require #2](https://github.com/dbashford/mimosa-testem-require/issues/2). Sorting specs before writing to avoid random file diffs.
 * [mimosa-bower](https://github.com/dbashford/mimosa-bower/). Any `mainOverride` files or paths that do not exist for a package will generate a log message.
+* [mimosa-bower #8](https://github.com/dbashford/mimosa-bower/issues/8).  Updated docs and error message regarding necessary location of `bower.json`
+* [mimosa-bower #6](https://github.com/dbashford/mimosa-bower/issues/6).
+The `mainOverrides` array can now be handed object(s) that map input package file/folder straight to output package file/folder for maximum flexibility. See the [alternate config](https://github.com/dbashford/mimosa-bower#alternate-config) for an example.
 * [mimosa-bower #5](https://github.com/dbashford/mimosa-bower/issues/5).  `strategy` can now be package specific.  See the [alternate config](https://github.com/dbashford/mimosa-bower#alternate-config) for an example.
 * [mimosa-bower #3](https://github.com/dbashford/mimosa-bower/issues/3).  `mainOverride` paths can now be folders and all the folders contents will be copied.
 * [mimosa #240](https://github.com/dbashford/mimosa/issues/240). Made default `package.json` name meet npm standards.
