@@ -34,9 +34,20 @@ var makeHandlebars = function (hbs) {
   }
 
   Ember.Handlebars.helper = function(name, value) {
+    if (Ember.Component.detect(value)) {
+      Ember.assert("You tried to register a component named '" + name + "', but component names must include a '-'", name.match(/-/));
+
+      var proto = value.proto();
+      if (!proto.layoutName && !proto.templateName) {
+        value.reopen({
+          layoutName: 'components/' + name
+        });
+      }
+    }
+
     if (Ember.View.detect(value)) {
       Ember.Handlebars.registerHelper(name, function(options) {
-        Ember.assert("You can only pass attributes as parameters (not values) to a application-defined helper", arguments.length < 2);
+        Ember.assert("You can only pass attributes (such as name=value) not bare values to a helper for a View", arguments.length < 2);
         makeBindings(options);
         return Ember.Handlebars.helpers.view.call(this, value, options);
       });
@@ -80,7 +91,7 @@ var makeHandlebars = function (hbs) {
     } else if (mustache.params.length || mustache.hash) {
       // no changes required
     } else {
-      var id = new Handlebars.AST.IdNode(['_triageMustache']);
+      var id = new Handlebars.AST.IdNode([{ part: '_triageMustache' }]);
       if(!mustache.escaped) {
         mustache.hash = mustache.hash || new Handlebars.AST.HashNode([]);
         mustache.hash.pairs.push(["unescaped", new Handlebars.AST.StringNode("true")]);
