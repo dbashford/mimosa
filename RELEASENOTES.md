@@ -15,6 +15,8 @@
 * [mimosa #240](https://github.com/dbashford/mimosa/issues/240). Made default `package.json` name meet npm standards.
 * [mimosa #241](https://github.com/dbashford/mimosa/issues/241). Upgraded the ember compiler for handlebars `1.0.12`
 * [mimosa](https://github.com/dbashford/mimosa/). Upgraded to latest Emblem: `0.3.0`.
+* [mimosa-lint #7](https://github.com/dbashford/mimosa-lin/issues/7). Added `expr:true` to the list of default rules for CoffeeScript and IcedCoffeeScript.
+* Demo Apps: Upgraded the [mimosa-ember-emblem](https://github.com/dbashford/mimosa-ember-emblem-templates) demo app and the [mimosa-testem](https://github.com/emirotin/mimosa-ember) demo apps to sync with library updates.
 * [mimosa-testem-require #2](https://github.com/dbashford/mimosa-testem-require/issues/2). Sorting specs before writing to avoid random file diffs.
 * [mimosa-bower](https://github.com/dbashford/mimosa-bower/). Any `mainOverride` files or paths that do not exist for a package will generate a log message.
 * [mimosa-bower #8](https://github.com/dbashford/mimosa-bower/issues/8).  Updated docs and error message regarding necessary location of `bower.json`
