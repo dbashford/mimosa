@@ -7,7 +7,9 @@
 * General code tightening/testing
 * Documentation and site updates
 
-## 0.14.3 - Jul ?? 2013
+## 0.14.4 - Jul ?? 2013
+
+## 0.14.3 - Jul 28 2013
 
 ### Major Changes
 * [mimosa-bower #7](https://github.com/dbashford/mimosa-bower/issues/7).  mimosa-bower will now keep track of your `bower.json` and the `bower` section of the mimosa-config between installs and detect if any changes have been made before executing an install. This slightly naive though effective feature allows `clean` to be set to `true` and still get the benefit of not re-installing every module with every Mimosa start.  Allowing `clean:true` means that the often enormous `bower_components` directory can be left out of your project.  The major downside is that when the `bower.json` or the `bower` mimosa-config section change in _any_ way, the full install will occur resulting in many files being overwritten with identical files. This should not cause any problems other than being a little unnerving.
@@ -15,6 +17,9 @@
   As part of this change, the default for `clean` is now `true`.  A new config property, `trackChanges`, has been added to turn this feature on and off.  When off mimosa-bower still falls back to Bower detecting on its own whether or not installs need to occur, but for that to work, `clean` must be set to `false`.
 
   More details on the [mimosa-bower README](https://github.com/dbashford/mimosa-bower/)
+
+### Minor Changes
+* [mimosa #244](https://github.com/dbashford/mimosa/issues/244). New `livescript` root level config available in the mimosa-config. That config is passed right into the LiveScript compiler.  By default, `bare` is set to `true` as module wrapping is assumed.
 
 ## 0.14.2 - Jul 27 2013
 
