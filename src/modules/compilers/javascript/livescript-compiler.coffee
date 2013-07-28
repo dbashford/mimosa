@@ -10,11 +10,12 @@ module.exports = class LiveScriptCompiler extends JSCompiler
   @defaultExtensions = ["ls"]
 
   constructor: (config, @extensions) ->
+    @options = config.livescript
     super()
 
   compile: (file, cb) ->
     try
-      output = liveScript.compile file.inputFileText
+      output = liveScript.compile file.inputFileText, @options
     catch err
       error = err
     cb(error, output)
