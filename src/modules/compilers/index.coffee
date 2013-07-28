@@ -136,6 +136,8 @@ class MimosaCompilerModule
       runtime:'none'
     coco:
       bare:true
+    livescript:
+      bare:true
     stylus:
       use:['nib']
       import:['nib']
@@ -179,6 +181,11 @@ class MimosaCompilerModule
                                     # can be "amd" or "commonjs"
 
       # coco:                       # config settings for coco
+        # bare:true                 # whether or not to include the top level wrapper around
+                                    # each compiled coco file. Defaults to not wrapping
+                                    # as wrapping with define/require is assumed.
+
+      # livescript:                 # config settings for livescript
         # bare:true                 # whether or not to include the top level wrapper around
                                     # each compiled coffeescript file. Defaults to not wrapping
                                     # as wrapping with define/require is assumed.
