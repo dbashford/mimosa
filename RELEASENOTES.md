@@ -9,6 +9,9 @@
 
 ## 0.14.4 - Jul ?? 2013
 
+### Major Changes
+* [mimosa #246](https://github.com/dbashford/mimosa/issues/246). Altered `mimosa config` command to always deliver a `mimosa-config.defaults.coffee`. This will let you keep the `mimosa-config.coffee/js` as trim as possible while keeping a `defaults` file around to use as reference. `mimosa config` will always overwrite whatever `defaults` file is in place.  A simple `git diff` will tell you what if any config has changed.
+
 ### Minor Changes
 * [mimosa-client-jade-static #2](https://github.com/dbashford/mimosa-client-jade-static/issues/2). `.html.jade` compilation can now take a `context` object for compilation. Previously jade files had to be purely static.
 * [mimosa-bower #10](https://github.com/dbashford/mimosa-bower/issues/10). Tracking will no longer pay attention to resolved `pathFull` property of `bower` config.  This was causing installs to occur every time across project teams.
