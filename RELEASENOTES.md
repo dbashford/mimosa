@@ -12,6 +12,7 @@
 ### Minor Changes
 * [mimosa-client-jade-static #2](https://github.com/dbashford/mimosa-client-jade-static/issues/2). `.html.jade` compilation can now take a `context` object for compilation. Previously jade files had to be purely static.
 * [mimosa-bower #10](https://github.com/dbashford/mimosa-bower/issues/10). Tracking will no longer pay attention to resolved `pathFull` property of `bower` config.  This was causing installs to occur every time across project teams.
+* [mimosa-bower #11](https://github.com/dbashford/mimosa-bower/issues/10). Tracking now keeps track of all installed files in a given bower install for easy cleaning when the `bower_components` directory is not available.
 
 ## 0.14.3 - Jul 28 2013
 
