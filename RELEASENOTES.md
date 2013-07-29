@@ -7,10 +7,10 @@
 * General code tightening/testing
 * Documentation and site updates
 
-## 0.14.4 - Jul ?? 2013
+## 0.14.4 - Jul292013
 
 ### Major Changes
-* [mimosa #246](https://github.com/dbashford/mimosa/issues/246). Altered `mimosa config` command to always deliver a `mimosa-config.defaults.coffee`. This will let you keep the `mimosa-config.coffee/js` as trim as possible while keeping a `defaults` file around to use as reference. `mimosa config` will always overwrite whatever `defaults` file is in place.  A simple `git diff` will tell you what if any config has changed.
+* [mimosa #246](https://github.com/dbashford/mimosa/issues/246). Altered `mimosa config` command to always deliver a `mimosa-config.defaults.coffee`. This will let you keep the `mimosa-config.coffee/js` as trim as possible while keeping a `defaults` file around to use as reference. `mimosa config` will always overwrite whatever `defaults` file is in place.  A simple `git diff` will tell you what if any config has changed.  `mimosa config` will continue to write a `mimosa-config.coffee` if one is not present as a way to include Mimosa into an existing app.
 
 ### Minor Changes
 * [mimosa-client-jade-static #2](https://github.com/dbashford/mimosa-client-jade-static/issues/2). `.html.jade` compilation can now take a `context` object for compilation. Previously jade files had to be purely static.

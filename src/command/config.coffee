@@ -9,10 +9,20 @@ copyConfig = (opts) ->
     logger.setDebug()
     process.env.DEBUG = true
 
-  currPath = path.join path.resolve(''), "mimosa-config.defaults.coffee"
-  logger.debug "Writing config file to #{currPath}"
-  fs.writeFileSync currPath, buildConfig(), 'ascii'
+  conf = buildConfig()
+
+  currDefaultsPath = path.join path.resolve(''), "mimosa-config.defaults.coffee"
+  logger.debug "Writing config defaults file to #{currDefaultsPath}"
+  fs.writeFileSync currDefaultsPath, conf, 'ascii'
   logger.success "Copied mimosa-config.defaults.coffee into current directory."
+
+  mimosaConfigPath = path.join path.resolve(''), "mimosa-config.coffee"
+  if fs.existsSync mimosaConfigPath
+    logger.info "Not writing mimosa-config.coffee file as one exists already."
+  else
+    logger.debug "Writing config file to #{mimosaConfigPath}"
+    fs.writeFileSync mimosaConfigPath, conf, 'ascii'
+    logger.success "Copied mimosa-config.coffee into current directory."
 
   process.exit 0
 
@@ -24,8 +34,10 @@ register = (program, callback) ->
     .action(callback)
     .on '--help', =>
       logger.green('  The config command will copy the default Mimosa config to the current directory.')
-      logger.green('  There are no options for the config command.')
+      logger.green('  And also copy a defaults file to keep as reference should you desire to alter and.')
+      logger.green('  shrink the mimosa-config.')
       logger.blue( '\n    $ mimosa config\n')
+
 
 module.exports = (program) ->
   register(program, copyConfig)
