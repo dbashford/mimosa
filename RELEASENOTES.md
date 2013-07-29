@@ -9,6 +9,9 @@
 
 ## 0.14.4 - Jul ?? 2013
 
+### Minor Changes
+* [mimosa-client-jade-static #2](https://github.com/dbashford/mimosa-client-jade-static/issues/2). `.html.jade` compilation can now take a `context` object for compilation. Previously jade files had to be purely static.
+
 ## 0.14.3 - Jul 28 2013
 
 ### Major Changes
