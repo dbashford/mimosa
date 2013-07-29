@@ -9,14 +9,10 @@ copyConfig = (opts) ->
     logger.setDebug()
     process.env.DEBUG = true
 
-  currPath = path.join path.resolve(''), "mimosa-config.coffee"
-  if fs.existsSync currPath
-    logger.warn "A mimosa-config.coffee already exists in this directory.  Will not overwrite.  Please navigate to a directory that does not contain a mimosa-config."
-  else
-    configText = buildConfig()
-    logger.debug "Writing config file to #{currPath}"
-    fs.writeFileSync currPath, configText, 'ascii'
-    logger.success "Copied default config file into current directory."
+  currPath = path.join path.resolve(''), "mimosa-config.defaults.coffee"
+  logger.debug "Writing config file to #{currPath}"
+  fs.writeFileSync currPath, buildConfig(), 'ascii'
+  logger.success "Copied mimosa-config.defaults.coffee into current directory."
 
   process.exit 0
 
