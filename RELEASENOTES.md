@@ -9,6 +9,9 @@
 
 ## 0.14.6 - Aug ?? 2013
 
+### Major Changes
+* New Demo App! [mimosa-peepcode](https://github.com/breathe/mimosa-peepcode) is a port of the Ember app from the Peepcode series to Mimosa.  Uses Ember, Emblem, Foundation, Stylus and CoffeeScript on the client. Bower for managing vendor assets. Testem and QUnit for testing. Backed by Express and Jade.
+
 ### Minor Changes
 * [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple). Upgraded testem to latest version.
 * [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). Upgraded mimosa-testem-simple to latest version.
