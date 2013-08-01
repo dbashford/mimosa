@@ -7,6 +7,12 @@
 * General code tightening/testing
 * Documentation and site updates
 
+## 0.14.6 - Aug ?? 2013
+
+### Minor Changes
+* [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple). Upgraded testem to latest version.
+* [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). Upgraded mimosa-testem-simple to latest version.
+
 ## 0.14.5 - Aug 01 2013
 
 ### Major Changes
