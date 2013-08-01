@@ -11,10 +11,17 @@ copyConfig = (opts) ->
 
   conf = buildConfig()
 
-  currDefaultsPath = path.join path.resolve(''), "mimosa-config.defaults.coffee"
+  currDefaultsPath = path.join path.resolve(''), "mimosa-config-commented.coffee"
   logger.debug "Writing config defaults file to #{currDefaultsPath}"
-  fs.writeFileSync currDefaultsPath, conf, 'ascii'
-  logger.success "Copied mimosa-config.defaults.coffee into current directory."
+  defaultsConf = """
+
+                 # THE FOLLOWING IS A COMMENTED VERSION OF THE mimosa-config.coffee WITH
+                 # ALL OF THE MOST RECENT DEFAULTS. THIS FILE IS MEANT FOR REFERENCE ONLY.
+
+                 #{conf}
+                 """
+  fs.writeFileSync currDefaultsPath, defaultsConf, 'ascii'
+  logger.success "Copied mimosa-config-commented.coffee into current directory."
 
   mimosaConfigPath = path.join path.resolve(''), "mimosa-config.coffee"
   if fs.existsSync mimosaConfigPath
