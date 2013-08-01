@@ -118,7 +118,7 @@ exports.stringMustExist = (errors, fld, obj) ->
 exports.booleanMustExist = (errors, fld, obj) ->
   if obj?
     if typeof obj isnt "boolean"
-      errors.push "#{fld} must be a string."
+      errors.push "#{fld} must be a boolean."
       false
     else
       true

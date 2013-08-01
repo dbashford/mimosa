@@ -7,7 +7,12 @@
 * General code tightening/testing
 * Documentation and site updates
 
-## 0.14.4 - Jul292013
+## 0.14.5 - Aug ?? 2013
+
+### Major Changes
+* New Module: [mimosa-require-library-package](https://github.com/dbashford/mimosa-require-library-package). Use this module when using RequireJS/AMD to build library code for use in other web applications. This module will package up your library in several formats: AMD-shimmed, with dependencies, and without.
+
+## 0.14.4 - Jul 29 2013
 
 ### Major Changes
 * [mimosa #246](https://github.com/dbashford/mimosa/issues/246). Altered `mimosa config` command to always deliver a `mimosa-config.defaults.coffee`. This will let you keep the `mimosa-config.coffee/js` as trim as possible while keeping a `defaults` file around to use as reference. `mimosa config` will always overwrite whatever `defaults` file is in place.  A simple `git diff` will tell you what if any config has changed.  `mimosa config` will continue to write a `mimosa-config.coffee` if one is not present as a way to include Mimosa into an existing app.
