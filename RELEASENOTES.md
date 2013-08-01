@@ -12,6 +12,9 @@
 ### Major Changes
 * New Module: [mimosa-require-library-package](https://github.com/dbashford/mimosa-require-library-package). Use this module when using RequireJS/AMD to build library code for use in other web applications. This module will package up your library in several formats: AMD-shimmed, with dependencies, and without.
 
+### Minor Changes
+* [mimosa #243](https://github.com/dbashford/mimosa/issues/243). Tweaked last releases change.  `mimosa config` now writes a file named `mimosa-config-commented.coffee` with a bit of text at the top mentioning that the file is for reference only.
+
 ## 0.14.4 - Jul 29 2013
 
 ### Major Changes
