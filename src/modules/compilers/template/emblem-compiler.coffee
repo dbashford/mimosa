@@ -1,8 +1,5 @@
 "use strict"
 
-emblem =     require 'emblem'
-logger =     require 'logmimosa'
-
 HandlebarsCompiler = require './handlebars'
 
 module.exports = class EmblemCompiler extends HandlebarsCompiler
@@ -13,9 +10,14 @@ module.exports = class EmblemCompiler extends HandlebarsCompiler
   constructor: (config, @extensions) ->
     super(config)
 
+    @emblem = if config.template.emblem?.lib?
+      config.template.emblem.lib
+    else
+      require 'emblem'
+
   compile: (file, cb) =>
     try
-      output = emblem.precompile @handlebars, file.inputFileText
+      output = @emblem.precompile @handlebars, file.inputFileText
       output = @transformTemplate output.toString()
       if @ember
         output = "Ember.TEMPLATES['#{file.templateName}'] = #{output}"

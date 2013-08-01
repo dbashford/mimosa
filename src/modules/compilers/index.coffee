@@ -237,6 +237,12 @@ class MimosaCompilerModule
                                           # provided for each output entry, and the names
                                           # must be unique.
 
+        # emblem:                         # emblem specific configuration
+          # lib: null                     # an opportuntity to provide a specific version of the
+                                          # emblem compiler for template compilation. Use
+                                          # node's require syntax to include a version that you
+                                          # have included in your project.
+
         # handlebars:                     # handlebars specific configuration
           # lib: null                     # an opportuntity to provide a specific version of the
                                           # handlebars compiler for template compilation. Use
