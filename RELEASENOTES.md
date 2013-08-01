@@ -7,7 +7,7 @@
 * General code tightening/testing
 * Documentation and site updates
 
-## 0.14.5 - Aug ?? 2013
+## 0.14.5 - Aug 01 2013
 
 ### Major Changes
 * New Module: [mimosa-require-library-package](https://github.com/dbashford/mimosa-require-library-package). Use this module when using RequireJS/AMD to build library code for use in other web applications. This module will package up your library in several formats: AMD-shimmed, with dependencies, and without.
