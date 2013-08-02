@@ -15,13 +15,14 @@
 
 ### Minor Changes
 * [mimosa-bower](https://github.com/dbashford/mimosa-bower). Upgraded to latest bower.
+* [mimosa-bower #12](https://github.com/dbashford/mimosa-bower/issues/12). `mimosa bower` will now error out gracefully if run on a project that does not have the `bower` module installed.
 * [mimosa-bower #13](https://github.com/dbashford/mimosa-bower/issues/13). Default placement of mimosa-bower assets, like track files and the `bower_components` folder will now be inside a `.mimosa/bower` folder.
 * [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple). Upgraded testem to latest version.
 * [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). Upgraded mimosa-testem-simple to latest version.
+* [mimosa-require-library-package #2](https://github.com/dbashford/mimosa-require-library-package/issues/2). Added a `mainConfigFile` option to allow those not using the `require.commonConfig` to set that without needing to use `overrides`.
 
 ### You'll need to...
 * If using mimosa-bower and upgrading to the latest version, you'll want to remove the mimosa-bower related files in `.mimosa`, namely all the ones starting with `bower-` and ending in `.json`.  If you have a `bower_components` directory, you'll want to remove that too.
-
 
 ## 0.14.5 - Aug 01 2013
 
