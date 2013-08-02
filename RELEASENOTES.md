@@ -14,8 +14,14 @@
 * New Demo App! [mimosa-peepcode](https://github.com/breathe/mimosa-peepcode) is a port of the Ember app from the Peepcode series to Mimosa.  Uses Ember, Emblem, Foundation, Stylus and CoffeeScript on the client. Bower for managing vendor assets. Testem and QUnit for testing. Backed by Express and Jade.
 
 ### Minor Changes
+* [mimosa-bower](https://github.com/dbashford/mimosa-bower). Upgraded to latest bower.
+* [mimosa-bower #13](https://github.com/dbashford/mimosa-bower/issues/13). Default placement of mimosa-bower assets, like track files and the `bower_components` folder will now be inside a `.mimosa/bower` folder.
 * [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple). Upgraded testem to latest version.
 * [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). Upgraded mimosa-testem-simple to latest version.
+
+### You'll need to...
+* If using mimosa-bower and upgrading to the latest version, you'll want to remove the mimosa-bower related files in `.mimosa`, namely all the ones starting with `bower-` and ending in `.json`.  If you have a `bower_components` directory, you'll want to remove that too.
+
 
 ## 0.14.5 - Aug 01 2013
 
