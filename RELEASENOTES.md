@@ -10,6 +10,7 @@
 ## 0.14.6 - Aug ?? 2013
 
 ### Major Changes
+* [mimosa #249](https://github.com/dbashford/mimosa/issues/249). `mimosa-skeleton` is now `skelmimosa` and is a default Mimosa module. Now all `skel:` commands are available by default.  It is a embedded module though, not a project module, so, like with compilers, there is no need to add it to a `modules` array in your projects.
 * New Demo App! [mimosa-peepcode](https://github.com/breathe/mimosa-peepcode) is a port of the Ember app from the Peepcode series to Mimosa.  Uses Ember, Emblem, Foundation, Stylus and CoffeeScript on the client. Bower for managing vendor assets. Testem and QUnit for testing. Backed by Express and Jade.
 
 ### Minor Changes
