@@ -3,7 +3,7 @@
 1.0 is a short bit away now, the following summarizes all that remains.
 
 * Bug fixes
-* Possible inclusion of modules like `skeleton` and `bower` as default Mimosa modules
+* Inclusion of `bower` as default Mimosa module
 * General code tightening/testing
 * Documentation and site updates
 
@@ -11,6 +11,7 @@
 
 ### Major Changes
 * [mimosa #249](https://github.com/dbashford/mimosa/issues/249). `mimosa-skeleton` is now `skelmimosa` and is a default Mimosa module. Now all `skel:` commands are available by default.  It is a embedded module though, not a project module, so, like with compilers, there is no need to add it to a `modules` array in your projects.
+* [mimosa #250](https://github.com/dbashford/mimosa/issues/250). The `build` command now has an `install` flag (`-i`/`--install`). No modules take advantage of it...yet.
 * New Demo App! [mimosa-peepcode](https://github.com/breathe/mimosa-peepcode) is a port of the Ember app from the Peepcode series to Mimosa.  Uses Ember, Emblem, Foundation, Stylus and CoffeeScript on the client. Bower for managing vendor assets. Testem and QUnit for testing. Backed by Express and Jade.
 
 ### Minor Changes
