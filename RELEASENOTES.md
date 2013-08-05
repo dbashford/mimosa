@@ -7,7 +7,7 @@
 * General code tightening/testing
 * Documentation and site updates
 
-## 0.14.6 - Aug ?? 2013
+## 0.14.6 - Aug 03 2013
 
 ### Major Changes
 * [mimosa #249](https://github.com/dbashford/mimosa/issues/249). `mimosa-skeleton` is now `skelmimosa` and is a default Mimosa module. Now all `skel:` commands are available by default.  It is a embedded module though, not a project module, so, like with compilers, there is no need to add it to a `modules` array in your projects.
@@ -18,6 +18,7 @@
 * [mimosa-bower](https://github.com/dbashford/mimosa-bower). Upgraded to latest bower.
 * [mimosa-bower #12](https://github.com/dbashford/mimosa-bower/issues/12). `mimosa bower` will now error out gracefully if run on a project that does not have the `bower` module installed.
 * [mimosa-bower #13](https://github.com/dbashford/mimosa-bower/issues/13). Default placement of mimosa-bower assets, like track files and the `bower_components` folder will now be inside a `.mimosa/bower` folder.
+* [mimosa-bower #14](https://github.com/dbashford/mimosa-bower/issues/14). Added `forceLatest:false` as a config option under `copy`.  Use this to quickly resolve any conflicts between library versions.
 * [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple). Upgraded testem to latest version.
 * [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). Upgraded mimosa-testem-simple to latest version.
 * [mimosa-require-library-package #2](https://github.com/dbashford/mimosa-require-library-package/issues/2). Added a `mainConfigFile` option to allow those not using the `require.commonConfig` to set that without needing to use `overrides`.
