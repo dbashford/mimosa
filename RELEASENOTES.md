@@ -7,6 +7,13 @@
 * General code tightening/testing
 * Documentation and site updates
 
+## 0.14.7 - Aug ?? 2013
+
+### Major Changes
+* New Module: [mimosa-requirebuild-include](https://github.com/CraigCav/mimosa-requirebuild-include). Used to add extra assets not picked up by r.js to your r.js bundled application.
+* New Skeleton: [mimosa-peepcode](https://github.com/breathe/mimosa-peepcode) is now in the skeleton registry. It is a port of the Ember app from the Peepcode series to Mimosa.  Uses Ember, Emblem, Foundation, Stylus and CoffeeScript on the client. Bower for managing vendor assets. Testem and QUnit for testing. Backed by Express and Jade. `mimosa skel:new ember-peepcode [nameOfFolder]`
+* New Skeleton: [ui-component](https://github.com/dbashford/MimosaUIComponentSkeleton). This skeleton is a great starting place if using Mimosa to build reusable UI components. It bundles bower, and includes testing with Mocha/Chai via Testem. It also includes the `library-package` module for bundling your application.
+
 ## 0.14.6 - Aug 03 2013
 
 ### Major Changes
