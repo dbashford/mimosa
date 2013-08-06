@@ -12,7 +12,7 @@
 ### Major Changes
 * __New Module__: [mimosa-s3-deployer](https://github.com/Costent/mimosa-s3-deployer). An installation plugin that will copy static assets into s3.
 * __New Module__: [mimosa-requirebuild-include](https://github.com/CraigCav/mimosa-requirebuild-include). Used to add extra assets not picked up by r.js to your r.js bundled application.
-* __New Skeleton__: [mimosa-peepcode](https://github.com/breathe/mimosa-peepcode) is now in the skeleton registry. It is a port of the Ember app from the Peepcode series to Mimosa.  Uses Ember, Emblem, Foundation, Stylus and CoffeeScript on the client. Bower for managing vendor assets. Testem and QUnit for testing. Backed by Express and Jade. `mimosa skel:new ember-peepcode [nameOfFolder]`
+* __New Skeleton__: [ember-peepcode](https://github.com/breathe/mimosa-peepcode) is now in the skeleton registry. It is a port of the Ember app from the Peepcode series to Mimosa.  Uses Ember, Emblem, Foundation, Stylus and CoffeeScript on the client. Bower for managing vendor assets. Testem and QUnit for testing. Backed by Express and Jade. `mimosa skel:new ember-peepcode [nameOfFolder]`
 * __New Skeleton__: [ui-component](https://github.com/dbashford/MimosaUIComponentSkeleton). This skeleton is a great starting place if using Mimosa to build reusable UI components. It bundles bower, and includes testing with Mocha/Chai via Testem. It also includes the `library-package` module for bundling your application.
 
 ### Minor Changes
