@@ -18,6 +18,7 @@
 
 ### Minor Changes
 * [mimosa-bower #16](https://github.com/dbashford/mimosa-bower/issues/16). Added `-c/--cache` flag to `bower:clean`.
+* [mimosa-import-source/mimosa #179](https://github.com/dbashford/mimosa/issues/179). New config added to mimosa-import-source to help alleviate CPU churn on (mostly) Windows machines.  `interval` and `binaryInterval` have been added to allow the file system watching polling to be slowed down.
 
 ## 0.14.6 - Aug 03 2013
 
