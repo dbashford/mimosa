@@ -269,9 +269,9 @@ class NewCommand
     packageJson.name = name if name?
 
     @removeFromPackageDeps(chosen.javascript.base, "livescript", "LiveScript", packageJson)
-    #@removeFromPackageDeps(chosen.javascript.base, "typescript", "typescript", packageJson)
     @removeFromPackageDeps(chosen.javascript.base, "iced", "iced-coffee-script", packageJson)
     @removeFromPackageDeps(chosen.javascript.base, "coffee", "coffee-script", packageJson)
+    @removeFromPackageDeps(chosen.javascript.base, "coco", "coco", packageJson)
 
     @removeFromPackageDeps(chosen.views.name, "jade", "jade", packageJson)
     @removeFromPackageDeps(chosen.views.name, "hogan", "hogan.js", packageJson)
