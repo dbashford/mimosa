@@ -24,7 +24,10 @@ THE SOFTWARE.
 
 define(function() {
 
+// lib/handlebars/browser-prefix.js
 var Handlebars = {};
+
+// lib/handlebars/base.js
 
 Handlebars.VERSION = "1.0.0";
 Handlebars.COMPILER_REVISION = 4;
