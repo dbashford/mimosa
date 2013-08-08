@@ -7,7 +7,7 @@
 * General code tightening/testing
 * Documentation and site updates
 
-## 0.14.7 - Aug ?? 2013
+## 0.14.7 - Aug 08 2013
 
 ### Major Changes
 * __New Module__: [mimosa-s3-deployer](https://github.com/Costent/mimosa-s3-deployer). An installation plugin that will copy static assets into s3.
