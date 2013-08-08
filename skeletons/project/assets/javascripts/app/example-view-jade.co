@@ -4,6 +4,6 @@ class ExampleView
   render: !(element)->
     ($ element)
       &append(templates.example {name:'Jade', css:'CSSHERE'})
-      &append(templates.another-example {name:'Jade'})
+      &append(templates["another-example"] {name:'Jade'})
 
 ExampleView
