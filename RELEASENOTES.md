@@ -9,6 +9,11 @@
 * General code tightening/testing
 * Documentation and site updates
 
+## 1.0.0-RC.1
+
+### Minor Changes
+* [mimosa #259](https://github.com/dbashford/mimosa/issues/259). Updated skeleton registry JSON, added details for future skeleton browsing web app front-end use.
+
 ## 0.14.8 - Aug 08 2013
 
 ### Minor Changes
