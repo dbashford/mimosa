@@ -17,9 +17,11 @@
 * __New Skeleton__: [durandal-node](https://github.com/dbashford/Durandal-Mimosa-Node-Skeleton). If you want to use Durandal on the front-end, but want to back it with node/Express, this is the skeleton for you. It includes Handlebars server views and also  bundles bower. `mimosa skel:new durandal-node [nameOfFolder]`
 
 ### Minor Changes
+* mimosa. Updated compiler dependencies: jade, emblem, dustjs-linkedin, underscore, iced-coffee-script, livescript, less, and stylus.
 * [mimosa-bower #16](https://github.com/dbashford/mimosa-bower/issues/16). Added `-c/--cache` flag to `bower:clean`.
 * [mimosa-import-source/mimosa #179](https://github.com/dbashford/mimosa/issues/179). New config added to mimosa-import-source to help alleviate CPU churn on (mostly) Windows machines.  `interval` and `binaryInterval` have been added to allow the file system watching polling to be slowed down.
 * [mimosa-require-library-package #3](https://github.com/dbashford/mimosa-require-library-package/issues/3). Whether or not to clean the `outFolder` is now configurable.
+
 
 ## 0.14.6 - Aug 03 2013
 
