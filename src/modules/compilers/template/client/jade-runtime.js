@@ -2,9 +2,15 @@ define(function (){
 
   var exports = {}
 
+  /*!
+  * Jade - runtime
+  * Copyright(c) 2010 TJ Holowaychuk <tj@vision-media.ca>
+  * MIT Licensed
+  */
+
   /**
-   * Lame Array.isArray() polyfill for now.
-   */
+  * Lame Array.isArray() polyfill for now.
+  */
 
   if (!Array.isArray) {
     Array.isArray = function(arr){
@@ -13,8 +19,8 @@ define(function (){
   }
 
   /**
-   * Lame Object.keys() polyfill for now.
-   */
+  * Lame Object.keys() polyfill for now.
+  */
 
   if (!Object.keys) {
     Object.keys = function(obj){
@@ -29,16 +35,16 @@ define(function (){
   }
 
   /**
-   * Merge two attribute objects giving precedence
-   * to values in object `b`. Classes are special-cased
-   * allowing for arrays and merging/joining appropriately
-   * resulting in a string.
-   *
-   * @param {Object} a
-   * @param {Object} b
-   * @return {Object} a
-   * @api private
-   */
+  * Merge two attribute objects giving precedence
+  * to values in object `b`. Classes are special-cased
+  * allowing for arrays and merging/joining appropriately
+  * resulting in a string.
+  *
+  * @param {Object} a
+  * @param {Object} b
+  * @return {Object} a
+  * @api private
+  */
 
   exports.merge = function merge(a, b) {
     var ac = a['class'];
@@ -49,9 +55,7 @@ define(function (){
       bc = bc || [];
       if (!Array.isArray(ac)) ac = [ac];
       if (!Array.isArray(bc)) bc = [bc];
-      ac = ac.filter(nulls);
-      bc = bc.filter(nulls);
-      a['class'] = ac.concat(bc).join(' ');
+      a['class'] = ac.concat(bc).filter(nulls);
     }
 
     for (var key in b) {
@@ -64,25 +68,37 @@ define(function (){
   };
 
   /**
-   * Filter null `val`s.
-   *
-   * @param {Mixed} val
-   * @return {Mixed}
-   * @api private
-   */
+  * Filter null `val`s.
+  *
+  * @param {*} val
+  * @return {Boolean}
+  * @api private
+  */
 
   function nulls(val) {
-    return val != null;
+    return val != null && val !== '';
   }
 
   /**
-   * Render the given attributes object.
-   *
-   * @param {Object} obj
-   * @param {Object} escaped
-   * @return {String}
-   * @api private
-   */
+  * join array as classes.
+  *
+  * @param {*} val
+  * @return {String}
+  * @api private
+  */
+
+  function joinClasses(val) {
+    return Array.isArray(val) ? val.map(joinClasses).filter(nulls).join(' ') : val;
+  }
+
+  /**
+  * Render the given attributes object.
+  *
+  * @param {Object} obj
+  * @param {Object} escaped
+  * @return {String}
+  * @api private
+  */
 
   exports.attrs = function attrs(obj, escaped){
     var buf = []
@@ -106,8 +122,16 @@ define(function (){
           }
         } else if (0 == key.indexOf('data') && 'string' != typeof val) {
           buf.push(key + "='" + JSON.stringify(val) + "'");
-        } else if ('class' == key && Array.isArray(val)) {
-          buf.push(key + '="' + exports.escape(val.join(' ')) + '"');
+        } else if ('class' == key) {
+          if (escaped && escaped[key]){
+            if (val = exports.escape(joinClasses(val))) {
+              buf.push(key + '="' + val + '"');
+            }
+          } else {
+            if (val = joinClasses(val)) {
+              buf.push(key + '="' + val + '"');
+            }
+          }
         } else if (escaped && escaped[key]) {
           buf.push(key + '="' + exports.escape(val) + '"');
         } else {
@@ -120,31 +144,31 @@ define(function (){
   };
 
   /**
-   * Escape the given string of `html`.
-   *
-   * @param {String} html
-   * @return {String}
-   * @api private
-   */
+  * Escape the given string of `html`.
+  *
+  * @param {String} html
+  * @return {String}
+  * @api private
+  */
 
   exports.escape = function escape(html){
     return String(html)
-      .replace(/&(?!(\w+|\#\d+);)/g, '&amp;')
+      .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
   };
 
   /**
-   * bad call to require 'fs' means need to cut this out.
-   *
-   * @param {Error} err
-   * @param {String} filename
-   * @param {String} lineno
-   * @api private
-   */
+  * bad call to require 'fs' means need to cut this out.
+  *
+  * @param {Error} err
+  * @param {String} filename
+  * @param {String} lineno
+  * @api private
+  */
 
-  exports.rethrow = function rethrow(err, filename, lineno){
+  exports.rethrow = function rethrow(err, filename, lineno, str){
     throw err;
   };
 
