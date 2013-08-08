@@ -2,10 +2,18 @@
 
 1.0 is a short bit away now, the following summarizes all that remains.
 
-* Bug fixes
 * Inclusion of `bower` as default Mimosa module
+* Allow all compilers to be provided in the mimosa-config in central config setting
+* Remove node-sass from `package.json`, force individual install if wanted.
+* Bug fixes
 * General code tightening/testing
 * Documentation and site updates
+
+## 0.14.8 - Aug 08 2013
+
+### Minor Changes
+* mimosa. Updated client template libraries mimosa delivers on `watch`.
+* mimosa. Update `package.json` dependency versions for `mimosa new` projects.
 
 ## 0.14.7 - Aug 08 2013
 
