@@ -112,6 +112,7 @@ class MimosaCompilerModule
   defaults: ->
     compilers:
       extensionOverrides: {}
+      libs:{}
     template:
       nameTransform:"fileName"
       amdWrap:true
@@ -143,8 +144,6 @@ class MimosaCompilerModule
       import:['nib']
       define:{}
       includes:[]
-    sass:
-      node:false
 
   placeholder: ->
     """
@@ -156,6 +155,14 @@ class MimosaCompilerModule
                                     # http://mimosajs.com/compilers.html for list of compiler names
           # coffee: ["coff"]        # This is an example override, this is not a default, must be
                                     # array of strings
+        # libs: {}                  # If Mimosa contains a version of a compiler that your code is
+                                    # not compatible with, use this setting to adjust to the right
+                                    # version. The key to the libs object is the name of the
+                                    # compiler and the value is a nodejs require call to pull the
+                                    # library in.  Ex: libs: less: require('less'). You will need
+                                    # to have the version of the compiler you need installed in
+                                    # your project. This is the only means to use node-sass as
+                                    # Mimosa does not come bundled with it.
 
       # coffeescript:               # config settings for coffeescript
         # sourceMap:true            # whether to generate source during "mimosa watch".
@@ -197,10 +204,6 @@ class MimosaCompilerModule
         # define: {}                # An object containing stylus variable defines
         # includes: []              # Files to include for compilation
 
-      # sass:                       # config settings for sass
-        # node: false               # whether or not to use the node SASS compiler instead of the
-                                    # Ruby one, which must be installed with Ruby.
-
       # template:                         # overall template object can be set to null if no
                                           # templates being used
         # nameTransform: "fileName"       # means by which Mimosa creates the name for each
@@ -237,17 +240,7 @@ class MimosaCompilerModule
                                           # provided for each output entry, and the names
                                           # must be unique.
 
-        # emblem:                         # emblem specific configuration
-          # lib: null                     # an opportuntity to provide a specific version of the
-                                          # emblem compiler for template compilation. Use
-                                          # node's require syntax to include a version that you
-                                          # have included in your project.
-
         # handlebars:                     # handlebars specific configuration
-          # lib: null                     # an opportuntity to provide a specific version of the
-                                          # handlebars compiler for template compilation. Use
-                                          # node's require syntax to include a version that you
-                                          # have included in your project.
           # helpers:["app/template/handlebars-helpers"]  # the paths from watch.javascriptDir to
                                           # the files containing handlebars helper/partial
                                           # registrations
@@ -370,13 +363,8 @@ class MimosaCompilerModule
     if validators.ifExistsIsObject(errors, "typescript config", config.typescript)
       validators.ifExistsIsString(errors, "typescript.module", config.typescript.module)
 
-    if validators.ifExistsIsObject(errors, "sass config", config.sass)
-      validators.ifExistsIsBoolean(errors, "sass.node", config.sass.node)
-
     if validators.ifExistsIsObject(errors, "stylus config", config.stylus)
-
       validators.ifExistsIsObject(errors, "stylus.define", config.stylus.define)
-
       validators.ifExistsIsArrayOfStrings(errors, "stylus.import", config.stylus.import)
       validators.ifExistsIsArrayOfStrings(errors, "stylus.includes", config.stylus.includes)
 

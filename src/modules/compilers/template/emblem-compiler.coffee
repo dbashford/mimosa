@@ -3,21 +3,20 @@
 HandlebarsCompiler = require './handlebars'
 
 module.exports = class EmblemCompiler extends HandlebarsCompiler
+  libName: "emblem"
 
   @prettyName        = "Emblem - http://emblemjs.com/"
   @defaultExtensions = ["emblem", "embl"]
 
-  constructor: (config, @extensions) ->
-    super(config)
-
-    @emblem = if config.template.emblem?.lib?
-      config.template.emblem.lib
-    else
-      require 'emblem'
+  constructor: (@mimosaConfig, @extensions) ->
+    super(@mimosaConfig)
 
   compile: (file, cb) =>
+    # make sure handlebars determined
+    @determineHandlebars @mimosaConfig unless @handlebars
+
     try
-      output = @emblem.precompile @handlebars, file.inputFileText
+      output = @compilerLib.precompile @handlebars, file.inputFileText
       output = @transformTemplate output.toString()
       if @ember
         output = "Ember.TEMPLATES['#{file.templateName}'] = #{output}"

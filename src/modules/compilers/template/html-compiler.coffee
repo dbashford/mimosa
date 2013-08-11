@@ -1,12 +1,11 @@
 "use strict"
 
-_ = require 'underscore'
-
 TemplateCompiler = require './template'
 
 module.exports = class HTMLCompiler extends TemplateCompiler
 
   clientLibrary: null
+  libName: "underscore"
 
   @prettyName        = "HTML - Just Plain HTML Snippets, no compiling"
   @defaultExtensions = ["template"]
@@ -28,18 +27,18 @@ module.exports = class HTMLCompiler extends TemplateCompiler
 
   compile: (file, cb) =>
     # we don't want underscore to actually work, just to wrap stuff
-    _.templateSettings =
+    @compilerLib.templateSettings =
       evaluate    : /<%%%%%%%%([\s\S]+?)%%%%%%%>/g,
       interpolate : /<%%%%%%%%=([\s\S]+?)%%%%%%%>/g
 
     try
-      compiledOutput = _.template(file.inputFileText)
+      compiledOutput = @compilerLib.template(file.inputFileText)
       output = "#{compiledOutput.source}()"
     catch err
       error = err
 
     # set it back
-    _.templateSettings =
+    @compilerLib.templateSettings =
       evaluate    : /<%([\s\S]+?)%>/g,
       interpolate : /<%=([\s\S]+?)%>/g
 

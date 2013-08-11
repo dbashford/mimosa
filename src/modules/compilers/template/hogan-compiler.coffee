@@ -1,12 +1,11 @@
 "use strict"
 
-hogan = require "hogan.js"
-
 TemplateCompiler = require './template'
 
 module.exports = class HoganCompiler extends TemplateCompiler
 
   clientLibrary: "hogan-template"
+  libName: "hogan.js"
 
   @prettyName        = "Hogan - http://twitter.github.com/hogan.js/"
   @defaultExtensions = ["hog", "hogan", "hjs"]
@@ -28,7 +27,7 @@ module.exports = class HoganCompiler extends TemplateCompiler
 
   compile: (file, cb) ->
     try
-      compiledOutput = hogan.compile(file.inputFileText, {asString:true})
+      compiledOutput = @compilerLib.compile(file.inputFileText, {asString:true})
       output = "templates['#{file.templateName}'] = new Hogan.Template(#{compiledOutput});\n"
     catch err
       error = err

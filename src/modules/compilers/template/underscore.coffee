@@ -21,7 +21,7 @@ module.exports = class AbstractUnderscoreCompiler extends TemplateCompiler
 
   compile: (file, cb) =>
     try
-      compiledOutput = @getLibrary().template(file.inputFileText)
+      compiledOutput = @compilerLib.template(file.inputFileText)
       output = compiledOutput.source
     catch err
       error = err

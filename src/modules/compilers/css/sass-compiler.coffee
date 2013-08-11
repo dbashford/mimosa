@@ -6,12 +6,11 @@ path = require 'path'
 
 _ = require 'lodash'
 logger = require 'logmimosa'
-nodesass = null
 
 AbstractCssCompiler = require './css'
 
 module.exports = class SassCompiler extends AbstractCssCompiler
-
+  libName: 'node-sass'
   importRegex: /@import ['"](.*)['"]/g
 
   @prettyName        = "SASS - http://sass-lang.com/"
@@ -20,11 +19,11 @@ module.exports = class SassCompiler extends AbstractCssCompiler
   constructor: (config, @extensions) ->
     super()
 
-    unless config.sass.node
+    unless config.compilers.libs.sass
       @_doRubySASSChecking()
 
   compile: (file, config, options, done) =>
-    if config.sass.node
+    if config.compilers.libs.sass
       @_compileNode(file, config, options, done)
     else
       @_preCompileRubySASS(file, config, options, done)
@@ -46,50 +45,38 @@ module.exports = class SassCompiler extends AbstractCssCompiler
       return @_compileRuby(file, config, options, done)
 
     if @hasSASS? and !@hasSASS
-      return @_movingToNodeCompile(file, config, options, done)
+      msg = """
+          You have SASS files but do not have Ruby SASS available. Either install Ruby SASS or
+          provide compilers.libs.sass:require('node-sass') in the mimosa-config to use node-sass.
+        """
+      return done(msg, '')
 
     compileOnDelay = =>
       if @hasCompass? and @hasSASS?
         if @hasSASS
           @_compileRuby(file, config, options, done)
         else
-          return @_movingToNodeCompile(file, config, options, done)
+          msg = """
+              You have SASS files but do not have Ruby SASS available. Either install Ruby SASS or
+              provide compilers.libs.sass:require('node-sass') in the mimosa-config to use node-sass.
+            """
+          return done(msg, '')
       else
         setTimeout compileOnDelay, 100
     do compileOnDelay
-
-  _movingToNodeCompile: (file, config, options, done) ->
-    config.sass.node = true
-    logger.error "You have Ruby SASS compilation configured but do not have Ruby SASS installed. Mimosa comes " +
-             "bundled with a node SASS compiler and will use that to compile your SASS. If you wish to " +
-             "use node to compile your SASS and you do not want to continue getting this warning, set " +
-             "sass.node to true in your mimosa-config. If you wish to use Ruby SASS, you must install it. " +
-             "SASS is a Ruby gem, information can be found here: http://sass-lang.com/tutorial.html. " +
-             "SASS can be installed by executing this command: gem install sass. After installing SASS " +
-             "you will need to restart Mimosa."
-    @_compileNode(file, config, options, done)
 
   __isInclude: (fileName) ->
     @includeToBaseHash[fileName]? or path.basename(fileName).charAt(0) is '_'
 
   _compileNode: (file, config, options, done) =>
-
-    unless nodesass
-      try
-        nodesass = require 'node-sass'
-      catch err
-        logger.fatal "Cannot use node-sass. Error:"
-        logger.fatal err
-        process.exit 1
-
     logger.debug "Beginning node compile of SASS file [[ #{file.inputFileName} ]]"
 
     finished = (error, text) =>
       logger.debug "Finished node compile for file [[ #{file.inputFileName} ]], errors? #{error?}"
       @initBaseFilesToCompile--
-      done(error, text)
+      done error, text
 
-    nodesass.render
+    @compilerLib.render
       data: file.inputFileText
       includePaths: [ config.watch.sourceDir, path.dirname(file.inputFileName) ]
       success: (css) =>

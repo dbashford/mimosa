@@ -1,12 +1,11 @@
 "use strict"
 
-eco = require "eco"
-
 TemplateCompiler = require './template'
 
 module.exports = class EcoCompiler extends TemplateCompiler
 
   clientLibrary: null
+  libName: 'eco'
 
   @prettyName        = "Embedded CoffeeScript Templates (ECO) - https://github.com/sstephenson/eco"
   @defaultExtensions = ["eco"]
@@ -28,7 +27,7 @@ module.exports = class EcoCompiler extends TemplateCompiler
 
   compile: (file, cb) ->
     try
-      output = eco.precompile file.inputFileText
+      output = @compilerLib.precompile file.inputFileText
     catch err
       error = err
     cb(error, output)

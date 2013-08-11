@@ -1,13 +1,12 @@
 "use strict"
 
-dust = require 'dustjs-linkedin'
-
 TemplateCompiler = require './template'
 
 module.exports = class DustCompiler extends TemplateCompiler
 
   clientLibrary: "dust"
   handlesNamespacing: true
+  libName: "dustjs-linkedin"
 
   @prettyName        = "(*) Dust - https://github.com/linkedin/dustjs/"
   @defaultExtensions = ["dust"]
@@ -29,7 +28,7 @@ module.exports = class DustCompiler extends TemplateCompiler
 
   compile: (file, cb) ->
     try
-      output = dust.compile file.inputFileText, file.templateName
+      output = @compilerLib.compile file.inputFileText, file.templateName
     catch err
       error = err
     cb(error, output)

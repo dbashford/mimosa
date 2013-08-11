@@ -1,10 +1,9 @@
 "use strict"
 
-liveScript = require 'LiveScript'
-
 JSCompiler = require "./javascript"
 
 module.exports = class LiveScriptCompiler extends JSCompiler
+  libName: 'LiveScript'
 
   @prettyName        = "LiveScript - http://gkz.github.com/LiveScript/"
   @defaultExtensions = ["ls"]
@@ -15,7 +14,7 @@ module.exports = class LiveScriptCompiler extends JSCompiler
 
   compile: (file, cb) ->
     try
-      output = liveScript.compile file.inputFileText, @options
+      output = @compilerLib.compile file.inputFileText, @options
     catch err
       error = err
     cb(error, output)

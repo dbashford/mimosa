@@ -2,12 +2,17 @@
 
 path = require 'path'
 fs = require 'fs'
-fileUtils = require '../../../util/file'
 
 _ = require "lodash"
 logger = require 'logmimosa'
 
-module.exports = class JSCompiler
+fileUtils = require '../../../util/file'
+BaseCompiler = require '../base'
+
+module.exports = class JSCompiler extends BaseCompiler
+
+  constructor: ->
+    super()
 
   registration: (config, register) ->
     register ['add','update','buildFile'], 'compile', @_compile, @extensions
@@ -15,6 +20,8 @@ module.exports = class JSCompiler
   _compile: (config, options, next) =>
     hasFiles = options.files?.length > 0
     return next() unless hasFiles
+
+    @determineCompilerLib config
 
     i = 0
     newFiles = []
@@ -90,10 +97,10 @@ module.exports = class JSCompiler
           else
             done()
 
-  _icedAndCoffeeCompile: (file, cb, coffeeConfig, compiler) ->
+  _icedAndCoffeeCompile: (file, cb, coffeeConfig) =>
 
     conf = _.extend {}, coffeeConfig, sourceFiles:[path.basename(file.inputFileName) + ".src"]
-    conf.literate = compiler.helpers.isLiterate(file.inputFileName)
+    conf.literate = @compilerLib.helpers.isLiterate(file.inputFileName)
 
     if conf.sourceMap
       if conf.sourceMapExclude?.indexOf(file.inputFileName) > -1
@@ -102,7 +109,7 @@ module.exports = class JSCompiler
         conf.sourceMap = false
 
     try
-      output = compiler.compile file.inputFileText, conf
+      output = @compilerLib.compile file.inputFileText, conf
       if output.v3SourceMap
         sourceMap = output.v3SourceMap
         output = output.js

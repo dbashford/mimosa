@@ -10,9 +10,9 @@ path = require "path"
 
 logger = require "logmimosa"
 
-io = require "./resources/io"
+io = null
+TypeScript = null
 
-TypeScript = require "./resources/typescript"
 JSCompiler = require "./javascript"
 
 module.exports = class TypeScriptCompiler extends JSCompiler
@@ -22,6 +22,10 @@ module.exports = class TypeScriptCompiler extends JSCompiler
 
   constructor: (@config, @extensions) ->
     super()
+
+  setupTypeScript: =>
+    io = require "./resources/io"
+    TypeScript = require "./resources/typescript"
 
     @defaultLibPath = path.join __dirname, "resources", "lib.d.ts"
 
@@ -36,6 +40,9 @@ module.exports = class TypeScriptCompiler extends JSCompiler
         TypeScript.moduleGenTarget = TypeScript.ModuleGenTarget.Asynchronous
 
   compile: (file, cb) ->
+
+    unless TypeScript
+      @setupTypeScript()
 
     targetJsFile = file.outputFileName.replace(@config.watch.compiledDir, @config.watch.sourceDir)
     targetJsFile = io.resolvePath(targetJsFile)

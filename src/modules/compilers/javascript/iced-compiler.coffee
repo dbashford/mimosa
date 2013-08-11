@@ -1,10 +1,9 @@
 "use strict"
 
-iced = require 'iced-coffee-script'
 JSCompiler = require "./javascript"
 
 module.exports = class IcedCompiler extends JSCompiler
-
+  libName: 'iced-coffee-script'
   @prettyName        = "Iced CoffeeScript - http://maxtaco.github.com/coffee-script/"
   @defaultExtensions = ["iced"]
 
@@ -17,4 +16,4 @@ module.exports = class IcedCompiler extends JSCompiler
     @_cleanUpSourceMapsRegister register, @extensions, @icedConfig
 
   compile: (file, cb) ->
-    @_icedAndCoffeeCompile file, cb, @icedConfig, iced
+    @_icedAndCoffeeCompile file, cb, @icedConfig

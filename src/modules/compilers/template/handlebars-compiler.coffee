@@ -10,10 +10,12 @@ module.exports = class HBSCompiler extends HandlebarsCompiler
   @defaultExtensions = ["hbs", "handlebars"]
   @isDefault         = true
 
-  constructor: (config, @extensions) ->
-    super(config)
+  constructor: (@mimosaConfig, @extensions) ->
+    super(@mimosaConfig)
 
   compile: (file, cb) =>
+    @determineHandlebars(@mimosaConfig) unless @handlebars
+
     try
       output = @handlebars.precompile file.inputFileText
       output = @transformTemplate output.toString()

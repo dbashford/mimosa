@@ -7,10 +7,12 @@ _ =      require 'lodash'
 logger =    require 'logmimosa'
 
 fileUtils = require '../../../util/file'
+BaseCompiler = require '../base'
 
-module.exports = class AbstractCSSCompiler
+module.exports = class AbstractCSSCompiler extends BaseCompiler
 
   constructor: ->
+    super()
 
   registration: (config, register) ->
     register ['buildExtension'], 'init',    @_processWatchedDirectories, [@extensions[0]]
@@ -59,6 +61,8 @@ module.exports = class AbstractCSSCompiler
   _compile: (config, options, next) =>
     hasFiles = options.files?.length > 0
     return next() unless hasFiles
+
+    @determineCompilerLib config
 
     i = 0
     newFiles = []

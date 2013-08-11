@@ -1,9 +1,10 @@
 "use strict"
 
-coffee = require 'coffee-script'
 JSCompiler = require "./javascript"
 
 module.exports = class CoffeeCompiler extends JSCompiler
+
+  libName: 'coffee-script'
 
   @prettyName        = "(*) CoffeeScript - http://coffeescript.org/"
   @defaultExtensions = ["coffee", "litcoffee"]
@@ -18,4 +19,4 @@ module.exports = class CoffeeCompiler extends JSCompiler
     @_cleanUpSourceMapsRegister register, @extensions, @coffeeConfig
 
   compile: (file, cb) ->
-    @_icedAndCoffeeCompile file, cb, @coffeeConfig, coffee
+    @_icedAndCoffeeCompile file, cb, @coffeeConfig

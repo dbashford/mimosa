@@ -3,14 +3,13 @@
 fs = require 'fs'
 path = require 'path'
 
-less = require 'less'
 _ = require 'lodash'
 logger = require 'logmimosa'
 
 AbstractCssCompiler = require './css'
 
 module.exports = class LessCompiler extends AbstractCssCompiler
-
+  libName: 'less'
   importRegex: /@import ['"](.*)['"]/g
   partialKeepsExtension: true
 
@@ -23,7 +22,7 @@ module.exports = class LessCompiler extends AbstractCssCompiler
   compile: (file, config, options, done) =>
     fileName = file.inputFileName
     logger.debug "Compiling LESS file [[ #{fileName} ]], first parsing..."
-    parser = new less.Parser
+    parser = new @compilerLib.Parser
       paths: [config.watch.sourceDir, path.dirname(fileName)],
       filename: fileName
     parser.parse file.inputFileText, (error, tree) =>

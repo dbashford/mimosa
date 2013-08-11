@@ -3,14 +3,13 @@
 fs = require 'fs'
 path = require 'path'
 
-stylus = require 'stylus'
 _ = require 'lodash'
 logger = require 'logmimosa'
 
 AbstractCssCompiler = require './css'
 
 module.exports = class StylusCompiler extends AbstractCssCompiler
-
+  libName: 'stylus'
   importRegex: /@import ['"](.*)['"]/g
 
   @prettyName        = "(*) Stylus - http://learnboost.github.com/stylus/"
@@ -31,7 +30,7 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
 
     logger.debug "Compiling Stylus file [[ #{fileName} ]]"
 
-    stylusSetup = stylus(text)
+    stylusSetup = @compilerLib(text)
       .include(path.dirname(fileName))
       .include(config.watch.sourceDir)
       .set('compress', false)

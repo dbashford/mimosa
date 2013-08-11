@@ -50,9 +50,10 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
   constructor: (config) ->
     super(config)
 
-    @ember = config.template.handlebars.ember.enabled
-    hbs = if config.template.handlebars.lib
-      config.template.handlebars.lib
+  determineHandlebars: (mimosaConfig) ->
+    @ember = mimosaConfig.template.handlebars.ember.enabled
+    hbs = if mimosaConfig.compilers.libs.handlebars
+      mimosaConfig.compilers.libs.handlebars
     else
       require 'handlebars'
 

@@ -7,6 +7,8 @@ JSCompiler = require "./javascript"
 
 module.exports = class CocoCompiler extends JSCompiler
 
+  libName: 'coco'
+
   @prettyName        = "Coco - https://github.com/satyr/coco"
   @defaultExtensions = ["co", "coco"]
 
@@ -16,7 +18,7 @@ module.exports = class CocoCompiler extends JSCompiler
 
   compile: (file, cb) ->
     try
-      output = coco.compile file.inputFileText, _.extend {}, @config
+      output = @compilerLib.compile file.inputFileText, _.extend {}, @config
     catch err
       error = err
     cb(error, output)

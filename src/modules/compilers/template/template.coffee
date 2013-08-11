@@ -7,10 +7,12 @@ _ =      require 'lodash'
 logger =           require 'logmimosa'
 
 fileUtils =        require '../../../util/file'
+BaseCompiler = require '../base'
 
-module.exports = class TemplateCompiler
+module.exports = class TemplateCompiler extends BaseCompiler
 
   constructor: (config) ->
+    super()
     if @clientLibrary?
       @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
       @clientPath = path.join config.vendor.javascripts, "#{@clientLibrary}.js"
@@ -77,10 +79,12 @@ module.exports = class TemplateCompiler
     hasFiles = options.files?.length > 0
     return next() unless hasFiles
 
+    @determineCompilerLib config
+
     i = 0
     newFiles = []
     options.files.forEach (file) =>
-      logger.debug "Compiling HTML template [[ #{file.inputFileName} ]]"
+      logger.debug "Compilings template [[ #{file.inputFileName} ]]"
       file.templateName = @__generateTemplateName(file.inputFileName, config)
       @compile file, (err, result) =>
         if err

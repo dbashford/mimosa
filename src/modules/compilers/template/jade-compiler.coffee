@@ -1,12 +1,11 @@
 "use strict"
 
-jade = require 'jade'
-
 TemplateCompiler = require './template'
 
 module.exports = class JadeCompiler extends TemplateCompiler
 
   clientLibrary: "jade-runtime"
+  libName: 'jade'
 
   @prettyName        = "Jade - http://jade-lang.com/"
   @defaultExtensions = ["jade"]
@@ -28,7 +27,7 @@ module.exports = class JadeCompiler extends TemplateCompiler
 
   compile: (file, cb) =>
     try
-      output = jade.compile file.inputFileText,
+      output = @compilerLib.compile file.inputFileText,
         compileDebug: false,
         client: true,
         filename: file.inputFileName

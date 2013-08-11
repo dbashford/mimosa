@@ -1,12 +1,11 @@
 "use strict"
 
-ejs = require 'ejs'
-
 TemplateCompiler = require './template'
 
 module.exports = class EJSCompiler extends TemplateCompiler
 
   clientLibrary: "ejs-filters"
+  libName: "ejs"
 
   @prettyName        = "Embedded JavaScript Templates (EJS) - https://github.com/visionmedia/ejs"
   @defaultExtensions = ["ejs"]
@@ -43,7 +42,7 @@ module.exports = class EJSCompiler extends TemplateCompiler
 
   compile: (file, cb) =>
     try
-      output = ejs.compile file.inputFileText,
+      output = @compilerLib.compile file.inputFileText,
         compileDebug: false,
         client: true,
         filename: file.inputFileName
