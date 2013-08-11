@@ -9,6 +9,14 @@
 * General code tightening/testing
 * Documentation and site updates
 
+## 0.14.9 - Aug 10 2013
+
+### Major Changes
+* [mimosa #262](https://github.com/dbashford/mimosa/issues/262). Added support for server-side dust templates.
+
+### Minor Changes
+* [mimosa-bower #15](https://github.com/dbashford/mimosa-bower/issues/15). Switched `forceLatest` default to `true` and now provide warning message with details when `forceLatest` results in a selection being made between multiple libraries.
+
 ## 0.14.8 - Aug 08 2013
 
 ### Minor Changes
