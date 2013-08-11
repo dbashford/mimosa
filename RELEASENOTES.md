@@ -9,10 +9,15 @@
 * General code tightening/testing
 * Documentation and site updates
 
-## 1.0.0-RC.1
+## 1.0.0-RC.1 (Upcoming)
 
 ### Minor Changes
 * [mimosa #259](https://github.com/dbashford/mimosa/issues/259). Updated skeleton registry JSON, added details for future skeleton browsing web app front-end use.
+
+## 0.14.9 - Aug ?? 2013
+
+### Minor Changes
+* [mimosa-bower #15](https://github.com/dbashford/mimosa-bower/issues/15). Switched `forceLatest` default to `true` and now provide warning message with details when `forceLatest` results in a selection being made between multiple libraries.
 
 ## 0.14.8 - Aug 08 2013
 
