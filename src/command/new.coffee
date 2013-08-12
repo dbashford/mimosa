@@ -49,6 +49,12 @@ class NewCommand
         library: "handlebars"
         extension:"hbs"
       }
+      {
+        name:"dust"
+        prettyName:"Dust - http://linkedin.github.io/dustjs/"
+        library: "dustjs-linkedin"
+        extension:"dust"
+      }
     ]
 
   constructor: (@program) ->
@@ -275,6 +281,7 @@ class NewCommand
 
     @removeFromPackageDeps(chosen.views.name, "jade", "jade", packageJson)
     @removeFromPackageDeps(chosen.views.name, "hogan", "hogan.js", packageJson)
+    @removeFromPackageDeps(chosen.views.name, "dust", "dustjs-linkedin", packageJson)
     @removeFromPackageDeps(chosen.views.name, "handlebars", "handlebars", packageJson)
     unless chosen.views.library is "ejs"
       @removeFromPackageDeps(chosen.views.name, "html", "ejs", packageJson)

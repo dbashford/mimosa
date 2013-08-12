@@ -21,6 +21,7 @@
     "jade": "0.34.1",
     "hogan.js": "2.0.0",
     "ejs": "0.8.4",
-    "handlebars": "1.0.12"
+    "handlebars": "1.0.12",
+    "dustjs-linkedin": "2.0.2"
   }
 }

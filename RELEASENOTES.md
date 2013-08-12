@@ -11,10 +11,23 @@
 
 ## 1.0.0-RC.1 (Upcoming)
 
+### Major Changes
+* [mimosa #258](https://github.com/dbashford/mimosa/issues/258). Removed `node-sass` as a dependency as it occasionally breaks Mimosa installs.  It also forces node `v0.10`. Mimosa still supports `node-sass`, but it needs to be provided to it via the `compilers.libs.sass` configuration parameter.
+* [mimosa #256](https://github.com/dbashford/mimosa/issues/256). All `require` calls for compilers are now delayed until the initial file of that type is encountered. This should slightly improve startup time, but it will also stop compiler confusion. Occasionally, for instance, iced-coffee-script would compile files instead of coffee-script.
+* [mimosa #255](https://github.com/dbashford/mimosa/issues/255). All compilers can now be provided via the mimosa-config by way of the `compilers.libs` setting. This allows users of Mimosa to use specific versions of compilers if Mimosa's current default versions aren't satisfactory.
+
 ### Minor Changes
 * [mimosa #259](https://github.com/dbashford/mimosa/issues/259). Updated skeleton registry JSON, added details for future skeleton browsing web app front-end use.
 
-## 0.14.9 - Aug ?? 2013
+## 0.14.10 - Aug ?? 2013
+
+### Major Changes
+* __New Module__: [mimosa-dependency-graph](https://github.com/brzpegasus/mimosa-dependency-graph). Simply add this module to your module list (that's it!) and you'll get some super cool d3 graph visualizations of your application's dependency graph. This module utilizes the information gathered by the mimosa-require module and layers on some d3 hotness.  Use this tool to figure out which modules have the most dependencies (refactoring targets) and which modules are depended on the most (testing targets).
+
+## 0.14.9 - Aug 10 2013
+
+### Major Changes
+* [mimosa #262](https://github.com/dbashford/mimosa/issues/262). Added support for server-side dust templates.
 
 ### Minor Changes
 * [mimosa-bower #15](https://github.com/dbashford/mimosa-bower/issues/15). Switched `forceLatest` default to `true` and now provide warning message with details when `forceLatest` results in a selection being made between multiple libraries.
