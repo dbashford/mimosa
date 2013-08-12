@@ -9,6 +9,11 @@
 * General code tightening/testing
 * Documentation and site updates
 
+## 0.14.10 - Aug ?? 2013
+
+### Major Changes
+* __New Module__: [mimosa-dependency-graph](https://github.com/brzpegasus/mimosa-dependency-graph). Simply add this module to your module list (that's it!) and you'll get some super cool d3 graph visualizations of your application's dependency graph. This module utilizes the information gathered by the mimosa-require module and layers on some d3 hotness.  Use this tool to figure out which modules have the most dependencies (refactoring targets) and which modules are depended on the most (testing targets).
+
 ## 0.14.9 - Aug 10 2013
 
 ### Major Changes
