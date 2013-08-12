@@ -14,7 +14,7 @@
 `rc.1` is moving along, but meanwhile dev on `0.14` continues.
 
 ### Major Changes
-# [mimosa #260](https://github.com/dbashford/mimosa/issues/260). Added several options to help manage file watching causing CPU issues. `watch.interval` determines the polling interval for non-binary files.  `watch.binaryInterval` determines the polling for binary files.  And `watch.usePolling` determines whether or not to actually use polling. For more information, check out the [GitHub issue](https://github.com/dbashford/mimosa/issues/179) where this was discussed.
+* [mimosa #260](https://github.com/dbashford/mimosa/issues/260). Added several options to help manage file watching causing CPU issues. `watch.interval` determines the polling interval for non-binary files.  `watch.binaryInterval` determines the polling for binary files.  And `watch.usePolling` determines whether or not to actually use polling. For more information, check out the [GitHub issue](https://github.com/dbashford/mimosa/issues/179) where this was discussed.
 * __New Module__: [mimosa-dependency-graph](https://github.com/brzpegasus/mimosa-dependency-graph). Simply add this module to your module list (that's it!) and you'll get some super cool d3 graph visualizations of your application's dependency graph. This module utilizes the information gathered by the mimosa-require module and layers on some d3 hotness.  Use this tool to figure out which modules have the most dependencies (refactoring targets) and which modules are depended on the most (testing targets).
 
 ## 0.14.9 - Aug 10 2013
