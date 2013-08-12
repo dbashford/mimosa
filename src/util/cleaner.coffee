@@ -11,7 +11,14 @@ class Cleaner
     @workflow.initClean @_startWatcher
 
   _startWatcher: =>
-    watcher = watch.watch(@config.watch.sourceDir, {ignored:@_ignoreFunct, persistent:false})
+    watchConfig =
+      ignored:@_ignoreFunct
+      persistent:false
+      interval: @config.watch.interval
+      binaryInterval: @config.watch.binaryInterval
+      usePolling: @config.watch.usePolling
+
+    watcher = watch.watch @config.watch.sourceDir, watchConfig
     watcher.on "add", @workflow.clean
 
   _cleanDone: =>

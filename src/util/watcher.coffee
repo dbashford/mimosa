@@ -13,7 +13,15 @@ class Watcher
     @workflow.initBuild @_startWatcher
 
   _startWatcher: =>
-    watcher = watch.watch(@config.watch.sourceDir, {ignored:@_ignoreFunct, persistent:@persist})
+
+    watchConfig =
+      ignored:@_ignoreFunct
+      persistent:@persist
+      interval: @config.watch.interval
+      binaryInterval: @config.watch.binaryInterval
+      usePolling: @config.watch.usePolling
+
+    watcher = watch.watch @config.watch.sourceDir, watchConfig
     watcher.on "error", (error) -> logger.warn "File watching error: #{error}"
     watcher.on "change", @workflow.update
     watcher.on "unlink", @workflow.remove
