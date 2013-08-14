@@ -20,11 +20,11 @@ _configTop = ->
 
     ###
     The list of Mimosa modules to use for this application. The defaults (lint, server, require,
-    minify, live-reload) come bundled with Mimosa and do not need to be installed.  The 'mimosa-'
-    that preceeds all Mimosa module names is assumed, however you can use it if you want.  If a
-    module is listed here that Mimosa is unaware of, Mimosa will attempt to install it.
+    minify, live-reload, bower) come bundled with Mimosa and do not need to be installed. The
+    'mimosa-' that preceeds all Mimosa module names is assumed, however you can use it if you
+    want. If a module is listed here that Mimosa is unaware of, Mimosa will attempt to install it.
     ###
-    # modules: ['lint', 'server', 'require', 'minify', 'live-reload']
+    # modules: ['lint', 'server', 'require', 'minify', 'live-reload', 'bower']
 
     # watch:
       # sourceDir: "assets"                # directory location of web assets, can be relative to
@@ -66,7 +66,7 @@ buildConfigText = ->
   configText += _configBottom()
 
   if moduleManager.configModuleString?
-    configText = configText.replace("  # modules: ['lint', 'server', 'require', 'minify', 'live-reload']", "  modules: " + moduleManager.configModuleString)
+    configText = configText.replace("  # modules: ['lint', 'server', 'require', 'minify', 'live-reload', 'bower']", "  modules: " + moduleManager.configModuleString)
 
   configText
 
