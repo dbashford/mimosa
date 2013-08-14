@@ -146,10 +146,19 @@ class NewCommand
     else
       @_usingOwnServer name, chosen
 
+    @_modifyBowerJSONName name
+
     @_moveViews chosen
 
     logger.debug "Renaming .gitignore"
     fs.renameSync (path.join @skeletonOutPath, ".ignore"), (path.join @skeletonOutPath, ".gitignore")
+
+  _modifyBowerJSONName: (name) =>
+    if name
+      bowerPath = path.join @skeletonOutPath, "bower.json"
+      bowerJson = require(bowerPath)
+      bowerJson.name = name
+      fs.writeFileSync bowerPath, JSON.stringify(bowerJson, null, 2)
 
   _moveDirectoryContents: (sourcePath, outPath) ->
     unless fs.existsSync outPath
@@ -199,8 +208,6 @@ class NewCommand
   _copyCompilerSpecificExampleFiles: (comps) ->
     safePaths = _.flatten([comps.javascript.defaultExtensions, comps.css.defaultExtensions, comps.template.defaultExtensions]).map (path) ->
       "\\.#{path}$"
-    safePaths.push "jquery\.js"
-    safePaths.push "require\.js"
 
     assetsPath = path.join @skeletonOutPath,  'assets'
     allItems = wrench.readdirSyncRecursive(assetsPath)
