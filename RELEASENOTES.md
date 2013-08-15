@@ -23,9 +23,16 @@
 ### Minor Changes
 * [mimosa #259](https://github.com/dbashford/mimosa/issues/259). Updated skeleton registry JSON, added details for future skeleton browsing web app front-end use.
 
-## 0.14.10 - Aug ?? 2013
+## 0.14.11 - Aug 14 2013
+
+### Minor Changes
+* [mimosa #264](https://github.com/dbashford/mimosa/issues/264). Fixed a problem on Windows where RequireJS main files that were nested inside project structure were not being built properly.
+* [mimosa-require](https://github.com/dbashford/mimosa-require). Added function toconvert full system paths into the proper AMD path given a project's requirejs path aliases and directory aliases.
+
+## 0.14.10 - Aug 12 2013
 
 ### Major Changes
+* [mimosa #260](https://github.com/dbashford/mimosa/issues/260). Added several options to help manage file watching causing CPU issues. `watch.interval` determines the polling interval for non-binary files.  `watch.binaryInterval` determines the polling for binary files.  And `watch.usePolling` determines whether or not to actually use polling. For more information, check out the [GitHub issue](https://github.com/dbashford/mimosa/issues/179) where this was discussed.
 * __New Module__: [mimosa-dependency-graph](https://github.com/brzpegasus/mimosa-dependency-graph). Simply add this module to your module list (that's it!) and you'll get some super cool d3 graph visualizations of your application's dependency graph. This module utilizes the information gathered by the mimosa-require module and layers on some d3 hotness.  Use this tool to figure out which modules have the most dependencies (refactoring targets) and which modules are depended on the most (testing targets).
 
 ## 0.14.9 - Aug 10 2013

@@ -26,6 +26,9 @@ baseDefaults =
     javascriptDir: "javascripts"
     exclude: [/[/\\](\.|~)[^/\\]+$/]
     throttle: 0
+    interval: 100
+    binaryInterval: 300
+    usePolling: true
   vendor:
     javascripts: "javascripts/vendor"
     stylesheets: "stylesheets/vendor"
@@ -90,6 +93,20 @@ _validateWatchConfig = (config) ->
 
   unless typeof config.watch.throttle is "number"
     errors.push "watch.throttle must be a number"
+
+  unless typeof config.watch.interval is "number"
+    errors.push "watch.interval must be a number"
+
+  unless typeof config.watch.binaryInterval is "number"
+    errors.push "watch.binaryInterval must be a number"
+
+  if validators.ifExistsIsBoolean(errors, "watch.usePolling", config.watch.usePolling)
+    if process.platform isnt 'win32' and config.watch.usePolling is false
+      logger.warn """
+          You have turned polling off (usePolling:false) but you are on not on Windows. If you
+          experience EMFILE issues, this is why. usePolling:false does not function properly on
+          other operating systems.
+        """
 
   if validators.ifExistsIsObject(errors, "vendor config", config.vendor)
     if validators.ifExistsIsString(errors, "vendor.javascripts", config.vendor.javascripts)

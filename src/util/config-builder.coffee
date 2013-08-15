@@ -44,7 +44,15 @@ _configTop = ->
                                            # files that all get copied at once. If the throttle
                                            # is set to 0, no throttling is performed. Recommended
                                            # to leave this set at 0, thedefault, until you start
-                                           # encountering EMFILE problems.
+                                           # encountering EMFILE problems. throttle has no effect
+                                           # if usePolling is set to false.
+      # usePolling: true                   # WARNING: Do not change this default if you are on
+                                           # *Nix. Windows users, read on.
+                                           # Whether or not to poll for system file changes.
+                                           # Unless you have a lot files and your CPU starts
+                                           # running hot, it is best to leave this setting alone.
+      # interval: 100                      # Interval of file system polling.
+      # binaryInterval: 300                # Interval of file system polling for binary files
 
     # vendor:                              # settings for vendor assets
       # javascripts: "javascripts/vendor"  # location, relative to the watch.sourceDir, of vendor
