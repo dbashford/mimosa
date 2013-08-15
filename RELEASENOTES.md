@@ -11,6 +11,10 @@
 
 ## 1.0.0-RC.1 (Upcoming)
 
+### Huge Changes
+* [mimosa #254](https://github.com/dbashford/mimosa/issues/254). [mimosa-bower](https://github.com/dbashford/mimosa-bower/) is now a default module. `mimosa new` will deliver a `bower.json` and not deliver `jquery.js`
+ or `require.js`.
+
 ### Major Changes
 * [mimosa #258](https://github.com/dbashford/mimosa/issues/258). Removed `node-sass` as a dependency as it occasionally breaks Mimosa installs.  It also forces node `v0.10`. Mimosa still supports `node-sass`, but it needs to be provided to it via the `compilers.libs.sass` configuration parameter.
 * [mimosa #256](https://github.com/dbashford/mimosa/issues/256). All `require` calls for compilers are now delayed until the initial file of that type is encountered. This should slightly improve startup time, but it will also stop compiler confusion. Occasionally, for instance, iced-coffee-script would compile files instead of coffee-script.
