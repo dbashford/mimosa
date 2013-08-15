@@ -64,6 +64,7 @@
     "underscore": "1.5.1",
     "ejs": "0.8.4",
     "eco": "1.1.0-rc-3",
+    "ractive":"0.3.4",
     "coffee-script": "1.6.3",
     "iced-coffee-script": "1.6.3-e",
     "LiveScript": "1.2.0",

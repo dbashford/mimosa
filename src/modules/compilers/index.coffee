@@ -286,7 +286,7 @@ class MimosaCompilerModule
 
       validators.ifExistsIsBoolean(errors, "template.amdWrap", config.template.amdWrap)
 
-      validTCompilers = ["handlebars", "dust", "hogan", "jade", "underscore", "lodash", "ejs", "html", "emblem", "eco"]
+      validTCompilers = ["handlebars", "dust", "hogan", "jade", "underscore", "lodash", "ejs", "html", "emblem", "eco","ractive"]
 
       if config.template.nameTransform?
         if typeof config.template.nameTransform is "string"
