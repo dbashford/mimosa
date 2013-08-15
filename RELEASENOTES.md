@@ -9,11 +9,16 @@
 * General code tightening/testing
 * Documentation and site updates
 
+## 0.14.12 - Aug 15 2013
+
+### Minor Changes
+* [mimosa-require](https://github.com/dbashford/mimosa-require). Fix for feature added in previous release.
+
 ## 0.14.11 - Aug 14 2013
 
 ### Minor Changes
 * [mimosa #264](https://github.com/dbashford/mimosa/issues/264). Fixed a problem on Windows where RequireJS main files that were nested inside project structure were not being built properly.
-* [mimosa-require](https://github.com/dbashford/mimosa-require). Added function toconvert full system paths into the proper AMD path given a project's requirejs path aliases and directory aliases.
+* [mimosa-require](https://github.com/dbashford/mimosa-require). Added function to convert full system paths into the proper AMD path given a project's requirejs path aliases and directory aliases.
 
 ## 0.14.10 - Aug 12 2013
 
