@@ -16,18 +16,30 @@
  or `require.js`.
 
 ### Major Changes
+* [mimosa #268](https://github.com/dbashford/mimosa/issues/258). Mimosa now comes with build-in support for the [Ractive](http://www.ractivejs.org/) templating library.  Two-way data binding ftw!
 * [mimosa #258](https://github.com/dbashford/mimosa/issues/258). Removed `node-sass` as a dependency as it occasionally breaks Mimosa installs.  It also forces node `v0.10`. Mimosa still supports `node-sass`, but it needs to be provided to it via the `compilers.libs.sass` configuration parameter.
 * [mimosa #256](https://github.com/dbashford/mimosa/issues/256). All `require` calls for compilers are now delayed until the initial file of that type is encountered. This should slightly improve startup time, but it will also stop compiler confusion. Occasionally, for instance, iced-coffee-script would compile files instead of coffee-script.
 * [mimosa #255](https://github.com/dbashford/mimosa/issues/255). All compilers can now be provided via the mimosa-config by way of the `compilers.libs` setting. This allows users of Mimosa to use specific versions of compilers if Mimosa's current default versions aren't satisfactory.
+*
 
 ### Minor Changes
 * [mimosa #259](https://github.com/dbashford/mimosa/issues/259). Updated skeleton registry JSON, added details for future skeleton browsing web app front-end use.
+
+## 0.14.13 - Aug ?? 2013
+
+### Minor Changes
+* [mimosa-client-jade-static #3](https://github.com/dbashford/mimosa-client-jade-static/issues/3). Added new configuration to client-jade-static module that allows for configuring the input and output extensions.
+
+## 0.14.12 - Aug 15 2013
+
+### Minor Changes
+* [mimosa-require](https://github.com/dbashford/mimosa-require). Fix for feature added in previous release.
 
 ## 0.14.11 - Aug 14 2013
 
 ### Minor Changes
 * [mimosa #264](https://github.com/dbashford/mimosa/issues/264). Fixed a problem on Windows where RequireJS main files that were nested inside project structure were not being built properly.
-* [mimosa-require](https://github.com/dbashford/mimosa-require). Added function toconvert full system paths into the proper AMD path given a project's requirejs path aliases and directory aliases.
+* [mimosa-require](https://github.com/dbashford/mimosa-require). Added function to convert full system paths into the proper AMD path given a project's requirejs path aliases and directory aliases.
 
 ## 0.14.10 - Aug 12 2013
 
