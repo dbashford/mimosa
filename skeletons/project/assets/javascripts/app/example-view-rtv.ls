@@ -5,7 +5,8 @@ define ['jquery', 'vendor/ractive', 'templates'], ($, Ractive, templates) ->
     render: (element) ->
       $(element).append("<div id='ractive1'></div>")
       $(element).append("<div id='ractive2'></div>")
-      new Ractive
+
+      rac1 =
         el: '#ractive1'
         template: templates.example
         partials: templates
@@ -13,8 +14,11 @@ define ['jquery', 'vendor/ractive', 'templates'], ($, Ractive, templates) ->
           name:'Ractive'
           css:'CSSHERE'
 
-      new Ractive
+      rac2 =
         el: '#ractive2'
         template: templates['another-example']
         data:
           name:'Ractive'
+
+      new Ractive rac1
+      new Ractive rac2

@@ -3,22 +3,22 @@ $, Ractive, templates <- define <[jquery vendor/ractive templates]>
 class ExampleView
   render: !(element)->
 
-  ($ element)
-    &append("<div id='ractive1'></div>")
-    &append("<div id='ractive2'></div>")
+    ($ element)
+      &append("<div id='ractive1'></div>")
+      &append("<div id='ractive2'></div>")
 
-  new Ractive
-    el: '#ractive1'
-    template: templates.example
-    partials: templates
-    data:
-      name:'Ractive'
-      css:'CSSHERE'
+    rac1 =
+      el: '#ractive1'
+      template: templates.example
+      partials: templates
+      data:
+        name:'Ractive'
+        css:'less'
+    new Ractive rac1
 
-  new Ractive
-    el: '#ractive2'
-    template: templates['another-example']
-    data:
-      name:'Ractive'
-
-ExampleView
+    rac2 =
+      el: '#ractive2'
+      template: templates['another-example']
+      data:
+        name:'Ractive'
+    new Ractive rac2
