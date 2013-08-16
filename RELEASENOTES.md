@@ -9,6 +9,11 @@
 * General code tightening/testing
 * Documentation and site updates
 
+## 0.14.13 - Aug ?? 2013
+
+### Minor Changes
+* [mimosa-client-jade-static #3](https://github.com/dbashford/mimosa-client-jade-static/issues/3). Added new configuration to client-jade-static module that allows for configuring the input and output extensions.
+
 ## 0.14.12 - Aug 15 2013
 
 ### Minor Changes
