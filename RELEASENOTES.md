@@ -2,9 +2,6 @@
 
 1.0 is a short bit away now, the following summarizes all that remains.
 
-* Inclusion of `bower` as default Mimosa module
-* Allow all compilers to be provided in the mimosa-config in central config setting
-* Remove node-sass from `package.json`, force individual install if wanted.
 * Bug fixes
 * General code tightening/testing
 * Documentation and site updates
@@ -16,9 +13,10 @@
  or `require.js`.
 
 ### Major Changes
-* [mimosa #268](https://github.com/dbashford/mimosa/issues/258). Mimosa now comes with build-in support for the [Ractive](http://www.ractivejs.org/) templating library.  Two-way data binding ftw!
+* [mimosa #268](https://github.com/dbashford/mimosa/issues/268). The command `mimosa mod:init` has been removed from Mimosa. New Mimosa skeletons have been added for creating a JavaScript Mimosa module and a CoffeeScript Mimosa module. `mimosa skel:new mimosa-module-javascript` and `mimosa skel:new mimosa-module-coffeescript`
+* [mimosa #268](https://github.com/dbashford/mimosa/issues/268). Mimosa now comes with build-in support for the [Ractive](http://www.ractivejs.org/) templating library. Two-way data binding ftw!
 * [mimosa #258](https://github.com/dbashford/mimosa/issues/258). Removed `node-sass` as a dependency as it occasionally breaks Mimosa installs.  It also forces node `v0.10`. Mimosa still supports `node-sass`, but it needs to be provided to it via the `compilers.libs.sass` configuration parameter.
-* [mimosa #256](https://github.com/dbashford/mimosa/issues/256). All `require` calls for compilers are now delayed until the initial file of that type is encountered. This should slightly improve startup time, but it will also stop compiler confusion. Occasionally, for instance, iced-coffee-script would compile files instead of coffee-script.
+* [mimosa #256](https://github.com/dbashford/mimosa/issues/256). All `require` calls for compilers are now delayed until the initial file of that type is encountered. This should slightly improve startup time, but it will also stop compiler confusion. Occasionally, for instance, iced-coffee-script would compile files on behalf of coffee-script.
 * [mimosa #255](https://github.com/dbashford/mimosa/issues/255). All compilers can now be provided via the mimosa-config by way of the `compilers.libs` setting. This allows users of Mimosa to use specific versions of compilers if Mimosa's current default versions aren't satisfactory.
 *
 
