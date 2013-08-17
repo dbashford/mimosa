@@ -12,7 +12,6 @@ all = ->
   require('./command/clean')(program)
   require('./command/external')(program)
   require('./command/module/install')(program)
-  require('./command/module/init')(program)
   require('./command/module/uninstall')(program)
   require('./command/module/list')(program)
   require('./command/module/search')(program)
