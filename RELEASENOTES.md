@@ -9,9 +9,10 @@
 * General code tightening/testing
 * Documentation and site updates
 
-## 0.14.13 - Aug ?? 2013
+## 0.14.13 - Aug 17 2013
 
 ### Minor Changes
+* [mimosa-require #13](https://github.com/dbashford/mimosa-require/issues/13). Fixed issue where attempting to debug log the r.js run config could result in a circular reference and bomb the process out.
 * [mimosa-client-jade-static #3](https://github.com/dbashford/mimosa-client-jade-static/issues/3). Added new configuration to client-jade-static module that allows for configuring the input and output extensions.
 
 ## 0.14.12 - Aug 15 2013
