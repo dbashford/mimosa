@@ -136,7 +136,7 @@ class NewCommand
   _create: (name, chosen) =>
     @config = buildConfig()
 
-    @skeletonPath = path.join __dirname, '..', '..', 'skeletons', 'project'
+    @skeletonPath = path.join __dirname, '..', '..', 'skeleton'
 
     @_moveDirectoryContents @skeletonPath, @skeletonOutPath
     @_makeChosenCompilerChanges chosen
