@@ -12,6 +12,7 @@
 ## 0.14.15 - Aug ?? 2013
 
 ### Minor Changes
+* [mimosa-bower #18](https://github.com/dbashford/mimosa-bower/issues/18). Changed `pathMod` defaults to an empty array due to possible harmful side effects of defaults on `mainOverride` object mappings.
 * [mimosa-bower #17](https://github.com/dbashford/mimosa-bower/issues/17). Fixed issue where binary files were getting jacked up when copying to `assets` directory.
 
 ## 0.14.14 - Aug 18 2013
