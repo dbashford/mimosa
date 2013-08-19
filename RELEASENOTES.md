@@ -9,6 +9,11 @@
 * General code tightening/testing
 * Documentation and site updates
 
+## 0.14.14 - Aug 18 2013
+
+### Minor Changes
+* [mimosa-lint #8](https://github.com/dbashford/mimosa-lin/issues/8). Fixed bug where non-coffee/iced js langauges could not set custom options.
+
 ## 0.14.13 - Aug 17 2013
 
 ### Minor Changes
