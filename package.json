@@ -82,7 +82,7 @@
     "mimosa-server": "0.9.0",
     "mimosa-require": "0.15.2",
     "mimosa-minify": "0.8.0",
-    "mimosa-lint": "0.7.5",
+    "mimosa-lint": "0.7.3",
     "mimosa-live-reload": "0.8.2"
   },
   "license": "MIT",
