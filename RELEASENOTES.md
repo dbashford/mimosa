@@ -6,6 +6,7 @@
 * General code tightening/testing
 * Documentation and site updates
 
+<<<<<<< HEAD
 ## 1.0.0-RC.1 (Upcoming)
 
 ### Huge Changes
@@ -23,9 +24,20 @@
 ### Minor Changes
 * [mimosa #259](https://github.com/dbashford/mimosa/issues/259). Updated skeleton registry JSON, added details for future skeleton browsing web app front-end use.
 
-## 0.14.13 - Aug ?? 2013
+## 0.14.15 - Aug ?? 2013
 
 ### Minor Changes
+* [mimosa-bower #17](https://github.com/dbashford/mimosa-bower/issues/17). Fixed issue where binary files were getting jacked up when copying to `assets` directory.
+
+## 0.14.14 - Aug 18 2013
+
+### Minor Changes
+* [mimosa-lint #8](https://github.com/dbashford/mimosa-lin/issues/8). Fixed bug where non-coffee/iced js langauges could not set custom options.
+
+## 0.14.13 - Aug 17 2013
+
+### Minor Changes
+* [mimosa-require #13](https://github.com/dbashford/mimosa-require/issues/13). Fixed issue where attempting to debug log the r.js run config could result in a circular reference and bomb the process out.
 * [mimosa-client-jade-static #3](https://github.com/dbashford/mimosa-client-jade-static/issues/3). Added new configuration to client-jade-static module that allows for configuring the input and output extensions.
 
 ## 0.14.12 - Aug 15 2013
