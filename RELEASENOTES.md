@@ -6,7 +6,6 @@
 * General code tightening/testing
 * Documentation and site updates
 
-<<<<<<< HEAD
 ## 1.0.0-RC.1 (Upcoming)
 
 ### Huge Changes

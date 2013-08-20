@@ -2,7 +2,6 @@
   "name": "mimosa",
   "preferGlobal": "true",
   "version": "1.0.0-rc.1",
-  "version": "0.14.14",
   "homepage": "http://www.mimosajs.com",
   "author": "David Bashford",
   "description": "A modern browser development toolkit and application assembler. Compile, lint, optimize, serve and more.",
@@ -85,7 +84,7 @@
     "mimosa-minify": "0.8.0",
     "mimosa-lint": "0.7.3",
     "mimosa-live-reload": "0.8.2",
-    "mimosa-bower":"0.8.2"
+    "mimosa-bower":"0.9.1"
   },
   "license": "MIT",
   "engines": {
