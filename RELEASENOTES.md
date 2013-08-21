@@ -12,6 +12,7 @@
 ## 0.14.15 - Aug ?? 2013
 
 ### Minor Changes
+* [mimosa-bower #21](https://github.com/dbashford/mimosa-bower/issues/21). Handling case when `bower.json` for component has incorrect path in `main`.
 * [mimosa-bower #20](https://github.com/dbashford/mimosa-bower/issues/20). Sorting the last installed files to avoid file diffs between installs.
 * [mimosa-bower #19](https://github.com/dbashford/mimosa-bower/issues/19). Removing `copy.exclude` from tracking checks because it contains file paths. Cross-project diffs will occur.
 * [mimosa-bower #18](https://github.com/dbashford/mimosa-bower/issues/18). Changed `pathMod` defaults to an empty array due to possible harmful side effects of defaults on `mainOverride` object mappings.
