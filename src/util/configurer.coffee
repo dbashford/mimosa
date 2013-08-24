@@ -58,11 +58,13 @@ _validateWatchConfig = (config) ->
 
       isHigher = false
       for i in [0..2]
-        if +versionPieces[i] > +minVersionPieces[i]
+        piece = minVersionPieces[i].split('-')[0]
+        vPiece = versionPieces[i].split('-')[0]
+        if +vPiece > +piece
           isHigher = true
 
         unless isHigher
-          if +versionPieces[i] < +minVersionPieces[i]
+          if +vPiece < +piece
             return ["Your version of Mimosa [[ #{currVersion} ]] is less than the required version for this project [[ #{config.minMimosaVersion} ]]"]
     else
       errors.push "minMimosaVersion must take the form 'number.number.number', ex: '0.7.0'"
