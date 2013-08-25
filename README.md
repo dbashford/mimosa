@@ -1,4 +1,4 @@
-[Visit the Mimosa Website](http://www.mimosajs.com)
+[Visit the Mimosa Website](http://www.mimosa.io)
 
 [![Build Status](https://travis-ci.org/dbashford/mimosa.png?branch=master)](https://travis-ci.org/dbashford/mimosa)
 
