@@ -1,12 +1,4 @@
-## 1.0.0 Roadmap
-
-1.0 is a short bit away now, the following summarizes all that remains.
-
-* Bug fixes
-* General code tightening/testing
-* Documentation and site updates
-
-## 1.0.0-RC.1 (Upcoming)
+## 1.0.0-rc.1 - Aug ?? 2013
 
 `1.0` upgrade info below...
 
@@ -29,7 +21,11 @@
 * `template.handlebars.lib` and `template.emblem.lib` have been moved to `compilers.libs.handlebars` and `compilers.libs.emblem` respectively.
 * Using `node-sass`? It is no longer bundled with Mimosa. To use `node-sass` you must `npm install` to install it into your project and then use `compilers.libs.sass` to `require` it in.
 
-## 0.14.15 - Aug ?? 2013
+## 0.14.15 - Aug 25 2013
+
+### Major Changes
+* [mimosa #270](https://github.com/dbashford/mimosa/issues/270). Fixed an issue where mimosa-server was holding onto references to every request object that came through it, causing memory to grow at a steady pace.
+* [mimosa-server-reload #2](https://github.com/dbashford/mimosa-server-reload/issues/2). While fixing the above issue, I stumbled upon the fix to this long running issue, which should make mimosa-server-reload once more 100% usable.
 
 ### Minor Changes
 * [mimosa-bower #21](https://github.com/dbashford/mimosa-bower/issues/21). Handling case when `bower.json` for component has incorrect path in `main`.
