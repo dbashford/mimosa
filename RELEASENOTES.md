@@ -15,6 +15,7 @@
 
 ### Minor Changes
 * [mimosa #259](https://github.com/dbashford/mimosa/issues/259). Updated skeleton registry JSON, added details for future skeleton browsing web app front-end use.
+* [mimosa-bower #22](https://github.com/dbashford/mimosa-bower/issues/22). mimosa-bower will now watch your `bower.json` and when changes to it occur, kick off a bower install.
 
 ### Upgrade Info / Breaking Changes
 * A minor inconvenience, and not very breaking, but if you have a Mimosa project that has not overridden the `modules` array, then when you upgrade to `1.0` `bower` will now be included in your project. You'll get a message indicating that a `bower.json` cannot be found. If you do not want Bower, simply uncomment the `modules` array and leave Bower out.
