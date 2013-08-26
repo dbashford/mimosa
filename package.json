@@ -80,11 +80,11 @@
     "logmimosa": "0.5.0",
     "skelmimosa": "0.5.0",
     "mimosa-server": "1.0.0",
-    "mimosa-require": "0.15.2",
-    "mimosa-minify": "0.8.0",
+    "mimosa-require": "1.0.0",
+    "mimosa-minify": "1.0.0",
     "mimosa-lint": "1.0.0",
-    "mimosa-live-reload": "0.8.2",
-    "mimosa-bower":"0.9.2"
+    "mimosa-live-reload": "1.0.0",
+    "mimosa-bower":"1.0.0"
   },
   "license": "MIT",
   "engines": {
