@@ -6,6 +6,7 @@ Some possible breaking changes with how template paths are handled, so check out
 * [mimosa #272](https://github.com/dbashford/mimosa/issues/272). `template` paths are now relative to `watch.sourceDir` rather than `watch.javascriptDir` so template files can be placed outside of `watch.javascriptDir` and the template output files can go anywhere inside `watch.sourceDir`. This is possibly a breaking change.  Previous defaults are preserved.
 
 ### Minor Changes
+* [mimosa-client-jade-static #1](https://github.com/dbashford/mimosa-client-jade-static/issues/1). Because of the change for [mimosa #272](https://github.com/dbashford/mimosa/issues/272), client-jade-static templates can be in any folder inside `watch.sourceDir`.
 * Upgraded [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple/) and [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require/) to latest version of testem.
 * [mimosa-testem-require #3](https://github.com/dbashford/mimosa-testem-require/issues/3). The `testscript` command now outputs with relative paths.
 * [mimosa-testem-require #4](https://github.com/dbashford/mimosa-testem-require/issues/4). The `testscript` command now errors out gracefully if mimosa-testem-require isn't a part of a project.
