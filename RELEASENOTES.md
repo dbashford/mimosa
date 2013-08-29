@@ -1,10 +1,20 @@
-## 1.0.0-rc.2 - Aug ?? 2013
+## 1.0.0-rc.2 - Aug 29 2013
+
+Some possible breaking changes with how template paths are handled, so check out the breaking changes below.
+
+### Major Changes
+* [mimosa #272](https://github.com/dbashford/mimosa/issues/272). `template` paths are now relative to `watch.sourceDir` rather than `watch.javascriptDir` so template files can be placed outside of `watch.javascriptDir` and the template output files can go anywhere inside `watch.sourceDir`. This is possibly a breaking change.  Previous defaults are preserved.
 
 ### Minor Changes
 * Upgraded [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple/) and [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require/) to latest version of testem.
 * [mimosa-testem-require #3](https://github.com/dbashford/mimosa-testem-require/issues/3). The `testscript` command now outputs with relative paths.
 * [mimosa-testem-require #4](https://github.com/dbashford/mimosa-testem-require/issues/4). The `testscript` command now errors out gracefully if mimosa-testem-require isn't a part of a project.
 * [mimosa-bower](https://github.com/dbashford/mimosa-bower/). Upgraded to latest bower and managed API changes.
+
+### Upgrade Info / Breaking Changes
+* You have __no changes to make__ if you are not using any micro-templaters or did not override any of Mimosa's defaults.
+* If you were overriding the location of output files, you will __need to alter the paths__ as the relative path has changed from `watch.javascriptDir` to `watch.sourceDir`
+* If you were providing `folders` to bundle into different output files, you will __need to alter the paths__ as the relative path has changed from `watch.javascriptDir` to `watch.sourceDir`
 
 ## 1.0.0-rc.1 - Aug 27 2013
 

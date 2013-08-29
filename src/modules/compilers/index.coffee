@@ -116,7 +116,7 @@ class MimosaCompilerModule
     template:
       nameTransform:"fileName"
       amdWrap:true
-      outputFileName: "templates"
+      outputFileName: "javascripts/templates"
       handlebars:
         helpers:["app/template/handlebars-helpers"]
         ember:
@@ -208,15 +208,15 @@ class MimosaCompilerModule
                                           # templates being used
         # nameTransform: "fileName"       # means by which Mimosa creates the name for each
                                           # template, options: default "fileName" is name of file,
-                                          # "filePath" is path of file after watch.javascriptDir
+                                          # "filePath" is path of file after watch.sourceDir
                                           # with the extension dropped, a supplied regex can be
                                           # used to remove any unwanted portions of the filePath,
                                           # and a provided function will be called with the
                                           # filePath as input
         # amdWrap: true                   # Whether or not to wrap the compiled template files in
                                           # an AMD wrapper for use with require.js
-        # outputFileName: "templates"     # the file all templates are compiled into, is relative
-                                          # to watch.javascriptDir.
+        # outputFileName: "javascripts/templates"  # the file all templates are compiled into,
+                                                   # is relative to watch.sourceDir.
 
         # outputFileName:                 # outputFileName Alternate Config 1
           # hogan:"hogans"                # Optionally outputFileName can be provided an object of
@@ -233,7 +233,7 @@ class MimosaCompilerModule
                                           # templates for each page to be built separately.
                                           # For each entry, provide an array of folders that
                                           # contain the templates to combine.  folders entries are
-                                          # relative to watch.javascriptDir and must exist.
+                                          # relative to watch.sourceDir and must exist.
                                           # outputFileName works identically to outputFileName
                                           # above, including the alternate config, however, no
                                           # default file name is assumed. An output name must be
@@ -313,7 +313,7 @@ class MimosaCompilerModule
             else
               newFolders = []
               for folder in outputConfig.folders
-                folder = path.join config.watch.sourceDir, config.watch.javascriptDir, folder
+                folder = path.join config.watch.sourceDir, folder
                 unless fs.existsSync folder
                   errors.push "template.templateFiles.folders must exist, folder resolved to [[ #{folder} ]]"
                 newFolders.push folder

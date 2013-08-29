@@ -43,15 +43,14 @@ class MimosaFileInitModule
 
     options.destinationFile = if exts.template.indexOf(ext) > -1
       options.isTemplate = true
-      compiledJSDir = config.watch.compiledJavascriptDir
       (compilerName, folders) =>
         for outputConfig in config.template.output
           if outputConfig.folders is folders
             outputFileName = outputConfig.outputFileName
             if outputFileName[compilerName]
-              return path.join(compiledJSDir, outputFileName[compilerName] + ".js")
+              return path.join(config.watch.compiledDir, outputFileName[compilerName] + ".js")
             else
-              return path.join(compiledJSDir, outputFileName + ".js")
+              return path.join(config.watch.compiledDir, outputFileName + ".js")
     else
       destFunct = if exts.copy.indexOf(ext) > -1
         options.isCopy = true

@@ -144,9 +144,8 @@ module.exports = class TemplateCompiler extends BaseCompiler
     if nameTransform is "fileName"
       path.basename fileName, path.extname(fileName)
     else
-      fullJSDir = path.join config.watch.sourceDir, config.watch.javascriptDir
-      # only javascriptdir forward
-      filePath = fileName.replace fullJSDir, ''
+      # only sourceDir forward
+      filePath = fileName.replace config.watch.sourceDir, ''
       # normalize to unix file seps, slice off first one
       filePath = filePath.split(path.sep).join('/').substring(1)
       # remove ext
