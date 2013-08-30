@@ -33,29 +33,44 @@ module.exports = class JSCompiler extends BaseCompiler
         next()
 
     options.files.forEach (file) =>
-      @compile file, (err, output, sourceMap) =>
+      @compile file, (err, output, compiledConfig, sourceMap) =>
         if err
           logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}"
         else
           if sourceMap
-            # writing 2 more files for source maps
-            whenDone += 2
-            file.sourceMap = sourceMap
-            file.sourceMapName = @_genMapFileName(config, file)
-            fileUtils.writeFile file.sourceMapName, sourceMap, (err) ->
-              if err
-                logger.error "Error writing map file [[ #{file.sourceMapName} ]], #{err}"
-              done()
 
-            sourceName = @_genSourceName(config, file)
-            fileUtils.writeFile sourceName, file.inputFileText, (err) ->
-              if err
-                logger.error "Error writing source file [[ #{sourceName} ]], #{err}"
-              done()
+            if compiledConfig.sourceMapDynamic
+              sourceMap = JSON.parse(sourceMap)
+              sourceMap.sources[0] = file.inputFileName
+              sourceMap.sourcesContent = [file.inputFileText];
+              sourceMap.file = file.outputFileName;
 
-            # @ is deprecated but # not widely supported in current release browsers
-            # output = "#{output}\n/*\n//# sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
-            output = "#{output}\n/*\n//@ sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
+              base64SourceMap = new Buffer(JSON.stringify(sourceMap)).toString('base64')
+              datauri = 'data:application/json;charset=utf-8;base64,' + base64SourceMap
+              output = "#{output}\n/*\n//@ sourceMappingURL=#{datauri}\n*/\n"
+
+            else
+              whenDone += 2
+              # writing source
+              sourceName = @_genSourceName(config, file)
+              fileUtils.writeFile sourceName, file.inputFileText, (err) ->
+                if err
+                  logger.error "Error writing source file [[ #{sourceName} ]], #{err}"
+                done()
+
+              # writing map
+              file.sourceMap = sourceMap
+              file.sourceMapName = @_genMapFileName(config, file)
+              whenDone += 1
+              fileUtils.writeFile file.sourceMapName, sourceMap, (err) ->
+                if err
+                  logger.error "Error writing map file [[ #{file.sourceMapName} ]], #{err}"
+                done()
+
+              # @ is deprecated but # not widely supported in current release browsers
+              # output = "#{output}\n/*\n//# sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
+              output = "#{output}\n/*\n//@ sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
+
 
 
           file.outputFileText = output
@@ -97,7 +112,7 @@ module.exports = class JSCompiler extends BaseCompiler
           else
             done()
 
-  _icedAndCoffeeCompile: (file, cb, coffeeConfig) =>
+  _icedAndCoffeeCompile: (file, coffeeConfig, cb) =>
 
     conf = _.extend {}, coffeeConfig, sourceFiles:[path.basename(file.inputFileName) + ".src"]
     conf.literate = @compilerLib.helpers.isLiterate(file.inputFileName)
@@ -115,4 +130,4 @@ module.exports = class JSCompiler extends BaseCompiler
         output = output.js
     catch err
       error = "#{err}, line #{err.location?.first_line}, column #{err.location?.first_column}"
-    cb error, output, sourceMap
+    cb error, output, coffeeConfig, sourceMap

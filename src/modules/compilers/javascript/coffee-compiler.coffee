@@ -19,4 +19,4 @@ module.exports = class CoffeeCompiler extends JSCompiler
     @_cleanUpSourceMapsRegister register, @extensions, @coffeeConfig
 
   compile: (file, cb) ->
-    @_icedAndCoffeeCompile file, cb, @coffeeConfig
+    @_icedAndCoffeeCompile file, @coffeeConfig, cb

@@ -16,4 +16,4 @@ module.exports = class IcedCompiler extends JSCompiler
     @_cleanUpSourceMapsRegister register, @extensions, @icedConfig
 
   compile: (file, cb) ->
-    @_icedAndCoffeeCompile file, cb, @icedConfig
+    @_icedAndCoffeeCompile file, @icedConfig, cb

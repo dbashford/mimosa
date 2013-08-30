@@ -128,10 +128,12 @@ class MimosaCompilerModule
       module:null
     coffeescript:
       sourceMap:true
+      sourceMapDynamic:true
       sourceMapExclude:[/\/specs?\//, /_spec.js$/]
       bare:true
     iced:
       sourceMap:true
+      sourceMapDynamic:true
       sourceMapExclude:[/\/specs?\//, /_spec.js$/]
       bare:true
       runtime:'none'
@@ -168,6 +170,9 @@ class MimosaCompilerModule
         # sourceMap:true            # whether to generate source during "mimosa watch".
                                     # Source maps are not generated during "mimosa build"
                                     # regardless of setting.
+        # sourceMapDynamic: true    # Whether or not to inline the source maps, this adds base64
+                                    # encoded source maps to the compiled file rather than write
+                                    # an extra map file.
         # sourceMapExclude: [/\\/specs?\\//, /_spec.js$/] # files to exclude from source map generation
         # bare:true                 # whether or not to include the top level wrapper around
                                     # each compiled coffeescript file. Defaults to not wrapping
@@ -177,6 +182,9 @@ class MimosaCompilerModule
         # sourceMap:true            # whether to generate source during "mimosa watch".
                                     # Source maps are not generated during "mimosa build"
                                     # regardless of setting.
+        # sourceMapDynamic: true    # Whether or not to inline the source maps, this adds base64
+                                    # encoded source maps to the compiled file rather than write
+                                    # an extra map file.
         # sourceMapExclude: [/\\/specs?\\//, /_spec.js$/] # files to exclude from source map generation
         # bare:true                 # whether or not to include the top level wrapper around each
                                     # compiled iced file. Defaults to not wrapping as wrapping with
@@ -352,13 +360,17 @@ class MimosaCompilerModule
       if config.isBuild
         config.coffeescript.sourceMap = false
       else
-       validators.ifExistsFileExcludeWithRegexAndStringWithField(errors, "coffeescript.sourceMapExclude", config.coffeescript, 'sourceMapExclude', config.watch.javascriptDir)
+        validators.ifExistsFileExcludeWithRegexAndStringWithField(errors, "coffeescript.sourceMapExclude", config.coffeescript, 'sourceMapExclude', config.watch.javascriptDir)
+        validators.ifExistsIsBoolean(errors, "coffee.sourceMapDynamic", config.coffeescript.sourceMapDynamic)
+
 
     if validators.ifExistsIsObject(errors, "iced config", config.iced)
       if config.isBuild
         config.iced.sourceMap = false
       else
-       validators.ifExistsFileExcludeWithRegexAndStringWithField(errors, "iced.sourceMapExclude", config.iced, 'sourceMapExclude', config.watch.javascriptDir)
+        validators.ifExistsFileExcludeWithRegexAndStringWithField(errors, "iced.sourceMapExclude", config.iced, 'sourceMapExclude', config.watch.javascriptDir)
+        validators.ifExistsIsBoolean(errors, "iced.sourceMapDynamic", config.iced.sourceMapDynamic)
+
 
     if validators.ifExistsIsObject(errors, "typescript config", config.typescript)
       validators.ifExistsIsString(errors, "typescript.module", config.typescript.module)
