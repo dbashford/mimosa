@@ -61,7 +61,6 @@ module.exports = class JSCompiler extends BaseCompiler
               # writing map
               file.sourceMap = sourceMap
               file.sourceMapName = @_genMapFileName(config, file)
-              whenDone += 1
               fileUtils.writeFile file.sourceMapName, sourceMap, (err) ->
                 if err
                   logger.error "Error writing map file [[ #{file.sourceMapName} ]], #{err}"
