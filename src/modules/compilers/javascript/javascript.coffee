@@ -46,8 +46,8 @@ module.exports = class JSCompiler extends BaseCompiler
               sourceMap.file = file.outputFileName;
 
               base64SourceMap = new Buffer(JSON.stringify(sourceMap)).toString('base64')
-              datauri = 'data:application/json;charset=utf-8;base64,' + base64SourceMap
-              output = "#{output}\n/*\n//@ sourceMappingURL=#{datauri}\n*/\n"
+              datauri = 'data:application/json;base64,' + base64SourceMap
+              output = "#{output}\n//@ sourceMappingURL=#{datauri}\n"
 
             else
               whenDone += 2
