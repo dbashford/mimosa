@@ -4,6 +4,12 @@
 * __New Module__: [mimosa-coffeelint](https://github.com/dbashford/mimosa-coffeelint) allows you to lint your coffeescript.
 * [mimosa #273](https://github.com/dbashford/mimosa/issues/273). By default Mimosa now outputs source maps as dynamic. So no `.map` or `.src` files are written, instead the map and source are base64 encoded and placed inside the JavaScript output. This means 66% less CoffeeScript related I/O and 66% fewer HTTP requests. Fewer HTTP requests also means less clutter in your debugger.
 
+### Minor Changes
+* [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple/) now builds it list of spec files at the beginning of the workflow. To use mimosa-testem-require with `rc.3` you will need version `v0.6.5` of mimosa-testem-require, otherwise mimosa-testem-require may not properly discover spec files.
+
+### Upgrade Info / Breaking Changes
+* If you are using mimosa-testem-simple, you will want to make sure you upgrade to `v0.6.5`.
+
 ## 1.0.0-rc.2 - Aug 29 2013
 
 Some possible breaking changes with how template paths are handled, so check out the breaking changes below.
