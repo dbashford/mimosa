@@ -20,24 +20,24 @@ class MimosaFileBeforeReadModule
     newFiles = []
     done = ->
       if ++i is options.files.length
-        if newFiles.length > 0
-          options.files = newFiles
+        options.files = newFiles
         next()
 
     options.files.forEach (file) =>
       # if using require verification, forcing compile to assemble require information
-      if options.isJavascript and config.requireRegister
+      if options.isJavascript and config.__forceJavaScriptRecompile
         newFiles.push file
         done()
       else
         fileUtils.isFirstFileNewer file.inputFileName, file.outputFileName, (isNewer) =>
-          newFiles.push file if isNewer
+          if isNewer
+            newFiles.push file
           done()
 
   _fileNeedsCompilingStartup: (config, options, next) =>
     # force compiling on startup to build require dependency tree
     # but not for vendor javascript
-    if config.requireRegister and options.isJSNotVendor
+    if config.__forceJavaScriptRecompile and options.isJSNotVendor
       logger.debug "File [[ #{options.inputFile} ]] NEEDS compiling/copying"
       next()
     else

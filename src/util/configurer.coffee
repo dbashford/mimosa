@@ -194,12 +194,17 @@ _validateSettings = (config, modules) ->
   else
     return [errors, {}]
 
+  currentlyNeedsClean = false
   for mod in modules
     continue unless mod.validate?
 
     moduleErrors = mod.validate config, validators
-    if moduleErrors
+    if moduleErrors? and Array.isArray(moduleErrors) and moduleErrors.length
       errors.push moduleErrors...
+    else
+      if not currentlyNeedsClean and config.needsClean
+        currentlyNeedsClean = true
+        logger.debug "The #{mod.__mimosaModuleName} module has requested a clean be performed before building the application"
 
   [errors, config]
 

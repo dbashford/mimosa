@@ -106,6 +106,7 @@ configured = (moduleNames, callback) ->
     for installed in meta when installed.name is modName
       unless modVersion? and modVersion isnt installed.version
         found = true
+        installed.mod.__mimosaModuleName = modName
         configuredModules.push installed.mod
         break
 
@@ -138,7 +139,9 @@ configured = (moduleNames, callback) ->
               delete require.cache[key]
 
           try
-            configuredModules.push(require modPath)
+            requiredModule = require modPath
+            requiredModule.__mimosaModuleName = modName
+            configuredModules.push(requiredModule)
           catch err
             logger.warn "There was an error attempting to include the newly installed module in the currently running Mimosa process," +
               " but the install was successful. Mimosa is exiting. When it is restarted, Mimosa will use the newly installed module."

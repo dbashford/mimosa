@@ -64,7 +64,7 @@
     "underscore": "1.5.1",
     "ejs": "0.8.4",
     "eco": "1.1.0-rc-3",
-    "ractive":"0.3.5",
+    "ractive": "0.3.5",
     "coffee-script": "1.6.3",
     "iced-coffee-script": "1.6.3-e",
     "LiveScript": "1.2.0",
@@ -80,11 +80,11 @@
     "logmimosa": "0.5.0",
     "skelmimosa": "0.5.0",
     "mimosa-server": "1.0.0",
-    "mimosa-require": "1.0.0",
+    "mimosa-require": "1.1.0",
     "mimosa-minify": "1.0.0",
     "mimosa-lint": "1.0.0",
     "mimosa-live-reload": "1.0.0",
-    "mimosa-bower":"1.1.0"
+    "mimosa-bower": "1.1.0"
   },
   "license": "MIT",
   "engines": {
