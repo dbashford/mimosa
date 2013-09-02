@@ -1,4 +1,9 @@
-## 1.0.0-rc.3 - Aug ?? 2013
+## 1.0.0-rc.3 - Sept ?? 2013
+
+### Huge Changes
+* [mimosa-require #14](https://github.com/dbashford/mimosa-require/issues/14). Mimosa needed to have all of its JavaScript rebuilt with every startup so that mimosa-require could rebuild its dependency graph. With this release, mimosa-require is capable of tracking your project's dependency information between mimosa runs. mimosa-require will persist to the file system the information it needs to startup without requiring all JavaScript files to be processed/compiled. A new `tracking` configuration has been added to the `require` config. When `require.tracking.enabled` is set to `true`, mimosa-require will keep track of dependency information on the file system.
+
+  `require.tracking.enabled` defaults to `false` for now while this feature is new and still being worked out. It will default to `true` in the near future after its had some time to shake out.
 
 ### Major Changes
 * __New Module__: [mimosa-coffeelint](https://github.com/dbashford/mimosa-coffeelint) allows you to lint your coffeescript.
@@ -6,6 +11,7 @@
 
 ### Minor Changes
 * [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple/) now builds it list of spec files at the beginning of the workflow. To use mimosa-testem-require with `rc.3` you will need version `v0.6.5` of mimosa-testem-require, otherwise mimosa-testem-require may not properly discover spec files.
+* [mimosa](https://github.com/dbashford/mimosa/). Mimosa modules can now force Mimosa to run a clean at the beginning
 
 ### Upgrade Info / Breaking Changes
 * If you are using mimosa-testem-simple, you will want to make sure you upgrade to `v0.6.5`.
