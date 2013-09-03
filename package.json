@@ -80,7 +80,7 @@
     "logmimosa": "0.5.0",
     "skelmimosa": "0.5.0",
     "mimosa-server": "1.0.0",
-    "mimosa-require": "1.1.0",
+    "mimosa-require": "1.1.1",
     "mimosa-minify": "1.0.0",
     "mimosa-lint": "1.0.0",
     "mimosa-live-reload": "1.0.0",
