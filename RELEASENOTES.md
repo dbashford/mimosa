@@ -1,17 +1,19 @@
-## 1.0.0-rc.3 - Sept ?? 2013
+## 1.0.0-rc.3 - Sept 03 2013
 
 ### Huge Changes
-* [mimosa-require #14](https://github.com/dbashford/mimosa-require/issues/14). Mimosa needed to have all of its JavaScript rebuilt with every startup so that mimosa-require could rebuild its dependency graph. With this release, mimosa-require is capable of tracking your project's dependency information between mimosa runs. mimosa-require will persist to the file system the information it needs to startup without requiring all JavaScript files to be processed/compiled. A new `tracking` configuration has been added to the `require` config. When `require.tracking.enabled` is set to `true`, mimosa-require will keep track of dependency information on the file system.
+* [mimosa-require #14](https://github.com/dbashford/mimosa-require/issues/14). Mimosa needed to have all of its JavaScript rebuilt with every startup so that mimosa-require could rebuild its dependency graph. With this release, mimosa-require is capable of tracking your project's dependency information between Mimosa runs. mimosa-require will persist to the file system the information it needs to startup without requiring all JavaScript files to be processed/compiled. A new `tracking` configuration has been added to the `require` config. When `require.tracking.enabled` is set to `true`, mimosa-require will keep track of dependency information on the file system.
 
   `require.tracking.enabled` defaults to `false` for now while this feature is new and still being worked out. It will default to `true` in the near future after its had some time to shake out.
 
+  If files are moved or changed while Mimosa is not running, `tracking` may get out of sync. When this happens, run a `mimosa clean` and mimosa-require will rebuild its tracking information.
+
 ### Major Changes
 * __New Module__: [mimosa-coffeelint](https://github.com/dbashford/mimosa-coffeelint) allows you to lint your coffeescript.
-* [mimosa #273](https://github.com/dbashford/mimosa/issues/273). By default Mimosa now outputs source maps as dynamic. So no `.map` or `.src` files are written, instead the map and source are base64 encoded and placed inside the JavaScript output. This means 66% less CoffeeScript related I/O and 66% fewer HTTP requests. Fewer HTTP requests also means less clutter in your debugger.
+* [mimosa #273](https://github.com/dbashford/mimosa/issues/273). By default Mimosa now outputs source maps as dynamic. So no `.map` or `.src` files are written, instead the map and source are base64 encoded and placed inside the JavaScript output. This means 66% less CoffeeScript related I/O and 66% fewer HTTP requests. Fewer HTTP requests also means less clutter in your debugger. Dynamic source maps also allow for tools like browserify to utilize the source maps as part of bundling.
 
 ### Minor Changes
-* [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple/) now builds it list of spec files at the beginning of the workflow. To use mimosa-testem-require with `rc.3` you will need version `v0.6.5` of mimosa-testem-require, otherwise mimosa-testem-require may not properly discover spec files.
-* [mimosa](https://github.com/dbashford/mimosa/). Mimosa modules can now force Mimosa to run a clean at the beginning
+* [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple/) now builds its list of spec files at the beginning of the workflow. To use mimosa-testem-require with `rc.3` you will need version `v0.6.5` of mimosa-testem-require, otherwise mimosa-testem-require may not properly discover spec files.
+* [mimosa](https://github.com/dbashford/mimosa/). Mimosa modules can now force Mimosa to run a clean at the beginning of `mimosa watch` starting up.
 
 ### Upgrade Info / Breaking Changes
 * If you are using mimosa-testem-simple, you will want to make sure you upgrade to `v0.6.5`.
