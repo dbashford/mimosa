@@ -65,7 +65,7 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
       hbs
 
   prefix: (config) =>
-    if config.template.amdWrap
+    if config.template.wrapType is 'amd'
       logger.debug "Building Handlebars template file wrapper"
       jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
       possibleHelperPaths = []
@@ -90,12 +90,25 @@ module.exports = class HandlebarsCompiler extends TemplateCompiler
       define([#{defineString}], function (#{params.join(',')}){
         #{@boilerplate()}
       """
+    else if config.template.wrapType is 'common'
+      if @ember
+        """
+        var Ember = require('#{config.template.commonLibPath}');
+        #{@boilerplate()}
+        """
+      else
+        """
+        var Handlebars = require('#{config.template.commonLibPath}');
+        #{@boilerplate()}
+        """
     else
       @boilerplate()
 
   suffix: (config) ->
-    if config.template.amdWrap
+    if config.template.wrapType is 'amd'
       'return templates; });'
+    else if config.template.wrapType is "common"
+      "\nmodule.exports = templates;"
     else
       ""
 

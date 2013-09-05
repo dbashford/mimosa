@@ -14,14 +14,16 @@ module.exports = class HTMLCompiler extends TemplateCompiler
     super(config)
 
   prefix: (config) ->
-    if config.template.amdWrap
+    if config.template.wrapType is 'amd'
       "define(function () { var templates = {};\n"
     else
       "var templates = {};\n"
 
   suffix: (config) ->
-    if config.template.amdWrap
+    if config.template.wrapType is 'amd'
       'return templates; });'
+    else if config.template.wrapType is "common"
+      "\nmodule.exports = templates;"
     else
       ""
 

@@ -14,14 +14,18 @@ module.exports = class JadeCompiler extends TemplateCompiler
     super(config)
 
   prefix: (config) ->
-    if config.template.amdWrap
+    if config.template.wrapType is 'amd'
       "define(['#{@libraryPath()}'], function (jade){ var templates = {};\n"
+    else if config.template.wrapType is "common"
+      "var jade = require('#{config.template.commonLibPath}');\nvar templates = {};\n"
     else
       "var templates = {};\n"
 
   suffix: (config) ->
-    if config.template.amdWrap
+    if config.template.wrapType is 'amd'
       'return templates; });'
+    else if config.template.wrapType is "common"
+      "\nmodule.exports = templates;"
     else
       ""
 

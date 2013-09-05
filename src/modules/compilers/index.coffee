@@ -114,8 +114,9 @@ class MimosaCompilerModule
       extensionOverrides: {}
       libs:{}
     template:
+      wrapType: "amd"
+      commonLibName: null
       nameTransform:"fileName"
-      amdWrap:true
       outputFileName: "javascripts/templates"
       handlebars:
         helpers:["app/template/handlebars-helpers"]
@@ -221,8 +222,12 @@ class MimosaCompilerModule
                                           # used to remove any unwanted portions of the filePath,
                                           # and a provided function will be called with the
                                           # filePath as input
-        # amdWrap: true                   # Whether or not to wrap the compiled template files in
-                                          # an AMD wrapper for use with require.js
+        # wrapType: "amd"                 # The type of module wrapping for the output templates
+                                          # file. Possible values: "amd", "common", "none".
+        # commonLibPath: null             # Valid when wrapType is 'common'. The path to the
+                                          # client library. Some libraries do not have clients
+                                          # therefore this is not strictly required when choosing
+                                          # the common wrapType.s
         # outputFileName: "javascripts/templates"  # the file all templates are compiled into,
                                                    # is relative to watch.sourceDir.
 
@@ -292,7 +297,16 @@ class MimosaCompilerModule
       if config.template.output and config.template.outputFileName
         delete config.template.outputFileName
 
-      validators.ifExistsIsBoolean(errors, "template.amdWrap", config.template.amdWrap)
+      if validators.ifExistsIsBoolean(errors, "template.amdWrap", config.template.amdWrap)
+        logger.warn "template.amdWrap has been deprecated and support will be removed with a future release. Use template.wrapType."
+        if config.template.amdWrap
+          config.template.wrapType = "amd"
+        else
+          config.template.wrapType = "none"
+
+      if validators.ifExistsIsString(errors, "template.wrapType", config.template.wrapType)
+        if ["common", "amd", "none"].indexOf(config.template.wrapType) is -1
+          errors.push "template.wrapType must be one of: 'common', 'amd', 'none'"
 
       validTCompilers = ["handlebars", "dust", "hogan", "jade", "underscore", "lodash", "ejs", "html", "emblem", "eco","ractive"]
 

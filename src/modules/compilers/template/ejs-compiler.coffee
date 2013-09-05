@@ -25,9 +25,14 @@ module.exports = class EJSCompiler extends TemplateCompiler
     super(config)
 
   prefix: (config) ->
-    if config.template.amdWrap
+    if config.template.wrapType is 'amd'
       """
       define(['#{@libraryPath()}'], function (globalFilters){
+        #{@boilerplate}
+      """
+    else if config.template.wrapType is "common"
+      """
+        var globalFilters = require('#{config.template.commonLibPath}');
         #{@boilerplate}
       """
     else
@@ -35,8 +40,10 @@ module.exports = class EJSCompiler extends TemplateCompiler
 
 
   suffix: (config) ->
-    if config.template.amdWrap
+    if config.template.wrapType is 'amd'
       'return templates; });'
+    else if config.template.wrapType is "common"
+      "\nmodule.exports = templates;"
     else
       ""
 

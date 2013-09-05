@@ -14,14 +14,18 @@ module.exports = class HoganCompiler extends TemplateCompiler
     super(config)
 
   prefix: (config) ->
-    if config.template.amdWrap
+    if config.template.wrapType is 'amd'
       "define(['#{@libraryPath()}'], function (Hogan){ var templates = {};\n"
+    else if config.template.wrapType is "common"
+      "var Hogan = require('#{config.template.commonLibPath}');\nvar templates = {};\n"
     else
       "var templates = {};\n"
 
   suffix: (config) ->
-    if config.template.amdWrap
+    if config.template.wrapType is 'amd'
       'return templates; });'
+    else if config.template.wrapType is "common"
+      "\nmodule.exports = templates;"
     else
       ""
 

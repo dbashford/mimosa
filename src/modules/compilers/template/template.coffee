@@ -13,7 +13,7 @@ module.exports = class TemplateCompiler extends BaseCompiler
 
   constructor: (config) ->
     super()
-    if @clientLibrary?
+    if @clientLibrary? and config.template.wrapType is 'amd'
       @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
       @clientPath = path.join config.vendor.javascripts, "#{@clientLibrary}.js"
       @clientPath = @clientPath.replace config.watch.sourceDir, config.watch.compiledDir

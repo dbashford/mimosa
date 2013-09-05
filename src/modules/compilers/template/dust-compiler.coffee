@@ -15,14 +15,18 @@ module.exports = class DustCompiler extends TemplateCompiler
     super(config)
 
   prefix: (config) ->
-    if config.template.amdWrap
+    if config.template.wrapType is "amd"
       "define(['#{@libraryPath()}'], function (dust){ "
+    else if config.template.wrapType is "common"
+      "var dust = require('#{config.template.commonLibPath}');\n"
     else
       ""
 
   suffix: (config) ->
-    if config.template.amdWrap
+    if config.template.wrapType is "amd"
       'return dust; });'
+    else if config.template.wrapType is "common"
+      "\nmodule.exports = dust;"
     else
       ""
 
