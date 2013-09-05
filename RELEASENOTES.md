@@ -1,3 +1,10 @@
+## 1.0.0-rc.4 - Sept ?? 2013
+
+Deprecating `template.amdWrap` as a config setting but still will support it in the short term.  That is the only breaking-ish change in this release.
+
+### Major Changes
+* [mimosa #273](https://github.com/dbashford/mimosa/issues/273). Mimosa now provides the option to output the combined template file as a commonjs module. The former `amdWrap:true/false` setting has been replaced with a `wrapType` setting that takes `amd`, `common` or `none`. Outputting a commonjs compliant templates files is the extent of the core Mimosa commonjs support.  For instance, for now, Mimosa will not output a CommonJS compliant library file.
+
 ## 1.0.0-rc.3 - Sept 03 2013
 
 ### Huge Changes
