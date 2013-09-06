@@ -115,7 +115,7 @@ class MimosaCompilerModule
       libs:{}
     template:
       wrapType: "amd"
-      commonLibName: null
+      commonLibPath: null
       nameTransform:"fileName"
       outputFileName: "javascripts/templates"
       handlebars:
