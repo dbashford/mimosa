@@ -5,6 +5,10 @@ Deprecating `template.amdWrap` as a config setting but still will support it in 
 ### Major Changes
 * [mimosa #273](https://github.com/dbashford/mimosa/issues/273). Mimosa now provides the option to output the combined template file as a commonjs module. The former `amdWrap:true/false` setting has been replaced with a `wrapType` setting that takes `amd`, `common` or `none`. Outputting a commonjs compliant templates files is the extent of the core Mimosa commonjs support.  For instance, for now, Mimosa will not output a CommonJS compliant library file.
 
+### Minor Changes
+* [mimosa-require](https://github.com/dbashford/mimosa-require/). Made some updates to the tracking functionality released with `rc.3`. Tracked paths are now relative to `watch.compiledDir` instead of the root of the project. Path separators are normalized to unix style to avoid diffs cross-project. Also to prevent unnecessary file diffs, the tracking file object keys are sorted. Will probably enable tracking by default after another release.
+* [mimosa-require #17](https://github.com/dbashford/mimosa-require/issues/17). Issue with `map` validation addressed.
+
 ## 1.0.0-rc.3 - Sept 03 2013
 
 ### Huge Changes
