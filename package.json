@@ -84,7 +84,7 @@
     "mimosa-minify": "1.0.0",
     "mimosa-lint": "1.0.0",
     "mimosa-live-reload": "1.0.0",
-    "mimosa-bower": "1.1.0"
+    "mimosa-bower": "1.2.0"
   },
   "license": "MIT",
   "engines": {
