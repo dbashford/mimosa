@@ -2,7 +2,11 @@
 
 Deprecating `template.amdWrap` as a config setting but still will support it in the short term.  That is the only breaking-ish change in this release.
 
+### Huge Changes
+* __New Module__: [mimosa-browserify](https://github.com/jonet/mimosa-browserify). Until now Mimosa's CommonJS support has been via AMD wrapping and using RequireJS. With the addition of a browserify module, Mimosa can now boast full CommonJS support and another means besides r.js to bundle your applications. To support the browserify module, the change mentioned below regarding CommonJS support for templates was necessary.
+
 ### Major Changes
+* __New Skeleton__: [browserify-example](https://github.com/JonET/mimosa-browserify-example). To show how to use the new browserify module @JonET whipped up a quick example project that takes the vanilla `mimosa new` app and converts it to use CommonJS/Browserify instead of AMD/RequireJS.
 * [mimosa #273](https://github.com/dbashford/mimosa/issues/273). Mimosa now provides the option to output the combined template file as a commonjs module. The former `amdWrap:true/false` setting has been replaced with a `wrapType` setting that takes `amd`, `common` or `none`. Outputting a commonjs compliant templates files is the extent of the core Mimosa commonjs support.  For instance, for now, Mimosa will not output a CommonJS compliant library file.
 * [mimosa-bower #25](https://github.com/dbashford/mimosa-bower/issues/25). The `bower:install` command has changed. Previously it did exactly what `mimosa bower` did.  It installed everything in the `bower.json`. Now it can be used to install new libraries.  For example: `mimosa bower:install backbone,lodash#1.2.1`. Notice multiple can be installed by comma-delimiting them, and version numbers can be used. The result of this will be the libraries will be installed, but also the project's `bower.json` `dependencies` object will be updated. To update `devDependencies` instead, use the `-d` flag.
 
