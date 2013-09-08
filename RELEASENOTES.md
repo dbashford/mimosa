@@ -1,4 +1,4 @@
-## 1.0.0-rc.4 - Sept ?? 2013
+## 1.0.0-rc.4 - Sept 9 2013
 
 Deprecating `template.amdWrap` as a config setting but still will support it in the short term.  That is the only breaking-ish change in this release.
 
