@@ -35,6 +35,7 @@ class MimosaFileInitModule
 
   _initMultiAsset: (config, options, next) =>
     @__determineDestinationFile config, options
+    options.files = []
     next()
 
   __determineDestinationFile: (config, options) =>

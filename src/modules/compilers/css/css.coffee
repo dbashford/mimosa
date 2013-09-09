@@ -115,7 +115,7 @@ module.exports = class AbstractCSSCompiler extends BaseCompiler
 
     baseFilesToCompile = _.uniq(baseFilesToCompileNow)
 
-    options.files =  baseFilesToCompile.map (base) =>
+    options.files = baseFilesToCompile.map (base) =>
       @__baseOptionsObject(base, options)
 
     if options.files.length > 0
