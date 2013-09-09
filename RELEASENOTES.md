@@ -3,7 +3,7 @@
 Deprecating `template.amdWrap` as a config setting but still will support it in the short term.  That is the only breaking-ish change in this release.
 
 ### Huge Changes
-* __New Module__: [mimosa-browserify](https://github.com/jonet/mimosa-browserify). Until now Mimosa's CommonJS support has been via AMD wrapping and using RequireJS. With the addition of a browserify module, Mimosa can now boast full CommonJS support and another means besides r.js to bundle your applications. To support the browserify module, the change mentioned below regarding CommonJS support for templates was necessary.
+* __New Module__: [mimosa-browserify](https://github.com/jonet/mimosa-browserify). Until now Mimosa's CommonJS support has been via AMD wrapping and using RequireJS. With the addition of a browserify module, Mimosa can now boast full CommonJS support and another means besides r.js to bundle your applications. To support the browserify module, the change mentioned below regarding CommonJS support for templates was necessary.  This closes the oldest open Mimosa ticket for [CommonJS support](https://github.com/dbashford/mimosa/issues/77).
 
 ### Major Changes
 * __New Skeleton__: [browserify-example](https://github.com/JonET/mimosa-browserify-example). To show how to use the new browserify module @JonET whipped up a quick example project that takes the vanilla `mimosa new` app and converts it to use CommonJS/Browserify instead of AMD/RequireJS.
