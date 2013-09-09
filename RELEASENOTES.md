@@ -1,3 +1,8 @@
+## 1.0.0-rc.5 - Sept ?? 2013
+
+### Minor Changes
+* [mimosa #280](https://github.com/dbashford/mimosa/issues/280). Programmatically setting `dynamicSourceMaps` to `false` if `minify` flag is used as Uglify cannot take dynamic source maps as input.
+
 ## 1.0.0-rc.4 - Sept 9 2013
 
 Deprecating `template.amdWrap` as a config setting but still will support it in the short term.  That is the only breaking-ish change in this release.

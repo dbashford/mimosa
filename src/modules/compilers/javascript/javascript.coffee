@@ -70,8 +70,6 @@ module.exports = class JSCompiler extends BaseCompiler
               # output = "#{output}\n/*\n//# sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
               output = "#{output}\n/*\n//@ sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
 
-
-
           file.outputFileText = output
           newFiles.push file
 

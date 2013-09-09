@@ -370,21 +370,26 @@ class MimosaCompilerModule
     if validators.ifExistsIsObject(errors, "copy config", config.copy)
       validators.isArrayOfStrings(errors, "copy.extensions", config.copy.extensions)
 
+
     if validators.ifExistsIsObject(errors, "coffeescript config", config.coffeescript)
       if config.isBuild
         config.coffeescript.sourceMap = false
       else
         validators.ifExistsFileExcludeWithRegexAndStringWithField(errors, "coffeescript.sourceMapExclude", config.coffeescript, 'sourceMapExclude', config.watch.javascriptDir)
-        validators.ifExistsIsBoolean(errors, "coffee.sourceMapDynamic", config.coffeescript.sourceMapDynamic)
-
+        if validators.ifExistsIsBoolean(errors, "coffee.sourceMapDynamic", config.coffeescript.sourceMapDynamic)
+          if config.isWatch and config.isMinify and config.coffeescript.sourceMapDynamic
+            config.coffeescript.sourceMapDynamic = false
+            logger.debug "mimosa watch called with minify, setting coffeescript.sourceMapDynamic to false to preserve source maps."
 
     if validators.ifExistsIsObject(errors, "iced config", config.iced)
       if config.isBuild
         config.iced.sourceMap = false
       else
         validators.ifExistsFileExcludeWithRegexAndStringWithField(errors, "iced.sourceMapExclude", config.iced, 'sourceMapExclude', config.watch.javascriptDir)
-        validators.ifExistsIsBoolean(errors, "iced.sourceMapDynamic", config.iced.sourceMapDynamic)
-
+        if validators.ifExistsIsBoolean(errors, "iced.sourceMapDynamic", config.iced.sourceMapDynamic)
+          if config.isWatch and config.isMinify and config.iced.sourceMapDynamic
+            config.iced.sourceMapDynamic = false
+            logger.debug "mimosa watch called with minify, setting iced.sourceMapDynamic to false to preserve source maps."
 
     if validators.ifExistsIsObject(errors, "typescript config", config.typescript)
       validators.ifExistsIsString(errors, "typescript.module", config.typescript.module)
