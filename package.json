@@ -84,7 +84,8 @@
     "mimosa-lint": "1.0.0",
     "mimosa-live-reload": "1.0.0",
     "mimosa-bower": "1.2.1",
-    "mimosa-require": "1.2.3"
+    "mimosa-require": "1.2.3",
+    "mimosa-require-lint": "~0.1.0"
   },
   "license": "MIT",
   "engines": {

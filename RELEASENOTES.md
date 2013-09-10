@@ -1,7 +1,7 @@
 ## 1.0.0-rc.5 - Sept ?? 2013
 
 ### Major Changes
-* __New Module__: [mimosa-require-lint](https://github.com/dbashford/mimosa-require-lint). This module will determine if you have any unused AMD dependencies in your `define` callback. In the future it may house other AMD related checks. If you have any ideas, open an issue!
+* __New Module__: [mimosa-require-lint](https://github.com/dbashford/mimosa-require-lint). This module will determine if you have any unused AMD dependencies in your `define` callback or in your CommonJS code wrapped in the AMD CommonJS wrapper. In the future it may house other AMD related checks. If you have any ideas, open an issue!
 
 ### Minor Changes
 * [mimosa #280](https://github.com/dbashford/mimosa/issues/280). Programmatically setting `dynamicSourceMaps` to `false` if `minify` flag is used as Uglify cannot take dynamic source maps as input.
