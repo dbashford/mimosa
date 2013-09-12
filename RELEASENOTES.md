@@ -3,6 +3,8 @@
 ### Major Changes
 * __New Module__: [mimosa-require-lint](https://github.com/dbashford/mimosa-require-lint). This module will determine if you have any unused AMD dependencies in your `define` callback or in your CommonJS code wrapped in the AMD CommonJS wrapper. In the future it may house other AMD related checks. If you have any ideas, open an issue!
 * __New Skeleton__: [zappa-basic](https://github.com/dbashford/MimosaZappaSkeleton). A few people over the past few months have asked how to use a [Zappa](http://zappajs.github.io/zappajs/) as a server, with live reload and such. So here ya go!
+* [mimosa #281](https://github.com/dbashford/mimosa/issues/281). `mimosa mod:list` has received an overhaul.  It now shows all Mimosa modules from NPM. Installed modules are sorted to the top. Pass an `-i/--installed` to just see those you have installed.  Calls to retrieve module information go to a Heroku app that caches the NPM information every hour.  This removes `npm` as a dependency for Mimosa internally.  `mod:list` will also inform you if you have an out of date dependency.
+* [mimosa #281](https://github.com/dbashford/mimosa/issues/281). The command `mimosa mod:search` has been dropped in lieu of simple improvements to `mod:list` mentioned above.
 
 ### Minor Changes
 * [mimosa #280](https://github.com/dbashford/mimosa/issues/280). Programmatically setting `dynamicSourceMaps` to `false` if `minify` flag is used as Uglify cannot take dynamic source maps as input.
