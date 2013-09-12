@@ -1,22 +1,53 @@
-path =   require 'path'
-fs =     require 'fs'
+http = require 'http'
 
+color  = require('ansi-color').set
 logger = require 'logmimosa'
+
 moduleMetadata = require('../../modules').installedMetadata
 
-list = (opts) ->
-  if opts.debug
-    logger.setDebug()
-    process.env.DEBUG = true
+printResults = (mods, opts) ->
+  verbose = opts.verbose
+  installed = opts.installed
 
-  logger.green "\n  The following is a list of the Mimosa modules you have installed.\n"
-  logger.blue "  Name                      Version         Website"
+  longestModName = 0
+  ownedMods = []
+  for mod in mods
+    if mod.name.length > longestModName
+      longestModName = mod.name.length
+    mod.installed= ''
+    for m in moduleMetadata
+      if m.name is mod.name
+        if mod.version is m.version
+          mod.installed = m.version
+        else
+          mod.installed = color m.version, "red"
+          mod.site = color "      "+mod.site, "green+bold"
+        ownedMods.push mod
+
+  mods = mods.filter (mod) ->
+    for owned in ownedMods
+      if owned.name is mod.name
+        return false
+    true
+
+  mods = if installed
+    logger.green "  The following is a list of the Mimosa modules currently installed.\n"
+    ownedMods
+  else
+    logger.green "  The following is a list of the Mimosa modules in NPM.\n"
+    ownedMods.concat mods
+
+  gap = new Array(longestModName-2).join(' ')
+
+  logger.blue "  Name" + gap + "Version     Updated              Have?       Website"
   fields = [
-    ['name',25],
-    ['version',15],
+    ['name',longestModName + 2],
+    ['version',13],
+    ['updated',22],
+    ['installed',13],
     ['site',65],
   ]
-  for mod in moduleMetadata
+  for mod in mods
     headline = "  "
     for field in fields
       name = field[0]
@@ -25,11 +56,11 @@ list = (opts) ->
       headline += data
       spaces = spacing - (data + "").length
       if spaces < 1 then spaces = 2
-      headline += " " for n in [0..spaces]
+      headline += new Array(spaces).join(' ')
 
     logger.green headline
 
-    if opts.verbose
+    if verbose
       console.log "  Description:  #{mod.desc}"
       if mod.dependencies?
         asArray = for dep, version of mod.dependencies
@@ -37,23 +68,48 @@ list = (opts) ->
         console.log "  Dependencies: #{asArray.join(', ')}"
       console.log ""
 
-  unless opts.verbose
-    logger.green "\n  To view more module details, execute \'mimosa mod:list -v\' for \'verbose\' logging. \n"
+  unless verbose
+    logger.green "\n  To view more module details, execute \'mimosa mod:search -v\' for \'verbose\' logging."
+
+  unless installed
+    logger.green "\n  To view only the installed Mimosa modules, add the [-i/--installed] flag: \'mimosa mod:list -i\'"
+
+  logger.green "  \n  Install modules by executing \'mimosa mod:install <<name of module>>\' \n\n"
 
   process.exit 0
+
+list = (opts) ->
+  if opts.debug
+    logger.setDebug()
+    process.env.DEBUG = true
+
+  logger.green "\n  Searching Mimosa modules...\n"
+
+  http.get "http://mimosa-data.herokuapp.com/modules", (res) ->
+    data = ''
+    res.on 'data', (chunk) ->
+      data += chunk
+    res.on 'end', ->
+      mods = JSON.parse data
+      printResults mods, opts
+
 
 register = (program, callback) ->
   program
     .command('mod:list')
     .option("-D, --debug", "run in debug mode")
     .option("-v, --verbose", "list more details about each module")
-    .description("list all of your currently installed Mimosa modules")
+    .option("-i, --installed", "Show just those modules that are currently installed.")
+    .description("get list of all mimosa modules in NPM")
     .action(callback)
     .on '--help', =>
-      logger.green('  The mod:list command will list all of the Mimosa modules you currently have installed')
-      logger.green('  and include information like version, a description, and where the module can be found')
-      logger.green('  so you can read up on it.')
+      logger.green('  The mod:list command will search npm for all packages and return a list')
+      logger.green('  of Mimosa modules that are available for install. This command will also')
+      logger.green('  inform you if your project has out of date modules.')
       logger.blue( '\n    $ mimosa mod:list\n')
+      logger.green('  Pass an \'installed\' flag to only see the modules you have installed.')
+      logger.blue( '\n    $ mimosa mod:list --installed\n')
+      logger.blue( '\n    $ mimosa mod:list -i\n')
       logger.green('  Pass a \'verbose\' flag to get additional information about each module')
       logger.blue( '\n    $ mimosa mod:list --verbose\n')
       logger.blue( '\n    $ mimosa mod:list -v\n')

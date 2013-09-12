@@ -6,6 +6,7 @@
 
 ### Minor Changes
 * [mimosa #280](https://github.com/dbashford/mimosa/issues/280). Programmatically setting `dynamicSourceMaps` to `false` if `minify` flag is used as Uglify cannot take dynamic source maps as input.
+* [mimosa-import-source #5](https://github.com/dbashford/mimosa-import-source/issues/5). Added a `usePolling` flag to config to help slow down CPU burn on Windows machines.
 
 ## 1.0.0-rc.4 - Sept 09 2013
 
