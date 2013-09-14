@@ -7,6 +7,7 @@
 * [mimosa #281](https://github.com/dbashford/mimosa/issues/281). The command `mimosa mod:search` has been dropped in lieu of simple improvements to `mod:list` mentioned above.
 
 ### Minor Changes
+* [mimosa-require #19](https://github.com/dbashford/mimosa-require/issues/19). mimosa-require will now validate paths in `packages` config.
 * [mimosa #280](https://github.com/dbashford/mimosa/issues/280). Programmatically setting `dynamicSourceMaps` to `false` if `minify` flag is used as Uglify cannot take dynamic source maps as input.
 * [mimosa-import-source #5](https://github.com/dbashford/mimosa-import-source/issues/5). Added a `usePolling` flag to config to help slow down CPU burn on Windows machines.
 
