@@ -229,7 +229,7 @@ module.exports = class TemplateCompiler extends BaseCompiler
       next()
 
   libraryPath: =>
-    @requireRegister?.aliasForPath(@libPath) ? @libPath
+    @requireRegister.aliasForPath(@libPath) ? @requireRegister.aliasForPath("./" + @libPath) ? @libPath
 
   __templatePreamble: (file) ->
     """
