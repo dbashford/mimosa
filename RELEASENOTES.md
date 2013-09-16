@@ -9,6 +9,7 @@
 ### Minor Changes
 * [mimosa-require #20](https://github.com/dbashford/mimosa-require/issues/20). Much of mimosa-require is tailored to 1-main-to-1-output builds. But if a single run results in multiple outputs, mimosa-require had issues with messaging properly and with cleaning up the aftermath.  That is fixed with this. Hoping to include more 1-run-many-output support soon.
 * [mimosa-require #19](https://github.com/dbashford/mimosa-require/issues/19). mimosa-require will now validate paths in `packages` config.
+* [mimosa #282](https://github.com/dbashford/mimosa/issues/282). Handling `./` at front of templates path alias resulting in wrong AMD path being written to `templates.js`.
 * [mimosa #280](https://github.com/dbashford/mimosa/issues/280). Programmatically setting `dynamicSourceMaps` to `false` if `minify` flag is used as Uglify cannot take dynamic source maps as input.
 * [mimosa-import-source #5](https://github.com/dbashford/mimosa-import-source/issues/5). Added a `usePolling` flag to config to help slow down CPU burn on Windows machines.
 
