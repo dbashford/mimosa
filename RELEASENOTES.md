@@ -1,3 +1,10 @@
+## 1.0.0-rc.6 - Sept ?? 2013
+
+`rc.6` is likely the last RC before going final.
+
+### Major Changes
+* __New Module__: [mimosa-es6-module-transpiler](https://github.com/dbashford/mimosa-es6-module-transpiler). Use ES6 module syntax today! This module will compile your ES6 module syntax down to AMD, CommonJS or globals.
+
 ## 1.0.0-rc.5 - Sept 16 2013
 
 ### Major Changes
