@@ -4,6 +4,7 @@
 
 ### Major Changes
 * __New Module__: [mimosa-es6-module-transpiler](https://github.com/dbashford/mimosa-es6-module-transpiler). Use ES6 module syntax today! This module will compile your ES6 module syntax down to AMD, CommonJS or globals.
+* [mimosa #284](https://github.com/dbashford/mimosa/issues/284). Enabling the new mimosa-require tracking functionality by default. Also updated the `mimosa new` `.gitignore` to exclude the `tracking.json` by default.  Many `.mimosa` artifacts benefit from being in source control, but this file does not.
 
 ## 1.0.0-rc.5 - Sept 16 2013
 
