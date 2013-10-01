@@ -13,8 +13,9 @@ buildConfig = require '../util/config-builder'
 class NewCommand
 
   servers: [
-      {name:"none", prettyName:"None - You don't need a server, or you'd like Mimosa to serve your application for you."}
-      {name:"express", prettyName:"(*) Express - http://expressjs.com/", isDefault:true}
+      {name:"None", prettyName:"None - You either don't need a server or you have one already that you will manage separate from Mimosa."}
+      {name:"Express", prettyName:"(*) Express - http://expressjs.com/", isDefault:true}
+      {name:"Mimosa's Express", prettyName:"Mimosa's Embedded Express - http://mimosa.io/server.html#mimosas, this is less powerful than having your own, but may be sufficient for trivial websites."}
     ]
 
   views: [
@@ -135,23 +136,22 @@ class NewCommand
 
   _create: (name, chosen) =>
     @config = buildConfig()
-
     @skeletonPath = path.join __dirname, '..', '..', 'skeleton'
-
     @_moveDirectoryContents @skeletonPath, @skeletonOutPath
     @_makeChosenCompilerChanges chosen
+    @_makeServerChanges name, chosen
+    @_modifyBowerJSONName name
+    @_moveViews chosen
+    logger.debug "Renaming .gitignore"
+    fs.renameSync (path.join @skeletonOutPath, ".ignore"), (path.join @skeletonOutPath, ".gitignore")
 
-    if chosen.server.name is "none"
+  _makeServerChanges: (name, chosen) =>
+    if chosen.server.name is "None"
+      @_usingNoServer()
+    else if chosen.server.name is "Mimosa's Express"
       @_usingDefaultServer()
     else
       @_usingOwnServer name, chosen
-
-    @_modifyBowerJSONName name
-
-    @_moveViews chosen
-
-    logger.debug "Renaming .gitignore"
-    fs.renameSync (path.join @skeletonOutPath, ".ignore"), (path.join @skeletonOutPath, ".gitignore")
 
   _modifyBowerJSONName: (name) =>
     if name
@@ -264,6 +264,18 @@ class NewCommand
     @_moveDirectoryContents(path.join(@skeletonOutPath, "view", chosen.views.name), @skeletonOutPath)
     wrench.rmdirSyncRecursive path.join(@skeletonOutPath, "view")
 
+  _usingNoServer: ->
+    logger.debug "Using no server, so removing server resources and config"
+    fs.unlinkSync path.join(@skeletonOutPath, "package.json")
+    wrench.rmdirSyncRecursive path.join(@skeletonOutPath, "servers")
+
+    @config = @config.replace(/\ \ #?\ ?server:[A-Za-z0-9 \"#\n\r:,.'-]*/g, "")
+    @config = @config.replace("  # modules:", "  modules:")
+    @config = @config.replace(/(\ \ modules:\ [\[\]\'A-Za-z\,\ -]*)('server', )([\[\]\'A-Za-z\,\ -]*)/g, "$1$3")
+    @config = @config.replace(/(\ \ modules:\ [\[\]\'A-Za-z\,\ -]*)('live-reload', )([\[\]\'A-Za-z\,\ -]*)/g, "$1$3")
+
+    @_done()
+
   # remove express files/directories and update config to point to default server
   _usingDefaultServer: ->
     logger.debug "Using default server, so removing server resources"
@@ -297,7 +309,8 @@ class NewCommand
     fs.writeFileSync jPath, JSON.stringify(packageJson, null, 2)
 
     logger.debug "Moving server into place"
-    @_moveDirectoryContents(path.join(@skeletonOutPath, "servers", chosen.server.name), @skeletonOutPath)
+    @removeFromPackageDeps(chosen.server.name.toLowerCase(), "express", "express", packageJson)
+    @_moveDirectoryContents(path.join(@skeletonOutPath, "servers", chosen.server.name.toLowerCase()), @skeletonOutPath)
     wrench.rmdirSyncRecursive path.join(@skeletonOutPath, "servers")
 
     logger.info "Installing node modules"
@@ -324,7 +337,7 @@ class NewCommand
   _done: =>
     configPath = path.join @skeletonOutPath, "mimosa-config.coffee"
     fs.writeFile configPath, @config, (err) ->
-      logger.success "New project creation complete!  Execute 'mimosa watch --server' from inside your project to monitor the file system. Then start coding!"
+      logger.success "New project creation complete!  Execute 'mimosa watch' from inside your project to monitor the file system. Then start coding!"
       process.stdin.destroy()
 
   _printHelp: ->
