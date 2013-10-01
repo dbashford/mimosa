@@ -1,4 +1,9 @@
-## 1.0.0-rc.6 - Sept ?? 2013
+## 1.0.0 Final - Oct ?? 2013
+
+### Minor Changes
+* [mimosa #287](https://github.com/dbashford/mimosa/issues/287). Better error messaging out of mimosa-require when require.js paths config isn't proper.
+
+## 1.0.0-rc.6 - Sept 23 2013
 
 `rc.6` is likely the last RC before going final.
 
