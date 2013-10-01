@@ -15,13 +15,16 @@ module.exports = class JSCompiler extends BaseCompiler
     super()
 
   registration: (config, register) ->
-    register ['add','update','buildFile'], 'compile', @_compile, @extensions
+    register ['buildFile'], 'init', @_compilerLib, @extensions
+    register ['add','update','buildFile'], 'compile', @_compile,     @extensions
+
+  _compilerLib: (config, options, next) =>
+    @determineCompilerLib config
+    next()
 
   _compile: (config, options, next) =>
     hasFiles = options.files?.length > 0
     return next() unless hasFiles
-
-    @determineCompilerLib config
 
     i = 0
     newFiles = []
