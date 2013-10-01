@@ -2,6 +2,7 @@
 
 ### Minor Changes
 * [mimosa #287](https://github.com/dbashford/mimosa/issues/287). Better error messaging out of mimosa-require when require.js paths config isn't proper.
+* [mimosa #285](https://github.com/dbashford/mimosa/issues/285). If no file of a given language needed to be compiled, then the compiler for that language would not be required in during startup. When the server file of that language was required in order to start the server, it could not be compiled. Now compiler libs are brought in whether or not a file needs to be compiled.
 
 ## 1.0.0-rc.6 - Sept 23 2013
 
