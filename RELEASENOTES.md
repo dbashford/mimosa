@@ -1,4 +1,8 @@
-## 1.0.0 Final - Oct ?? 2013
+## 1.0.0 Final - Oct 7 2013
+
+## 1.0.0-rc.7 - Oct 2 2013
+
+Planning to release `1.0 Final` on Monday Oct 7, but wanted to get the following updates in sooner than that.
 
 ### Major Changes
 * __New Example App__: [MimomsaDynamicRequire](https://github.com/dbashford/MimosaDynamicRequire). A quick little example showing how to use Mimosa to build a requirejs app with dynamic modules.
@@ -9,8 +13,6 @@
 * [mimosa #283](https://github.com/dbashford/mimosa/issues/283). Added a real 'none' server option to `mimosa new` that will legit not provide server options.  Previously the 'none' option was actually Mimosa's embedded server rather than no server at all. The expectation is that you will point the `watch.compiledDir` to some `public` folder of yours.
 
 ## 1.0.0-rc.6 - Sept 23 2013
-
-`rc.6` is likely the last RC before going final.
 
 ### Major Changes
 * __New Module__: [mimosa-es6-module-transpiler](https://github.com/dbashford/mimosa-es6-module-transpiler). Use ES6 module syntax today! This module will compile your ES6 module syntax down to AMD, CommonJS or globals.
