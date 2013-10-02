@@ -1,5 +1,8 @@
 ## 1.0.0 Final - Oct ?? 2013
 
+### Major Changes
+* __New Example App__: [MimomsaDynamicRequire](https://github.com/dbashford/MimosaDynamicRequire). A quick little example showing how to use Mimosa to build a requirejs app with dynamic modules.
+
 ### Minor Changes
 * [mimosa #287](https://github.com/dbashford/mimosa/issues/287). Better error messaging out of mimosa-require when require.js paths config isn't proper.
 * [mimosa #285](https://github.com/dbashford/mimosa/issues/285). If no file of a given language needed to be compiled, then the compiler for that language would not be required in during startup. When the server file of that language was required in order to start the server, it could not be compiled. Now compiler libs are brought in whether or not a file needs to be compiled.
