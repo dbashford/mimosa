@@ -114,7 +114,7 @@ class NewCommand
         @program.choose _.pluck(compilers.template, 'prettyName'),(i) =>
           logger.blue "\n  You chose #{compilers.template[i].prettyName}."
           chosen.template = compilers.template[i]
-          logger.green "\n  Choose your server technology, if you pick no server, Mimosa will serve your assets for you:\n"
+          logger.green "\n  Choose your server technology: \n"
           @program.choose _.pluck(@servers, 'prettyName'),(i) =>
             logger.blue "\n  You chose #{@servers[i].prettyName}."
             chosen.server = @servers[i]
@@ -270,6 +270,7 @@ class NewCommand
     wrench.rmdirSyncRecursive path.join(@skeletonOutPath, "servers")
 
     @config = @config.replace(/\ \ #?\ ?server:[A-Za-z0-9 \"#\n\r:,.'-]*/g, "")
+    @config = @config.replace(/\ \ #?\ ?liveReload:[\]\[A-Za-z0-9 \"#\n\r:,.'-]*/g, "")
     @config = @config.replace("  # modules:", "  modules:")
     @config = @config.replace(/(\ \ modules:\ [\[\]\'A-Za-z\,\ -]*)('server', )([\[\]\'A-Za-z\,\ -]*)/g, "$1$3")
     @config = @config.replace(/(\ \ modules:\ [\[\]\'A-Za-z\,\ -]*)('live-reload', )([\[\]\'A-Za-z\,\ -]*)/g, "$1$3")
