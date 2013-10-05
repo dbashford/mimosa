@@ -1,6 +1,7 @@
 ## 1.0.0 Final - Oct 7 2013
 
 ### Minor Changes
+* [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). Fixed issue with random diffs popping up in the `test-variables` file.
 * [mimosa #271](https://github.com/dbashford/mimosa/issues/271). mimosa-web-package now builds the proper tar command when using tools like git bash on windows.  Previous it made a Windows `cmd` compatible command, now it goes *nix if using an emulator.
 
 ## 1.0.0-rc.7 - Oct 2 2013
