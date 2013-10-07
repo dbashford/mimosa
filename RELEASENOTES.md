@@ -1,4 +1,4 @@
-## 1.0.0 Final - Oct 7 2013
+## 1.0.0 Final - Oct 8 2013
 
 ### Minor Changes
 * [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). Fixed issue with random diffs popping up in the `test-variables` file.
