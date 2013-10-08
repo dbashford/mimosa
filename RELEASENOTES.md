@@ -2,6 +2,7 @@
 
 ### Major Changes
 * __New Module__: [mimosa-plato](https://github.com/dbashford/mimosa-plato). A module for running the [Plato](https://github.com/dbashford/mimosa-plato) static analysis tool against your JavaScript.
+* __New Module__: [mimosa-js-valiadte](https://github.com/dbashford/mimosa-js-validate). Uses Esprima to catch validation and syntax errors in JavaScript.  Great if you choose to not use a linter.
 
 ### Minor Changes
 * [mimosa-require](https://github.com/dbashford/mimosa-require/). Fixed issue where regular non-optimized builds, `mimosa build`, would cause dependency checking to fail.
