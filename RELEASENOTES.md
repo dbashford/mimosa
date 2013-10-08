@@ -1,3 +1,8 @@
+## 1.0.1 - Oct 8 2013
+
+### Minor Changes
+* [mimosa-require](https://github.com/dbashford/mimosa-require/). Fixed issue where regular non-optimized builds, `mimosa build`, would cause dependency checking to fail.
+
 ## 1.0.0 Final - Oct 8 2013
 
 ### Minor Changes
