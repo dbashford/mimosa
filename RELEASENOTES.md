@@ -1,5 +1,8 @@
 ## 1.0.1 - Oct 8 2013
 
+### Major Changes
+* __New Module__: [mimosa-plato](https://github.com/dbashford/mimosa-plato). A module for running the [Plato](https://github.com/dbashford/mimosa-plato) static analysis tool against your JavaScript.
+
 ### Minor Changes
 * [mimosa-require](https://github.com/dbashford/mimosa-require/). Fixed issue where regular non-optimized builds, `mimosa build`, would cause dependency checking to fail.
 
