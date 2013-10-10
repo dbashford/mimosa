@@ -1,3 +1,8 @@
+## 1.0.3 - Oct ?? 2013
+
+### Minor Changes
+* [server-template-compile #3](https://github.com/dbashford/mimosa-server-template-compile/issues/3). Module now includes all the templating languages it needs rather than depending on other modules.
+
 ## 1.0.2 - Oct 9 2013
 
 ### Major Changes
