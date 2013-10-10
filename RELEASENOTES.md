@@ -1,5 +1,8 @@
 ## 1.0.2 - Oct 9 2013
 
+### Major Changes
+* __New Skeleton__: [backbone-topcoat](https://github.com/mftaher/mimosa-backbone-topcoat). New skeleton integrates some simple Backbone boilerplate with Top Coat. Coded in CoffeeScript/Stylus/Underscore with Hogan/Express on the server.  Check it out!
+
 ### Minor Changes
 * [skelmimosa #6](https://github.com/dbashford/skelmimosa/issues/6). Fixed issue with folder not removing on windows.
 * [skelmimosa #12](https://github.com/dbashford/skelmimosa/issues/12). Unpublished old `mimosa-skeleton` module from NPM.
