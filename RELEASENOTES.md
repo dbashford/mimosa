@@ -1,3 +1,9 @@
+## 1.0.2 - Oct 9 2013
+
+### Minor Changes
+* [skelmimosa #6](https://github.com/dbashford/skelmimosa/issues/6). Fixed issue with folder not removing on windows.
+* [skelmimosa #12](https://github.com/dbashford/skelmimosa/issues/12). Unpublished old `mimosa-skeleton` module from NPM.
+
 ## 1.0.1 - Oct 8 2013
 
 ### Major Changes
