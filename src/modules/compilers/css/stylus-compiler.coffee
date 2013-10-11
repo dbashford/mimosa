@@ -38,6 +38,9 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
       #.set('linenos', not config.isOptimize and not config.isBuild)
       .set('filename', fileName)
 
+    if config.stylus.url
+      stylusSetup.define 'url', @compilerLib.url config.stylus.url
+
     config.stylus.includes?.forEach (inc) ->
       stylusSetup.include inc
 
