@@ -2,6 +2,14 @@
 
 ### Minor Changes
 * [server-template-compile #3](https://github.com/dbashford/mimosa-server-template-compile/issues/3). Module now includes all the templating languages it needs rather than depending on other modules.
+* [mimosa #293](https://github.com/dbashford/mimosa/pull/293). Haven't fixed #293, but error messaging has been improved. `mimosa mod:list` will not work behind a proxy and previously the command would error out. Now there is some more helpful messaging.
+* [mimosa #291](https://github.com/dbashford/mimosa/pull/291). PR created support for the [Stylus url function](http://learnboost.github.io/stylus/docs/functions.url.html). Configuration pass through to the url functionality is available via `stylus.url`
+
+    ```coffeescript
+    stylus:
+      url:
+        limit: 40000
+    ```
 
 ## 1.0.2 - Oct 9 2013
 
