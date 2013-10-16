@@ -1,3 +1,9 @@
+## 1.0.4 - Oct 15 2013
+
+### Minor Changes
+* [mimosa-require #22](https://github.com/dbashford/mimosa-require/issues/22). Fixed a stray async call in the tracker code.
+* [mimosa #296](https://github.com/dbashford/mimosa/issues/296). Mimosa now shuts down the `clean` watcher after the cleaning is done. The `clean` watcher not being shut down meant that any files added (like from a bower install) after the cleaner was finished might get removed as soon as they are compiled to `watch.compiledDir` and you'd end up with randomly missing files.
+
 ## 1.0.3 - Oct 15 2013
 
 ### Minor Changes
