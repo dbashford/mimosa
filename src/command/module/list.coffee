@@ -85,18 +85,19 @@ list = (opts) ->
 
   logger.green "\n  Searching Mimosa modules...\n"
 
-  http.get "http://mimosa-data.herokuapp.com/modules", (res) ->
-    data = ''
-    res.on 'data', (chunk) ->
-      data += chunk
-    res.on 'end', ->
-      mods = JSON.parse data
+  childProcess.exec 'npm config get proxy', (error, stdout, stderr) ->
+    options = {
+      'uri': 'http://mimosa-data.herokuapp.com/modules'
+    }
+    proxy = stdout.replace /(\r\n|\n|\r)/gm, ''
+    if !error && proxy != 'null'
+      options.proxy = proxy
+    request options, (error, client, response) ->
+      if error != null
+        console.log(error)
+        return
+      mods = JSON.parse response
       printResults mods, opts
-  .on 'error', (err) ->
-    logger.info "An error was encountered attempting to retrieve Mimosa's module list."
-    logger.info "Might you be behind a proxy or disconnected from the internet?"
-    logger.info "Error message : ", err.message
-    logger.info "A list of modules can be found at http://mimosa.io/modules.html#list."
 
 register = (program, callback) ->
   program
