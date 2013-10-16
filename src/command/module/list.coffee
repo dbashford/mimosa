@@ -2,6 +2,7 @@ http = require 'http'
 
 color  = require('ansi-color').set
 logger = require 'logmimosa'
+childProcess = require 'child_process'
 
 moduleMetadata = require('../../modules').installedMetadata
 
