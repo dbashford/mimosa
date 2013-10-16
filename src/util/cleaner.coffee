@@ -18,11 +18,13 @@ class Cleaner
       binaryInterval: @config.watch.binaryInterval
       usePolling: @config.watch.usePolling
 
-    watcher = watch.watch @config.watch.sourceDir, watchConfig
-    watcher.on "add", @workflow.clean
+    @watcher = watch.watch @config.watch.sourceDir, watchConfig
+    @watcher.on "add", @workflow.clean
 
   _cleanDone: =>
-    @workflow.postClean @initCallback
+    @workflow.postClean =>
+      @watcher.close()
+      @initCallback()
 
   _ignoreFunct: (name) =>
     if @config.watch.excludeRegex?

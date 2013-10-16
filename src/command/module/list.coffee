@@ -100,6 +100,14 @@ list = (opts) ->
         return
       mods = JSON.parse response
       printResults mods, opts
+<<<<<<< HEAD
+=======
+  .on 'error', (err) ->
+    logger.info "An error was encountered attempting to retrieve Mimosa's module list."
+    logger.info "Might you be behind a proxy or disconnected from the internet?"
+    logger.info "Error message : ", err.message
+    logger.info "A list of modules can be found at http://mimosa.io/modules.html#list."
+>>>>>>> source/master
 
 register = (program, callback) ->
   program

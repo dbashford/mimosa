@@ -1,7 +1,22 @@
-## 1.0.3 - Oct ?? 2013
+## 1.0.4 - Oct 15 2013
+
+### Minor Changes
+* [mimosa-require #22](https://github.com/dbashford/mimosa-require/issues/22). Fixed a stray async call in the tracker code.
+* [mimosa #296](https://github.com/dbashford/mimosa/issues/296). Mimosa now shuts down the `clean` watcher after the cleaning is done. The `clean` watcher not being shut down meant that any files added (like from a bower install) after the cleaner was finished might get removed as soon as they are compiled to `watch.compiledDir` and you'd end up with randomly missing files.
+
+## 1.0.3 - Oct 15 2013
 
 ### Minor Changes
 * [server-template-compile #3](https://github.com/dbashford/mimosa-server-template-compile/issues/3). Module now includes all the templating languages it needs rather than depending on other modules.
+* [mimosa #295](https://github.com/dbashford/mimosa/pull/295) and [mimosa #292](https://github.com/dbashford/mimosa/issues/292). PR included support for Stylus' [`include css`](https://github.com/LearnBoost/stylus/issues/448) functionality.
+* [mimosa #293](https://github.com/dbashford/mimosa/pull/293). Haven't fixed #293, but error messaging has been improved. `mimosa mod:list` will not work behind a proxy and previously the command would error out. Now there is some more helpful messaging.
+* [mimosa #291](https://github.com/dbashford/mimosa/pull/291). PR created support for the [Stylus url function](http://learnboost.github.io/stylus/docs/functions.url.html). Configuration pass through to the url functionality is available via `stylus.url`
+
+    ```coffeescript
+    stylus:
+      url:
+        limit: 40000
+    ```
 
 ## 1.0.2 - Oct 9 2013
 
