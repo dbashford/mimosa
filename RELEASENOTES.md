@@ -1,5 +1,8 @@
 ## 1.0.5 - Oct 17 2013
 
+### Major Changes
+* __New Module__: [mimosa-sprite](https://github.com/dbashford/mimosa-sprite). This module will generate CSS sprite images and corresponding stylesheets.
+
 ### Minor Changes
 * [mimosa #300](https://github.com/dbashford/mimosa/pull/300), [mimosa #293](https://github.com/dbashford/mimosa/issues/293). `mimosa mod:list` should now function behind a proxy thx to PR.
 
