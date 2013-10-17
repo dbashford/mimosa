@@ -1,3 +1,8 @@
+## 1.0.5 - Oct 17 2013
+
+### Minor Changes
+* [mimosa #300](https://github.com/dbashford/mimosa/pull/300), [mimosa #293](https://github.com/dbashford/mimosa/issues/293). `mimosa mod:list` should now function behind a proxy thx to PR.
+
 ## 1.0.4 - Oct 15 2013
 
 ### Minor Changes
