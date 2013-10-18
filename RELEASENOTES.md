@@ -1,7 +1,12 @@
-## 1.0.5 - Oct 17 2013
+## 1.0.6 - Oct 17 2013
 
 ### Major Changes
 * __New Module__: [mimosa-sprite](https://github.com/dbashford/mimosa-sprite). This module will generate CSS sprite images and corresponding stylesheets.
+
+### Minor Changes
+* [mimosa #301](https://github.com/dbashford/mimosa/issues/301). `.css` files were not being properly handled during `mimosa watch` after the initial startup. An update to a `.css` file would not update the file in the `watch.compiledDir`.
+
+## 1.0.5 - Oct 17 2013
 
 ### Minor Changes
 * [mimosa #300](https://github.com/dbashford/mimosa/pull/300), [mimosa #293](https://github.com/dbashford/mimosa/issues/293). `mimosa mod:list` should now function behind a proxy thx to PR.
