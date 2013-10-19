@@ -1,7 +1,8 @@
-## 1.0.7 - Oct ?? 2013
+## 1.0.7 - Oct 19 2013
 
 ### Minor Changes
 * [mimosa-live-reload #2](https://github.com/dbashford/mimosa-live-reload/issues/2). mimosa-live-reload would fail if attempting to write `reload-client.js` to the output folder if the output folder didn't exist.  Now it'll create the folder if its not there.
+* [mimosa-require #23](https://github.com/dbashford/mimosa-require/issues/23). `mimosa clean` now does a better job of cleaning up over r.js runs involving a `modules` config.
 
 ## 1.0.6 - Oct 17 2013
 
