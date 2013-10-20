@@ -83,7 +83,7 @@
     "mimosa-minify": "1.0.0",
     "mimosa-lint": "1.0.0",
     "mimosa-live-reload": "1.0.1",
-    "mimosa-require": "1.4.4",
+    "mimosa-require": "1.5.0",
     "mimosa-bower": "1.2.1",
     "request": "2.27.0"
   },
