@@ -1,3 +1,8 @@
+## 1.0.8 - Oct ?? 2013
+
+### Minor Changes
+* [mimosa-sprite](https://github.com/dbashford/mimosa-sprite). Removed need to return object from `options` function. Also added debugging.
+
 ## 1.0.7 - Oct 19 2013
 
 ### Minor Changes
