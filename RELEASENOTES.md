@@ -1,6 +1,7 @@
 ## 1.0.8 - Oct ?? 2013
 
 ### Major Changes
+* __New Module__: [mimosa-post-hook](https://github.com/dbashford/mimosa-post-hook). A module for executing scripts/commands when `mimosa watch` finishes its startup.
 * [mimosa-require #24](https://github.com/dbashford/mimosa-require/issues/24). Addressed some issues that popped up with the recent `modules` support. If running `mimosa watch`, you could only run optimization successfully one time when `watch` started up. Every subsequent run (after saving a file for instance) would error out. That has been addressed, however one of the pieces to fix this was to disable, by default, creation of source maps during `modules`-based r.js runs (non-`modules` runs will continue to have source maps). Even after addressing most of the issues, source maps still made it difficult to keep developing while `mimosa watch` was running. Source maps can be forced on using `require.optimize.overrides`, and they will work, but only that first time.  Work will be done int he future to address source maps + `modules` dev, likely at the same time mimosa-require is updated to the latest requirejs.
 
 ### Minor Changes
