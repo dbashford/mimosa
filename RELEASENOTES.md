@@ -1,4 +1,4 @@
-## 1.0.8 - Oct ?? 2013
+## 1.0.8 - Oct 21 2013
 
 ### Major Changes
 * __New Module__: [mimosa-post-hook](https://github.com/dbashford/mimosa-post-hook). A module for executing scripts/commands when `mimosa watch` finishes its startup.
