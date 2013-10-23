@@ -1,3 +1,11 @@
+## 1.0.9 - Oct ?? 2013
+
+### Major Changes
+* __New Module__:
+[mimosa-requirebuild-module-include](https://github.com/twill88/mimosa-requirebuild-module-include). A module for including module dependencies into an r.js build.
+* __New Module__:
+[mimosa-requirebuild-textplugin-module-include](https://github.com/twill88/mimosa-requirebuild-textplugin-module-include). Long, though descriptive, name for a new module that will add your text plugin dependencies to your requirejs `modules` config.
+
 ## 1.0.8 - Oct 21 2013
 
 ### Major Changes
