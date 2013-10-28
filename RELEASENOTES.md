@@ -1,6 +1,14 @@
-## 1.0.9 - Oct ?? 2013
+## 1.1.0 (Planned) - Upcoming Breaking Changes
+
+* mimosa-jshint and mimosa-csslint modules will be built over the next few days to a week.
+* The current mimosa-lint module will no longer be a default Mimosa module. mimosa-jshint and mimosa-csslint will take its place as defaults.
+* All of the necessary changes to reflect this update will be limited to the mimosa-config.  If you use mimosa-lint, that config will need to be broken down into two configs.
+* The upgrade ought not take you more than 10 minutes of config updates to come into alignment with.
+
+## 1.0.9 - Oct 28 2013
 
 ### Major Changes
+* [mimosa-bower #28](https://github.com/dbashford/mimosa-bower/issues/28). A new config setting, `bower.copy.unknownMainFullCopy`, is a quick fix for bower packages that do not declare a `main`.  The right way to solve this problem is to set up a `mainOverride` that pulls out the specific files you want, but in lieu of that, this will simply copy the entire package into the appropriate place.  It defaults to `false`.
 * __New Module__:
 [mimosa-requirebuild-module-include](https://github.com/twill88/mimosa-requirebuild-module-include). A module for including module dependencies into an r.js build.
 * __New Module__:
