@@ -5,6 +5,13 @@
 * All of the necessary changes to reflect this update will be limited to the mimosa-config.  If you use mimosa-lint, that config will need to be broken down into two configs.
 * The upgrade ought not take you more than 10 minutes of config updates to come into alignment with.
 
+## 1.1.0 - Nov ?? 2013
+
+### Major Changes
+* __New Module__:
+[mimosa-jshint](https://github.com/dbashford/mimosa-jshint). A pure [JSHint](http://www.jshint.com/) module. With release `1.1.0`, this module replaces part of the current mimosa-lint module as a default Mimosa module.  It preserves all of the same functionality of mimosa-lint, but with a simplified config. This module also allows those who were not interested in mimosa-lint's full feature set but want JSHint to simply add it.
+
+
 ## 1.0.9 - Oct 28 2013
 
 ### Major Changes
