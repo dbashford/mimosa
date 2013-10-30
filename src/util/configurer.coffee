@@ -33,11 +33,27 @@ baseDefaults =
     javascripts: "javascripts/vendor"
     stylesheets: "stylesheets/vendor"
 
-_extend = (obj, props) ->
+_extend = (obj, props, resetObjAndRetry) ->
   Object.keys(props).forEach (k) ->
     val = props[k]
-    if val? and (typeof val is 'object') and (not Array.isArray(val)) and (not (val instanceof RegExp)) and (typeof obj[k] is typeof val)
-      _extend obj[k], val
+
+    # if value is an object, but not an array or not a regex, might need to recurse
+    if val? and (typeof val is 'object') and (not Array.isArray(val)) and (not (val instanceof RegExp))
+
+      if obj is null
+        # value is an object, but the object to override is null.
+        # need to reset it back up a call in the call chain and retry
+        # the _extend, resetting here results in properties not sticking
+        resetObjAndRetry()
+      else
+        # if everything is still an object, need to recurse again
+        # to pull child properties
+        if (typeof obj[k] is typeof val)
+          _extend obj[k], val, ->
+            obj[k] = {}
+            _extend obj[k], val
+        else
+          obj[k] = val
     else
       obj[k] = val
   obj

@@ -11,6 +11,10 @@
 * __New Module__:
 [mimosa-jshint](https://github.com/dbashford/mimosa-jshint). A pure [JSHint](http://www.jshint.com/) module. With release `1.1.0`, this module replaces part of the current mimosa-lint module as a default Mimosa module.  It preserves all of the same functionality of mimosa-lint, but with a simplified config. This module also allows those who were not interested in mimosa-lint's full feature set but want JSHint to simply add it.
 
+## 1.0.10 - Oct 30 2013
+
+### Minor Changes
+* [mimosa #304](https://github.com/dbashford/mimosa/issues/304), [mimosa-testem-require #6](https://github.com/dbashford/mimosa-testem-require/issues/6). Allowing mimosa-config default config object settings to be `null`. Previously mimosa-config object properties had to be `{}`.  Setting them to `null` would cause Mimosa to error out when the property needed to be overridden.
 
 ## 1.0.9 - Oct 28 2013
 
