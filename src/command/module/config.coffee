@@ -1,14 +1,15 @@
 logger = require 'logmimosa'
+_ = require 'lodash'
+
+modules = require('../../modules/').installedMetadata
 
 config = (name, opts) ->
   unless name?
     return logger.error "Must provide a module name, ex: mimosa mod:config mimosa-moduleX"
 
-  mod = getModule(name)
-  unless mod?
-    mod = getModule("mimosa-#{name}")
-
-  if mod?
+  modMeta = _.findWhere(modules, {name:name})
+  if modMeta?
+    mod = modMeta.mod
     if mod.placeholder
       text = mod.placeholder()
       logger.green "#{text}\n\n"
@@ -18,12 +19,6 @@ config = (name, opts) ->
     return logger.error "Could not find module named [[ #{name} ]]"
 
   process.exit 0
-
-getModule = (name) ->
-  try
-    require name
-  catch err
-    logger.debug "Did not find module named [[ #{name} ]]"
 
 register = (program, callback) ->
   program

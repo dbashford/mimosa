@@ -17,6 +17,11 @@ mimosa-lint will still be supported, but as an external module. I won't be updat
 * __New Module__:
 [mimosa-csslint](https://github.com/dbashford/mimosa-csslint). A pure [CSSLint](http://csslint.net/) module. With release `1.1.0`, this module replaces the CSS portion of of the current mimosa-lint module as a default Mimosa module. It preserves all of the same functionality of CSS pieces of mimosa-lint, but with a simplified config. This module also allows those who were not interested in mimosa-lint's full feature set but want CSSLint to simply add it.
 
+## 1.0.11 - Oct 30 2013
+
+### Minor Changes
+* [mimosa #305](https://github.com/dbashford/mimosa/issues/305). Adjustment to `mimosa mod:config` command to allow it to see locally installed modules. Previously if you had modules in a project's `node_modules` directory (as opposed to installed inside Mimosa itself, as with `mimosa mod:install`), `mod:config` would not be able to find them.
+
 ## 1.0.10 - Oct 30 2013
 
 ### Minor Changes
