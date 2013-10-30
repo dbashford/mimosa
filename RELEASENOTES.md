@@ -15,7 +15,7 @@ mimosa-lint will still be supported, but as an external module. I won't be updat
 * __New Module__:
 [mimosa-jshint](https://github.com/dbashford/mimosa-jshint). A pure [JSHint](http://www.jshint.com/) module. With release `1.1.0`, this module replaces the JavaScript portion of the current mimosa-lint module as a default Mimosa module. It preserves all of the same functionality of the JS pieces of mimosa-lint, but with a simplified config. This module also allows those who were not interested in mimosa-lint's full feature set, but want JSHint, to add it by itself.
 * __New Module__:
-[mimosa-csslint](https://github.com/dbashford/mimosa-csslint). A pure [CSSLint](http://csslint.net/) module. With release `1.1.0`, this module replaces the CSS portion of of the current mimosa-lint module as a default Mimosa module. It preserves all of the same functionality of mimosa-lint, but with a simplified config. This module also allows those who were not interested in mimosa-lint's full feature set but want JSHint to simply add it.
+[mimosa-csslint](https://github.com/dbashford/mimosa-csslint). A pure [CSSLint](http://csslint.net/) module. With release `1.1.0`, this module replaces the CSS portion of of the current mimosa-lint module as a default Mimosa module. It preserves all of the same functionality of CSS pieces of mimosa-lint, but with a simplified config. This module also allows those who were not interested in mimosa-lint's full feature set but want CSSLint to simply add it.
 
 ## 1.0.10 - Oct 30 2013
 
