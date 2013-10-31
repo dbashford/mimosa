@@ -1,21 +1,22 @@
-## 1.1.0 (Planned) - Upcoming Breaking Changes
-
-* mimosa-jshint and mimosa-csslint modules will be built over the next few days to a week.
-* The current mimosa-lint module will no longer be a default Mimosa module. mimosa-jshint and mimosa-csslint will take its place as defaults.
-* All of the necessary changes to reflect this update will be limited to the mimosa-config.  If you use mimosa-lint, that config will need to be broken down into two configs.
-* The upgrade ought not take you more than 10 minutes of config updates to come into alignment with.
-
-## 1.1.0 - Nov ?? 2013
+## 1.1.0 (Planned) - Nov ?? 2013
 
 Two new modules, mimosa-jshint and mimosa-csslint, as of this release will replace the old mimosa-lint.  This simplifies the config a good deal, and makes it much easier to remove one without removing the other.
 
 mimosa-lint will still be supported, but as an external module. I won't be updating it all unless asked.
+
+Details on how to upgrade [on the site](http://mimosa.io/about.html).
 
 ### Major Changes
 * __New Module__:
 [mimosa-jshint](https://github.com/dbashford/mimosa-jshint). A pure [JSHint](http://www.jshint.com/) module. With release `1.1.0`, this module replaces the JavaScript portion of the current mimosa-lint module as a default Mimosa module. It preserves all of the same functionality of the JS pieces of mimosa-lint, but with a simplified config. This module also allows those who were not interested in mimosa-lint's full feature set, but want JSHint, to add it by itself.
 * __New Module__:
 [mimosa-csslint](https://github.com/dbashford/mimosa-csslint). A pure [CSSLint](http://csslint.net/) module. With release `1.1.0`, this module replaces the CSS portion of of the current mimosa-lint module as a default Mimosa module. It preserves all of the same functionality of CSS pieces of mimosa-lint, but with a simplified config. This module also allows those who were not interested in mimosa-lint's full feature set but want CSSLint to simply add it.
+
+## 1.0.12 - Oct 31 2013
+
+### Minor Changes
+* Dependency updates: stylus, nib, less, iced-coffee, ractive, underscore, dust, emblem, jade.  All updated to latest.  Remember, if the latest versions don't work for you, you can always [supply a specific version](http://mimosa.io/configuration.html#compilers) that works for you.
+* [mimosa-combine #11](https://github.com/dbashford/mimosa-combine/pull/11). From a PR, addresses white spaces issues in combined files.
 
 ## 1.0.11 - Oct 30 2013
 
