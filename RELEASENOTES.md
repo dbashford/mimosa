@@ -14,6 +14,10 @@ Details on how to upgrade [on the site](http://mimosa.io/about.html).
 
 ## 1.0.12 - Oct 31 2013
 
+### Major Changes
+* __New Module__:
+[mimosa-spritesmith](https://github.com/ddlsmurf/mimosa-spritesmith). From the community comes this fork of [mimosa-sprite](https://github.com/dbashford/mimosa-sprite) which shifts the spriting dependency to spritesmith and provides retina support. Great docs, check it out!
+
 ### Minor Changes
 * Dependency updates: stylus, nib, less, iced-coffee, ractive, underscore, dust, emblem, jade.  All updated to latest.  Remember, if the latest versions don't work for you, you can always [supply a specific version](http://mimosa.io/configuration.html#compilers) that works for you.
 * [mimosa-combine #11](https://github.com/dbashford/mimosa-combine/pull/11). From a PR, addresses white spaces issues in combined files.
