@@ -1,4 +1,4 @@
-## 1.1.0 (Planned) - Nov ?? 2013
+## 1.1.0 (Planned) - Nov ~04 2013
 
 Two new modules, mimosa-jshint and mimosa-csslint, as of this release will replace the old mimosa-lint.  This simplifies the config a good deal, and makes it much easier to remove one without removing the other.
 
@@ -8,9 +8,15 @@ Details on how to upgrade [on the site](http://mimosa.io/about.html).
 
 ### Major Changes
 * __New Module__:
-[mimosa-jshint](https://github.com/dbashford/mimosa-jshint). A pure [JSHint](http://www.jshint.com/) module. With release `1.1.0`, this module replaces the JavaScript portion of the current mimosa-lint module as a default Mimosa module. It preserves all of the same functionality of the JS pieces of mimosa-lint, but with a simplified config. This module also allows those who were not interested in mimosa-lint's full feature set, but want JSHint, to add it by itself.
+[mimosa-jshint](https://github.com/dbashford/mimosa-jshint). A pure [JSHint](http://www.jshint.com/) module. With release `1.1.0`, this module replaces the JavaScript portion of the current mimosa-lint module as a default Mimosa module. It preserves all of the same functionality of the JS pieces of mimosa-lint, but with a simplified config. This module also allows those who were not interested in mimosa-lint's full feature set, but want JSHint, to add it by itself.  See the site for [details on how to configure this module](http://mimosa.io/configuration.html).
 * __New Module__:
-[mimosa-csslint](https://github.com/dbashford/mimosa-csslint). A pure [CSSLint](http://csslint.net/) module. With release `1.1.0`, this module replaces the CSS portion of of the current mimosa-lint module as a default Mimosa module. It preserves all of the same functionality of CSS pieces of mimosa-lint, but with a simplified config. This module also allows those who were not interested in mimosa-lint's full feature set but want CSSLint to simply add it.
+[mimosa-csslint](https://github.com/dbashford/mimosa-csslint). A pure [CSSLint](http://csslint.net/) module. With release `1.1.0`, this module replaces the CSS portion of of the current mimosa-lint module as a default Mimosa module. It preserves all of the same functionality of CSS pieces of mimosa-lint, but with a simplified config. This module also allows those who were not interested in mimosa-lint's full feature set but want CSSLint to simply add it.  See the site for [details on how to configure this module](http://mimosa.io/configuration.html).
+* The two modules listed above are now default modules.
+* mimosa-lint is no longer a default module
+
+### Breaking Changes
+*  If you have a commented out mimosa-config `modules` property, these two new modules will be activated.  If you have uncommented your `modules` property, then you will be using whatever modules you have listed.  To upgrade to the new lint/hint modules and stop using the previous one, checkout [the 1.1 Release information on the site](http://mimosa.io/about.html).
+
 
 ## 1.0.12 - Oct 31 2013
 
