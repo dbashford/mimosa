@@ -15,8 +15,8 @@ Details on how to upgrade [on the site](http://mimosa.io/about.html).
 * mimosa-lint is no longer a default module
 
 ### Breaking Changes
-*  If you have a commented out mimosa-config `modules` property, these two new modules will be activated.  If you have uncommented your `modules` property, then you will be using whatever modules you have listed.  To upgrade to the new lint/hint modules and stop using the previous one, checkout [the 1.1 Release information on the site](http://mimosa.io/about.html).
-
+* If you have a __commented__ out mimosa-config `modules` property, these two new modules will be activated. If you need a quick fix, uncomment your `modules` array and leave it unchanged. You will continue using the older lint module. Otherwise checkout [the 1.1 Release information on the site](http://mimosa.io/about.html) to upgrade and use the new modules.
+* If you have __uncommented__ your `modules` property, then you will be using whatever modules you have listed __and no changes are necessary__.  To upgrade to the new lint/hint modules and stop using the previous one, checkout [the 1.1 Release information on the site](http://mimosa.io/about.html).
 
 ## 1.0.12 - Oct 31 2013
 
