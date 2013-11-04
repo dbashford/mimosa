@@ -1,4 +1,4 @@
-## 1.1.0 (Planned) - Nov ~04 2013
+## 1.1.0 - Nov 04 2013
 
 Two new modules, mimosa-jshint and mimosa-csslint, as of this release will replace the old mimosa-lint.  This simplifies the config a good deal, and makes it much easier to remove one without removing the other.
 
