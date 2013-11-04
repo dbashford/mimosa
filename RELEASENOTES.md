@@ -14,6 +14,9 @@ Details on how to upgrade [on the site](http://mimosa.io/about.html).
 * The two modules listed above are now default modules.
 * mimosa-lint is no longer a default module
 
+### Minor Changes
+* [mimosa-post-hook](https://github.com/dbashford/mimosa-post-hook). Updated the module to allow for configuring which `postBuild` workflow step to run the commands on.  This'll allow you to, for instance, run some command before the server starts.  Also added the ability to selectively choose when to continue Mimosa workflow processing for each command.  This will allow you to wait for a timeout or a certain message in stdout before resuming Mimosa workflow steps.  So, for example, you can ensure Mongo is started before starting the server.
+
 ### Breaking Changes
 * If you have a __commented__ out mimosa-config `modules` property, these two new modules will be activated. If you need a quick fix, uncomment your `modules` array and leave it unchanged. You will continue using the older lint module. Otherwise checkout [the 1.1 Release information on the site](http://mimosa.io/about.html) to upgrade and use the new modules.
 * If you have __uncommented__ your `modules` property, then you will be using whatever modules you have listed __and no changes are necessary__.  To upgrade to the new lint/hint modules and stop using the previous one, checkout [the 1.1 Release information on the site](http://mimosa.io/about.html).
