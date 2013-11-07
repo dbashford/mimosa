@@ -4,7 +4,7 @@ configurer = require '../util/configurer'
 Watcher =  require '../util/watcher'
 Cleaner = require '../util/cleaner'
 
-build = (opts, foo, bar, baz, what) =>
+build = (opts) =>
   if opts.debug
     logger.setDebug()
     process.env.DEBUG = true
