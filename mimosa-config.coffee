@@ -1,5 +1,5 @@
 exports.config =
-  modules: ["lint"]
+  modules: ["jshint"]
   compilers:
     extensionOverrides:
       typescript: null
@@ -9,8 +9,7 @@ exports.config =
     javascriptDir: null
   copy:
     extensions: ["js", "ts"]
-  lint:
+  jshint:
     exclude:[/\/resources\//, /\/client\//]
     rules:
-      javascript:
-        node: true
+      node: true
