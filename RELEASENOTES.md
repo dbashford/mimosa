@@ -1,3 +1,12 @@
+## 1.1.4 - Nov 08 2013
+
+### Major Changes
+* [mimosa #309](https://github.com/dbashford/mimosa/issues/309). A new `-e/--errorout` flag was added to the `build` command. When the `errorout` flag is used, and a file fails compile (js, css, template), the build will exit immediately with a non-zero status.  Use this flag for your automated builds.  If `errorout` is not used, `mimosa build` will continue compiling files and will return a zero status.
+
+## 1.1.2/1.1.3 - Nov 08 2013
+
+Small patch fixes to fix problems with `1.1.1`.
+
 ## 1.1.1 - Nov 07 2013
 
 ### Minor Changes
