@@ -277,15 +277,16 @@ processConfig = (opts, callback) ->
     else
       return logger.fatal "Profile provided but not found at [[ #{path.join('profiles', opts.profile)} ]]"
 
-  config.isServer =     opts?.server
-  config.isOptimize =   opts?.optimize
-  config.isMinify =     opts?.minify
+  config.isServer =    opts?.server
+  config.isOptimize =  opts?.optimize
+  config.isMinify =    opts?.minify
   config.isForceClean = opts?.force
-  config.isClean =      opts?.clean
-  config.isBuild =      opts?.build
-  config.isWatch =      opts?.watch
-  config.isPackage =    opts?.package
-  config.isInstall =    opts?.install
+  config.isClean =     opts?.clean
+  config.isBuild =     opts?.build
+  config.isWatch =     opts?.watch
+  config.isPackage =   opts?.package
+  config.isInstall =   opts?.install
+  config.exitOnError = opts?.errorout
 
   _applyAndValidateDefaults config, (err, newConfig, modules) ->
     if err
