@@ -38,7 +38,7 @@ module.exports = class JSCompiler extends BaseCompiler
     options.files.forEach (file) =>
       @compile file, (err, output, compiledConfig, sourceMap) =>
         if err
-          logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}"
+          logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}", {exitIfBuild:true}
         else
           if sourceMap
 

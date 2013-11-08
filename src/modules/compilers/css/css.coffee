@@ -77,7 +77,7 @@ module.exports = class AbstractCSSCompiler extends BaseCompiler
         if exists
           @compile file, config, options, (err, result) =>
             if err
-              logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}"
+              logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}", {exitIfBuild:true}
             else
               file.outputFileText = result
 

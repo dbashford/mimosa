@@ -88,7 +88,7 @@ module.exports = class TemplateCompiler extends BaseCompiler
       file.templateName = @__generateTemplateName(file.inputFileName, config)
       @compile file, (err, result) =>
         if err
-          logger.error "Template [[ #{file.inputFileName} ]] failed to compile. Reason: #{err}"
+          logger.error "Template [[ #{file.inputFileName} ]] failed to compile. Reason: #{err}", {exitIfBuild:true}
         else
           unless @handlesNamespacing
             result = "templates['#{file.templateName}'] = #{result}\n"
