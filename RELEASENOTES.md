@@ -1,3 +1,8 @@
+## 1.1.5 - Nov ?? 2013
+
+### Minor Changes
+* [mimosa-testem-require #7](https://github.com/dbashford/mimosa-testem-require/pull/7), [mimosa-testem-simple #3](https://github.com/dbashford/mimosa-testem-simple/issues/3). Killer PR added config flags for testem-require that allows for PhantomJS runs of testem to be turned off during `mimosa watch` and `mimosa build`. This lets testem-require just do the heavy lifting of setting up your application's testing suite but not do the execution.
+
 ## 1.1.4 - Nov 08 2013
 
 ### Major Changes
