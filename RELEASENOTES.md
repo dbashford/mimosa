@@ -1,3 +1,7 @@
+## 1.1.6 - Nov 20 2013
+
+* [mimosa #313](https://github.com/dbashford/mimosa/issues/313). Fixed issue where Mimosa was not recognizing valid Stylus `@import` syntax without quotes.
+
 ## 1.1.5 - Nov 20 2013
 
 ### Minor Changes

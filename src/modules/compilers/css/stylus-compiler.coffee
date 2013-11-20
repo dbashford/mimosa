@@ -10,7 +10,7 @@ AbstractCssCompiler = require './css'
 
 module.exports = class StylusCompiler extends AbstractCssCompiler
   libName: 'stylus'
-  importRegex: /@import ['"](.*)['"]/g
+  importRegex: /@import[\s\t]*[\(]?[\s\t]*['"]?([a-zA-Z0-9*\/\.\-\_]*)[\s\t]*[\n;\s'")]?/g
 
   @prettyName        = "(*) Stylus - http://learnboost.github.com/stylus/"
   @defaultExtensions = ["styl"]
