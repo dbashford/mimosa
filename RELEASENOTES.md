@@ -1,3 +1,8 @@
+## 1.1.7 - Nov 23 2013
+
+### Minor Changes
+* [mimosa-live-reload #4](https://github.com/dbashford/mimosa-live-reload/pull/4). Fix for cross domain support.
+
 ## 1.1.6 - Nov 20 2013
 
 * [mimosa #313](https://github.com/dbashford/mimosa/issues/313). Fixed issue where Mimosa was not recognizing valid Stylus `@import` syntax without quotes.
