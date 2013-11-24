@@ -1,3 +1,9 @@
+## 1.2.0 (Upcoming) - ?? 2013
+
+* As with `1.1.0`, one module will be breaking into 2.  The minify module currently handles both CSS and JS.  Two new modules will be created, one for each, and both will replace the current minify module as defaults.  This makes for ease of configuring, and ease of removal.
+* The only current Mimosa users that would be effected by this are those that are currently using the default module set (`modules` is commented out) and providing a `minify.exclude` config.
+* The current minify module will still be supported.  If you are using it, it will still function.
+
 ## 1.1.8 - Nov ?? 2013
 
 ### Major Changes
