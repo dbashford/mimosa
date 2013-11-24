@@ -12,11 +12,8 @@ _configTop = ->
 
   exports.config = {
 
-    # minMimosaVersion:null   # The minimum Mimosa version that must be installed to use the
-                              # project. Defaults to null, which means Mimosa will not check
-                              # the version.  This is a no-nonsense way for big teams to ensure
-                              # everyone stays up to date with the blessed Mimosa version for a
-                              # project.
+    # minMimosaVersion:null      # The minimum Mimosa version that must be installed to use the project.
+    # requiredMimosaVersion:null # The Mimosa version that must be installed to use the project.
 
     ###
     The list of Mimosa modules to use for this application. The defaults (jshint, csslint, server,

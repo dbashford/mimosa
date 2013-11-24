@@ -19,6 +19,7 @@ PRECOMPILE_FUN_REGION_LINES_MAX        = 100
 
 baseDefaults =
   minMimosaVersion:null
+  requiredMimosaVersion:null
   modules: ['jshint', 'csslint', 'server', 'require', 'minify', 'live-reload', 'bower']
   watch:
     sourceDir: "assets"
@@ -66,6 +67,9 @@ _findConfigPath = (file) ->
 _validateWatchConfig = (config) ->
   errors = []
 
+  if config.minMimosaVersion? and config.requiredMimosaVersion?
+    return ["Cannot have both minMimosaVersion and requiredMimosaVersion"]
+
   if config.minMimosaVersion?
     if config.minMimosaVersion.match(/^(\d+\.){2}(\d+)$/)
       currVersion =  require('../../package.json').version
@@ -81,9 +85,17 @@ _validateWatchConfig = (config) ->
 
         unless isHigher
           if +vPiece < +piece
-            return ["Your version of Mimosa [[ #{currVersion} ]] is less than the required version for this project [[ #{config.minMimosaVersion} ]]"]
+            return ["Your version of Mimosa [[ #{currVersion} ]] is less than the required minimum version for this project [[ #{config.minMimosaVersion} ]]"]
     else
-      errors.push "minMimosaVersion must take the form 'number.number.number', ex: '0.7.0'"
+      errors.push "minMimosaVersion must take the form 'number.number.number', ex: '1.1.0'"
+
+  if config.requiredMimosaVersion?
+    if config.requiredMimosaVersion.match(/^(\d+\.){2}(\d+)$/)
+      currVersion = require('../../package.json').version
+      unless currVersion is config.requiredMimosaVersion
+        return ["Your version of Mimosa [[ #{currVersion} ]] does not match the required version for this project [[ #{config.requiredMimosaVersion} ]]"]
+    else
+      errors.push "requiredMimosaVersion must take the form 'number.number.number', ex: '1.1.0'"
 
   config.watch.sourceDir = validators.multiPathMustExist(errors, "watch.sourceDir", config.watch.sourceDir, config.root)
 
