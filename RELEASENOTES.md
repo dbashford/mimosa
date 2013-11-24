@@ -1,3 +1,8 @@
+## 1.1.8 - Nov ?? 2013
+
+### Major Changes
+* __New Skeleton__: [minimal](https://github.com/lachenmayer/mimosa-minimal). A stripped down skeleton for quick startup. No server or prescribed MVC.
+
 ## 1.1.7 - Nov 23 2013
 
 ### Minor Changes
