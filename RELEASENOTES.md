@@ -4,7 +4,7 @@
 * The only current Mimosa users that would be effected by this are those that are currently using the default module set (`modules` is commented out) and providing a `minify.exclude` config.
 * The current minify module will still be supported.  If you are using it, it will still function.
 
-## 1.1.8 - Nov 2? 2013
+## 1.1.8 - Nov 24 2013
 
 ### Major Changes
 * A new configuration property was added to the root of the config: `requiredMimosaVersion`.  It is `null` by default.  When it is provided, Mimosa will force the specific version be installed to run Mimosa.  This allows large project teams to force everyone to stay on a specific version, and to force them to upgrade in unison.
