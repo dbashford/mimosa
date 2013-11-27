@@ -71,7 +71,7 @@ buildConfigText = ->
   configText += _configBottom()
 
   if moduleManager.configModuleString?
-    configText = configText.replace("  # modules: ['jshint', 'csslint', server', 'require', 'minify', 'live-reload', 'bower']", "  modules: " + moduleManager.configModuleString)
+    configText = configText.replace("  # modules: ['jshint', 'csslint', 'server', 'require', 'minify', 'live-reload', 'bower']", "  modules: " + moduleManager.configModuleString)
 
   configText
 
