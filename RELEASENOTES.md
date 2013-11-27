@@ -6,6 +6,10 @@
 
 ## 1.1.9 - Nov 27 2013
 
+### Major Changes
+* __New Module__:
+[mimosa-minify-css](https://github.com/dbashford/mimosa-minify-css). This new module duplicates the minification/cleaning functionality of the [mimosa-minify](https://github.com/dbashford/mimosa-minify) module, except it only contains the css portions.  And it is written in JS rather than Coffee. With `1.2`, this module will be one of two modules replacing the mimosa-minify module as Mimosa defaults.
+
 ### Minor Changes
 * [mimosa #314](https://github.com/dbashford/mimosa/issues/314). `mimosa new` was not properly building the `modules` array for the mimosa-config when modules other than the internal build-ins were installed.  Small typo.
 * [mimosa-require #25](https://github.com/dbashford/mimosa-require/issues/25). Adjusting comments in config placeholder.
