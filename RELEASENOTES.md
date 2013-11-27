@@ -8,11 +8,12 @@
 
 ### Major Changes
 * __New Module__:
-[mimosa-minify-css](https://github.com/dbashford/mimosa-minify-css). This new module duplicates the minification/cleaning functionality of the [mimosa-minify](https://github.com/dbashford/mimosa-minify) module, except it only contains the css portions.  And it is written in JS rather than Coffee. With `1.2`, this module will be one of two modules replacing the mimosa-minify module as Mimosa defaults.
+[mimosa-minify-css](https://github.com/dbashford/mimosa-minify-css). This new module duplicates the CSS minification/cleaning functionality of the [mimosa-minify](https://github.com/dbashford/mimosa-minify) module, omitting the CSS functionality.  And it is written in JS rather than Coffee. With `1.2`, this module will be one of two modules replacing the mimosa-minify module as Mimosa defaults.
+* __New Module__:
+[mimosa-minify-js](https://github.com/dbashford/mimosa-minify-js). This new module duplicates the JavaScript minification functionality of the [mimosa-minify](https://github.com/dbashford/mimosa-minify) module, omitting the CSS functionality.  And it is written in JS rather than Coffee. With `1.2`, this module will be one of two modules replacing the mimosa-minify module as Mimosa defaults.  Also, mimosa-minify did not create source maps for any files that didn't already have source maps, like compiled CoffeeScript files.  This module will create source maps for all minified JavaScript files, whether they are transpiled files or not.
 
 ### Minor Changes
 * [mimosa-require #26](https://github.com/dbashford/mimosa-require/issues/26). Fixing issue with require module not cleaning up r.js built files.
-
 
 ## 1.1.9 - Nov 27 2013
 
