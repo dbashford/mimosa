@@ -4,11 +4,17 @@
 * The only current Mimosa users that would be effected by this are those that are currently using the default module set (`modules` is commented out) and providing a `minify.exclude` config.
 * The current minify module will still be supported.  If you are using it, it will still function.
 
-## 1.1.9 - Nov 27 2013
+## 1.1.10 - Nov 27 2013
 
 ### Major Changes
 * __New Module__:
 [mimosa-minify-css](https://github.com/dbashford/mimosa-minify-css). This new module duplicates the minification/cleaning functionality of the [mimosa-minify](https://github.com/dbashford/mimosa-minify) module, except it only contains the css portions.  And it is written in JS rather than Coffee. With `1.2`, this module will be one of two modules replacing the mimosa-minify module as Mimosa defaults.
+
+### Minor Changes
+* [mimosa-require #26](https://github.com/dbashford/mimosa-require/issues/26). Fixing issue with require module not cleaning up r.js built files.
+
+
+## 1.1.9 - Nov 27 2013
 
 ### Minor Changes
 * [mimosa #314](https://github.com/dbashford/mimosa/issues/314). `mimosa new` was not properly building the `modules` array for the mimosa-config when modules other than the internal build-ins were installed.  Small typo.
