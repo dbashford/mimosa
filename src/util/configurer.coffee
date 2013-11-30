@@ -20,7 +20,7 @@ PRECOMPILE_FUN_REGION_LINES_MAX        = 100
 baseDefaults =
   minMimosaVersion:null
   requiredMimosaVersion:null
-  modules: ['jshint', 'csslint', 'server', 'require', 'minify', 'live-reload', 'bower']
+  modules: ['jshint', 'csslint', 'server', 'require', 'minify-js', 'minify-css', 'live-reload', 'bower']
   watch:
     sourceDir: "assets"
     compiledDir: "public"

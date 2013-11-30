@@ -12,7 +12,7 @@ compilers =     require './compilers'
 file =          require './file'
 mimosaPackage = require('../../package.json')
 
-builtIns = ['mimosa-server','mimosa-jshint','mimosa-csslint','mimosa-require','mimosa-minify','mimosa-live-reload','mimosa-bower']
+builtIns = ['mimosa-server','mimosa-jshint','mimosa-csslint','mimosa-require','mimosa-minify-js','mimosa-minify-css','mimosa-live-reload','mimosa-bower']
 configuredModules = null
 
 isMimosaModuleName = (str) -> str.indexOf('mimosa-') > -1

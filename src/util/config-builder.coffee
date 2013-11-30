@@ -16,12 +16,11 @@ _configTop = ->
     # requiredMimosaVersion:null # The Mimosa version that must be installed to use the project.
 
     ###
-    The list of Mimosa modules to use for this application. The defaults (jshint, csslint, server,
-    require, minify, live-reload, bower) come bundled with Mimosa and do not need to be installed.
-    The 'mimosa-' that preceeds all Mimosa module names is assumed, however you can use it if you
-    want. If a module is listed here that Mimosa is unaware of, Mimosa will attempt to install it.
+    The list of Mimosa modules to use for this application. The defaults come bundled with Mimosa
+    and do not need to be installed. If a module is listed here that Mimosa is unaware of, Mimosa
+    will attempt to install it.
     ###
-    # modules: ['jshint', 'csslint', 'server', 'require', 'minify', 'live-reload', 'bower']
+    # modules: ['jshint', 'csslint', 'server', 'require', 'minify-js', 'minify-css', 'live-reload', 'bower']
 
     # watch:
       # sourceDir: "assets"                # directory location of web assets, can be relative to
@@ -71,7 +70,7 @@ buildConfigText = ->
   configText += _configBottom()
 
   if moduleManager.configModuleString?
-    configText = configText.replace("  # modules: ['jshint', 'csslint', 'server', 'require', 'minify', 'live-reload', 'bower']", "  modules: " + moduleManager.configModuleString)
+    configText = configText.replace("  # modules: ['jshint', 'csslint', 'server', 'require', 'minify-js', 'minify-css', 'live-reload', 'bower']", "  modules: " + moduleManager.configModuleString)
 
   configText
 

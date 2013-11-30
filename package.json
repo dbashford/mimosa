@@ -1,7 +1,7 @@
 {
   "name": "mimosa",
   "preferGlobal": "true",
-  "version": "1.1.10",
+  "version": "1.2.0",
   "homepage": "http://www.mimosa.io",
   "author": "David Bashford",
   "description": "A modern browser development toolkit and application assembler. Compile, lint, optimize, serve and more.",
@@ -81,13 +81,15 @@
     "logmimosa": "0.6.0",
     "skelmimosa": "0.5.1",
     "mimosa-server": "1.0.0",
-    "mimosa-minify": "1.1.2",
+    "mimosa-minify-js": "1.0.0",
+    "mimosa-minify-css": "1.0.0",
     "mimosa-jshint": "1.0.1",
     "mimosa-csslint": "1.0.1",
     "mimosa-live-reload": "1.0.3",
     "mimosa-require": "1.5.2",
     "mimosa-bower": "1.3.0",
-    "request": "2.27.0"
+    "request": "2.27.0",
+    "mimosa-sprite": "~0.1.2"
   },
   "license": "MIT",
   "engines": {
