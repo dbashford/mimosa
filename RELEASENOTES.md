@@ -1,8 +1,11 @@
-## 1.2.0 (Upcoming) - ?? 2013
+## 1.2.0 - Nov 30 2013
 
-* As with `1.1.0`, one module will be breaking into 2.  The minify module currently handles both CSS and JS.  Two new modules will be created, one for each, and both will replace the current minify module as defaults.  This makes for ease of configuring, and ease of removal.
+### Major Changes
+* [mimosa-minify-css](https://github.com/dbashford/mimosa-minify-css) and [mimosa-minify-js](https://github.com/dbashford/mimosa-minify-js) are now default modules.
+* [mimosa-minify](https://github.com/dbashford/mimosa-minify) is no longer a default module
 * The only current Mimosa users that would be effected by this are those that are currently using the default module set (`modules` is commented out) and providing a `minify.exclude` config.
 * The current minify module will still be supported.  If you are using it, it will still function.
+* For upgrade details [visit the site](http://mimosa.io/about.html).
 
 ## 1.1.10 - Nov 27 2013
 
