@@ -1,3 +1,8 @@
+## 1.2.1 - Nov 30 2013
+
+### Minor Changes
+* [mimosa-bower #31](https://github.com/dbashford/mimosa-bower/issues/31). Improved error messaging and fixed issue where Mimosa would stop processing when Bower install would fail because of git not being detected.
+
 ## 1.2.0 - Nov 30 2013
 
 ### Major Changes
