@@ -73,7 +73,6 @@ module.exports = class SassCompiler extends AbstractCssCompiler
 
     finished = (error, text) =>
       logger.debug "Finished node compile for file [[ #{file.inputFileName} ]], errors? #{error?}"
-      @initBaseFilesToCompile--
       done error, text
 
     @compilerLib.render
@@ -101,13 +100,13 @@ module.exports = class SassCompiler extends AbstractCssCompiler
       error += buffer.toString()
     sass.on 'exit', (code) =>
       logger.debug "Finished Ruby SASS compile for file [[ #{fileName} ]], errors? #{error?}"
-      @initBaseFilesToCompile--
       done(error, result)
 
-  _determineBaseFiles: =>
-    baseFiles = @allFiles.filter (file) =>
+  _determineBaseFiles: (allFiles) =>
+    baseFiles = allFiles.filter (file) =>
       (not @__isInclude(file)) and file.indexOf('compass') < 0
-    logger.debug "Base files for SASS are:\n#{baseFiles.join('\n')}"
+    if logger.isDebug
+      logger.debug "Base files for SASS are:\n#{baseFiles.join('\n')}"
     baseFiles
 
   _getImportFilePath: (baseFile, importPath) ->

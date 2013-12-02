@@ -26,9 +26,8 @@ module.exports = class LessCompiler extends AbstractCssCompiler
       paths: [config.watch.sourceDir, path.dirname(fileName)],
       filename: fileName
     parser.parse file.inputFileText, (error, tree) =>
-      @initBaseFilesToCompile--
-
-      return done(error, null) if error?
+      if error?
+        return done(error, null)
 
       try
         logger.debug "...then converting to CSS"
@@ -37,13 +36,14 @@ module.exports = class LessCompiler extends AbstractCssCompiler
         err = "#{ex.type}Error:#{ex.message}"
         err += " in '#{ex.filename}:#{ex.line}:#{ex.column}'" if ex.filename
 
-      logger.debug "Finished LESS compile for file [[ #{fileName} ]], errors? #{err?}"
+      if logger.isDebug
+        logger.debug "Finished LESS compile for file [[ #{fileName} ]], errors? #{err?}"
 
       done(err, result)
 
-  _determineBaseFiles: =>
+  _determineBaseFiles: (allFiles) =>
     imported = []
-    for file in @allFiles
+    for file in allFiles
       imports = fs.readFileSync(file, 'utf8').match(@importRegex)
       continue unless imports?
 
@@ -53,7 +53,7 @@ module.exports = class LessCompiler extends AbstractCssCompiler
         fullImportPath = path.join path.dirname(file), importPath
         imported.push fullImportPath
 
-    baseFiles = _.difference(@allFiles, imported)
+    baseFiles = _.difference(allFiles, imported)
     logger.debug "Base files for LESS are:\n#{baseFiles.join('\n')}"
     baseFiles
 

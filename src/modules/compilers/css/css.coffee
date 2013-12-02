@@ -125,10 +125,10 @@ module.exports = class AbstractCSSCompiler
 
   _processWatchedDirectories: (config, options, next) =>
     @includeToBaseHash = {}
-    @allFiles = @__getAllFiles(config)
+    allFiles = @__getAllFiles(config)
 
     oldBaseFiles = @baseFiles ?= []
-    @baseFiles = @_determineBaseFiles()
+    @baseFiles = @_determineBaseFiles(allFiles)
     allBaseFiles = _.union oldBaseFiles, @baseFiles
 
     # Change in base files to be compiled, cleanup and message
@@ -136,7 +136,7 @@ module.exports = class AbstractCSSCompiler
       logger.info "The list of CSS files that Mimosa will compile has changed. Mimosa will now compile the following root files to CSS:"
       logger.info baseFile for baseFile in @baseFiles
 
-    @__importsForFile(baseFile, baseFile) for baseFile in @baseFiles
+    @__importsForFile(baseFile, baseFile, allFiles) for baseFile in @baseFiles
 
     next()
 
@@ -155,7 +155,7 @@ module.exports = class AbstractCSSCompiler
 
   # get all imports for a given file, and recurse through
   # those imports until entire tree is built
-  __importsForFile: (baseFile, file) ->
+  __importsForFile: (baseFile, file, allFiles) ->
     imports = fs.readFileSync(file, 'utf8').match(@importRegex)
     return unless imports?
 
@@ -167,7 +167,7 @@ module.exports = class AbstractCSSCompiler
       importPath = @importRegex.exec(anImport)[1]
       fullImportFilePath = @_getImportFilePath(file, importPath)
 
-      includeFiles = @allFiles.filter (f) =>
+      includeFiles = allFiles.filter (f) =>
         f = f.replace(path.extname(f), '') unless @partialKeepsExtension
         f.slice(-fullImportFilePath.length) is fullImportFilePath
 
@@ -179,4 +179,4 @@ module.exports = class AbstractCSSCompiler
         else
           logger.debug "Creating base file entry for include file [[ #{includeFile} ]], adding base file [[ #{baseFile} ]]"
           @includeToBaseHash[includeFile] = [baseFile]
-        @__importsForFile(baseFile, includeFile)
+        @__importsForFile(baseFile, includeFile, allFiles)

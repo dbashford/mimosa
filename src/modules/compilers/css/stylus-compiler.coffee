@@ -24,8 +24,8 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
     fileName = file.inputFileName
 
     cb = (err, css) =>
-      logger.debug "Finished Stylus compile for file [[ #{fileName} ]], errors?  #{err?}"
-      @initBaseFilesToCompile--
+      if logger.isDebug
+        logger.debug "Finished Stylus compile for file [[ #{fileName} ]], errors?  #{err?}"
       done(err, css)
 
     logger.debug "Compiling Stylus file [[ #{fileName} ]]"
@@ -56,9 +56,9 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
 
     stylusSetup.render cb
 
-  _determineBaseFiles: =>
+  _determineBaseFiles: (allFiles) =>
     imported = []
-    for file in @allFiles
+    for file in allFiles
       imports = fs.readFileSync(file, 'utf8').match(@importRegex)
       continue unless imports?
 
@@ -66,14 +66,15 @@ module.exports = class StylusCompiler extends AbstractCssCompiler
         @importRegex.lastIndex = 0
         importPath = @importRegex.exec(anImport)[1]
         fullImportPath = path.join path.dirname(file), importPath
-        for fullFilePath in @allFiles
+        for fullFilePath in allFiles
           if fullFilePath.indexOf(fullImportPath) is 0
             fullImportPath += path.extname(fullFilePath)
             break
         imported.push fullImportPath
 
-    baseFiles = _.difference(@allFiles, imported)
-    logger.debug "Base files for Stylus are:\n#{baseFiles.join('\n')}"
+    baseFiles = _.difference(allFiles, imported)
+    if logger.isDebug
+      logger.debug "Base files for Stylus are:\n#{baseFiles.join('\n')}"
     baseFiles
 
   _getImportFilePath: (baseFile, importPath) ->
