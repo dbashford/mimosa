@@ -29,7 +29,19 @@ class MimosaCompilerModule
 
   registration: (config, register) ->
     for compiler in @configuredCompilers.compilers
-      compiler.registration(config, register) if compiler.registration?
+      if compiler.registration?
+        compiler.registration(config, register)
+
+      # set default compilers
+      if compiler.libName
+        if config.compilers.libs[compiler.constructor.base]
+          logger.debug "Using provided [[ #{compiler.constructor.base} ]] compiler"
+          compiler.compilerLib = mimosaConfig.compilers.libs[compiler.constructor.base]
+        else
+          logger.debug "Using Mimosa embedded [[ #{compiler.constructor.base} ]] compiler"
+          unless compiler.libName is 'node-sass'
+            #compiler.compilerLib = require compiler.libName
+            compiler.delayedCompilerLib = true
 
     if config.template
       register ['buildExtension'], 'complete', @_testDifferentTemplateLibraries, config.extensions.template
@@ -89,8 +101,7 @@ class MimosaCompilerModule
           _.difference Compiler.defaultExtensions, allOverriddenExtensions
 
       # compiler left without extensions, don't register
-
-      #continue if extensions.length is 0
+      # continue if extensions.length is 0
       if extensions
         compiler = new Compiler(config, extensions)
         allCompilers.push compiler

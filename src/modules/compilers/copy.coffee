@@ -11,7 +11,7 @@ module.exports = class CopyCompiler
     hasFiles = options.files?.length > 0
     return next() unless hasFiles
 
-    options.files.forEach (file) =>
+    options.files.forEach (file) ->
       file.outputFileText = file.inputFileText
 
     next()

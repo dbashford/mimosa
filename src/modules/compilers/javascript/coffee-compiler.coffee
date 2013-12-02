@@ -2,7 +2,7 @@
 
 JSCompiler = require "./javascript"
 
-module.exports = class CoffeeCompiler extends JSCompiler
+module.exports = class CoffeeCompiler extends JSCompiler.JSCompiler
 
   libName: 'coffee-script'
 
@@ -16,7 +16,7 @@ module.exports = class CoffeeCompiler extends JSCompiler
 
   registration: (config, register) ->
     super config, register
-    @_cleanUpSourceMapsRegister register, @extensions, @coffeeConfig
+    JSCompiler.cleanUpSourceMapsRegister register, @extensions, @coffeeConfig
 
   compile: (file, cb) ->
     @_icedAndCoffeeCompile file, @coffeeConfig, cb

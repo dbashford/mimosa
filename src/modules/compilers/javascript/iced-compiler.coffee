@@ -2,7 +2,7 @@
 
 JSCompiler = require "./javascript"
 
-module.exports = class IcedCompiler extends JSCompiler
+module.exports = class IcedCompiler extends JSCompiler.JSCompiler
   libName: 'iced-coffee-script'
   @prettyName        = "Iced CoffeeScript - http://maxtaco.github.com/coffee-script/"
   @defaultExtensions = ["iced"]
@@ -13,7 +13,7 @@ module.exports = class IcedCompiler extends JSCompiler
 
   registration: (config, register) ->
     super config, register
-    @_cleanUpSourceMapsRegister register, @extensions, @icedConfig
+    JSCompiler.cleanUpSourceMapsRegister register, @extensions, @icedConfig
 
   compile: (file, cb) ->
     @_icedAndCoffeeCompile file, @icedConfig, cb

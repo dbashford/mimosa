@@ -15,7 +15,7 @@ TypeScript = null
 
 JSCompiler = require "./javascript"
 
-module.exports = class TypeScriptCompiler extends JSCompiler
+module.exports = class TypeScriptCompiler extends JSCompiler.JSCompiler
 
   @prettyName        = "TypeScript - http://www.typescriptlang.org"
   @defaultExtensions = ["ts"]

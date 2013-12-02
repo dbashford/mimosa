@@ -7,12 +7,10 @@ _ =      require 'lodash'
 logger =           require 'logmimosa'
 
 fileUtils =        require '../../../util/file'
-BaseCompiler = require '../base'
 
-module.exports = class TemplateCompiler extends BaseCompiler
+module.exports = class TemplateCompiler
 
   constructor: (config) ->
-    super()
     if @clientLibrary? and config.template.wrapType is 'amd'
       @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
       @clientPath = path.join config.vendor.javascripts, "#{@clientLibrary}.js"
@@ -79,7 +77,9 @@ module.exports = class TemplateCompiler extends BaseCompiler
     hasFiles = options.files?.length > 0
     return next() unless hasFiles
 
-    @determineCompilerLib config
+    if @delayedCompilerLib
+      @compilerLib = require @libName
+      @delayedCompilerLib = null
 
     i = 0
     newFiles = []

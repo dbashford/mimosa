@@ -5,7 +5,7 @@ _ = require 'lodash'
 
 JSCompiler = require "./javascript"
 
-module.exports = class CocoCompiler extends JSCompiler
+module.exports = class CocoCompiler extends JSCompiler.JSCompiler
 
   libName: 'coco'
 
