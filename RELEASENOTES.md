@@ -1,3 +1,8 @@
+## 1.2.2 - Dec 4 2013
+
+### Minor Changes
+* [mimosa #318](https://github.com/dbashford/mimosa/issues/318). Added `mp4` to the list of default `copy.extensions`.
+
 ## 1.2.1 - Nov 30 2013
 
 ### Minor Changes
