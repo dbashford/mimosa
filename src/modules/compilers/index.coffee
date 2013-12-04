@@ -61,15 +61,6 @@ class MimosaCompilerModule
 
     next()
 
-  _compilersWithoutCopy: ->
-    @all.filter (comp) -> comp.base isnt "copy"
-
-  compilersByType: ->
-    compilersByType = {css:[], javascript:[], template:[]}
-    for comp in @_compilersWithoutCopy()
-      compilersByType[comp.type].push(comp)
-    compilersByType
-
   setupCompilers: (config) ->
     allOverriddenExtensions = []
     for base, ext of config.compilers.extensionOverrides

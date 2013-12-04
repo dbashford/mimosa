@@ -6,57 +6,180 @@ wrench =   require 'wrench'
 _ =        require 'lodash'
 logger =   require 'logmimosa'
 
-compilerCentral = require '../modules/compilers'
 deps =      require('../../package.json').dependencies
 buildConfig = require '../util/config-builder'
+compilers = {
+  "javascript": [
+    {
+      "prettyName": "Coco - https://github.com/satyr/coco",
+      "base": "coco",
+      "defaultExtensions": [
+        "co"
+      ]
+    },
+    {
+      "isDefault": true,
+      "prettyName": "(*) CoffeeScript - http://coffeescript.org/",
+      "base": "coffee",
+      "defaultExtensions": [
+        "coffee"
+      ]
+    },
+    {
+      "prettyName": "Iced CoffeeScript - http://maxtaco.github.com/coffee-script/",
+      "base": "iced",
+      "defaultExtensions": [
+        "iced"
+      ]
+    },
+    {
+      "prettyName": "LiveScript - http://gkz.github.com/LiveScript/",
+      "base": "livescript",
+      "defaultExtensions": [
+        "ls"
+      ]
+    },
+    {
+      "prettyName": "None (Raw JavaScript)",
+      "base": "none",
+      "defaultExtensions": [
+        "js"
+      ]
+    },
+    {
+      "prettyName": "TypeScript - http://www.typescriptlang.org",
+      "base": "typescript",
+      "defaultExtensions": [
+        "ts"
+      ]
+    }
+  ],
+  "css": [
+    {
+      "prettyName": "LESS - http://lesscss.org/",
+      "base": "less",
+      "defaultExtensions": [
+        "less"
+      ]
+    },
+    {
+      "prettyName": "None (Raw CSS)",
+      "base": "none",
+      "defaultExtensions": [
+        "css"
+      ]
+    },
+    {
+      "prettyName": "SASS - http://sass-lang.com/",
+      "base": "sass",
+      "defaultExtensions": [
+        "scss"
+      ]
+    },
+    {
+      "isDefault": true,
+      "prettyName": "(*) Stylus - http://learnboost.github.com/stylus/",
+      "base": "stylus",
+      "defaultExtensions": [
+        "styl"
+      ]
+    }
+  ],
+  "template": [
+    {
+      "prettyName": "Coco - https://github.com/satyr/coco",
+      "base": "coco",
+      "defaultExtensions": [
+        "co"
+      ]
+    },
+    {
+      "isDefault": true,
+      "prettyName": "(*) CoffeeScript - http://coffeescript.org/",
+      "base": "coffee",
+      "defaultExtensions": [
+        "coffee"
+      ]
+    },
+    {
+      "prettyName": "Iced CoffeeScript - http://maxtaco.github.com/coffee-script/",
+      "base": "iced",
+      "defaultExtensions": [
+        "iced"
+      ]
+    },
+    {
+      "prettyName": "LiveScript - http://gkz.github.com/LiveScript/",
+      "base": "livescript",
+      "defaultExtensions": [
+        "ls"
+      ]
+    },
+    {
+      "prettyName": "None (Raw JavaScript)",
+      "base": "none",
+      "defaultExtensions": [
+        "js"
+      ]
+    },
+    {
+      "prettyName": "TypeScript - http://www.typescriptlang.org",
+      "base": "typescript",
+      "defaultExtensions": [
+        "ts"
+      ]
+    }
+  ]
+}
+
+servers: [
+    {name:"None", prettyName:"None - You either don't need a server or you have one already that you will manage separate from Mimosa."}
+    {name:"Express", prettyName:"(*) Express - http://expressjs.com/", isDefault:true}
+    {name:"Mimosa's Express", prettyName:"Mimosa's Embedded Express - http://mimosa.io/server.html#mimosas, this is less powerful than having your own, but may be sufficient for trivial websites."}
+  ]
+
+views: [
+  {
+    name:"jade"
+    prettyName:"(*) Jade - http://jade-lang.com/"
+    library: "jade"
+    extension:"jade"
+    isDefault:true
+  }
+  {
+    name:"hogan"
+    prettyName:"Hogan - http://twitter.github.com/hogan.js/"
+    library: "hogan.js"
+    extension:"hjs"
+  }
+  {
+    name:"html"
+    prettyName:"Plain HTML"
+    library: "ejs"
+    extension:"html"
+  }
+  {
+    name:"ejs"
+    prettyName:"Embedded JavaScript Templates (EJS) - https://github.com/visionmedia/ejs"
+    library: "ejs"
+    extension:"ejs"
+  }
+  {
+    name:"handlebars"
+    prettyName:"Handlebars - http://handlebarsjs.com/"
+    library: "handlebars"
+    extension:"hbs"
+  }
+  {
+    name:"dust"
+    prettyName:"Dust - http://linkedin.github.io/dustjs/"
+    library: "dustjs-linkedin"
+    extension:"dust"
+  }
+]
+
 
 class NewCommand
-
-  servers: [
-      {name:"None", prettyName:"None - You either don't need a server or you have one already that you will manage separate from Mimosa."}
-      {name:"Express", prettyName:"(*) Express - http://expressjs.com/", isDefault:true}
-      {name:"Mimosa's Express", prettyName:"Mimosa's Embedded Express - http://mimosa.io/server.html#mimosas, this is less powerful than having your own, but may be sufficient for trivial websites."}
-    ]
-
-  views: [
-      {
-        name:"jade"
-        prettyName:"(*) Jade - http://jade-lang.com/"
-        library: "jade"
-        extension:"jade"
-        isDefault:true
-      }
-      {
-        name:"hogan"
-        prettyName:"Hogan - http://twitter.github.com/hogan.js/"
-        library: "hogan.js"
-        extension:"hjs"
-      }
-      {
-        name:"html"
-        prettyName:"Plain HTML"
-        library: "ejs"
-        extension:"html"
-      }
-      {
-        name:"ejs"
-        prettyName:"Embedded JavaScript Templates (EJS) - https://github.com/visionmedia/ejs"
-        library: "ejs"
-        extension:"ejs"
-      }
-      {
-        name:"handlebars"
-        prettyName:"Handlebars - http://handlebarsjs.com/"
-        library: "handlebars"
-        extension:"hbs"
-      }
-      {
-        name:"dust"
-        prettyName:"Dust - http://linkedin.github.io/dustjs/"
-        library: "dustjs-linkedin"
-        extension:"dust"
-      }
-    ]
 
   constructor: (@program) ->
 
@@ -85,14 +208,14 @@ class NewCommand
     else
       process.cwd()
 
-    compilers = compilerCentral.compilersByType()
     if opts.defaults
-      @_createWithDefaults compilers, name
+      @_createWithDefaults name
     else
-      @_prompting compilers, name
+      @_prompting name
 
-  _prompting: (compilers, name) =>
-    logger.debug "Compilers :\n#{JSON.stringify(compilers, null, 2)}"
+  _prompting: (name) =>
+    if logger.isDebug
+      logger.debug "Compilers :\n#{JSON.stringify(compilers, null, 2)}"
 
     logger.green "\n  Mimosa will guide you through technology selection and project creation. For"
     logger.green "  all of the selections, if your favorite is not an option, you can add a"
@@ -103,6 +226,7 @@ class NewCommand
     logger.green "  be here when you get back."
 
     logger.green "\n  To start, please choose your JavaScript meta-language: \n"
+
     @program.choose _.pluck(compilers.javascript, 'prettyName'), (i) =>
       logger.blue "\n  You chose #{compilers.javascript[i].prettyName}."
       chosen = {javascript: compilers.javascript[i]}
@@ -115,23 +239,23 @@ class NewCommand
           logger.blue "\n  You chose #{compilers.template[i].prettyName}."
           chosen.template = compilers.template[i]
           logger.green "\n  Choose your server technology: \n"
-          @program.choose _.pluck(@servers, 'prettyName'),(i) =>
-            logger.blue "\n  You chose #{@servers[i].prettyName}."
-            chosen.server = @servers[i]
+          @program.choose _.pluck(servers, 'prettyName'),(i) =>
+            logger.blue "\n  You chose #{servers[i].prettyName}."
+            chosen.server = servers[i]
             logger.green "\n  And finally choose your server view templating library:\n"
-            @program.choose _.pluck(@views, 'prettyName'),(i) =>
-              logger.blue "\n  You chose #{@views[i].prettyName}."
-              chosen.views = @views[i]
+            @program.choose _.pluck(views, 'prettyName'),(i) =>
+              logger.blue "\n  You chose #{views[i].prettyName}."
+              chosen.views = views[i]
               logger.green "\n  Creating and setting up your project... \n"
               @_create(name, chosen)
 
-  _createWithDefaults: (compilers, name) =>
+  _createWithDefaults: (name) =>
     chosen = {}
     chosen.css =        (compilers.css.filter        (item) -> item.isDefault)[0]
     chosen.javascript = (compilers.javascript.filter (item) -> item.isDefault)[0]
     chosen.template =   (compilers.template.filter   (item) -> item.isDefault)[0]
-    chosen.server =     (@servers.filter             (item) -> item.isDefault)[0]
-    chosen.views =      (@views.filter               (item) -> item.isDefault)[0]
+    chosen.server =     (servers.filter              (item) -> item.isDefault)[0]
+    chosen.views =      (views.filter                (item) -> item.isDefault)[0]
     @_create(name, chosen)
 
   _create: (name, chosen) =>
