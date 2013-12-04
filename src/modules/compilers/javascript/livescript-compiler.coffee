@@ -5,7 +5,6 @@ JSCompiler = require "./javascript"
 module.exports = class LiveScriptCompiler extends JSCompiler.JSCompiler
   libName: 'LiveScript'
 
-  @prettyName        = "LiveScript - http://gkz.github.com/LiveScript/"
   @defaultExtensions = ["ls"]
 
   constructor: (config, @extensions) ->

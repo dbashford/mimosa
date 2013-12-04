@@ -5,8 +5,6 @@ logger =     require 'logmimosa'
 HandlebarsCompiler = require './handlebars'
 
 module.exports = class HBSCompiler extends HandlebarsCompiler
-
-  @prettyName        = "(*) Handlebars - http://handlebarsjs.com/"
   @defaultExtensions = ["hbs", "handlebars"]
   @isDefault         = true
 

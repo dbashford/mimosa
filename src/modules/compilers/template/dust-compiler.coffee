@@ -8,7 +8,6 @@ module.exports = class DustCompiler extends TemplateCompiler
   handlesNamespacing: true
   libName: "dustjs-linkedin"
 
-  @prettyName        = "(*) Dust - https://github.com/linkedin/dustjs/"
   @defaultExtensions = ["dust"]
 
   constructor: (config, @extensions) ->

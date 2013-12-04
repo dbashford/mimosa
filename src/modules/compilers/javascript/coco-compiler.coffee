@@ -9,7 +9,6 @@ module.exports = class CocoCompiler extends JSCompiler.JSCompiler
 
   libName: 'coco'
 
-  @prettyName        = "Coco - https://github.com/satyr/coco"
   @defaultExtensions = ["co", "coco"]
 
   constructor: (config, @extensions) ->

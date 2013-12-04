@@ -7,7 +7,6 @@ module.exports = class EcoCompiler extends TemplateCompiler
   clientLibrary: null
   libName: 'eco'
 
-  @prettyName        = "Embedded CoffeeScript Templates (ECO) - https://github.com/sstephenson/eco"
   @defaultExtensions = ["eco"]
 
   constructor: (config, @extensions) ->

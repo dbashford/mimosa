@@ -7,7 +7,6 @@ module.exports = class RactiveCompiler extends TemplateCompiler
   clientLibrary: 'ractive'
   libName: 'ractive'
 
-  @prettyName        = "Ractive - http://www.ractivejs.org/"
   @defaultExtensions = ["rtv","rac"]
 
   constructor: (config, @extensions) ->

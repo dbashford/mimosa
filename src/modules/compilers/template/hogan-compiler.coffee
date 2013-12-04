@@ -7,7 +7,6 @@ module.exports = class HoganCompiler extends TemplateCompiler
   clientLibrary: "hogan-template"
   libName: "hogan.js"
 
-  @prettyName        = "Hogan - http://twitter.github.com/hogan.js/"
   @defaultExtensions = ["hog", "hogan", "hjs"]
 
   constructor: (config, @extensions) ->

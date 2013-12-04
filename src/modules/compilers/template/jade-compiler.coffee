@@ -7,7 +7,6 @@ module.exports = class JadeCompiler extends TemplateCompiler
   clientLibrary: "jade-runtime"
   libName: 'jade'
 
-  @prettyName        = "Jade - http://jade-lang.com/"
   @defaultExtensions = ["jade"]
 
   constructor: (config, @extensions) ->

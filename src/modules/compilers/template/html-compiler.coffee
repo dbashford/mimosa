@@ -7,7 +7,6 @@ module.exports = class HTMLCompiler extends TemplateCompiler
   clientLibrary: null
   libName: "underscore"
 
-  @prettyName        = "HTML - Just Plain HTML Snippets, no compiling"
   @defaultExtensions = ["template"]
 
   constructor: (config, @extensions) ->

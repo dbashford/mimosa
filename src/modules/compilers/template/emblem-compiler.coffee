@@ -5,7 +5,6 @@ HandlebarsCompiler = require './handlebars'
 module.exports = class EmblemCompiler extends HandlebarsCompiler
   libName: "emblem"
 
-  @prettyName        = "Emblem - http://emblemjs.com/"
   @defaultExtensions = ["emblem", "embl"]
 
   constructor: (@mimosaConfig, @extensions) ->

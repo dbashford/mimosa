@@ -108,9 +108,6 @@ class MimosaCompilerModule
 
     @
 
-  getCompilers: ->
-    @configuredCompilers
-
   defaults: ->
     compilers:
       extensionOverrides: {}

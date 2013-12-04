@@ -7,7 +7,6 @@ module.exports = class EJSCompiler extends TemplateCompiler
   clientLibrary: "ejs-filters"
   libName: "ejs"
 
-  @prettyName        = "Embedded JavaScript Templates (EJS) - https://github.com/visionmedia/ejs"
   @defaultExtensions = ["ejs"]
 
   boilerplate: """

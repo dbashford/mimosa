@@ -4,7 +4,6 @@ JSCompiler = require "./javascript"
 
 module.exports = class IcedCompiler extends JSCompiler.JSCompiler
   libName: 'iced-coffee-script'
-  @prettyName        = "Iced CoffeeScript - http://maxtaco.github.com/coffee-script/"
   @defaultExtensions = ["iced"]
 
   constructor: (config, @extensions) ->

@@ -13,7 +13,6 @@ module.exports = class SassCompiler extends AbstractCssCompiler
   libName: 'node-sass'
   importRegex: /@import ['"](.*)['"]/g
 
-  @prettyName        = "SASS - http://sass-lang.com/"
   @defaultExtensions = ["scss", "sass"]
 
   constructor: (config, @extensions) ->

@@ -87,56 +87,84 @@ compilers = {
   ],
   "template": [
     {
-      "prettyName": "Coco - https://github.com/satyr/coco",
-      "base": "coco",
-      "defaultExtensions": [
-        "co"
-      ]
+      "prettyName": "(*) Dust - https://github.com/linkedin/dustjs/",
+      "base": "dust",
+      "defaultExtensions": "dust"
+    },
+    {
+      "prettyName": "Embedded CoffeeScript Templates (ECO) - https://github.com/sstephenson/eco",
+      "base": "eco",
+      "defaultExtensions": "eco"
+    },
+    {
+      "prettyName": "Embedded JavaScript Templates (EJS) - https://github.com/visionmedia/ejs",
+      "base": "ejs",
+      "defaultExtensions": "ejs"
+    },
+    {
+      "prettyName": "Emblem - http://emblemjs.com/",
+      "base": "emblem",
+      "defaultExtensions": "emblem"
     },
     {
       "isDefault": true,
-      "prettyName": "(*) CoffeeScript - http://coffeescript.org/",
-      "base": "coffee",
-      "defaultExtensions": [
-        "coffee"
-      ]
+      "prettyName": "(*) Handlebars - http://handlebarsjs.com/",
+      "base": "handlebars",
+      "defaultExtensions": "hbs"
     },
     {
-      "prettyName": "Iced CoffeeScript - http://maxtaco.github.com/coffee-script/",
-      "base": "iced",
-      "defaultExtensions": [
-        "iced"
-      ]
+      "prettyName": "Hogan - http://twitter.github.com/hogan.js/",
+      "base": "hogan",
+      "defaultExtensions": "hog"
     },
     {
-      "prettyName": "LiveScript - http://gkz.github.com/LiveScript/",
-      "base": "livescript",
-      "defaultExtensions": [
-        "ls"
-      ]
+      "prettyName": "HTML - Just Plain HTML Snippets, no compiling",
+      "base": "html",
+      "defaultExtensions": "template"
     },
     {
-      "prettyName": "None (Raw JavaScript)",
+      "prettyName": "Jade - http://jade-lang.com/",
+      "base": "jade",
+      "defaultExtensions": "jade"
+    },
+    {
+      "prettyName": "LoDash - http://lodash.com/docs#template",
+      "base": "lodash",
+      "defaultExtensions": "tmpl"
+    },
+    {
+      "prettyName": "None (No Templating)",
       "base": "none",
-      "defaultExtensions": [
-        "js"
-      ]
+      "defaultExtensions": "html"
     },
     {
-      "prettyName": "TypeScript - http://www.typescriptlang.org",
-      "base": "typescript",
-      "defaultExtensions": [
-        "ts"
-      ]
+      "prettyName": "Ractive - http://www.ractivejs.org/",
+      "base": "ractive",
+      "defaultExtensions": "rtv"
+    },
+    {
+      "prettyName": "Underscore - http://underscorejs.org/#template",
+      "base": "underscore",
+      "defaultExtensions": "tpl"
     }
   ]
 }
 
 servers: [
-    {name:"None", prettyName:"None - You either don't need a server or you have one already that you will manage separate from Mimosa."}
-    {name:"Express", prettyName:"(*) Express - http://expressjs.com/", isDefault:true}
-    {name:"Mimosa's Express", prettyName:"Mimosa's Embedded Express - http://mimosa.io/server.html#mimosas, this is less powerful than having your own, but may be sufficient for trivial websites."}
-  ]
+  {
+    name:"None"
+    prettyName:"None - You either don't need a server or you have one already that you will manage separate from Mimosa."
+  }
+  {
+    name:"Express"
+    prettyName:"(*) Express - http://expressjs.com/"
+    isDefault:true
+  }
+  {
+    name:"Mimosa's Express"
+    prettyName:"Mimosa's Embedded Express - http://mimosa.io/server.html#mimosas, this is less powerful than having your own, but may be sufficient for trivial websites."
+  }
+]
 
 views: [
   {
@@ -177,7 +205,6 @@ views: [
     extension:"dust"
   }
 ]
-
 
 class NewCommand
 

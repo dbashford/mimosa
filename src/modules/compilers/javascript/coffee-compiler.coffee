@@ -6,7 +6,6 @@ module.exports = class CoffeeCompiler extends JSCompiler.JSCompiler
 
   libName: 'coffee-script'
 
-  @prettyName        = "(*) CoffeeScript - http://coffeescript.org/"
   @defaultExtensions = ["coffee", "litcoffee"]
   @isDefault         = true
 
