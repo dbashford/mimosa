@@ -8,12 +8,71 @@ logger =           require 'logmimosa'
 
 fileUtils =        require '../../../util/file'
 
+__generateTemplateName = (fileName, config) ->
+  nameTransform = config.template.nameTransform
+  if nameTransform is "fileName"
+    path.basename fileName, path.extname(fileName)
+  else
+    # only sourceDir forward
+    filePath = fileName.replace config.watch.sourceDir, ''
+    # normalize to unix file seps, slice off first one
+    filePath = filePath.split(path.sep).join('/').substring(1)
+    # remove ext
+    filePath = filePath.replace(path.extname(filePath), '')
+    if nameTransform is "filePath"
+      filePath
+    else
+      returnFilepath = if nameTransform instanceof RegExp
+        filePath.replace nameTransform, ''
+      else
+        nameTransform filePath
+
+      if typeof returnFilepath isnt "string"
+        logger.error "Application of template.nameTransform for file [[ #{fileName} ]] did not result in string"
+        "nameTransformFailed"
+      else
+        returnFilepath
+
+__removeClientLibrary = (clientPath, cb) ->
+  if clientPath?
+    fs.exists clientPath, (exists) ->
+      if exists
+        logger.debug "Removing client library [[ #{clientPath} ]]"
+        fs.unlink clientPath, (err) ->
+          logger.success "Deleted file [[ #{clientPath} ]]" unless err
+          cb()
+      else
+        cb()
+  else
+    cb()
+
+__testForSameTemplateName = (fileNames) ->
+  templateHash = {}
+  fileNames.forEach (fileName) ->
+    templateName = path.basename(fileName, path.extname(fileName))
+    if templateHash[templateName]?
+      logger.error "Files [[ #{templateHash[templateName]} ]] and [[ #{fileName} ]] result in templates of the same name " +
+                   "being created.  You will want to change the name for one of them or they will collide."
+    else
+      templateHash[templateName] = fileName
+
+__templatePreamble = (file) ->
+  """
+  \n//
+  // Source file: [#{file.inputFileName}]
+  // Template name: [#{file.templateName}]
+  //\n
+  """
+
 module.exports = class TemplateCompiler
 
-  constructor: (config) ->
-    if @clientLibrary? and config.template.wrapType is 'amd'
-      @mimosaClientLibraryPath = path.join __dirname, "client", "#{@clientLibrary}.js"
-      @clientPath = path.join config.vendor.javascripts, "#{@clientLibrary}.js"
+  constructor: (config, @extensions, @compiler) ->
+    if @compiler.init
+      @compiler.init(config, @extensions)
+
+    if @compiler.clientLibrary? and config.template.wrapType is 'amd'
+      @mimosaClientLibraryPath = path.join __dirname, "client", "#{@compiler.clientLibrary}.js"
+      @clientPath = path.join config.vendor.javascripts, "#{@compiler.clientLibrary}.js"
       @clientPath = @clientPath.replace config.watch.sourceDir, config.watch.compiledDir
       compiledJs = path.join config.watch.compiledDir, config.watch.javascriptDir
       @libPath = @clientPath.replace(compiledJs, '').substring(1).split(path.sep).join('/')
@@ -24,10 +83,10 @@ module.exports = class TemplateCompiler
 
     register ['remove'], 'init', @_testForRemoveClientLibrary, @extensions
 
-    register ['buildExtension'],        'init',       @_gatherFiles, [@extensions[0]]
-    register ['add','update','remove'], 'init',       @_gatherFiles, @extensions
-    register ['buildExtension'],        'compile',    @_compile,     [@extensions[0]]
-    register ['add','update','remove'], 'compile',    @_compile,     @extensions
+    register ['buildExtension'],        'init',         @_gatherFiles, [@extensions[0]]
+    register ['add','update','remove'], 'init',         @_gatherFiles, @extensions
+    register ['buildExtension'],        'compile',      @_compile,     [@extensions[0]]
+    register ['add','update','remove'], 'compile',      @_compile,     @extensions
 
     register ['cleanFile'],             'init',         @_removeFiles, @extensions
 
@@ -78,19 +137,19 @@ module.exports = class TemplateCompiler
     return next() unless hasFiles
 
     if @delayedCompilerLib
-      @compilerLib = require @libName
+      @compilerLib = require @compiler.libName
       @delayedCompilerLib = null
 
     i = 0
     newFiles = []
     options.files.forEach (file) =>
       logger.debug "Compilings template [[ #{file.inputFileName} ]]"
-      file.templateName = @__generateTemplateName(file.inputFileName, config)
+      file.templateName = __generateTemplateName(file.inputFileName, config)
       @compile file, (err, result) =>
         if err
           logger.error "Template [[ #{file.inputFileName} ]] failed to compile. Reason: #{err}", {exitIfBuild:true}
         else
-          unless @handlesNamespacing
+          unless @compiler.handlesNamespacing
             result = "templates['#{file.templateName}'] = #{result}\n"
           file.outputFileText = result
           newFiles.push file
@@ -103,8 +162,8 @@ module.exports = class TemplateCompiler
     hasFiles = options.files?.length > 0
     return next() unless hasFiles
 
-    prefix = @prefix config
-    suffix = @suffix config
+    prefix = @compiler.prefix config, @__libraryPath()
+    suffix = @compiler.suffix config
 
     for outputFileConfig in config.template.output
 
@@ -124,46 +183,20 @@ module.exports = class TemplateCompiler
           if file.inputFileName?.indexOf(path.join(folder, path.sep)) is 0
             mergedFiles.push file.inputFileName
             unless config.isOptimize
-              mergedText += @__templatePreamble file
+              mergedText += __templatePreamble file
             mergedText += file.outputFileText
             break
 
-      @__testForSameTemplateName(mergedFiles) if mergedFiles.length > 1
+      __testForSameTemplateName(mergedFiles) if mergedFiles.length > 1
 
       continue if mergedText is ""
 
       options.files.push
         outputFileText: prefix + mergedText + suffix
-        outputFileName: options.destinationFile(@constructor.base, outputFileConfig.folders)
+        outputFileName: options.destinationFile(@compiler.base, outputFileConfig.folders)
         isTemplate:true
 
     next()
-
-  __generateTemplateName: (fileName, config) ->
-    nameTransform = config.template.nameTransform
-    if nameTransform is "fileName"
-      path.basename fileName, path.extname(fileName)
-    else
-      # only sourceDir forward
-      filePath = fileName.replace config.watch.sourceDir, ''
-      # normalize to unix file seps, slice off first one
-      filePath = filePath.split(path.sep).join('/').substring(1)
-      # remove ext
-      filePath = filePath.replace(path.extname(filePath), '')
-      if nameTransform is "filePath"
-        filePath
-      else
-        returnFilepath = if nameTransform instanceof RegExp
-          filePath.replace nameTransform, ''
-        else
-          nameTransform filePath
-
-        if typeof returnFilepath isnt "string"
-          logger.error "Application of template.nameTransform for file [[ #{fileName} ]] did not result in string"
-          "nameTransformFailed"
-        else
-          returnFilepath
-
 
   _removeFiles: (config, options, next) =>
     total = if config.template.output
@@ -175,9 +208,9 @@ module.exports = class TemplateCompiler
     done = ->
       next() if ++i is total
 
-    @removeClientLibrary(@clientPath, done)
+    __removeClientLibrary(@clientPath, done)
     for outputFileConfig in config.template.output
-      @removeClientLibrary(options.destinationFile(@constructor.base, outputFileConfig.folders), done)
+      __removeClientLibrary(options.destinationFile(@compiler.base, outputFileConfig.folders), done)
 
   _testForRemoveClientLibrary: (config, options, next) =>
     if options.files?.length is 0
@@ -185,29 +218,6 @@ module.exports = class TemplateCompiler
       @_removeFiles(config, options, next)
     else
       next()
-
-  removeClientLibrary: (clientPath, cb) ->
-    if clientPath?
-      fs.exists clientPath, (exists) =>
-        if exists
-          logger.debug "Removing client library [[ #{clientPath} ]]"
-          fs.unlink clientPath, (err) ->
-            logger.success "Deleted file [[ #{clientPath} ]]" unless err
-            cb()
-        else
-          cb()
-    else
-      cb()
-
-  __testForSameTemplateName: (fileNames) ->
-    templateHash = {}
-    fileNames.forEach (fileName) ->
-      templateName = path.basename(fileName, path.extname(fileName))
-      if templateHash[templateName]?
-        logger.error "Files [[ #{templateHash[templateName]} ]] and [[ #{fileName} ]] result in templates of the same name " +
-                     "being created.  You will want to change the name for one of them or they will collide."
-      else
-        templateHash[templateName] = fileName
 
   _readInClientLibrary: (config, options, next) =>
 
@@ -228,13 +238,8 @@ module.exports = class TemplateCompiler
 
       next()
 
-  libraryPath: =>
-    @requireRegister.aliasForPath(@libPath) ? @requireRegister.aliasForPath("./" + @libPath) ? @libPath
-
-  __templatePreamble: (file) ->
-    """
-    \n//
-    // Source file: [#{file.inputFileName}]
-    // Template name: [#{file.templateName}]
-    //\n
-    """
+  __libraryPath: =>
+    if @requireRegister
+      @requireRegister.aliasForPath(@libPath) ? @requireRegister.aliasForPath("./" + @libPath) ? @libPath
+    else
+      @libPath

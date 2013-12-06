@@ -8,7 +8,7 @@ exports.config =
     compiledDir: "lib"
     javascriptDir: null
   copy:
-    extensions: ["js", "ts"]
+    extensions: ["js", "ts", "json"]
   jshint:
     exclude:[/\/resources\//, /\/client\//]
     rules:

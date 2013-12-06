@@ -34,7 +34,7 @@ _cleanUpSourceMaps = (config, options, next) ->
         else
           done()
 
-exports.cleanUpSourceMapsRegister = (register, extensions, compilerConfig) ->
+_cleanUpSourceMapsRegister = (register, extensions, compilerConfig) ->
   # register remove only if sourcemap as remove is watch workflow
   if compilerConfig.sourceMap
     register ['remove'], 'delete', _cleanUpSourceMaps, extensions
@@ -45,13 +45,20 @@ exports.cleanUpSourceMapsRegister = (register, extensions, compilerConfig) ->
 
 exports.JSCompiler = class JSCompiler
 
+  contructor: (config, @extensions, @compiler) ->
+    if @compiler.init
+      @compiler.init(config, @extensions)
+
   registration: (config, register) ->
-    register ['buildFile'], 'init', @_compilerLib, @extensions
-    register ['add','update','buildFile'], 'compile', @_compile, @extensions
+    register ['buildFile'],                'init',    @_compilerLib, @extensions
+    register ['add','update','buildFile'], 'compile', @_compile,     @extensions
+
+    if @compiler.cleanUpSourceMaps
+      _cleanUpSourceMapsRegister register, @extensions, @compiler.config ? {}
 
   _compilerLib: (config, options, next) =>
     if @delayedCompilerLib
-      @compilerLib = require @libName
+      @compiler.compilerLib = require @compiler.libName
       @delayedCompilerLib = null
     next()
 
@@ -110,23 +117,3 @@ exports.JSCompiler = class JSCompiler
           newFiles.push file
 
         done()
-
-  _icedAndCoffeeCompile: (file, coffeeConfig, cb) =>
-
-    conf = _.extend {}, coffeeConfig, sourceFiles:[path.basename(file.inputFileName) + ".src"]
-    conf.literate = @compilerLib.helpers.isLiterate(file.inputFileName)
-
-    if conf.sourceMap
-      if conf.sourceMapExclude?.indexOf(file.inputFileName) > -1
-        conf.sourceMap = false
-      else if conf.sourceMapExcludeRegex? and file.inputFileName.match(conf.sourceMapExcludeRegex)
-        conf.sourceMap = false
-
-    try
-      output = @compilerLib.compile file.inputFileText, conf
-      if output.v3SourceMap
-        sourceMap = output.v3SourceMap
-        output = output.js
-    catch err
-      error = "#{err}, line #{err.location?.first_line}, column #{err.location?.first_column}"
-    cb error, output, coffeeConfig, sourceMap

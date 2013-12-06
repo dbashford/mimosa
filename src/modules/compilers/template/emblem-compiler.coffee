@@ -1,24 +1,139 @@
 "use strict"
 
-HandlebarsCompiler = require './handlebars'
+fs =     require 'fs'
+path =   require 'path'
 
-module.exports = class EmblemCompiler extends HandlebarsCompiler
-  libName: "emblem"
+logger = require 'logmimosa'
 
-  @defaultExtensions = ["emblem", "embl"]
+handlebars = null
+ember = false
+config = {}
+compiler = null
+_compilerLib = null
 
-  constructor: (@mimosaConfig, @extensions) ->
-    super(@mimosaConfig)
+regularBoilerplate =
+  """
+  if (!Handlebars) {
+    console.log("Handlebars library has not been passed in successfully");
+    return;
+  }
 
-  compile: (file, cb) =>
-    # make sure handlebars determined
-    @determineHandlebars @mimosaConfig unless @handlebars
+  if (!Object.keys) {
+     Object.keys = function (obj) {
+         var keys = [],
+             k;
+         for (k in obj) {
+             if (Object.prototype.hasOwnProperty.call(obj, k)) {
+                 keys.push(k);
+             }
+         }
+         return keys;
+     };
+  }
 
-    try
-      output = @compilerLib.precompile @handlebars, file.inputFileText
-      output = @transformTemplate output.toString()
-      if @ember
-        output = "Ember.TEMPLATES['#{file.templateName}'] = #{output}"
-    catch err
-      error = err
-    cb(error, output)
+  var template = Handlebars.template, templates = {};
+  Handlebars.partials = templates;\n
+  """
+
+emberBoilerplate =
+  """
+  var template = Ember.Handlebars.template, templates = {};\n
+  """
+
+__boilerplate = (ember) ->
+  if ember
+    emberBoilerplate
+  else
+    regularBoilerplate
+
+__transformTemplate = (text) -> "template(#{text})"
+
+__determineHandlebars = ->
+  ember = config.template.handlebars.ember.enabled
+  hbs = if config.compilers.libs.handlebars
+    config.compilers.libs.handlebars
+  else
+    require 'handlebars'
+
+  handlebars = if ember
+    ec = require './resources/ember-comp'
+    ec.makeHandlebars hbs
+  else
+    hbs
+
+_prefix = (config, libraryPath) ->
+  if config.template.wrapType is 'amd'
+    logger.debug "Building Handlebars template file wrapper"
+    jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
+    possibleHelperPaths = []
+    for ext in config.extensions.javascript
+      for helperFile in config.template.handlebars.helpers
+        possibleHelperPaths.push path.join(jsDir, "#{helperFile}.#{ext}")
+    helperPaths = possibleHelperPaths.filter (p) -> fs.existsSync(p)
+
+    {defines, params} = if ember
+      {defines:["'#{config.template.handlebars.ember.path}'"], params:["Ember"]}
+    else
+      {defines:["'#{libraryPath}'"], params:["Handlebars"]}
+
+    for helperPath in helperPaths
+      helperDefine = helperPath.replace(config.watch.sourceDir, '').replace(/\\/g, '/').replace(/^\/?\w+\/|\.\w+$/g, '')
+      defines.push "'#{helperDefine}'"
+    defineString = defines.join ','
+
+    logger.debug "Define string for Handlebars templates [[ #{defineString} ]]"
+
+    """
+    define([#{defineString}], function (#{params.join(',')}){
+      #{__boilerplate()}
+    """
+  else if config.template.wrapType is 'common'
+    if ember
+      """
+      var Ember = require('#{config.template.commonLibPath}');
+      #{__boilerplate()}
+      """
+    else
+      """
+      var Handlebars = require('#{config.template.commonLibPath}');
+      #{__boilerplate()}
+      """
+  else
+    __boilerplate()
+
+_suffix = (config) ->
+  if config.template.wrapType is 'amd'
+    'return templates; });'
+  else if config.template.wrapType is "common"
+    "\nmodule.exports = templates;"
+  else
+    ""
+
+_init = (conf) ->
+  config = conf
+
+_compile = (file, cb, handlebars, ember) ->
+  unless handlebars
+    __determineHandlebars()
+
+  try
+    output = _compilerLib.precompile handlebars, file.inputFileText
+    output = __transformTemplate output.toString()
+    if ember
+      output = "Ember.TEMPLATES['#{file.templateName}'] = #{output}"
+  catch err
+    error = err
+  cb(error, output)
+
+module.exports =
+  isHandlebars: true
+  base: "emblem"
+  type: "template"
+  defaultExtensions:["emblem", "embl"]
+  libName: 'emblem'
+  clientLibrary: "handlebars"
+  compile: _compile
+  init: _init
+  suffix: _suffix
+  prefix: _prefix
+  compilerLib: _compilerLib

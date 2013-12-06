@@ -1,6 +1,6 @@
 "use strict"
 
-module.exports = class CopyCompiler
+compiler = class CopyCompiler
 
   constructor: (config, @extensions) ->
 
@@ -15,3 +15,8 @@ module.exports = class CopyCompiler
       file.outputFileText = file.inputFileText
 
     next()
+
+module.exports =
+  compiler: compiler
+  base: "copy"
+  type: "copy"

@@ -1,34 +1,35 @@
 "use strict"
 
-TemplateCompiler = require './template'
+_compilerLib = null
 
-module.exports = class EcoCompiler extends TemplateCompiler
+_prefix = (config) ->
+  if config.template.wrapType is 'amd'
+    "define(function (){ var templates = {};\n"
+  else
+    "var templates = {};\n"
 
-  clientLibrary: null
+_suffix = (config) ->
+  if config.template.wrapType is 'amd'
+    'return templates; });'
+  else if config.template.wrapType is "common"
+    "\nmodule.exports = templates;"
+  else
+    ""
+
+_compile = (file, cb) ->
+  try
+    output = _compilerLib.precompile file.inputFileText
+  catch err
+    error = err
+  cb(error, output)
+
+module.exports =
+  base: "eco"
+  type: "template"
+  defaultExtensions: ["eco"]
   libName: 'eco'
-
-  @defaultExtensions = ["eco"]
-
-  constructor: (config, @extensions) ->
-    super(config)
-
-  prefix: (config) ->
-    if config.template.wrapType is 'amd'
-      "define(function (){ var templates = {};\n"
-    else
-      "var templates = {};\n"
-
-  suffix: (config) ->
-    if config.template.wrapType is 'amd'
-      'return templates; });'
-    else if config.template.wrapType is "common"
-      "\nmodule.exports = templates;"
-    else
-      ""
-
-  compile: (file, cb) ->
-    try
-      output = @compilerLib.precompile file.inputFileText
-    catch err
-      error = err
-    cb(error, output)
+  handlesNamespacing: true
+  compile: _compile
+  suffix: _suffix
+  prefix: _prefix
+  compilerLib: _compilerLib

@@ -8,7 +8,11 @@ logger =    require 'logmimosa'
 
 fileUtils = require '../../../util/file'
 
-module.exports = class AbstractCSSCompiler
+module.exports = class CSSCompiler
+
+  constructor: (config, @extensions, @compiler) ->
+    if @compiler.init
+      @compiler.init(config, @extensions)
 
   registration: (config, register) ->
     register ['buildExtension'], 'init',    @_processWatchedDirectories, [@extensions[0]]
@@ -30,7 +34,7 @@ module.exports = class AbstractCSSCompiler
 
   _findBasesToCompile: (config, options, next) =>
     options.files = []
-    if @__isInclude(options.inputFile)
+    if @_isInclude(options.inputFile, @includeToBaseHash)
       bases = @includeToBaseHash[options.inputFile]
       if bases?
         logger.debug "Bases files for [[ #{options.inputFile} ]]\n#{bases.join('\n')}"
@@ -59,7 +63,7 @@ module.exports = class AbstractCSSCompiler
     return next() unless hasFiles
 
     if @delayedCompilerLib
-      @compilerLib = require @libName
+      @compiler.compilerLib = require @compiler.libName
       @delayedCompilerLib = null
 
     i = 0
@@ -73,7 +77,7 @@ module.exports = class AbstractCSSCompiler
     options.files.forEach (file) =>
       fs.exists file.inputFileName, (exists) =>
         if exists
-          @compile file, config, options, (err, result) =>
+          @compiler.compile file, config, options, (err, result) =>
             if err
               logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}", {exitIfBuild:true}
             else
@@ -128,7 +132,7 @@ module.exports = class AbstractCSSCompiler
     allFiles = @__getAllFiles(config)
 
     oldBaseFiles = @baseFiles ?= []
-    @baseFiles = @_determineBaseFiles(allFiles)
+    @baseFiles = @compiler.determineBaseFiles(allFiles)
     allBaseFiles = _.union oldBaseFiles, @baseFiles
 
     # Change in base files to be compiled, cleanup and message
@@ -140,8 +144,11 @@ module.exports = class AbstractCSSCompiler
 
     next()
 
-  __isInclude: (fileName) ->
-    @includeToBaseHash[fileName]?
+  _isInclude: (fileName, includeToBaseHash) ->
+    if @compiler.isInclude
+      @compiler.isInclude(fileName, includeToBaseHash)
+    else
+      includeToBaseHash[fileName]?
 
   __getAllFiles: (config) =>
     files = fileUtils.readdirSyncRecursive(config.watch.sourceDir, config.watch.exclude, config.watch.excludeRegex)
@@ -156,19 +163,19 @@ module.exports = class AbstractCSSCompiler
   # get all imports for a given file, and recurse through
   # those imports until entire tree is built
   __importsForFile: (baseFile, file, allFiles) ->
-    imports = fs.readFileSync(file, 'utf8').match(@importRegex)
+    imports = fs.readFileSync(file, 'utf8').match(@compiler.importRegex)
     return unless imports?
 
     logger.debug "Imports for file [[ #{file} ]]: #{imports}"
 
     for anImport in imports
 
-      @importRegex.lastIndex = 0
-      importPath = @importRegex.exec(anImport)[1]
-      fullImportFilePath = @_getImportFilePath(file, importPath)
+      @compiler.importRegex.lastIndex = 0
+      importPath = @compiler.importRegex.exec(anImport)[1]
+      fullImportFilePath = @compiler.getImportFilePath(file, importPath)
 
       includeFiles = allFiles.filter (f) =>
-        f = f.replace(path.extname(f), '') unless @partialKeepsExtension
+        f = f.replace(path.extname(f), '') unless @compiler.partialKeepsExtension
         f.slice(-fullImportFilePath.length) is fullImportFilePath
 
       for includeFile in includeFiles

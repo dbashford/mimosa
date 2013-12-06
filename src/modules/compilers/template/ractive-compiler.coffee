@@ -1,35 +1,36 @@
 "use strict"
 
-TemplateCompiler = require './template'
+_compilerLib = null
 
-module.exports = class RactiveCompiler extends TemplateCompiler
+_prefix = (config, libraryPath) ->
+  if config.template.wrapType is 'amd'
+    "define(['#{libraryPath}'], function (){ var templates = {};\n"
+  else
+    "var templates = {};\n"
 
-  clientLibrary: 'ractive'
-  libName: 'ractive'
+_suffix = (config) ->
+  if config.template.wrapType is 'amd'
+    'return templates; });'
+  else if config.template.wrapType is "common"
+    "module.exports = templates;"
+  else
+    ""
 
-  @defaultExtensions = ["rtv","rac"]
+_compile = (file, cb) ->
+  try
+    output = _compilerLib.parse file.inputFileText
+    output = JSON.stringify output
+  catch err
+    error = err
+  cb(error, output)
 
-  constructor: (config, @extensions) ->
-    super(config)
-
-  prefix: (config) ->
-    if config.template.wrapType is 'amd'
-      "define(['#{@libraryPath()}'], function (){ var templates = {};\n"
-    else
-      "var templates = {};\n"
-
-  suffix: (config) ->
-    if config.template.wrapType is 'amd'
-      'return templates; });'
-    else if config.template.wrapType is "common"
-      "module.exports = templates;"
-    else
-      ""
-
-  compile: (file, cb) ->
-    try
-      output = @compilerLib.parse file.inputFileText
-      output = JSON.stringify output
-    catch err
-      error = err
-    cb(error, output)
+module.exports =
+  base: "ractive"
+  type: "template"
+  defaultExtensions:  ["rtv","rac"]
+  clientLibrary: "ractive"
+  libName: "ractive"
+  compilerLib: _compilerLib
+  compile: _compile
+  suffix: _suffix
+  prefix: _prefix

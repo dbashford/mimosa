@@ -7,6 +7,10 @@ _ =      require 'lodash'
 logger = require 'logmimosa'
 wrench = require 'wrench'
 
+JavaScriptCompiler = require "./javascript/javascript"
+CSSCompiler = require "./css/css"
+TemplateCompiler = require "./template/template"
+
 baseDirRegex = /([^[\/\\\\]*]*)$/
 
 class MimosaCompilerModule
@@ -19,29 +23,22 @@ class MimosaCompilerModule
         (/-compiler.js$/).test(f) or (/copy.js$/).test(f)
       .map (f) ->
         file = path.join __dirname, f
-        comp = require(file)
-        comp.base = path.basename(file, ".js").replace('-compiler', '')
-        if comp.base isnt "copy"
-          comp.type = baseDirRegex.exec(path.dirname(file))[0]
-        else
-          comp.type = "copy"
-        comp
+        require(file)
 
   registration: (config, register) ->
     for compiler in @configuredCompilers.compilers
-      if compiler.registration?
-        compiler.registration(config, register)
-
       # set default compilers
       if compiler.libName
-        if config.compilers.libs[compiler.constructor.base]
-          logger.debug "Using provided [[ #{compiler.constructor.base} ]] compiler"
-          compiler.compilerLib = mimosaConfig.compilers.libs[compiler.constructor.base]
+        if config.compilers.libs[compiler.base]
+          logger.debug "Using provided [[ #{compiler.base} ]] compiler"
+          compiler.compilerLib = config.compilers.libs[compiler.base]
         else
-          logger.debug "Using Mimosa embedded [[ #{compiler.constructor.base} ]] compiler"
+          logger.debug "Using Mimosa embedded [[ #{compiler.base} ]] compiler"
           unless compiler.libName is 'node-sass'
-            #compiler.compilerLib = require compiler.libName
             compiler.delayedCompilerLib = true
+
+      if compiler.registration?
+        compiler.registration(config, register)
 
     if config.template
       register ['buildExtension'], 'complete', @_testDifferentTemplateLibraries, config.extensions.template
@@ -71,33 +68,42 @@ class MimosaCompilerModule
     allCompilers = []
     extHash = {}
 
-    compilers = @all.filter (comp) ->
-      comp.base isnt "none"
-
+    compilers = @all
     if config.template is null
       compilers = compilers.filter (comp) ->
         comp.type isnt "template"
 
-    for Compiler in compilers
-      extensions = if Compiler.base is "copy"
+    for compiler in compilers
+      extensions = if compiler.base is "copy"
         config.copy.extensions
       else
-        if config.compilers.extensionOverrides[Compiler.base] is null
-          logger.debug "Not registering compiler [[ #{Compiler.base} ]], has been set to null in config."
+        if config.compilers.extensionOverrides[compiler.base] is null
+          logger.debug "Not registering compiler [[ #{compiler.base} ]], has been set to null in config."
           false
-        else if config.compilers.extensionOverrides[Compiler.base]?
-          config.compilers.extensionOverrides[Compiler.base]
+        else if config.compilers.extensionOverrides[compiler.base]?
+          config.compilers.extensionOverrides[compiler.base]
         else
           # check and see if an overridden extension conflicts with an existing one
-          _.difference Compiler.defaultExtensions, allOverriddenExtensions
+          _.difference compiler.defaultExtensions, allOverriddenExtensions
 
       # compiler left without extensions, don't register
       # continue if extensions.length is 0
       if extensions
-        compiler = new Compiler(config, extensions)
+
+        compiler = switch compiler.type
+          when "copy"
+            new compiler.compiler(config, extensions)
+          when "javascript"
+            new JavaScriptCompiler(config, extensions, compiler)
+          when "template"
+            new TemplateCompiler(config, extensions, compiler)
+          when "css"
+            new CSSCompiler(config, extensions, compiler)
+
         allCompilers.push compiler
-        extHash[ext] = compiler for ext in compiler.extensions
-        config.extensions[Compiler.type].push(extensions...)
+        for ext in compiler.extensions
+          extHash[ext] = compiler
+        config.extensions[compiler.type].push(extensions...)
 
     for type, extensions of config.extensions
       config.extensions[type] = _.uniq(extensions)
@@ -226,7 +232,7 @@ class MimosaCompilerModule
         # commonLibPath: null             # Valid when wrapType is 'common'. The path to the
                                           # client library. Some libraries do not have clients
                                           # therefore this is not strictly required when choosing
-                                          # the common wrapType.s
+                                          # the common wrapType.
         # outputFileName: "javascripts/templates"  # the file all templates are compiled into,
                                                    # is relative to watch.sourceDir.
 

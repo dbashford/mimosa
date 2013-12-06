@@ -12,118 +12,122 @@ logger = require "logmimosa"
 
 io = null
 TypeScript = null
+compilationSettings = null
+defaultLibPath = null
+_config = {}
 
-JSCompiler = require "./javascript"
+__setupTypeScript = ->
+  io = require "./resources/io"
+  TypeScript = require "./resources/typescript"
 
-module.exports = class TypeScriptCompiler extends JSCompiler.JSCompiler
+  defaultLibPath = path.join __dirname, "resources", "lib.d.ts"
 
-  @prettyName        = "TypeScript - http://www.typescriptlang.org"
-  @defaultExtensions = ["ts"]
+  compilationSettings = new TypeScript.CompilationSettings()
+  compilationSettings.codeGenTarget = TypeScript.CodeGenTarget.ES5
+  compilationSettings.errorRecovery = true
 
-  constructor: (@config, @extensions) ->
-    super()
+  if _config.typescript?.module?
+    if _config.typescript.module is "commonjs"
+      TypeScript.moduleGenTarget = TypeScript.ModuleGenTarget.Synchronous
+    else if _config.typescript.module is "amd"
+      TypeScript.moduleGenTarget = TypeScript.ModuleGenTarget.Asynchronous
 
-  setupTypeScript: =>
-    io = require "./resources/io"
-    TypeScript = require "./resources/typescript"
+_init = (conf) ->
+  _config = conf
 
-    @defaultLibPath = path.join __dirname, "resources", "lib.d.ts"
+_compile = (file, cb) ->
 
-    @compilationSettings = new TypeScript.CompilationSettings()
-    @compilationSettings.codeGenTarget = TypeScript.CodeGenTarget.ES5
-    @compilationSettings.errorRecovery = true
+  unless TypeScript
+    __setupTypeScript()
 
-    if @config.typescript?.module?
-      if @config.typescript.module is "commonjs"
-        TypeScript.moduleGenTarget = TypeScript.ModuleGenTarget.Synchronous
-      else if @config.typescript.module is "amd"
-        TypeScript.moduleGenTarget = TypeScript.ModuleGenTarget.Asynchronous
+  targetJsFile = file.outputFileName.replace(_config.watch.compiledDir, _config.watch.sourceDir)
+  targetJsFile = io.resolvePath(targetJsFile)
+  targetJsFile = TypeScript.switchToForwardSlashes(targetJsFile)
 
-  compile: (file, cb) ->
+  outText = ""
+  targetScriptAssembler =
+    Write: (str) -> outText += str
+    WriteLine: (str) -> outText += str + '\r\n'
+    Close: ->
 
-    unless TypeScript
-      @setupTypeScript()
+  depScriptWriter =
+    Write: (str) ->
+    WriteLine: (str) ->
+    Close: ->
 
-    targetJsFile = file.outputFileName.replace(@config.watch.compiledDir, @config.watch.sourceDir)
-    targetJsFile = io.resolvePath(targetJsFile)
-    targetJsFile = TypeScript.switchToForwardSlashes(targetJsFile)
+  errorMessage = ""
+  stderr =
+    Write: (str) -> errorMessage += str
+    WriteLine: (str) -> errorMessage += str + '\r\n'
+    Close: ->
 
-    outText = ""
-    targetScriptAssembler =
-      Write: (str) -> outText += str
-      WriteLine: (str) -> outText += str + '\r\n'
-      Close: ->
+  emitterIOHost =
+    createFile: (fileName, useUTF8) ->
+      if fileName is targetJsFile
+        targetScriptAssembler
+      else
+        depScriptWriter
+    directoryExists: io.directoryExists
+    fileExists: io.fileExists
+    resolvePath: io.resolvePath
 
-    depScriptWriter =
-      Write: (str) ->
-      WriteLine: (str) ->
-      Close: ->
+  preEnv = new TypeScript.CompilationEnvironment(compilationSettings, io)
+  resolver = new TypeScript.CodeResolver(preEnv)
+  resolvedEnv = new TypeScript.CompilationEnvironment(compilationSettings, io)
+  compiler = new TypeScript.TypeScriptCompiler(stderr, new TypeScript.NullLogger(), compilationSettings)
+  compiler.setErrorOutput(stderr)
 
-    errorMessage = ""
-    stderr =
-      Write: (str) -> errorMessage += str
-      WriteLine: (str) -> errorMessage += str + '\r\n'
-      Close: ->
+  if compilationSettings.errorRecovery
+    compiler.parser.setErrorRecovery(stderr)
 
-    emitterIOHost =
-      createFile: (fileName, useUTF8) ->
-        if fileName is targetJsFile
-          targetScriptAssembler
-        else
-          depScriptWriter
-      directoryExists: io.directoryExists
-      fileExists: io.fileExists
-      resolvePath: io.resolvePath
+  code = new TypeScript.SourceUnit(defaultLibPath, null)
+  preEnv.code.push(code)
 
-    preEnv = new TypeScript.CompilationEnvironment(@compilationSettings, io)
-    resolver = new TypeScript.CodeResolver(preEnv)
-    resolvedEnv = new TypeScript.CompilationEnvironment(@compilationSettings, io)
-    compiler = new TypeScript.TypeScriptCompiler(stderr, new TypeScript.NullLogger(), @compilationSettings)
-    compiler.setErrorOutput(stderr)
+  code = new TypeScript.SourceUnit(file.inputFileName, null)
+  preEnv.code.push(code)
 
-    if @compilationSettings.errorRecovery
-      compiler.parser.setErrorRecovery(stderr)
+  resolvedPaths = {}
 
-    code = new TypeScript.SourceUnit(@defaultLibPath, null)
-    preEnv.code.push(code)
+  resolutionDispatcher =
+    postResolutionError: (errorFile, line, col, errorMessage) ->
+      stderr.WriteLine("#{errorFile} (#{line}, #{col}) " + (errorMessage == "" ? "" : ": " + errorMessage))
+    postResolution: (path, code) ->
+      if !resolvedPaths[path]
+        resolvedEnv.code.push(code)
+        resolvedPaths[path] = true
 
-    code = new TypeScript.SourceUnit(file.inputFileName, null)
-    preEnv.code.push(code)
+  for code in preEnv.code
+    path = TypeScript.switchToForwardSlashes(io.resolvePath(code.path))
+    resolver.resolveCode(path, "", false, resolutionDispatcher)
 
-    resolvedPaths = {}
+  for code in resolvedEnv.code
+    unless code.content is null
+      compiler.addUnit(code.content, code.path, false, code.referencedFiles)
 
-    resolutionDispatcher =
-      postResolutionError: (errorFile, line, col, errorMessage) ->
-        stderr.WriteLine("#{errorFile} (#{line}, #{col}) " + (errorMessage == "" ? "" : ": " + errorMessage))
-      postResolution: (path, code) ->
-        if !resolvedPaths[path]
-          resolvedEnv.code.push(code)
-          resolvedPaths[path] = true
+  try
+    compiler.typeCheck()
+    mapInputToOutput = (unitIndex, outFile) ->
+      preEnv.inputOutputMap[unitIndex] = outFile
+    compiler.emit emitterIOHost, mapInputToOutput
+  catch err
+    compiler.errorReporter.hasErrors = true
 
-    for code in preEnv.code
-      path = TypeScript.switchToForwardSlashes(io.resolvePath(code.path))
-      resolver.resolveCode(path, "", false, resolutionDispatcher)
+  error = if errorMessage.length > 0
+    new Error(errorMessage)
+  else
+    null
 
-    for code in resolvedEnv.code
-      unless code.content is null
-        compiler.addUnit(code.content, code.path, false, code.referencedFiles)
+  if /.d.ts$/.test(file.inputFileName) and outText is ""
+    outText = undefined
+    unless error
+      logger.success "Compiled [[ " + file.inputFileName + " ]]"
 
-    try
-      compiler.typeCheck()
-      mapInputToOutput = (unitIndex, outFile) ->
-        preEnv.inputOutputMap[unitIndex] = outFile
-      compiler.emit emitterIOHost, mapInputToOutput
-    catch err
-      compiler.errorReporter.hasErrors = true
+  cb(error, outText)
 
-    error = if errorMessage.length > 0
-      new Error(errorMessage)
-    else
-      null
 
-    if /.d.ts$/.test(file.inputFileName) and outText is ""
-      outText = undefined
-      unless error
-        logger.success "Compiled [[ " + file.inputFileName + " ]]"
-
-    cb(error, outText)
+module.exports =
+  base: "typescript"
+  type: "javascript"
+  defaultExtensions: ["ts"]
+  init: _init
+  compile: _compile

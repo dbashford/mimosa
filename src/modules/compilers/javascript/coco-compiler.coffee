@@ -1,23 +1,25 @@
 "use strict"
 
-coco = require 'coco'
 _ = require 'lodash'
 
-JSCompiler = require "./javascript"
+_compilerLib = null
+_config = {}
 
-module.exports = class CocoCompiler extends JSCompiler.JSCompiler
+_init = (conf) ->
+  _config = conf.coco
 
+_compile =  (file, cb) ->
+  try
+    output = _compilerLib.compile file.inputFileText, _.extend {}, _config
+  catch err
+    error = err
+  cb(error, output)
+
+module.exports =
+  base: "coco"
+  type: "javascript"
+  defaultExtensions: ["co", "coco"]
   libName: 'coco'
-
-  @defaultExtensions = ["co", "coco"]
-
-  constructor: (config, @extensions) ->
-    @config = config.coco
-    super()
-
-  compile: (file, cb) ->
-    try
-      output = @compilerLib.compile file.inputFileText, _.extend {}, @config
-    catch err
-      error = err
-    cb(error, output)
+  init: _init
+  compile: _compile
+  compilerLib: _compilerLib
