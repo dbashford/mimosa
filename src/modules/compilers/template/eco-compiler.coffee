@@ -34,7 +34,6 @@ module.exports =
   base: "eco"
   type: "template"
   defaultExtensions: ["eco"]
-  handlesNamespacing: true
   compile: compile
   suffix: suffix
   prefix: prefix
