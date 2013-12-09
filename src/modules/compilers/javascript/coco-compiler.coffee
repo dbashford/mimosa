@@ -2,15 +2,22 @@
 
 _ = require 'lodash'
 
-_compilerLib = null
-_config = {}
+compilerLib = null
+libName = "coco"
+cocoConfig = {}
 
-_init = (conf) ->
-  _config = conf.coco
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
 
-_compile =  (file, cb) ->
+init = (conf) ->
+  cocoConfig = conf.coco
+
+prefix =  (file, cb) ->
+  unless compilerLib
+    compilerLib = require libName
+
   try
-    output = _compilerLib.compile file.inputFileText, _.extend {}, _config
+    output = compilerLib.compile file.inputFileText, _.extend {}, cocoConfig
   catch err
     error = err
   cb(error, output)
@@ -19,7 +26,6 @@ module.exports =
   base: "coco"
   type: "javascript"
   defaultExtensions: ["co", "coco"]
-  libName: 'coco'
-  init: _init
-  compile: _compile
-  compilerLib: _compilerLib
+  init: init
+  compile: prefix
+  setCompilerLib: setCompilerLib

@@ -4,15 +4,22 @@ path = require 'path'
 
 _ = require 'lodash'
 
-_compilerLib = null
-_config = {}
+compilerLib = null
+libName = 'coffee-script'
+coffeeConfig = {}
 
-_init = (conf) ->
-  _config = conf.coffeescript
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
 
-_compile = (file, cb) ->
-  conf = _.extend {}, _config, sourceFiles:[path.basename(file.inputFileName) + ".src"]
-  conf.literate = _compilerLib.helpers.isLiterate(file.inputFileName)
+init = (conf) ->
+  coffeeConfig = conf.coffeescript
+
+prefix = (file, cb) ->
+  unless compilerLib
+    compilerLib = require libName
+
+  conf = _.extend {}, coffeeConfig, sourceFiles:[path.basename(file.inputFileName) + ".src"]
+  conf.literate = compilerLib.helpers.isLiterate(file.inputFileName)
 
   if conf.sourceMap
     if conf.sourceMapExclude?.indexOf(file.inputFileName) > -1
@@ -21,21 +28,20 @@ _compile = (file, cb) ->
       conf.sourceMap = false
 
   try
-    output = _compilerLib.compile file.inputFileText, conf
+    output = compilerLib.compile file.inputFileText, conf
     if output.v3SourceMap
       sourceMap = output.v3SourceMap
       output = output.js
   catch err
     error = "#{err}, line #{err.location?.first_line}, column #{err.location?.first_column}"
-  cb error, output, _config, sourceMap
+  cb error, output, coffeeConfig, sourceMap
 
 module.exports =
   base: "coffee"
   type: "javascript"
   defaultExtensions: ["coffee", "litcoffee"]
   cleanUpSourceMaps: true
-  libName: 'coffee-script'
-  init: _init
-  compile: _compile
-  compilerLib: _compilerLib
-  config: _config
+  init: init
+  compile: prefix
+  setCompilerLib: setCompilerLib
+  config: coffeeConfig

@@ -62,10 +62,6 @@ module.exports = class CSSCompiler
     hasFiles = options.files?.length > 0
     return next() unless hasFiles
 
-    if @delayedCompilerLib
-      @compiler.compilerLib = require @compiler.libName
-      @delayedCompilerLib = null
-
     i = 0
     newFiles = []
     done = (file) ->

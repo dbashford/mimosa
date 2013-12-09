@@ -2,13 +2,13 @@
 
 _ = require 'lodash'
 
-_compilerLib = null
+compilerLib = null
+libName = "lodash"
 
-_init = (config, compiler) ->
-  module.exports.libName = compiler.libName
-  module.exports.clientLibrary = compiler.clientLibrary
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
 
-_prefix = (config, libraryPath) ->
+prefix = (config, libraryPath) ->
   if config.template.wrapType is 'amd'
     "define(['#{libraryPath}'], function (_) { var templates = {};\n"
   else if config.template.wrapType is "common"
@@ -16,7 +16,7 @@ _prefix = (config, libraryPath) ->
   else
     "var templates = {};\n"
 
-_suffix = (config) ->
+suffix = (config) ->
   if config.template.wrapType is 'amd'
     'return templates; });'
   else if config.template.wrapType is "common"
@@ -24,9 +24,12 @@ _suffix = (config) ->
   else
     ""
 
-_compile = (file, cb) ->
+prefix = (file, cb) ->
+  unless compilerLib
+    compilerLib = require libName
+
   try
-    compiledOutput = _compilerLib.template(file.inputFileText)
+    compiledOutput = compilerLib.template(file.inputFileText)
     output = compiledOutput.source
   catch err
     error = err
@@ -37,9 +40,7 @@ module.exports =
   type: "template"
   defaultExtensions:  ["tmpl", "lodash"]
   clientLibrary: "lodash"
-  libName: "lodash"
-  init: _init
-  compile: _compile
-  suffix: _suffix
-  prefix: _prefix
-  compilerLib: _compilerLib
+  compile: prefix
+  suffix: suffix
+  prefix: prefix
+  setCompilerLib: setCompilerLib

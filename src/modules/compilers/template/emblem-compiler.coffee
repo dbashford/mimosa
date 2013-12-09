@@ -9,7 +9,11 @@ handlebars = null
 ember = false
 config = {}
 compiler = null
-_compilerLib = null
+compilerLib = null
+libName = 'emblem'
+
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
 
 regularBoilerplate =
   """
@@ -61,7 +65,7 @@ __determineHandlebars = ->
   else
     hbs
 
-_prefix = (config, libraryPath) ->
+prefix = (config, libraryPath) ->
   if config.template.wrapType is 'amd'
     logger.debug "Building Handlebars template file wrapper"
     jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
@@ -101,7 +105,7 @@ _prefix = (config, libraryPath) ->
   else
     __boilerplate()
 
-_suffix = (config) ->
+suffix = (config) ->
   if config.template.wrapType is 'amd'
     'return templates; });'
   else if config.template.wrapType is "common"
@@ -109,15 +113,18 @@ _suffix = (config) ->
   else
     ""
 
-_init = (conf) ->
+init = (conf) ->
   config = conf
 
-_compile = (file, cb, handlebars, ember) ->
+prefix = (file, cb, handlebars, ember) ->
   unless handlebars
     __determineHandlebars()
 
+  unless compilerLib
+    compilerLib = require libName
+
   try
-    output = _compilerLib.precompile handlebars, file.inputFileText
+    output = compilerLib.precompile handlebars, file.inputFileText
     output = __transformTemplate output.toString()
     if ember
       output = "Ember.TEMPLATES['#{file.templateName}'] = #{output}"
@@ -130,10 +137,9 @@ module.exports =
   base: "emblem"
   type: "template"
   defaultExtensions:["emblem", "embl"]
-  libName: 'emblem'
   clientLibrary: "handlebars"
-  compile: _compile
-  init: _init
-  suffix: _suffix
-  prefix: _prefix
-  compilerLib: _compilerLib
+  compile: prefix
+  init: init
+  suffix: suffix
+  prefix: prefix
+  setCompilerLib: setCompilerLib

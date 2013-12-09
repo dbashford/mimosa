@@ -43,24 +43,17 @@ _cleanUpSourceMapsRegister = (register, extensions, compilerConfig) ->
   register ['cleanFile'], 'delete', _cleanUpSourceMaps, extensions
 
 
-exports.JSCompiler = class JSCompiler
+module.exports = class JSCompiler
 
-  contructor: (config, @extensions, @compiler) ->
+  constructor: (config, @extensions, @compiler) ->
     if @compiler.init
       @compiler.init(config, @extensions)
 
   registration: (config, register) ->
-    register ['buildFile'],                'init',    @_compilerLib, @extensions
-    register ['add','update','buildFile'], 'compile', @_compile,     @extensions
+    register ['add','update','buildFile'], 'compile', @_compile, @extensions
 
     if @compiler.cleanUpSourceMaps
       _cleanUpSourceMapsRegister register, @extensions, @compiler.config ? {}
-
-  _compilerLib: (config, options, next) =>
-    if @delayedCompilerLib
-      @compiler.compilerLib = require @compiler.libName
-      @delayedCompilerLib = null
-    next()
 
   _compile: (config, options, next) =>
     hasFiles = options.files?.length > 0
@@ -76,7 +69,11 @@ exports.JSCompiler = class JSCompiler
         next()
 
     options.files.forEach (file) =>
-      @compile file, (err, output, compiledConfig, sourceMap) =>
+
+      if logger.isDebug
+        logger.debug "Calling compiler function for compiler [[ " + @compiler.base + " ]]"
+
+      @compiler.compile file, (err, output, compiledConfig, sourceMap) =>
         if err
           logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}", {exitIfBuild:true}
         else

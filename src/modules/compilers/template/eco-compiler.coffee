@@ -1,14 +1,18 @@
 "use strict"
 
-_compilerLib = null
+compilerLib = null
+libName ='eco'
 
-_prefix = (config) ->
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
+
+prefix = (config) ->
   if config.template.wrapType is 'amd'
     "define(function (){ var templates = {};\n"
   else
     "var templates = {};\n"
 
-_suffix = (config) ->
+suffix = (config) ->
   if config.template.wrapType is 'amd'
     'return templates; });'
   else if config.template.wrapType is "common"
@@ -16,9 +20,12 @@ _suffix = (config) ->
   else
     ""
 
-_compile = (file, cb) ->
+prefix = (file, cb) ->
+  unless compilerLib
+    compilerLib = require libName
+
   try
-    output = _compilerLib.precompile file.inputFileText
+    output = compilerLib.precompile file.inputFileText
   catch err
     error = err
   cb(error, output)
@@ -27,9 +34,8 @@ module.exports =
   base: "eco"
   type: "template"
   defaultExtensions: ["eco"]
-  libName: 'eco'
   handlesNamespacing: true
-  compile: _compile
-  suffix: _suffix
-  prefix: _prefix
-  compilerLib: _compilerLib
+  compile: prefix
+  suffix: suffix
+  prefix: prefix
+  setCompilerLib: setCompilerLib

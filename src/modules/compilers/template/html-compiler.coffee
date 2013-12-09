@@ -1,14 +1,18 @@
 "use strict"
 
-_compilerLib = null
+compilerLib = null
+libName = "underscore"
 
-_prefix = (config) ->
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
+
+prefix = (config) ->
   if config.template.wrapType is 'amd'
     "define(function () { var templates = {};\n"
   else
     "var templates = {};\n"
 
-_suffix = (config) ->
+suffix = (config) ->
   if config.template.wrapType is 'amd'
     'return templates; });'
   else if config.template.wrapType is "common"
@@ -16,20 +20,23 @@ _suffix = (config) ->
   else
     ""
 
-_compile = (file, cb) ->
+prefix = (file, cb) ->
+  unless compilerLib
+    compilerLib = require libName
+
   # we don't want underscore to actually work, just to wrap stuff
-  _compilerLib.templateSettings =
+  compilerLib.templateSettings =
     evaluate    : /<%%%%%%%%([\s\S]+?)%%%%%%%>/g,
     interpolate : /<%%%%%%%%=([\s\S]+?)%%%%%%%>/g
 
   try
-    compiledOutput = _compilerLib.template(file.inputFileText)
+    compiledOutput = compilerLib.template(file.inputFileText)
     output = "#{compiledOutput.source}()"
   catch err
     error = err
 
   # set it back
-  _compilerLib.templateSettings =
+  compilerLib.templateSettings =
     evaluate    : /<%([\s\S]+?)%>/g,
     interpolate : /<%=([\s\S]+?)%>/g
 
@@ -39,8 +46,7 @@ module.exports =
   base: "html"
   type: "template"
   defaultExtensions: ["template"]
-  libName: "underscore"
-  compile: _compile
-  suffix: _suffix
-  prefix: _prefix
-  compilerLib: _compilerLib
+  compile: prefix
+  suffix: suffix
+  prefix: prefix
+  compilerLib: setCompilerLib

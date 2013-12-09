@@ -60,7 +60,7 @@ __determineHandlebars = ->
   else
     hbs
 
-_prefix = (config, libraryPath) ->
+prefix = (config, libraryPath) ->
   if config.template.wrapType is 'amd'
     logger.debug "Building Handlebars template file wrapper"
     jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
@@ -100,7 +100,7 @@ _prefix = (config, libraryPath) ->
   else
     __boilerplate()
 
-_suffix = (config) ->
+suffix = (config) ->
   if config.template.wrapType is 'amd'
     'return templates; });'
   else if config.template.wrapType is "common"
@@ -108,10 +108,10 @@ _suffix = (config) ->
   else
     ""
 
-_init = (conf) ->
+init = (conf) ->
   config = conf
 
-_compile = (file, cb, handlebars, ember) ->
+prefix = (file, cb, handlebars, ember) ->
   unless handlebars
     __determineHandlebars()
 
@@ -128,9 +128,8 @@ module.exports =
   base: "handlebars"
   type: "template"
   defaultExtensions: ["hbs", "handlebars"]
-  libName: 'handlebars'
   clientLibrary: "handlebars"
-  compile: _compile
-  init: _init
-  suffix: _suffix
-  prefix: _prefix
+  compile: prefix
+  init: init
+  suffix: suffix
+  prefix: prefix

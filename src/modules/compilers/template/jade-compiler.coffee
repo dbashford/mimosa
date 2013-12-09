@@ -1,8 +1,12 @@
 "use strict"
 
-_compilerLib = null
+compilerLib = null
+libName = "jade"
 
-_prefix = (config, libraryPath) ->
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
+
+prefix = (config, libraryPath) ->
   if config.template.wrapType is 'amd'
     "define(['#{libraryPath}'], function (jade){ var templates = {};\n"
   else if config.template.wrapType is "common"
@@ -10,7 +14,7 @@ _prefix = (config, libraryPath) ->
   else
     "var templates = {};\n"
 
-_suffix = (config) ->
+suffix = (config) ->
   if config.template.wrapType is 'amd'
     'return templates; });'
   else if config.template.wrapType is "common"
@@ -18,9 +22,12 @@ _suffix = (config) ->
   else
     ""
 
-_compile = (file, cb) ->
+prefix = (file, cb) ->
+  unless compilerLib
+    compilerLib = require libName
+
   try
-    output = _compilerLib.compile file.inputFileText,
+    output = compilerLib.compile file.inputFileText,
       compileDebug: false,
       client: true,
       filename: file.inputFileName
@@ -33,8 +40,7 @@ module.exports =
   type: "template"
   defaultExtensions:  ["jade"]
   clientLibrary: "jade-runtime"
-  libName: "jade"
-  compile: _compile
-  suffix: _suffix
-  prefix: _prefix
-  compilerLib: _compilerLib
+  compile: prefix
+  suffix: suffix
+  prefix: prefix
+  setCompilerLib: setCompilerLib

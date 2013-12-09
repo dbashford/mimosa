@@ -7,11 +7,14 @@ path = require 'path'
 _ = require 'lodash'
 logger = require 'logmimosa'
 
-_importRegex = /@import ['"](.*)['"]/g
+importRegex = /@import ['"](.*)['"]/g
 runSass = 'sass'
 hasSASS = undefined
 hasCompass = undefined
-_compilerLib = null
+compilerLib = null
+
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
 
 __doRubySASSChecking = ->
   logger.debug "Checking if Compass/SASS is available"
@@ -75,7 +78,7 @@ __compileNode = (file, config, options, done) ->
     logger.debug "Finished node compile for file [[ #{file.inputFileName} ]], errors? #{error?}"
     done error, text
 
-  _compilerLib.render
+  compilerLib.render
     data: file.inputFileText
     includePaths: [ config.watch.sourceDir, path.dirname(file.inputFileName) ]
     success: (css) ->
@@ -83,25 +86,25 @@ __compileNode = (file, config, options, done) ->
     error: (error) ->
       finished error, ''
 
-_init = (config) ->
+init = (config) ->
   unless config.compilers.libs.sass
     __doRubySASSChecking()
 
-_compile = (file, config, options, done) ->
+prefix = (file, config, options, done) ->
   if config.compilers.libs.sass
     __compileNode(file, config, options, done)
   else
     __preCompileRubySASS(file, config, options, done)
 
-_isInclude = (fileName, includeToBaseHash) ->
+isInclude = (fileName, includeToBaseHash) ->
   includeToBaseHash[fileName]? or path.basename(fileName).charAt(0) is '_'
 
-_getImportFilePath = (baseFile, importPath) ->
+getImportFilePath = (baseFile, importPath) ->
   path.join path.dirname(baseFile), importPath.replace(/(\w+\.|[\w-]+$)/, '_$1')
 
-_determineBaseFiles = (allFiles) ->
+determineBaseFiles = (allFiles) ->
   baseFiles = allFiles.filter (file) ->
-    (not _isInclude(file)) and file.indexOf('compass') < 0
+    (not isInclude(file)) and file.indexOf('compass') < 0
   if logger.isDebug
     logger.debug "Base files for SASS are:\n#{baseFiles.join('\n')}"
   baseFiles
@@ -110,11 +113,10 @@ module.exports =
   base: "sass"
   type: "css"
   defaultExtensions: ["scss", "sass"]
-  libName: 'node-sass'
-  importRegex: _importRegex
-  init: _init
-  compile: _compile
-  isInclude: _isInclude
-  getImportFilePath: _getImportFilePath
-  determineBaseFiles: _determineBaseFiles
-  compilerLib: _compilerLib
+  importRegex: importRegex
+  init: init
+  compile: prefix
+  isInclude: isInclude
+  getImportFilePath: getImportFilePath
+  determineBaseFiles: determineBaseFiles
+  setCompilerLib: setCompilerLib

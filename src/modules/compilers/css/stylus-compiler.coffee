@@ -6,10 +6,17 @@ path = require 'path'
 _ = require 'lodash'
 logger = require 'logmimosa'
 
-_importRegex = /@import[\s\t]*[\(]?[\s\t]*['"]?([a-zA-Z0-9*\/\.\-\_]*)[\s\t]*[\n;\s'")]?/g
-_compilerLib = null
+importRegex = /@import[\s\t]*[\(]?[\s\t]*['"]?([a-zA-Z0-9*\/\.\-\_]*)[\s\t]*[\n;\s'")]?/g
+compilerLib = null
+libName = "stylus"
 
-_compile = (file, config, options, done) ->
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
+
+prefix = (file, config, options, done) ->
+  unless compilerLib
+    compilerLib = require libName
+
   text = file.inputFileText
   fileName = file.inputFileName
 
@@ -20,7 +27,7 @@ _compile = (file, config, options, done) ->
 
   logger.debug "Compiling Stylus file [[ #{fileName} ]]"
 
-  stylusSetup = _compilerLib(text)
+  stylusSetup = compilerLib(text)
     .include(path.dirname(fileName))
     .include(config.watch.sourceDir)
     .set('compress', false)
@@ -30,7 +37,7 @@ _compile = (file, config, options, done) ->
     .set('include css', true)
 
   if config.stylus.url
-    stylusSetup.define 'url', _compilerLib.url config.stylus.url
+    stylusSetup.define 'url', compilerLib.url config.stylus.url
 
   config.stylus.includes?.forEach (inc) ->
     stylusSetup.include inc
@@ -46,15 +53,15 @@ _compile = (file, config, options, done) ->
 
   stylusSetup.render cb
 
-_determineBaseFiles = (allFiles) ->
+determineBaseFiles = (allFiles) ->
   imported = []
   for file in allFiles
-    imports = fs.readFileSync(file, 'utf8').match(_importRegex)
+    imports = fs.readFileSync(file, 'utf8').match(importRegex)
     continue unless imports?
 
     for anImport in imports
-      _importRegex.lastIndex = 0
-      importPath = _importRegex.exec(anImport)[1]
+      importRegex.lastIndex = 0
+      importPath = importRegex.exec(anImport)[1]
       fullImportPath = path.join path.dirname(file), importPath
       for fullFilePath in allFiles
         if fullFilePath.indexOf(fullImportPath) is 0
@@ -67,16 +74,15 @@ _determineBaseFiles = (allFiles) ->
     logger.debug "Base files for Stylus are:\n#{baseFiles.join('\n')}"
   baseFiles
 
-_getImportFilePath = (baseFile, importPath) ->
+getImportFilePath = (baseFile, importPath) ->
   path.join path.dirname(baseFile), importPath
 
 module.exports =
   base: "stylus"
   type: "css"
   defaultExtensions: ["styl"]
-  libName: 'stylus'
-  importRegex: _importRegex
-  compile: _compile
-  determineBaseFiles: _determineBaseFiles
-  getImportFilePath: _getImportFilePath
-  compilerLib: _compilerLib
+  importRegex: importRegex
+  compile: prefix
+  determineBaseFiles: determineBaseFiles
+  getImportFilePath: getImportFilePath
+  setCompilerLib: setCompilerLib

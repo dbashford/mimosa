@@ -1,8 +1,12 @@
 "use strict"
 
-_compilerLib = null
+compilerLib = null
+libName = 'dustjs-linkedin'
 
-_prefix = (config, libraryPath) ->
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
+
+prefix = (config, libraryPath) ->
   if config.template.wrapType is "amd"
     "define(['#{libraryPath}'], function (dust){ "
   else if config.template.wrapType is "common"
@@ -10,7 +14,7 @@ _prefix = (config, libraryPath) ->
   else
     ""
 
-_suffix = (config) ->
+suffix = (config) ->
   if config.template.wrapType is "amd"
     'return dust; });'
   else if config.template.wrapType is "common"
@@ -18,9 +22,12 @@ _suffix = (config) ->
   else
     ""
 
-_compile = (file, cb) ->
+prefix = (file, cb) ->
+  unless compilerLib
+    compilerLib = require libName
+
   try
-    output = _compilerLib.compile file.inputFileText, file.templateName
+    output = compilerLib.compile file.inputFileText, file.templateName
   catch err
     error = err
   cb(error, output)
@@ -29,10 +36,9 @@ module.exports =
   base: "dust"
   type: "template"
   defaultExtensions: ["dust"]
-  libName: 'dustjs-linkedin'
   clientLibrary: "dust"
   handlesNamespacing: true
-  compile: _compile
-  suffix: _suffix
-  prefix: _prefix
-  compilerLib: _compilerLib
+  compile: prefix
+  suffix: suffix
+  prefix: prefix
+  setCompilerLib: setCompilerLib

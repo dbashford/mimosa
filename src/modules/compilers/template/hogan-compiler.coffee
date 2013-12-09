@@ -1,8 +1,12 @@
 "use strict"
 
-_compilerLib = null
+compilerLib = null
+libName = "hogan.js"
 
-_prefix = (config, libraryPath) ->
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
+
+prefix = (config, libraryPath) ->
   if config.template.wrapType is 'amd'
     "define(['#{libraryPath}'], function (Hogan){ var templates = {};\n"
   else if config.template.wrapType is "common"
@@ -10,7 +14,7 @@ _prefix = (config, libraryPath) ->
   else
     "var templates = {};\n"
 
-_suffix = (config) ->
+suffix = (config) ->
   if config.template.wrapType is 'amd'
     'return templates; });'
   else if config.template.wrapType is "common"
@@ -18,9 +22,12 @@ _suffix = (config) ->
   else
     ""
 
-_compile = (file, cb) ->
+prefix = (file, cb) ->
+  unless compilerLib
+    compilerLib = require libName
+
   try
-    compiledOutput = _compilerLib.compile(file.inputFileText, {asString:true})
+    compiledOutput = compilerLib.compile(file.inputFileText, {asString:true})
     output = "templates['#{file.templateName}'] = new Hogan.Template(#{compiledOutput});\n"
   catch err
     error = err
@@ -31,8 +38,7 @@ module.exports =
   type: "template"
   defaultExtensions: ["hog", "hogan", "hjs"]
   clientLibrary: "hogan-template"
-  libName: "hogan.js"
-  compile: _compile
-  suffix: _suffix
-  prefix: _prefix
-  compilerLib: _compilerLib
+  compile: prefix
+  suffix: suffix
+  prefix: prefix
+  setCompilerLib: setCompilerLib

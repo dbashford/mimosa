@@ -1,14 +1,21 @@
 "use strict"
 
-_compilerLib = null
-_config = {}
+liveConfig = {}
+compilerLib = null
+libName = 'LiveScript'
 
-_init = (conf) ->
-  _config = conf.livescript
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
 
-_compile = (file, cb) ->
+init = (conf) ->
+  liveConfig = conf.livescript
+
+prefix = (file, cb) ->
+  unless compilerLib
+    compilerLib = require libName
+
   try
-    output = _compilerLib.compile file.inputFileText, _config
+    output = compilerLib.compile file.inputFileText, liveConfig
   catch err
     error = err
   cb(error, output)
@@ -17,7 +24,6 @@ module.exports =
   base: "livescript"
   type: "javascript"
   defaultExtensions: ["ls"]
-  libName: 'LiveScript'
-  init: _init
-  compile: _compile
-  compilerLib: _compilerLib
+  init: init
+  compile: prefix
+  setCompilerLib: setCompilerLib

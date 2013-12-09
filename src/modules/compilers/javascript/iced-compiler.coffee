@@ -4,15 +4,22 @@ path = require 'path'
 
 _ = require 'lodash'
 
-_compilerLib = null
-_config = {}
+compilerLib = null
+libName = 'iced-coffee-script'
+icedConfig = {}
 
-_init = (conf) ->
-  _config = conf.iced
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
 
-_compile = (file, cb) ->
-  conf = _.extend {}, _config, sourceFiles:[path.basename(file.inputFileName) + ".src"]
-  conf.literate = _compilerLib.helpers.isLiterate(file.inputFileName)
+init = (conf) ->
+  icedConfig = conf.iced
+
+prefix = (file, cb) ->
+  unless compilerLib
+    compilerLib = require libName
+
+  conf = _.extend {}, icedConfig, sourceFiles:[path.basename(file.inputFileName) + ".src"]
+  conf.literate = compilerLib.helpers.isLiterate(file.inputFileName)
 
   if conf.sourceMap
     if conf.sourceMapExclude?.indexOf(file.inputFileName) > -1
@@ -21,21 +28,20 @@ _compile = (file, cb) ->
       conf.sourceMap = false
 
   try
-    output = _compilerLib.compile file.inputFileText, conf
+    output = compilerLib.compile file.inputFileText, conf
     if output.v3SourceMap
       sourceMap = output.v3SourceMap
       output = output.js
   catch err
     error = "#{err}, line #{err.location?.first_line}, column #{err.location?.first_column}"
-  cb error, output, _config, sourceMap
+  cb error, output, icedConfig, sourceMap
 
 module.exports =
   base: "iced"
   type: "javascript"
   defaultExtensions: ["iced"]
   cleanUpSourceMaps: true
-  libName: 'iced-coffee-script'
-  init: _init
-  compile: _compile
-  compilerLib: _compilerLib
-  config: _config
+  init: init
+  compile: prefix
+  setCompilerLib: setCompilerLib
+  config: icedConfig

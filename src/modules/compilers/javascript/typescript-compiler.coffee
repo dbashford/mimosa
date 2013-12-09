@@ -14,7 +14,7 @@ io = null
 TypeScript = null
 compilationSettings = null
 defaultLibPath = null
-_config = {}
+mimosaConfig = {}
 
 __setupTypeScript = ->
   io = require "./resources/io"
@@ -26,21 +26,21 @@ __setupTypeScript = ->
   compilationSettings.codeGenTarget = TypeScript.CodeGenTarget.ES5
   compilationSettings.errorRecovery = true
 
-  if _config.typescript?.module?
-    if _config.typescript.module is "commonjs"
+  if mimosaConfig.typescript?.module?
+    if mimosaConfig.typescript.module is "commonjs"
       TypeScript.moduleGenTarget = TypeScript.ModuleGenTarget.Synchronous
-    else if _config.typescript.module is "amd"
+    else if mimosaConfig.typescript.module is "amd"
       TypeScript.moduleGenTarget = TypeScript.ModuleGenTarget.Asynchronous
 
-_init = (conf) ->
-  _config = conf
+init = (conf) ->
+  mimosaConfig = conf
 
 _compile = (file, cb) ->
 
   unless TypeScript
     __setupTypeScript()
 
-  targetJsFile = file.outputFileName.replace(_config.watch.compiledDir, _config.watch.sourceDir)
+  targetJsFile = file.outputFileName.replace(mimosaConfig.watch.compiledDir, mimosaConfig.watch.sourceDir)
   targetJsFile = io.resolvePath(targetJsFile)
   targetJsFile = TypeScript.switchToForwardSlashes(targetJsFile)
 
@@ -129,5 +129,5 @@ module.exports =
   base: "typescript"
   type: "javascript"
   defaultExtensions: ["ts"]
-  init: _init
+  init: init
   compile: _compile

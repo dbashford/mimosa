@@ -1,14 +1,18 @@
 "use strict"
 
-_compilerLib = null
+compilerLib = null
+libName = "ractive"
 
-_prefix = (config, libraryPath) ->
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
+
+prefix = (config, libraryPath) ->
   if config.template.wrapType is 'amd'
     "define(['#{libraryPath}'], function (){ var templates = {};\n"
   else
     "var templates = {};\n"
 
-_suffix = (config) ->
+suffix = (config) ->
   if config.template.wrapType is 'amd'
     'return templates; });'
   else if config.template.wrapType is "common"
@@ -16,9 +20,12 @@ _suffix = (config) ->
   else
     ""
 
-_compile = (file, cb) ->
+prefix = (file, cb) ->
+  unless compilerLib
+    compilerLib = require libName
+
   try
-    output = _compilerLib.parse file.inputFileText
+    output = compilerLib.parse file.inputFileText
     output = JSON.stringify output
   catch err
     error = err
@@ -29,8 +36,7 @@ module.exports =
   type: "template"
   defaultExtensions:  ["rtv","rac"]
   clientLibrary: "ractive"
-  libName: "ractive"
-  compilerLib: _compilerLib
-  compile: _compile
-  suffix: _suffix
-  prefix: _prefix
+  compile: prefix
+  suffix: suffix
+  prefix: prefix
+  setCompilerLib: setCompilerLib

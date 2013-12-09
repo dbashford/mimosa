@@ -6,13 +6,20 @@ path = require 'path'
 _ = require 'lodash'
 logger = require 'logmimosa'
 
-_importRegex = /@import ['"](.*)['"]/g
-_compilerLib = null
+importRegex = /@import ['"](.*)['"]/g
+libName = "less"
+compilerLib = null
 
-_compile = (file, config, options, done) ->
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
+
+prefix = (file, config, options, done) ->
+  unless compilerLib
+    compilerLib = require libName
+
   fileName = file.inputFileName
   logger.debug "Compiling LESS file [[ #{fileName} ]], first parsing..."
-  parser = new _compilerLib.Parser
+  parser = new compilerLib.Parser
     paths: [config.watch.sourceDir, path.dirname(fileName)],
     filename: fileName
   parser.parse file.inputFileText, (error, tree) ->
@@ -31,15 +38,15 @@ _compile = (file, config, options, done) ->
 
     done(err, result)
 
-_determineBaseFiles = (allFiles) ->
+determineBaseFiles = (allFiles) ->
   imported = []
   for file in allFiles
-    imports = fs.readFileSync(file, 'utf8').match(_importRegex)
+    imports = fs.readFileSync(file, 'utf8').match(importRegex)
     continue unless imports?
 
     for anImport in imports
-      _importRegex.lastIndex = 0
-      importPath = _importRegex.exec(anImport)[1]
+      importRegex.lastIndex = 0
+      importPath = importRegex.exec(anImport)[1]
       fullImportPath = path.join path.dirname(file), importPath
       imported.push fullImportPath
 
@@ -47,7 +54,7 @@ _determineBaseFiles = (allFiles) ->
   logger.debug "Base files for LESS are:\n#{baseFiles.join('\n')}"
   baseFiles
 
-_getImportFilePath = (baseFile, importPath) ->
+getImportFilePath = (baseFile, importPath) ->
   path.join path.dirname(baseFile), importPath
 
 module.exports =
@@ -55,9 +62,8 @@ module.exports =
   type: "css"
   defaultExtensions: ["less"]
   partialKeepsExtension: true
-  libName: 'less'
-  importRegex: _importRegex
-  compile: _compile
-  determineBaseFiles: _determineBaseFiles
-  getImportFilePath: _getImportFilePath
-  compilerLib: _compilerLib
+  importRegex: importRegex
+  compile: prefix
+  determineBaseFiles: determineBaseFiles
+  getImportFilePath: getImportFilePath
+  setCompilerLib: setCompilerLib

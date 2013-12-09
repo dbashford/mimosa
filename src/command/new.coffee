@@ -89,7 +89,7 @@ class NewCommand
     chosen.css =        (compilers.css.filter        (item) -> item.isDefault)[0]
     chosen.javascript = (compilers.javascript.filter (item) -> item.isDefault)[0]
     chosen.template =   (compilers.template.filter   (item) -> item.isDefault)[0]
-    chosen.server =     (servers.filter              (item) -> console.log(item);item.isDefault)[0]
+    chosen.server =     (servers.filter              (item) -> item.isDefault)[0]
     chosen.views =      (views.filter                (item) -> item.isDefault)[0]
 
     if logger.isDebug

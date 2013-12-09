@@ -1,6 +1,10 @@
 "use strict"
 
-_compilerLib = null
+compilerLib = null
+libName = 'ejs'
+
+setCompilerLib = (_compilerLib) ->
+  compilerLib = _compilerLib
 
 boilerplate = """
   var templates = {};
@@ -13,7 +17,7 @@ boilerplate = """
   };
 """
 
-_prefix =  (config, libraryPath) ->
+prefix =  (config, libraryPath) ->
   if config.template.wrapType is 'amd'
     """
     define(['#{libraryPath}'], function (globalFilters){
@@ -27,7 +31,7 @@ _prefix =  (config, libraryPath) ->
   else
     boilerplate
 
-_suffix = (config) ->
+suffix = (config) ->
   if config.template.wrapType is 'amd'
     'return templates; });'
   else if config.template.wrapType is "common"
@@ -38,9 +42,12 @@ _suffix = (config) ->
 __transform = (output) ->
   output.replace(/\nescape[\s\S]*?};/, 'escape = escape || globalEscape; filters = filters || globalFilters;')
 
-_compile = (file, cb) ->
+prefix = (file, cb) ->
+  unless compilerLib
+    compilerLib = require libName
+
   try
-    output = _compilerLib.compile file.inputFileText,
+    output = compilerLib.compile file.inputFileText,
       compileDebug: false,
       client: true,
       filename: file.inputFileName
@@ -54,10 +61,9 @@ module.exports =
   base: "ejs"
   type: "template"
   defaultExtensions: ["ejs"]
-  libName: 'ejs'
   clientLibrary: "ejs-filters"
-  compile: _compile
-  suffix: _suffix
-  prefix: _prefix
-  compilerLib: _compilerLib
+  compile: prefix
+  suffix: suffix
+  prefix: prefix
+  setCompilerLib: setCompilerLib
 

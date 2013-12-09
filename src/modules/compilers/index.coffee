@@ -7,7 +7,7 @@ _ =      require 'lodash'
 logger = require 'logmimosa'
 wrench = require 'wrench'
 
-JavaScriptCompiler = require "./javascript/javascript"
+JavaScriptCompiler = require("./javascript/javascript")
 CSSCompiler = require "./css/css"
 TemplateCompiler = require "./template/template"
 
@@ -27,15 +27,11 @@ class MimosaCompilerModule
 
   registration: (config, register) ->
     for compiler in @configuredCompilers.compilers
-      # set default compilers
-      if compiler.libName
-        if config.compilers.libs[compiler.base]
-          logger.debug "Using provided [[ #{compiler.base} ]] compiler"
-          compiler.compilerLib = config.compilers.libs[compiler.base]
-        else
-          logger.debug "Using Mimosa embedded [[ #{compiler.base} ]] compiler"
-          unless compiler.libName is 'node-sass'
-            compiler.delayedCompilerLib = true
+      if config.compilers.libs[compiler.base] && compiler.setCompilerLib
+        logger.debug "Using provided [[ #{compiler.base} ]] compiler"
+        compiler.setCompilerLib config.compilers.libs[compiler.base]
+      else
+        logger.debug "Using Mimosa embedded [[ #{compiler.base} ]] compiler"
 
       if compiler.registration?
         compiler.registration(config, register)
@@ -74,6 +70,9 @@ class MimosaCompilerModule
         comp.type isnt "template"
 
     for compiler in compilers
+      if logger.isDebug
+        logger.debug "Processing compiler " + compiler.base
+
       extensions = if compiler.base is "copy"
         config.copy.extensions
       else
@@ -90,25 +89,28 @@ class MimosaCompilerModule
       # continue if extensions.length is 0
       if extensions
 
-        compiler = switch compiler.type
-          when "copy"
-            new compiler.compiler(config, extensions)
-          when "javascript"
-            new JavaScriptCompiler(config, extensions, compiler)
-          when "template"
-            new TemplateCompiler(config, extensions, compiler)
-          when "css"
-            new CSSCompiler(config, extensions, compiler)
+        if logger.isDebug
+          logger.debug "Creating compiler " + compiler.base + " with extensions " + extensions
 
-        allCompilers.push compiler
-        for ext in compiler.extensions
-          extHash[ext] = compiler
+        compilerInstance = switch compiler.type
+          when "copy" then new compiler.compiler(config, extensions)
+          when "javascript" then new JavaScriptCompiler(config, extensions, compiler)
+          when "template" then new TemplateCompiler(config, extensions, compiler)
+          when "css" then new CSSCompiler(config, extensions, compiler)
+
+        allCompilers.push compilerInstance
+        for ext in compilerInstance.extensions
+          extHash[ext] = compilerInstance
         config.extensions[compiler.type].push(extensions...)
+
+      if logger.isDebug
+        logger.debug "Done with compiler " + compiler.base
 
     for type, extensions of config.extensions
       config.extensions[type] = _.uniq(extensions)
 
-    logger.debug("Compiler/Extension hash \n #{extHash}")
+    if logger.isDebug
+      logger.debug("Compiler/Extension hash \n" + JSON.stringify(extHash, null, 2))
 
     @configuredCompilers = {compilerExtensionHash:extHash, compilers:allCompilers}
 

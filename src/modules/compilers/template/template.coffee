@@ -136,10 +136,6 @@ module.exports = class TemplateCompiler
     hasFiles = options.files?.length > 0
     return next() unless hasFiles
 
-    if @delayedCompilerLib
-      @compilerLib = require @compiler.libName
-      @delayedCompilerLib = null
-
     i = 0
     newFiles = []
     options.files.forEach (file) =>
