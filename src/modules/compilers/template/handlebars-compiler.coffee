@@ -111,7 +111,7 @@ suffix = (config) ->
 init = (conf) ->
   config = conf
 
-prefix = (file, cb, handlebars, ember) ->
+compile = (file, cb, handlebars, ember) ->
   unless handlebars
     __determineHandlebars()
 
@@ -129,7 +129,7 @@ module.exports =
   type: "template"
   defaultExtensions: ["hbs", "handlebars"]
   clientLibrary: "handlebars"
-  compile: prefix
+  compile: compile
   init: init
   suffix: suffix
   prefix: prefix

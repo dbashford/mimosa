@@ -22,7 +22,7 @@ suffix = (config) ->
   else
     ""
 
-prefix = (file, cb) ->
+compile = (file, cb) ->
   unless compilerLib
     compilerLib = require libName
 
@@ -38,7 +38,7 @@ module.exports =
   defaultExtensions: ["dust"]
   clientLibrary: "dust"
   handlesNamespacing: true
-  compile: prefix
+  compile: compile
   suffix: suffix
   prefix: prefix
   setCompilerLib: setCompilerLib

@@ -136,12 +136,11 @@ module.exports = class TemplateCompiler
     hasFiles = options.files?.length > 0
     return next() unless hasFiles
 
-    i = 0
     newFiles = []
-    options.files.forEach (file) =>
-      logger.debug "Compilings template [[ #{file.inputFileName} ]]"
+    options.files.forEach (file, i) =>
+      logger.debug "Compiling template [[ #{file.inputFileName} ]]"
       file.templateName = __generateTemplateName(file.inputFileName, config)
-      @compile file, (err, result) =>
+      @compiler.compile file, (err, result) =>
         if err
           logger.error "Template [[ #{file.inputFileName} ]] failed to compile. Reason: #{err}", {exitIfBuild:true}
         else
@@ -150,15 +149,17 @@ module.exports = class TemplateCompiler
           file.outputFileText = result
           newFiles.push file
 
-        if ++i is options.files.length
+        if i is options.files.length-1
           options.files = newFiles
+          console.log "calling next!"
           next()
 
   _merge: (config, options, next) =>
     hasFiles = options.files?.length > 0
     return next() unless hasFiles
 
-    prefix = @compiler.prefix config, @__libraryPath()
+    libPath = @__libraryPath()
+    prefix = @compiler.prefix config, libPath
     suffix = @compiler.suffix config
 
     for outputFileConfig in config.template.output

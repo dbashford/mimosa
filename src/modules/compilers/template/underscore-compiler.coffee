@@ -24,7 +24,7 @@ suffix = (config) ->
   else
     ""
 
-prefix = (file, cb) ->
+compile = (file, cb) ->
   unless compilerLib
     compilerLib = require libName
 
@@ -40,7 +40,7 @@ module.exports =
   type: "template"
   defaultExtensions:  ["tpl", "underscore"]
   clientLibrary: "underscore"
-  compile: prefix
+  compile: compile
   suffix: suffix
   prefix: prefix
   setCompilerLib: setCompilerLib

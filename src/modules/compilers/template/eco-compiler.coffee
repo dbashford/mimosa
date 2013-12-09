@@ -20,7 +20,7 @@ suffix = (config) ->
   else
     ""
 
-prefix = (file, cb) ->
+compile = (file, cb) ->
   unless compilerLib
     compilerLib = require libName
 
@@ -35,7 +35,7 @@ module.exports =
   type: "template"
   defaultExtensions: ["eco"]
   handlesNamespacing: true
-  compile: prefix
+  compile: compile
   suffix: suffix
   prefix: prefix
   setCompilerLib: setCompilerLib

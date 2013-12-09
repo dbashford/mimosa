@@ -42,7 +42,7 @@ suffix = (config) ->
 __transform = (output) ->
   output.replace(/\nescape[\s\S]*?};/, 'escape = escape || globalEscape; filters = filters || globalFilters;')
 
-prefix = (file, cb) ->
+compile = (file, cb) ->
   unless compilerLib
     compilerLib = require libName
 
@@ -62,7 +62,7 @@ module.exports =
   type: "template"
   defaultExtensions: ["ejs"]
   clientLibrary: "ejs-filters"
-  compile: prefix
+  compile: compile
   suffix: suffix
   prefix: prefix
   setCompilerLib: setCompilerLib

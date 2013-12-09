@@ -109,8 +109,8 @@ class MimosaCompilerModule
     for type, extensions of config.extensions
       config.extensions[type] = _.uniq(extensions)
 
-    if logger.isDebug
-      logger.debug("Compiler/Extension hash \n" + JSON.stringify(extHash, null, 2))
+    #if logger.isDebug
+    #  logger.debug("Compiler/Extension hash \n" + JSON.stringify(extHash, null, 2))
 
     @configuredCompilers = {compilerExtensionHash:extHash, compilers:allCompilers}
 
