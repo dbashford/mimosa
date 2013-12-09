@@ -4,9 +4,9 @@ path = require 'path'
 fs =   require 'fs'
 
 _ =      require 'lodash'
-logger =           require 'logmimosa'
+logger = require 'logmimosa'
 
-fileUtils =        require '../../../util/file'
+fileUtils = require '../../../util/file'
 
 __generateTemplateName = (fileName, config) ->
   nameTransform = config.template.nameTransform
@@ -81,12 +81,12 @@ module.exports = class TemplateCompiler
   registration: (config, register) ->
     @requireRegister = config.installedModules['mimosa-require']
 
-    register ['remove'], 'init', @_testForRemoveClientLibrary, @extensions
-
     register ['buildExtension'],        'init',         @_gatherFiles, [@extensions[0]]
     register ['add','update','remove'], 'init',         @_gatherFiles, @extensions
     register ['buildExtension'],        'compile',      @_compile,     [@extensions[0]]
     register ['add','update','remove'], 'compile',      @_compile,     @extensions
+
+    register ['remove'], 'init', @_testForRemoveClientLibrary, @extensions
 
     register ['cleanFile'],             'init',         @_removeFiles, @extensions
 
@@ -151,7 +151,6 @@ module.exports = class TemplateCompiler
 
         if i is options.files.length-1
           options.files = newFiles
-          console.log "calling next!"
           next()
 
   _merge: (config, options, next) =>
@@ -217,7 +216,6 @@ module.exports = class TemplateCompiler
       next()
 
   _readInClientLibrary: (config, options, next) =>
-
     if !@clientPath? or fs.existsSync @clientPath
       logger.debug "Not going to write template client library"
       return next()
