@@ -13,7 +13,7 @@ compilerLib = null
 setCompilerLib = (_compilerLib) ->
   compilerLib = _compilerLib
 
-prefix = (file, config, options, done) ->
+compile = (file, config, options, done) ->
   unless compilerLib
     compilerLib = require libName
 
@@ -63,7 +63,7 @@ module.exports =
   defaultExtensions: ["less"]
   partialKeepsExtension: true
   importRegex: importRegex
-  compile: prefix
+  compile: compile
   determineBaseFiles: determineBaseFiles
   getImportFilePath: getImportFilePath
   setCompilerLib: setCompilerLib

@@ -98,6 +98,8 @@ class MimosaCompilerModule
           when "template" then new TemplateCompiler(config, extensions, compiler)
           when "css" then new CSSCompiler(config, extensions, compiler)
 
+        compilerInstance.base = compiler.base
+
         allCompilers.push compilerInstance
         for ext in compilerInstance.extensions
           extHash[ext] = compilerInstance
@@ -109,8 +111,8 @@ class MimosaCompilerModule
     for type, extensions of config.extensions
       config.extensions[type] = _.uniq(extensions)
 
-    #if logger.isDebug
-    #  logger.debug("Compiler/Extension hash \n" + JSON.stringify(extHash, null, 2))
+    if logger.isDebug
+      logger.debug("Compiler/Extension hash \n" + JSON.stringify(extHash, null, 2))
 
     @configuredCompilers = {compilerExtensionHash:extHash, compilers:allCompilers}
 

@@ -47,10 +47,10 @@ __compileRuby = (file, config, options, done) ->
     done(error, result)
 
 __preCompileRubySASS = (file, config, options, done) ->
-  if hasCompass and hasSASS
+  if hasCompass != undefined && hasSASS != undefined && hasSASS
     return __compileRuby(file, config, options, done)
 
-  if hasSASS
+  if hasSASS != undefined && not hasSASS
     msg = """
         You have SASS files but do not have Ruby SASS available. Either install Ruby SASS or
         provide compilers.libs.sass:require('node-sass') in the mimosa-config to use node-sass.
@@ -58,7 +58,7 @@ __preCompileRubySASS = (file, config, options, done) ->
     return done(msg, '')
 
   compileOnDelay = ->
-    if hasCompass? and hasSASS?
+    if hasCompass != undefined && hasSASS != undefined
       if hasSASS
         __compileRuby(file, config, options, done)
       else
@@ -90,7 +90,7 @@ init = (config) ->
   unless config.compilers.libs.sass
     __doRubySASSChecking()
 
-prefix = (file, config, options, done) ->
+compile = (file, config, options, done) ->
   if config.compilers.libs.sass
     __compileNode(file, config, options, done)
   else
@@ -104,7 +104,7 @@ getImportFilePath = (baseFile, importPath) ->
 
 determineBaseFiles = (allFiles) ->
   baseFiles = allFiles.filter (file) ->
-    (not isInclude(file)) and file.indexOf('compass') < 0
+    (not isInclude(file, {})) and file.indexOf('compass') < 0
   if logger.isDebug
     logger.debug "Base files for SASS are:\n#{baseFiles.join('\n')}"
   baseFiles
@@ -115,7 +115,7 @@ module.exports =
   defaultExtensions: ["scss", "sass"]
   importRegex: importRegex
   init: init
-  compile: prefix
+  compile: compile
   isInclude: isInclude
   getImportFilePath: getImportFilePath
   determineBaseFiles: determineBaseFiles
