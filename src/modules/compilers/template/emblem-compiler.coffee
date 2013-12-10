@@ -44,14 +44,6 @@ emberBoilerplate =
   var template = Ember.Handlebars.template, templates = {};\n
   """
 
-__boilerplate = (ember) ->
-  if ember
-    emberBoilerplate
-  else
-    regularBoilerplate
-
-__transformTemplate = (text) -> "template(#{text})"
-
 __determineHandlebars = ->
   ember = config.template.handlebars.ember.enabled
   hbs = if config.compilers.libs.handlebars
@@ -66,6 +58,12 @@ __determineHandlebars = ->
     hbs
 
 prefix = (config, libraryPath) ->
+
+  boilerplate = if ember
+    emberBoilerplate
+  else
+    regularBoilerplate
+
   if config.template.wrapType is 'amd'
     logger.debug "Building Handlebars template file wrapper"
     jsDir = path.join config.watch.sourceDir, config.watch.javascriptDir
@@ -89,21 +87,21 @@ prefix = (config, libraryPath) ->
 
     """
     define([#{defineString}], function (#{params.join(',')}){
-      #{__boilerplate()}
+      #{boilerplate}
     """
   else if config.template.wrapType is 'common'
     if ember
       """
       var Ember = require('#{config.template.commonLibPath}');
-      #{__boilerplate()}
+      #{boilerplate}
       """
     else
       """
       var Handlebars = require('#{config.template.commonLibPath}');
-      #{__boilerplate()}
+      #{boilerplate}
       """
   else
-    __boilerplate()
+    boilerplate
 
 suffix = (config) ->
   if config.template.wrapType is 'amd'
@@ -116,7 +114,7 @@ suffix = (config) ->
 init = (conf) ->
   config = conf
 
-compile = (file, cb, handlebars, ember) ->
+compile = (file, cb) ->
   unless handlebars
     __determineHandlebars()
 
@@ -125,7 +123,7 @@ compile = (file, cb, handlebars, ember) ->
 
   try
     output = compilerLib.precompile handlebars, file.inputFileText
-    output = __transformTemplate output.toString()
+    output = "template(#{output.toString()})"
     if ember
       output = "Ember.TEMPLATES['#{file.templateName}'] = #{output}"
   catch err
