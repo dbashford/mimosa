@@ -29,6 +29,7 @@ class MimosaCompilerModule
     for compiler in @configuredCompilers.compilers
       if config.compilers.libs[compiler.base] && compiler.setCompilerLib
         logger.debug "Using provided [[ #{compiler.base} ]] compiler"
+        compiler.setCompilerLib config.compilers.libs[compiler.base]
       else
         logger.debug "Using Mimosa embedded [[ #{compiler.base} ]] compiler"
 
