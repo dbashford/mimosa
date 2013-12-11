@@ -3,6 +3,7 @@
 ### Minor Changes
 * [mimosa-testem-simple #4](https://github.com/dbashford/mimosa-testem-simple/issues/4). Added `port` setting which will allow for running both testem ci and testem at the same time without port collisions.
 * [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require/). Bumped to contain the latest testem-simple.
+* [mimosa-web-package #8](https://github.com/dbashford/mimosa-web-package/issues/8). Check if server properties are present before using them. Fixes issue where if server config present but server module is not would cause build to hang/crash.
 
 ## 1.2.2 - Dec 4 2013
 
