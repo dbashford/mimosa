@@ -2,6 +2,10 @@
 
 `1.3` marks the beginning of a total compiler rewrite. This first step, `1.3`, will have no impact on users but will lay the ground work for pulling all of the compilers out of mimosa's core library and into external libraries.  That will take place as part of `2.0` which will likely follow a few weeks after `1.3`
 
+## 1.2.4 - Dec 11 2013
+
+### Minor Changes
+* [mimosa #322](https://github.com/dbashford/mimosa/issues/322). Fixed issue with `mimosa new` + underscore/lodash micro templates.
 
 ## 1.2.3 - Dec 11 2013
 
