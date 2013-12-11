@@ -1,9 +1,0 @@
-$, templates <- define <[jquery templates]>
-
-class ExampleView
-  render: !(element)->
-    ($ element)
-      &append(templates.example {name:'Underscore', css:'CSSHERE'})
-      &append(templates.'another-example' {name:'Underscore'})
-
-ExampleView
