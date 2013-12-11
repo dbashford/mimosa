@@ -11,10 +11,12 @@ coffeeConfig = {}
 setCompilerLib = (_compilerLib) ->
   compilerLib = _compilerLib
 
+getConfig = -> coffeeConfig
+
 init = (conf) ->
   coffeeConfig = conf.coffeescript
 
-prefix = (file, cb) ->
+compile = (file, cb) ->
   unless compilerLib
     compilerLib = require libName
 
@@ -42,6 +44,6 @@ module.exports =
   defaultExtensions: ["coffee", "litcoffee"]
   cleanUpSourceMaps: true
   init: init
-  compile: prefix
+  compile: compile
   setCompilerLib: setCompilerLib
-  config: coffeeConfig
+  config: getConfig

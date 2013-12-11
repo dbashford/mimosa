@@ -10,7 +10,7 @@ setCompilerLib = (_compilerLib) ->
 init = (conf) ->
   liveConfig = conf.livescript
 
-prefix = (file, cb) ->
+compile = (file, cb) ->
   unless compilerLib
     compilerLib = require libName
 
@@ -25,5 +25,5 @@ module.exports =
   type: "javascript"
   defaultExtensions: ["ls"]
   init: init
-  compile: prefix
+  compile: compile
   setCompilerLib: setCompilerLib

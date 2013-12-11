@@ -11,10 +11,12 @@ icedConfig = {}
 setCompilerLib = (_compilerLib) ->
   compilerLib = _compilerLib
 
+getConfig = -> icedConfig
+
 init = (conf) ->
   icedConfig = conf.iced
 
-prefix = (file, cb) ->
+compile = (file, cb) ->
   unless compilerLib
     compilerLib = require libName
 
@@ -42,6 +44,6 @@ module.exports =
   defaultExtensions: ["iced"]
   cleanUpSourceMaps: true
   init: init
-  compile: prefix
+  compile: compile
   setCompilerLib: setCompilerLib
-  config: icedConfig
+  config: getConfig

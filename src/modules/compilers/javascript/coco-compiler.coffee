@@ -12,7 +12,7 @@ setCompilerLib = (_compilerLib) ->
 init = (conf) ->
   cocoConfig = conf.coco
 
-prefix =  (file, cb) ->
+compile =  (file, cb) ->
   unless compilerLib
     compilerLib = require libName
 
@@ -27,5 +27,5 @@ module.exports =
   type: "javascript"
   defaultExtensions: ["co", "coco"]
   init: init
-  compile: prefix
+  compile: compile
   setCompilerLib: setCompilerLib

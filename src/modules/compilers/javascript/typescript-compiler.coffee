@@ -35,7 +35,7 @@ __setupTypeScript = ->
 init = (conf) ->
   mimosaConfig = conf
 
-_compile = (file, cb) ->
+compile = (file, cb) ->
 
   unless TypeScript
     __setupTypeScript()
@@ -130,4 +130,4 @@ module.exports =
   type: "javascript"
   defaultExtensions: ["ts"]
   init: init
-  compile: _compile
+  compile: compile
