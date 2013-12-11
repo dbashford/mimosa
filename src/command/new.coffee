@@ -269,7 +269,7 @@ class NewCommand
     fs.unlinkSync path.join(@skeletonOutPath, "package.json")
     wrench.rmdirSyncRecursive path.join(@skeletonOutPath, "servers")
 
-    @config = @config.replace(/\ \ #?\ ?server:[A-Za-z0-9 \"#\n\r:,.'-]*/g, "")
+    @config = @config.replace(/\ \ #?\ ?server:[A-Za-z0-9 \"#\n\r:,.'-]*\n/g, "")
     @config = @config.replace(/\ \ #?\ ?liveReload:[\]\[A-Za-z0-9 \"#\n\r:,.'-]*/g, "")
     @config = @config.replace("  # modules:", "  modules:")
     @config = @config.replace(/(\ \ modules:\ [\[\]\'A-Za-z\,\ -]*)('server', )([\[\]\'A-Za-z\,\ -]*)/g, "$1$3")

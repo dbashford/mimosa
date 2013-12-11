@@ -1,6 +1,12 @@
-## 1.3.0 - Dec ?? 2013
+## 1.3.0 (Future) - Dec ?? 2013
+
+`1.3` marks the beginning of a total compiler rewrite. This first step, `1.3`, will have no impact on users but will lay the ground work for pulling all of the compilers out of mimosa's core library and into external libraries.  That will take place as part of `2.0` which will likely follow a few weeks after `1.3`
+
+
+## 1.2.3 - Dec 11 2013
 
 ### Minor Changes
+* [mimosa #321](https://github.com/dbashford/mimosa/issues/321). Made adjustments to the regex for config replacement to fix config for `mimosa new` + no server.
 * [mimosa-testem-simple #4](https://github.com/dbashford/mimosa-testem-simple/issues/4). Added `port` setting which will allow for running both testem ci and testem at the same time without port collisions.
 * [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require/). Bumped to contain the latest testem-simple.
 * [mimosa-web-package #8](https://github.com/dbashford/mimosa-web-package/issues/8). Check if server properties are present before using them. Fixes issue where if server config present but server module is not would cause build to hang/crash.
