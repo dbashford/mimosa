@@ -29,7 +29,6 @@ class MimosaCompilerModule
     for compiler in @configuredCompilers.compilers
       if config.compilers.libs[compiler.base] && compiler.setCompilerLib
         logger.debug "Using provided [[ #{compiler.base} ]] compiler"
-        compiler.setCompilerLib config.compilers.libs[compiler.base]
       else
         logger.debug "Using Mimosa embedded [[ #{compiler.base} ]] compiler"
 
@@ -99,6 +98,8 @@ class MimosaCompilerModule
           when "css" then new CSSCompiler(config, extensions, compiler)
 
         compilerInstance.base = compiler.base
+        if compiler.setCompilerLib
+          compilerInstance.setCompilerLib = compiler.setCompilerLib
 
         allCompilers.push compilerInstance
         for ext in compilerInstance.extensions

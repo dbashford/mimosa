@@ -49,4 +49,4 @@ module.exports =
   compile: compile
   suffix: suffix
   prefix: prefix
-  compilerLib: setCompilerLib
+  setCompilerLib: setCompilerLib
