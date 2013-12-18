@@ -161,6 +161,7 @@ module.exports = class WorkflowManager
 
   _workflowMethod: (type, step, options, done) ->
     #logger.debug "Calling workflow: [[ #{type} ]], [[ #{step} ]], [[ #{options.extension} ]], [[ #{options.inputFile} ]]"
+    #logger.debug options.files?.length
 
     tasks = []
     ext = options.extension

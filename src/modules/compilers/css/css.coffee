@@ -8,6 +8,18 @@ logger =    require 'logmimosa'
 
 fileUtils = require '../../../util/file'
 
+__buildDestinationFile = (config, fileName) ->
+  baseCompDir = fileName.replace(config.watch.sourceDir, config.watch.compiledDir)
+  baseCompDir.substring(0, baseCompDir.lastIndexOf(".")) + ".css"
+
+__baseOptionsObject = (config, base) ->
+  destFile = __buildDestinationFile(config, base)
+
+  inputFileName:base
+  outputFileName:destFile
+  inputFileText:null
+  outputFileText:null
+
 module.exports = class CSSCompiler
 
   constructor: (config, @extensions, @compiler) ->
@@ -19,11 +31,15 @@ module.exports = class CSSCompiler
     register ['buildExtension'], 'init',    @_findBasesToCompileStartup, [@extensions[0]]
     register ['buildExtension'], 'compile', @_compile,                   [@extensions[0]]
 
-    register ['add'],                               'init',         @_processWatchedDirectories, @extensions
-    register ['remove','cleanFile'],                'init',         @_checkState,                @extensions
-    register ['add','update','remove','cleanFile'], 'init',         @_findBasesToCompile,        @extensions
-    register ['add','update','remove'],             'compile',      @_compile,                   @extensions
-    register ['update','remove'],                   'afterCompile', @_processWatchedDirectories, @extensions
+    exts = @extensions
+    if @compiler.canFullyImportCSS
+      exts.push "css"
+
+    register ['add'],                               'init',         @_processWatchedDirectories, exts
+    register ['remove','cleanFile'],                'init',         @_checkState,                exts
+    register ['add','update','remove','cleanFile'], 'init',         @_findBasesToCompile,        exts
+    register ['add','update','remove'],             'compile',      @_compile,                   exts
+    register ['update','remove'],                   'afterCompile', @_processWatchedDirectories, exts
 
   # for clean
   _checkState: (config, options, next) =>
@@ -33,55 +49,57 @@ module.exports = class CSSCompiler
       @_processWatchedDirectories(config, options, -> next())
 
   _findBasesToCompile: (config, options, next) =>
-    options.files = []
+    # clear out any compiler related files, leave any that are not from this compiler
+    options.files = options.files.filter @__notCompilerFile
+
     if @_isInclude(options.inputFile, @includeToBaseHash)
+      # file is include so need to find bases to compile for it
       bases = @includeToBaseHash[options.inputFile]
       if bases?
         logger.debug "Bases files for [[ #{options.inputFile} ]]\n#{bases.join('\n')}"
         for base in bases
-          options.files.push @__baseOptionsObject(base, options)
-      else
+          options.files.push __baseOptionsObject(config, base)
+      # else
         # valid only for SASS which has naming convension for partials
-        unless options.lifeCycleType is 'remove'
-          logger.warn "Orphaned partial file: [[ #{options.inputFile} ]]"
+        # unless options.lifeCycleType is 'remove'
+          # logger.warn "Orphaned partial file: [[ #{options.inputFile} ]]"
     else
-      unless options.lifeCycleType is 'remove'
-        options.files.push @__baseOptionsObject(options.inputFile, options)
+      # file is passing through, isn't include, is base of its own and needs to be compiled
+      # unless it is a remove (since it is deleted)
+      if options.lifeCycleType isnt 'remove' and path.extname(options.inputFile) isnt ".css"
+        options.files.push __baseOptionsObject(config, options.inputFile)
 
     next()
-
-  __baseOptionsObject: (base, options) ->
-    destFile = options.destinationFile(base)
-
-    inputFileName:base
-    outputFileName:destFile
-    inputFileText:null
-    outputFileText:null
 
   _compile: (config, options, next) =>
     hasFiles = options.files?.length > 0
     return next() unless hasFiles
 
     i = 0
-    newFiles = []
-    done = (file) ->
-      newFiles.push file if file
+    done = ->
       if ++i is options.files.length
-        options.files = newFiles
         next()
 
     options.files.forEach (file) =>
-      fs.exists file.inputFileName, (exists) =>
+      if (@__notCompilerFile(file))
+        done()
+      else fs.exists file.inputFileName, (exists) =>
         if exists
           @compiler.compile file, config, options, (err, result) =>
             if err
               logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}", {exitIfBuild:true}
             else
               file.outputFileText = result
-
-            done(file)
+            done()
         else
-          done(file)
+          done()
+
+  __notCompilerFile: (file) =>
+    # css files are processed by all compilers
+    # result is some compilers can add files to other compilers workflows
+    # as css file flows through, need to be certain file belongs
+    ext = path.extname(file.inputFileName).replace(/\./,'')
+    @extensions.indexOf(ext) is -1
 
   _findBasesToCompileStartup: (config, options, next) =>
     baseFilesToCompileNow = []
@@ -89,7 +107,7 @@ module.exports = class CSSCompiler
     # Determine if any includes necessitate a base file compile
     for include, bases of @includeToBaseHash
       for base in bases
-        basePath = options.destinationFile(base)
+        basePath = __buildDestinationFile(config, base)
         if fs.existsSync basePath
           includeTime = fs.statSync(include).mtime
           baseTime = fs.statSync(basePath).mtime
@@ -102,7 +120,7 @@ module.exports = class CSSCompiler
 
     # Determine if any bases need to be compiled based on their own merit
     for base in @baseFiles
-      baseCompiledPath = options.destinationFile(base)
+      baseCompiledPath = __buildDestinationFile(config, base)
       if fs.existsSync baseCompiledPath
         if fs.statSync(base).mtime > fs.statSync(baseCompiledPath).mtime
           logger.debug "Base file [[ #{base} ]] needs to be compiled, it has been changed recently"
@@ -113,8 +131,8 @@ module.exports = class CSSCompiler
 
     baseFilesToCompile = _.uniq(baseFilesToCompileNow)
 
-    options.files = baseFilesToCompile.map (base) =>
-      @__baseOptionsObject(base, options)
+    options.files = baseFilesToCompile.map (base) ->
+      __baseOptionsObject(config, base)
 
     if options.files.length > 0
       options.isVendor = fileUtils.isVendorCSS(config, options.files[0].inputFileName)
@@ -128,7 +146,8 @@ module.exports = class CSSCompiler
     allFiles = @__getAllFiles(config)
 
     oldBaseFiles = @baseFiles ?= []
-    @baseFiles = @compiler.determineBaseFiles(allFiles)
+    @baseFiles = @compiler.determineBaseFiles(allFiles).filter (file) ->
+      path.extname(file) isnt '.css'
     allBaseFiles = _.union oldBaseFiles, @baseFiles
 
     # Change in base files to be compiled, cleanup and message
@@ -150,7 +169,8 @@ module.exports = class CSSCompiler
     files = fileUtils.readdirSyncRecursive(config.watch.sourceDir, config.watch.exclude, config.watch.excludeRegex)
       .filter (file) =>
         @extensions.some (ext) ->
-          file.slice(-(ext.length+1)) is ".#{ext}"
+          fileExt = file.slice(-(ext.length+1))
+          fileExt is ".#{ext}" or (fileExt is ".css" and @compiler.canFullyImportCSS)
 
     # logger.debug "All files for extensions [[ #{@extensions} ]]:\n#{files.join('\n')}"
 
@@ -159,7 +179,9 @@ module.exports = class CSSCompiler
   # get all imports for a given file, and recurse through
   # those imports until entire tree is built
   __importsForFile: (baseFile, file, allFiles) ->
-    imports = fs.readFileSync(file, 'utf8').match(@compiler.importRegex)
+    if fs.existsSync(file)
+      imports = fs.readFileSync(file, 'utf8').match(@compiler.importRegex)
+
     return unless imports?
 
     logger.debug "Imports for file [[ #{file} ]]: #{imports}"
@@ -170,9 +192,12 @@ module.exports = class CSSCompiler
       importPath = @compiler.importRegex.exec(anImport)[1]
       fullImportFilePath = @compiler.getImportFilePath(file, importPath)
 
-      includeFiles = allFiles.filter (f) =>
-        f = f.replace(path.extname(f), '') unless @compiler.partialKeepsExtension
-        f.slice(-fullImportFilePath.length) is fullImportFilePath
+      includeFiles = if path.extname(fullImportFilePath) is ".css" and @compiler.canFullyImportCSS
+        [fullImportFilePath]
+      else
+        allFiles.filter (f) =>
+          f = f.replace(path.extname(f), '') unless @compiler.partialKeepsExtension
+          f.slice(-fullImportFilePath.length) is fullImportFilePath
 
       for includeFile in includeFiles
         hash = @includeToBaseHash[includeFile]
@@ -180,6 +205,7 @@ module.exports = class CSSCompiler
           logger.debug "Adding base file [[ #{baseFile} ]] to list of base files for include [[ #{includeFile} ]]"
           hash.push(baseFile) if hash.indexOf(baseFile) is -1
         else
-          logger.debug "Creating base file entry for include file [[ #{includeFile} ]], adding base file [[ #{baseFile} ]]"
-          @includeToBaseHash[includeFile] = [baseFile]
+          if fs.existsSync includeFile
+            logger.debug "Creating base file entry for include file [[ #{includeFile} ]], adding base file [[ #{baseFile} ]]"
+            @includeToBaseHash[includeFile] = [baseFile]
         @__importsForFile(baseFile, includeFile, allFiles)

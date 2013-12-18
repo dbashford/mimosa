@@ -6,7 +6,7 @@ path = require 'path'
 _ = require 'lodash'
 logger = require 'logmimosa'
 
-importRegex = /@import ['"](.*)['"]/g
+importRegex = /@import\s+(?:(?:\(less\)|\(css\))\s+?)?['"](.*)['"]/g
 libName = "less"
 compilerLib = null
 
@@ -62,6 +62,7 @@ module.exports =
   type: "css"
   defaultExtensions: ["less"]
   partialKeepsExtension: true
+  canFullyImportCSS: true
   importRegex: importRegex
   compile: compile
   determineBaseFiles: determineBaseFiles

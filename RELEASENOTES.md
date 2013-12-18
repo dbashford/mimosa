@@ -10,6 +10,18 @@
 
 NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like mimosa-coffeescript) may show up in NPM as I build things out. I'll make it clear that those are 2.0 targeted modules. Using them with `1.3.x` will likely cause some odd results.
 
+## 1.3.1 (future) - Dec 18/19 2013
+
+### Major Changes
+* __New Skeleton__: [markdown-math](https://github.com/xixixao/mimosa-markdown-math). A simple skeleton for markdown and math.
+* __New Skeleton__: [minimal-foundation](https://github.com/xixixao/mimosa-minimal-foundation). A skeleton with basic Foundation integration (only CSS) and Foundation intro template page.
+
+### Minor Changes
+* [mimosa #319](https://github.com/dbashford/mimosa/issues/319). Adjusted Mimosa's embedded server so that it would not throw errors when attempting to access certain bad URLs.
+* [mimosa #323](https://github.com/dbashford/mimosa/issues/323). Updated CSS compilation so that included `.css` files will trigger proper CSS compiles. Now if a `.css` file is included in a Stylus or Less file, and that CSS file changes, the parent Stylus/Less file will be recompiled.
+* [mimosa-jshint #2](https://github.com/dbashford/mimosa-jshint/pull/2). Added `globals` support to jshint via PR.
+* [mimosa-bower #33](https://github.com/dbashford/mimosa-bower/pull/33). Fixing some Windows path issues with custom path mapping.
+
 ## 1.3.0 - Dec 12 2013
 
 `1.3` marks the beginning of a total compiler rewrite. This first step, `1.3`, has no impact on users but lays the ground work for pulling all of the compilers out of mimosa's core library and into external modules. That will take place as part of `2.0` which will likely follow a 2-4 weeks after `1.3`.

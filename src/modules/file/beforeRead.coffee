@@ -1,46 +1,54 @@
 "use strict"
 
+path = require 'path'
+
 logger = require 'logmimosa'
 
 fileUtils = require '../../util/file'
 
-class MimosaFileBeforeReadModule
+allExtensions = null
 
-  registration: (config, register) ->
-    e = config.extensions
-    cExts = config.copy.extensions
-    register ['buildFile'],    'beforeRead', @_fileNeedsCompilingStartup, [e.javascript..., cExts...]
-    register ['add','update'], 'beforeRead', @_fileNeedsCompiling,        [e.javascript..., cExts...]
+_notValidExtension = (file) ->
+  ext = path.extname(file.inputFileName).replace(/\./,'')
+  allExtensions.indexOf(ext) is -1
 
-  _fileNeedsCompiling: (config, options, next) ->
-    hasFiles = options.files?.length > 0
-    return next() unless hasFiles
+_fileNeedsCompiling = (config, options, next) ->
+  hasFiles = options.files?.length > 0
+  return next() unless hasFiles
 
-    i = 0
-    newFiles = []
-    done = ->
-      if ++i is options.files.length
-        options.files = newFiles
-        next()
-
-    options.files.forEach (file) =>
-      # if using require verification, forcing compile to assemble require information
-      if options.isJavascript and config.__forceJavaScriptRecompile
-        newFiles.push file
-        done()
-      else
-        fileUtils.isFirstFileNewer file.inputFileName, file.outputFileName, (isNewer) =>
-          if isNewer
-            newFiles.push file
-          done()
-
-  _fileNeedsCompilingStartup: (config, options, next) =>
-    # force compiling on startup to build require dependency tree
-    # but not for vendor javascript
-    if config.__forceJavaScriptRecompile and options.isJSNotVendor
-      logger.debug "File [[ #{options.inputFile} ]] NEEDS compiling/copying"
+  i = 0
+  newFiles = []
+  done = ->
+    if ++i is options.files.length
+      options.files = newFiles
       next()
-    else
-      @_fileNeedsCompiling(config, options, next)
 
-module.exports = new MimosaFileBeforeReadModule()
+  options.files.forEach (file) ->
+    # if using require verification, forcing compile to assemble require information
+    # or if extension is for file that was placed here, not that originated the workflow
+    # like with .css files and CSS proprocessors
+    if (options.isJavascript and config.__forceJavaScriptRecompile) or _notValidExtension(file)
+      newFiles.push file
+      done()
+    else
+      fileUtils.isFirstFileNewer file.inputFileName, file.outputFileName, (isNewer) ->
+        if isNewer
+          newFiles.push file
+        else
+          if logger.isDebug
+            logger.debug "Not processing [[ #{file.inputFileName} ]] as it is not newer than destination file."
+        done()
+
+_fileNeedsCompilingStartup = (config, options, next) ->
+  # force compiling on startup to build require dependency tree
+  # but not for vendor javascript
+  if config.__forceJavaScriptRecompile and options.isJSNotVendor
+    logger.debug "File [[ #{options.inputFile} ]] NEEDS compiling/copying"
+    next()
+  else
+    _fileNeedsCompiling(config, options, next)
+
+exports.registration = (config, register) ->
+  allExtensions = [config.extensions.javascript..., config.copy.extensions...]
+  register ['buildFile'],    'beforeRead', _fileNeedsCompilingStartup, allExtensions
+  register ['add','update'], 'beforeRead', _fileNeedsCompiling,        allExtensions
