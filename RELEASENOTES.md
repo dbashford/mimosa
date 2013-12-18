@@ -15,10 +15,11 @@ NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like 
 ### Major Changes
 * __New Skeleton__: [markdown-math](https://github.com/xixixao/mimosa-markdown-math). A simple skeleton for markdown and math.
 * __New Skeleton__: [minimal-foundation](https://github.com/xixixao/mimosa-minimal-foundation). A skeleton with basic Foundation integration (only CSS) and Foundation intro template page.
+* [mimosa #323](https://github.com/dbashford/mimosa/issues/323). Updated CSS compilation so that included `.css` files will trigger proper CSS compiles. Now if a `.css` file is included in a Stylus or Less file, and that CSS file changes, the parent Stylus/Less file will be recompiled.
 
 ### Minor Changes
+* [mimosa #325](https://github.com/dbashford/mimosa/issues/325). The copy "compiler" now has a 2nd setting for files not to copy. You could use the `watch.exclude` for this, but that prevents files from even being considered by Mimosa.  The new `copy.exclude` does not prevent those files that were to be copied from being considered, it just prevents them from being copied.  When would you want to process a copied file but not copy it?  With [mimosa #323](https://github.com/dbashford/mimosa/issues/323) `.css` files can now trigger Stylus/Less recompiles.  You may wish for a `.css` file to be processed so it can trigger that recompile, but you may not wish for that `.css` file to be copied itself.
 * [mimosa #319](https://github.com/dbashford/mimosa/issues/319). Adjusted Mimosa's embedded server so that it would not throw errors when attempting to access certain bad URLs.
-* [mimosa #323](https://github.com/dbashford/mimosa/issues/323). Updated CSS compilation so that included `.css` files will trigger proper CSS compiles. Now if a `.css` file is included in a Stylus or Less file, and that CSS file changes, the parent Stylus/Less file will be recompiled.
 * [mimosa-jshint #2](https://github.com/dbashford/mimosa-jshint/pull/2). Added `globals` support to jshint via PR.
 * [mimosa-bower #33](https://github.com/dbashford/mimosa-bower/pull/33). Fixing some Windows path issues with custom path mapping.
 

@@ -136,6 +136,7 @@ class MimosaCompilerModule
           path:"vendor/ember"
     copy:
       extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd","map","md","mp4"]
+      exclude:[]
     typescript:
       module:null
     coffeescript:
@@ -280,6 +281,10 @@ class MimosaCompilerModule
       ###
       # copy:
         # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd","map","md","mp4"]
+        # exclude: []       # List of regexes or strings to match files that should not be copied
+                            # but that you might still want processed. String paths can be absolute
+                            # or relative to the watch.sourceDir. Regexes are applied to the entire
+                            # path.
     """
 
   validate: (config, validators) ->
@@ -380,7 +385,7 @@ class MimosaCompilerModule
 
     if validators.ifExistsIsObject(errors, "copy config", config.copy)
       validators.isArrayOfStrings(errors, "copy.extensions", config.copy.extensions)
-
+      validators.ifExistsFileExcludeWithRegexAndString(errors, "copy.exclude", config.copy, config.watch.sourceDir)
 
     if validators.ifExistsIsObject(errors, "coffeescript config", config.coffeescript)
       if config.isBuild
