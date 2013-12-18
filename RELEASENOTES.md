@@ -10,7 +10,7 @@
 
 NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like mimosa-coffeescript) may show up in NPM as I build things out. I'll make it clear that those are 2.0 targeted modules. Using them with `1.3.x` will likely cause some odd results.
 
-## 1.3.1 (future) - Dec 18/19 2013
+## 1.3.1 (future) - Dec 19/20 2013
 
 ### Major Changes
 * __New Skeleton__: [markdown-math](https://github.com/xixixao/mimosa-markdown-math). A simple skeleton for markdown and math.
@@ -22,6 +22,7 @@ NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like 
 * [mimosa #324](https://github.com/dbashford/mimosa/issues/324). Better error messaging in default server when 404 occurs.
 * [mimosa #320](https://github.com/dbashford/mimosa/issues/320). Improved documentation for [mimosa-client-jade-static](https://github.com/dbashford/mimosa-client-jade-static#functionality) to explain an idiosyncrasy of that module and optimization that results in the minify modules attempting to minify non javascript.
 * [mimosa #319](https://github.com/dbashford/mimosa/issues/319). Adjusted Mimosa's embedded server so that it would not throw errors when attempting to access certain bad URLs.
+* [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple), [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). The Testem version has been updated (from `0.4.2` to `0.6.1`) for testem-simple and testem-require has the updated testem-simple. Testem has had a huge amount of updates since it was last updated, but a fundamental problem with folder/directory watching inside testem prevented the library from being updated. That issue has been fixed.
 * [mimosa-jshint #2](https://github.com/dbashford/mimosa-jshint/pull/2). Added `globals` support to jshint via PR.
 * [mimosa-bower #33](https://github.com/dbashford/mimosa-bower/pull/33). Fixing some Windows path issues with custom path mapping.
 
