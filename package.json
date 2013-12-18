@@ -80,7 +80,7 @@
     "chokidar": "0.6.3",
     "logmimosa": "0.6.0",
     "skelmimosa": "0.5.1",
-    "mimosa-server": "1.0.1",
+    "mimosa-server": "1.0.2",
     "mimosa-minify-js": "1.0.1",
     "mimosa-minify-css": "1.0.0",
     "mimosa-jshint": "1.0.2",
