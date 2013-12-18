@@ -10,7 +10,7 @@
 
 NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like mimosa-coffeescript) may show up in NPM as I build things out. I'll make it clear that those are 2.0 targeted modules. Using them with `1.3.x` will likely cause some odd results.
 
-## 1.3.1 (future) - Dec 19/20 2013
+## 1.3.1 - Dec 19 2013
 
 ### Major Changes
 * __New Skeleton__: [markdown-math](https://github.com/xixixao/mimosa-markdown-math). A simple skeleton for markdown and math.
