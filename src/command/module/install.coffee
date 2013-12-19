@@ -9,7 +9,8 @@ mimosaPath = path.join __dirname, '..', '..', '..'
 currentDir = process.cwd()
 
 install = (name, opts) ->
-  if opts.debug
+  if opts.mdebug
+    opts.debug = true
     logger.setDebug()
     process.env.DEBUG = true
 
@@ -146,7 +147,7 @@ Command
 register = (program, callback) ->
   program
     .command('mod:install [name]')
-    .option("-D, --debug", "run in debug mode")
+    .option("-D, --mdebug", "run in debug mode")
     .description("install a Mimosa module into your Mimosa")
     .action(callback)
     .on '--help', =>

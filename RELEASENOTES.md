@@ -10,6 +10,14 @@
 
 NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like mimosa-coffeescript) may show up in NPM as I build things out. I'll make it clear that those are 2.0 targeted modules. Using them with `1.3.x` will likely cause some odd results.
 
+## 1.3.2 - Dec 19 2013
+
+### Major Changes
+* [mimosa #315](https://github.com/dbashford/mimosa/issues/315). Mimosa will now accept node flags upon startup.  So you can, for instance, use `--debug`
+
+### Minor Changes
+* [mimosa #327](https://github.com/dbashford/mimosa/issues/327). To deconflict Mimosa's `--debug` and node's `--debug`, moved Mimosa from `-D/--debug` to `-D/--mdebug`. Those Mimosa modules that introduce new commands will also need to make this shift.
+
 ## 1.3.1 - Dec 19 2013
 
 ### Major Changes

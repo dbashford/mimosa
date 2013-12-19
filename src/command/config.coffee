@@ -5,7 +5,8 @@ logger = require 'logmimosa'
 buildConfig = require '../util/config-builder'
 
 copyConfig = (opts) ->
-  if opts.debug
+  if opts.mdebug
+    opts.debug = true
     logger.setDebug()
     process.env.DEBUG = true
 
@@ -36,7 +37,7 @@ copyConfig = (opts) ->
 register = (program, callback) ->
   program
     .command('config')
-    .option("-D, --debug", "run in debug mode")
+    .option("-D, --mdebug", "run in debug mode")
     .description("copy the default Mimosa config into the current folder")
     .action(callback)
     .on '--help', =>

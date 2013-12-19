@@ -6,7 +6,8 @@ logger = require 'logmimosa'
 moduleMetadata = require('../../modules').installedMetadata
 
 deleteMod = (name, opts) ->
-  if opts.debug
+  if opts.mdebug
+    opts.debug = true
     logger.setDebug()
     process.env.DEBUG = true
 
@@ -54,7 +55,7 @@ deleteMod = (name, opts) ->
 register = (program, callback) ->
   program
     .command('mod:uninstall [name]')
-    .option("-D, --debug", "run in debug mode")
+    .option("-D, --mdebug", "run in debug mode")
     .description("uninstall a Mimosa module from your installed Mimosa")
     .action(callback)
     .on '--help', =>

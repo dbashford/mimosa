@@ -5,7 +5,8 @@ Watcher =  require '../util/watcher'
 Cleaner = require '../util/cleaner'
 
 build = (opts) =>
-  if opts.debug
+  if opts.mdebug
+    opts.debug = true
     logger.setDebug()
     process.env.DEBUG = true
 
@@ -32,7 +33,7 @@ register = (program, callback) =>
     .option("-i --install", "use modules that perform installation")
     .option("-e --errorout", "cease processing and error out if the build encounters critical errors")
     .option("-P, --profile <profileName>", "select a mimosa profile")
-    .option("-D, --debug", "run in debug mode")
+    .option("-D, --mdebug", "run in debug mode")
     .action(callback)
     .on '--help', =>
       logger.green('  The build command will make a single pass through your assets and bulid any that need building')

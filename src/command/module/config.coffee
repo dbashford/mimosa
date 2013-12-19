@@ -4,6 +4,11 @@ _ = require 'lodash'
 modules = require('../../modules/').installedMetadata
 
 config = (name, opts) ->
+  if opts.mdebug
+    opts.debug = true
+    logger.setDebug()
+    process.env.DEBUG = true
+
   unless name?
     return logger.error "Must provide a module name, ex: mimosa mod:config mimosa-moduleX"
 
@@ -23,7 +28,7 @@ config = (name, opts) ->
 register = (program, callback) ->
   program
     .command('mod:config [name]')
-    .option("-D, --debug", "run in debug mode")
+    .option("-D, --mdebug", "run in debug mode")
     .description("Print out the configuration snippet for a module to the console")
     .action(callback)
     .on '--help', =>

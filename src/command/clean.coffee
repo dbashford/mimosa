@@ -7,7 +7,8 @@ Cleaner = require '../util/cleaner'
 configurer = require '../util/configurer'
 
 clean = (opts) ->
-  if opts.debug
+  if opts.mdebug
+    opts.debug = true
     logger.setDebug()
     process.env.DEBUG = true
 
@@ -32,7 +33,7 @@ register = (program, callback) =>
     .command('clean')
     .option("-f, --force", "completely delete your compiledDir")
     .option("-P, --profile <profileName>", "select a mimosa profile")
-    .option("-D, --debug", "run in debug mode")
+    .option("-D, --mdebug", "run in debug mode")
     .description("clean out all of the compiled assets from the compiled directory")
     .action(callback)
     .on '--help', =>

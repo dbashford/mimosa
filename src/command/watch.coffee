@@ -9,7 +9,8 @@ Watcher = require '../util/watcher'
 Cleaner = require '../util/cleaner'
 
 watch = (opts) =>
-  if opts.debug
+  if opts.mdebug
+    opts.debug = true
     logger.setDebug()
     process.env.DEBUG = true
 
@@ -40,7 +41,7 @@ register = (program, callback) =>
     .option("-c, --clean", "clean the compiled directory before you begin the watch, this forces a recompile of all your assets")
     .option("-d, --delete", "remove the compiled directory entirely before starting")
     .option("-P, --profile <profileName>", "select a mimosa profile")
-    .option("-D, --debug", "run in debug mode")
+    .option("-D, --mdebug", "run in debug mode")
     .action(callback)
     .on '--help', =>
       logger.green('  The watch command will observe your source directory and compile or copy your assets when they change.')

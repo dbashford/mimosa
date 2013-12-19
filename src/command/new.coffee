@@ -23,12 +23,13 @@ class NewCommand
       .command('new [name]')
       .description("create a skeleton matching Mimosa's defaults, which includes a basic Express setup")
       .option("-d, --defaults",  "bypass prompts and go with Mimosa defaults (CoffeeScript, Stylus, Handlebars)")
-      .option("-D, --debug", "run in debug mode")
+      .option("-D, --mdebug", "run in debug mode")
       .action(@new)
       .on '--help', @_printHelp
 
   new: (name, opts) =>
-    if opts.debug
+    if opts.mdebug
+      opts.debug = true
       logger.setDebug()
       process.env.DEBUG = true
 

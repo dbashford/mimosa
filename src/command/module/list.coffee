@@ -81,7 +81,8 @@ printResults = (mods, opts) ->
   process.exit 0
 
 list = (opts) ->
-  if opts.debug
+  if opts.mdebug
+    opts.debug = true
     logger.setDebug()
     process.env.DEBUG = true
 
@@ -104,7 +105,7 @@ list = (opts) ->
 register = (program, callback) ->
   program
     .command('mod:list')
-    .option("-D, --debug", "run in debug mode")
+    .option("-D, --mdebug", "run in debug mode")
     .option("-v, --verbose", "list more details about each module")
     .option("-i, --installed", "Show just those modules that are currently installed.")
     .description("get list of all mimosa modules in NPM")
