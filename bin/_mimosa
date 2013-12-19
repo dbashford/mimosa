@@ -1,0 +1,50 @@
+#!/usr/bin/env node
+
+/**
+ *
+ * Taken from Mocha: https://github.com/visionmedia/mocha/blob/master/bin/mocha
+ *
+ * This tiny wrapper file checks for known node flags and appends them
+ * when found, before invoking the "real" mimosa executable.
+ */
+
+var spawn = require('child_process').spawn
+  , args = [ __dirname + '/mimosa' ];
+
+process.argv.slice(2).forEach(function(arg){
+  var flag = arg.split('=')[0];
+
+  switch (flag) {
+    case '--debug':
+    case '--debug-brk':
+      args.unshift(arg);
+      break;
+    case '-gc':
+    case '--expose-gc':
+      args.unshift('--expose-gc');
+      break;
+    case '--gc-global':
+    case '--harmony':
+    case '--harmony-proxies':
+    case '--harmony-collections':
+    case '--harmony-generators':
+    case '--prof':
+      args.unshift(arg);
+      break;
+    default:
+      if (0 == arg.indexOf('--trace')) args.unshift(arg);
+      else args.push(arg);
+      break;
+  }
+});
+
+var proc = spawn(process.argv[0], args, { customFds: [0,1,2] });
+proc.on('exit', function (code, signal) {
+  process.on('exit', function(){
+    if (signal) {
+      process.kill(process.pid, signal);
+    } else {
+      process.exit(code);
+    }
+  });
+});

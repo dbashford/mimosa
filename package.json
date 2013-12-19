@@ -12,7 +12,7 @@
     }
   ],
   "bin": {
-    "mimosa": "./bin/mimosa"
+    "mimosa": "./bin/_mimosa"
   },
   "main": "./lib/index",
   "repository": {
