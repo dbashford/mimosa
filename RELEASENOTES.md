@@ -13,10 +13,10 @@ NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like 
 ## 1.3.2 - Dec 20 2013
 
 ### Major Changes
-* [mimosa #315](https://github.com/dbashford/mimosa/issues/315). Mimosa will now accept node flags upon startup.  So you can, for instance, use `--debug`
+* [mimosa #315](https://github.com/dbashford/mimosa/issues/315). Mimosa will now accept node flags upon startup.  The list of available flags are `--debug`, `--debug-brk`, `-gc`, `--expose-gc`, `--gc-global`, `--harmony`, `--harmony-proxies`, `--harmony-collections`, `--harmony-generators`, and `--prof`.
 
 ### Minor Changes
-* [mimosa #327](https://github.com/dbashford/mimosa/issues/327). To deconflict Mimosa's `--debug` and node's `--debug`, moved Mimosa from `-D/--debug` to `-D/--mdebug`. Those Mimosa modules that introduce new commands will also need to make this shift.
+* [mimosa #327](https://github.com/dbashford/mimosa/issues/327). To deconflict Mimosa's `--debug` and node's `--debug`, moved Mimosa from `-D/--debug` to `-D/--mdebug`.
 
 ## 1.3.1 - Dec 19 2013
 
