@@ -10,6 +10,11 @@
 
 NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like mimosa-coffeescript) may show up in NPM as I build things out. I'll make it clear that those are 2.0 targeted modules. Using them with `1.3.x` will likely cause some odd results.
 
+## 1.3.3 - Dec 23 2013
+
+### Minor Changes
+* [mimosa #330](https://github.com/dbashford/mimosa/issues/330). Fixed bug introed in `1.3.1` that was causing plain `.css` files to occasionally not be compiled to `compiledDir`.
+
 ## 1.3.2 - Dec 20 2013
 
 ### Major Changes
