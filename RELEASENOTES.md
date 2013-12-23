@@ -10,6 +10,11 @@
 
 NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like mimosa-coffeescript) may show up in NPM as I build things out. I'll make it clear that those are 2.0 targeted modules. Using them with `1.3.x` will likely cause some odd results.
 
+## 1.3.4 - Dec 23 2013
+
+### Minor Changes
+* [mimosa #329](https://github.com/dbashford/mimosa/issues/329). mimosa-server has a new property, `packageJSONDir` that points that module at your `package.json`. This is only valid for those projects that have their own server (as opposed to those using Mimosa's default server). mimosa-server will use your `package.json` to determine if there is a transpiler that needs to be `require`d in before running your server. `LiveScript` for instance needs to be `require`d in before the server can be started so that `LiveScript` files can be properly transpiled before being used.
+
 ## 1.3.3 - Dec 23 2013
 
 ### Minor Changes
