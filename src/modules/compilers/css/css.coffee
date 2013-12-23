@@ -99,7 +99,7 @@ module.exports = class CSSCompiler
     # result is some compilers can add files to other compilers workflows
     # as css file flows through, need to be certain file belongs
     ext = path.extname(file.inputFileName).replace(/\./,'')
-    @extensions.indexOf(ext) is -1
+    @extensions.indexOf(ext) is -1 or ext is "css"
 
   _findBasesToCompileStartup: (config, options, next) =>
     baseFilesToCompileNow = []
