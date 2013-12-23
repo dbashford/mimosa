@@ -13,3 +13,4 @@ exports.config =
     exclude:[/\/resources\//, /\/client\//]
     rules:
       node: true
+      laxcomma: true
