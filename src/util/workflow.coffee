@@ -159,19 +159,18 @@ module.exports = class WorkflowManager
 
     next()
 
-  _workflowMethod: (type, step, options, done) ->
-    #logger.debug "Calling workflow: [[ #{type} ]], [[ #{step} ]], [[ #{options.extension} ]], [[ #{options.inputFile} ]]"
-    #logger.debug options.files?.length
-
+  _workflowMethod: (type, _step, options, done) ->
     tasks = []
     ext = options.extension
-    step = @registration[type][step]
+    step = @registration[type][_step]
     if step[ext]? then tasks.push step[ext]...
     if step['*']? then tasks.push step['*']...
 
     i = 0
     next = =>
       if i < tasks.length
+        #logger.debug "Calling workflow: [[ #{type} ]], [[ #{_step} ]], [[ #{options.extension} ]], [[ #{options.inputFile} ]]"
+        #logger.debug options.files?.length
         tasks[i++](@config, options, cb)
       else
         # natural finish to workflow step
