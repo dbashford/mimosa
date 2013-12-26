@@ -22,7 +22,7 @@ compile = (file, cb) ->
 
 module.exports =
   base: "livescript"
-  type: "javascript"
+  compilerType: "javascript"
   defaultExtensions: ["ls"]
   init: init
   compile: compile

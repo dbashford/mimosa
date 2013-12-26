@@ -127,7 +127,7 @@ compile = (file, cb) ->
 
 module.exports =
   base: "typescript"
-  type: "javascript"
+  compilerType: "javascript"
   defaultExtensions: ["ts"]
   init: init
   compile: compile

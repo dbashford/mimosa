@@ -24,7 +24,7 @@ compile =  (file, cb) ->
 
 module.exports =
   base: "coco"
-  type: "javascript"
+  compilerType: "javascript"
   defaultExtensions: ["co", "coco"]
   init: init
   compile: compile

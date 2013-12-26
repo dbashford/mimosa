@@ -67,7 +67,7 @@ class MimosaCompilerModule
     compilers = @all
     if config.template is null
       compilers = compilers.filter (comp) ->
-        comp.type isnt "template"
+        comp.compilerType isnt "template"
 
     for compiler in compilers
       if logger.isDebug
@@ -92,7 +92,7 @@ class MimosaCompilerModule
         if logger.isDebug
           logger.debug "Creating compiler " + compiler.base + " with extensions " + extensions
 
-        compilerInstance = switch compiler.type
+        compilerInstance = switch compiler.compilerType
           when "copy" then new compiler.compiler(config, extensions)
           when "javascript" then new JavaScriptCompiler(config, extensions, compiler)
           when "template" then new TemplateCompiler(config, extensions, compiler)
@@ -105,7 +105,7 @@ class MimosaCompilerModule
         allCompilers.push compilerInstance
         for ext in compilerInstance.extensions
           extHash[ext] = compilerInstance
-        config.extensions[compiler.type].push(extensions...)
+        config.extensions[compiler.compilerType].push(extensions...)
 
       if logger.isDebug
         logger.debug "Done with compiler " + compiler.base

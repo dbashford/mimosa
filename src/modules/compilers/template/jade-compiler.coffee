@@ -37,7 +37,7 @@ compile = (file, cb) ->
 
 module.exports =
   base: "jade"
-  type: "template"
+  compilerType: "template"
   defaultExtensions:  ["jade"]
   clientLibrary: "jade-runtime"
   compile: compile

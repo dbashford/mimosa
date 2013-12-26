@@ -101,8 +101,9 @@ var determineBaseFiles = function (allFiles) {
 };
 
 module.exports = {
+  isCompiler: true,
   base: "stylus",
-  type: "css",
+  compilerType: "css",
   defaultExtensions: ["styl"],
   canFullyImportCSS: true,
   importRegex: importRegex,

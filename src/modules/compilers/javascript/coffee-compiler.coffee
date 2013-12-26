@@ -40,7 +40,7 @@ compile = (file, cb) ->
 
 module.exports =
   base: "coffee"
-  type: "javascript"
+  compilerType: "javascript"
   defaultExtensions: ["coffee", "litcoffee"]
   cleanUpSourceMaps: true
   init: init

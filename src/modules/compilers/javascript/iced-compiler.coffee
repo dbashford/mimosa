@@ -40,7 +40,7 @@ compile = (file, cb) ->
 
 module.exports =
   base: "iced"
-  type: "javascript"
+  compilerType: "javascript"
   defaultExtensions: ["iced"]
   cleanUpSourceMaps: true
   init: init

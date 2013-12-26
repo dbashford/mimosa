@@ -26,4 +26,4 @@ compiler = class CopyCompiler
 module.exports =
   compiler: compiler
   base: "copy"
-  type: "copy"
+  compilerType: "copy"

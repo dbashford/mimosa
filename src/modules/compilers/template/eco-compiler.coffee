@@ -32,7 +32,7 @@ compile = (file, cb) ->
 
 module.exports =
   base: "eco"
-  type: "template"
+  compilerType: "template"
   defaultExtensions: ["eco"]
   compile: compile
   suffix: suffix

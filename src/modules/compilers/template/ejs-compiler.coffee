@@ -59,7 +59,7 @@ compile = (file, cb) ->
 
 module.exports =
   base: "ejs"
-  type: "template"
+  compilerType: "template"
   defaultExtensions: ["ejs"]
   clientLibrary: "ejs-filters"
   compile: compile

@@ -34,7 +34,7 @@ compile = (file, cb) ->
 
 module.exports =
   base: "dust"
-  type: "template"
+  compilerType: "template"
   defaultExtensions: ["dust"]
   clientLibrary: "dust"
   handlesNamespacing: true

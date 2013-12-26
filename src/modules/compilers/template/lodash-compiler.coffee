@@ -37,7 +37,7 @@ compile = (file, cb) ->
 
 module.exports =
   base: "lodash"
-  type: "template"
+  compilerType: "template"
   defaultExtensions:  ["tmpl", "lodash"]
   clientLibrary: "lodash"
   compile: compile

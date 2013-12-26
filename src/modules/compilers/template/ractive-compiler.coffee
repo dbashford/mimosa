@@ -33,7 +33,7 @@ compile = (file, cb) ->
 
 module.exports =
   base: "ractive"
-  type: "template"
+  compilerType: "template"
   defaultExtensions:  ["rtv","rac"]
   clientLibrary: "ractive"
   compile: compile

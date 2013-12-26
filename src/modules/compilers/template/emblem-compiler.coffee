@@ -133,7 +133,7 @@ compile = (file, cb) ->
 module.exports =
   isHandlebars: true
   base: "emblem"
-  type: "template"
+  compilerType: "template"
   defaultExtensions:["emblem", "embl"]
   clientLibrary: "handlebars"
   compile: compile

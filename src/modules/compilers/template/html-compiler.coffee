@@ -44,7 +44,7 @@ compile = (file, cb) ->
 
 module.exports =
   base: "html"
-  type: "template"
+  compilerType: "template"
   defaultExtensions: ["template"]
   compile: compile
   suffix: suffix

@@ -35,7 +35,7 @@ compile = (file, cb) ->
 
 module.exports =
   base: "hogan"
-  type: "template"
+  compilerType: "template"
   defaultExtensions: ["hog", "hogan", "hjs"]
   clientLibrary: "hogan-template"
   compile: compile

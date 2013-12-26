@@ -37,7 +37,7 @@ compile = (file, cb) ->
 
 module.exports =
   base: "underscore"
-  type: "template"
+  compilerType: "template"
   defaultExtensions:  ["tpl", "underscore"]
   clientLibrary: "underscore"
   compile: compile

@@ -124,7 +124,7 @@ compile = (file, cb) ->
 
 module.exports =
   base: "handlebars"
-  type: "template"
+  compilerType: "template"
   defaultExtensions: ["hbs", "handlebars"]
   clientLibrary: "handlebars"
   compile: compile
