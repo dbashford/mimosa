@@ -9,7 +9,6 @@ var path = require('path')
   }
   , getConfig = function() { return coffeeConfig; }
   , init = function ( conf ) {
-    console.log("setting coffeeConfig to ", conf.coffeescript)
     coffeeConfig = conf.coffeescript;
   };
 
@@ -33,13 +32,9 @@ var compile = function ( file, cb ) {
     }
   }
 
-  console.log(conf)
-
   try {
     output = compilerLib.compile( file.inputFileText, conf );
     if ( output.v3SourceMap ) {
-      console.log("source map!!!", sourceMap)
-
       sourceMap = output.v3SourceMap;
       output = output.js;
     }
