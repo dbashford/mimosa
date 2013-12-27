@@ -1,11 +1,11 @@
 "use strict";
 
-var fs = require('fs')
-  , path = require('path')
-  , spawn = require('child_process').spawn
-  , exec = require('child_process').exec
-  , _ = require('lodash')
-  , logger = require('logmimosa')
+var fs = require( 'fs' )
+  , path = require( 'path' )
+  , spawn = require( 'child_process' ).spawn
+  , exec = require( 'child_process' ).exec
+  , _ = require( 'lodash' )
+  , logger = require( 'logmimosa' )
   , importRegex = /@import ['"](.*)['"]/g
   , runSass = 'sass'
   , hasSASS
@@ -18,7 +18,7 @@ var fs = require('fs')
     return ( includeToBaseHash[fileName] || path.basename( fileName ).charAt( 0 ) === '_' );
   }
   , getImportFilePath = function ( baseFile, importPath ) {
-    return path.join( path.dirname( baseFile ), importPath.replace(/(\w+\.|[\w-]+$)/, '_$1') );
+    return path.join( path.dirname( baseFile ), importPath.replace( /(\w+\.|[\w-]+$)/, '_$1' ) );
   };
 
 var _doRubySASSChecking = function () {
@@ -69,7 +69,7 @@ var _compileRuby = function ( file, config, options, done ) {
 
   sass.on( 'exit', function ( code ) {
     if ( logger.isDebug ) {
-      logger.debug( "Finished Ruby SASS compile for file [[ " + fileName + " ]], errors? " + !!error);
+      logger.debug( "Finished Ruby SASS compile for file [[ " + fileName + " ]], errors? " + !!error );
     }
     done( error, result );
   });
@@ -113,7 +113,7 @@ var _compileNode = function ( file, config, options, done ) {
   compilerLib.render({
     data: file.inputFileText,
     includePaths: [ config.watch.sourceDir, path.dirname( file.inputFileName ) ],
-    success: function (css) {
+    success: function ( css ) {
       finished( null, css );
     },
     error: function ( error ) {
@@ -142,7 +142,7 @@ var determineBaseFiles = function ( allFiles ) {
   });
 
   if ( logger.isDebug ) {
-    logger.debug("Base files for SASS are:\n" + baseFiles.join('\n'));
+    logger.debug( "Base files for SASS are:\n" + baseFiles.join( '\n' ) );
   }
 
   return baseFiles;

@@ -1,7 +1,7 @@
 "use strict";
 
-var path = require('path')
-  , _ = require('lodash')
+var path = require( 'path' )
+  , _ = require( 'lodash' )
   , compilerLib = null
   , coffeeConfig = {}
   , setCompilerLib = function ( _compilerLib ) {
@@ -23,7 +23,7 @@ var compile = function ( file, cb ) {
   conf.literate = compilerLib.helpers.isLiterate( file.inputFileName );
 
   if ( conf.sourceMap ) {
-    if (conf.sourceMapExclude && conf.sourceMapExclude.indexOf( file.inputFileName ) > -1 ) {
+    if ( conf.sourceMapExclude && conf.sourceMapExclude.indexOf( file.inputFileName ) > -1 ) {
       conf.sourceMap = false;
     } else {
       if ( conf.sourceMapExcludeRegex && file.inputFileName.match( conf.sourceMapExcludeRegex ) ) {
@@ -38,10 +38,10 @@ var compile = function ( file, cb ) {
       sourceMap = output.v3SourceMap;
       output = output.js;
     }
-  } catch (err) {
+  } catch ( err ) {
     var line = "unknown";
     var column = "unknown";
-    if (err.location) {
+    if ( err.location ) {
       line = err.location.first_line;
       column = err.location.first_column;
     }
