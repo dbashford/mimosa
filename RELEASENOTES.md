@@ -10,13 +10,14 @@
 
 NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like mimosa-coffeescript) may show up in NPM as I build things out. I'll make it clear that those are 2.0 targeted modules. Using them with `1.3.x` will likely cause some odd results.
 
-## 1.3.5 - Dec ?? 2013
+## 1.3.5 - Dec 28 2013
 
 ### Major Changes
 * __New Skeleton__: [hyper](https://github.com/xixixao/mimosa-hyper). A minimal skeleton for using React.js in CoffeeScript via Hyper.
 
 ### Minor Changes
 * Part of prepping for `2.0`, all of the CSS and JavaScript compilers have been converted from CoffeeScript to JavaScript.
+* [mimosa #332](https://github.com/dbashford/mimosa/issues/332). The node flags that were made available in `1.3.2` have been added to the command line `--help` docs.
 
 ## 1.3.4 - Dec 23 2013
 
