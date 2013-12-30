@@ -1,6 +1,7 @@
 "use strict";
 
-var compilerLib = null
+var path = require( 'path' )
+  , compilerLib = null
   , setCompilerLib = function ( _compilerLib ) {
     compilerLib = _compilerLib;
   };
@@ -49,7 +50,7 @@ module.exports = {
   base: "dust",
   compilerType: "template",
   defaultExtensions: ["dust"],
-  clientLibrary: "dust",
+  clientLibrary: path.join( __dirname, "client", "dust.js" ),
   handlesNamespacing: true,
   compile: compile,
   suffix: suffix,

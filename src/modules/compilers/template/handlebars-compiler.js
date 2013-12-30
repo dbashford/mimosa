@@ -131,7 +131,7 @@ module.exports = {
   base: "handlebars",
   compilerType: "template",
   defaultExtensions: ["hbs", "handlebars"],
-  clientLibrary: "handlebars",
+  clientLibrary: path.join( __dirname, "client", "handlebars.js" ),
   compile: compile,
   init: init,
   suffix: suffix,

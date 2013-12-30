@@ -1,6 +1,7 @@
 "use strict";
 
-var compilerLib = null
+var path = require( 'path' )
+  , compilerLib = null
   , _transform = function (output) {
     return output.replace(/\nescape[\s\S]*?};/, 'escape = escape || globalEscape; filters = filters || globalFilters;');
   }
@@ -64,7 +65,7 @@ module.exports = {
   base: "ejs",
   compilerType: "template",
   defaultExtensions: ["ejs"],
-  clientLibrary: "ejs-filters",
+  clientLibrary: path.join( __dirname, "client", "ejs-filters.js" ),
   compile: compile,
   suffix: suffix,
   prefix: prefix,

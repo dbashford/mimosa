@@ -71,8 +71,8 @@ module.exports = class TemplateCompiler
       @compiler.init(config, @extensions)
 
     if @compiler.clientLibrary? and config.template.wrapType is 'amd'
-      @mimosaClientLibraryPath = path.join __dirname, "client", "#{@compiler.clientLibrary}.js"
-      @clientPath = path.join config.vendor.javascripts, "#{@compiler.clientLibrary}.js"
+      @clientPath = path.basename(@compiler.clientLibrary)
+      @clientPath = path.join config.vendor.javascripts, @clientPath
       @clientPath = @clientPath.replace config.watch.sourceDir, config.watch.compiledDir
       compiledJs = path.join config.watch.compiledDir, config.watch.javascriptDir
       @libPath = @clientPath.replace(compiledJs, '').substring(1).split(path.sep).join('/')
@@ -220,11 +220,11 @@ module.exports = class TemplateCompiler
       logger.debug "Not going to write template client library"
       return next()
 
-    logger.debug "Adding template client library [[ #{@mimosaClientLibraryPath} ]] to list of files to write"
+    logger.debug "Adding template client library [[ #{@compiler.clientLibrary} ]] to list of files to write"
 
-    fs.readFile @mimosaClientLibraryPath, "utf8", (err, data) =>
+    fs.readFile @compiler.clientLibrary, "utf8", (err, data) =>
       if err
-        logger.error("Cannot read client library [[ #{@mimosaClientLibraryPath} ]]")
+        logger.error("Cannot read client library [[ #{@compiler.clientLibrary} ]]")
         return next()
 
       options.files.push
