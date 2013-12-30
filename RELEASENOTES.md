@@ -16,7 +16,8 @@ NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like 
 * Part of prepping for `2.0`, all of the template compilers have been converted from CoffeeScript to JavaScript.
 * The underscore client library was updated to `1.5.2` from `1.5.1`
 * The Ractive client library and the compiler were updated to `0.3.9`
-
+* The Lodash client library was updated to `2.4.1`
+* The Handlebars client library was updated to `1.2.0` and the compiler library was updated to `1.2.1`
 
 ## 1.3.5 - Dec 28 2013
 
