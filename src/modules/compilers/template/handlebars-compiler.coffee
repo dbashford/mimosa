@@ -8,7 +8,6 @@ logger = require 'logmimosa'
 handlebars = null
 ember = false
 config = {}
-compiler = null
 
 regularBoilerplate =
   """
@@ -39,7 +38,7 @@ emberBoilerplate =
   var template = Ember.Handlebars.template, templates = {};\n
   """
 
-__determineHandlebars = ->
+_determineHandlebars = ->
   ember = config.template.handlebars.ember.enabled
   hbs = if config.compilers.libs.handlebars
     config.compilers.libs.handlebars
@@ -111,7 +110,7 @@ init = (conf) ->
 
 compile = (file, cb) ->
   unless handlebars
-    __determineHandlebars()
+    _determineHandlebars()
 
   try
     output = handlebars.precompile file.inputFileText
