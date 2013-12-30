@@ -10,6 +10,14 @@
 
 NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like mimosa-coffeescript) may show up in NPM as I build things out. I'll make it clear that those are 2.0 targeted modules. Using them with `1.3.x` will likely cause some odd results.
 
+## 1.3.6 - Dec ?? 2013
+
+### Minor Changes
+* Part of prepping for `2.0`, all of the template compilers have been converted from CoffeeScript to JavaScript.
+* The underscore client library was updated to `1.5.2` from `1.5.1`
+* The Ractive client library and the compiler were updated to `0.3.9`
+
+
 ## 1.3.5 - Dec 28 2013
 
 ### Major Changes
