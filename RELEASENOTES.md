@@ -12,6 +12,8 @@ NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like 
 
 ## 1.3.6 - Dec ?? 2013
 
+Big dependency/library upgrade release.
+
 ### Minor Changes
 * Part of prepping for `2.0`, all of the template compilers have been converted from CoffeeScript to JavaScript.
 * The underscore client library was updated to `1.5.2` from `1.5.1`
@@ -21,6 +23,8 @@ NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like 
 * The Emblem compiler was updated to `0.3.6`
 * The EJS compiler was updated to `0.3.6`
 * The Dust client library and compiler have been updated to `2.2.2`
+* Upgraded dependencies for `mimosa new` projects including Express.
+* mimosa-server dependencies bumped for Express, Jade and others.
 
 ## 1.3.5 - Dec 28 2013
 
