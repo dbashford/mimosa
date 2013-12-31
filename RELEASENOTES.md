@@ -10,6 +10,11 @@
 
 NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like mimosa-coffeescript) may show up in NPM as I build things out. I'll make it clear that those are 2.0 targeted modules. Using them with `1.3.x` will likely cause some odd results.
 
+## 1.3.7 - Dec 31 2013
+
+### Minor Changes
+* [mimosa #337](https://github.com/dbashford/mimosa/issues/337). mimosa-server will now properly interpret iced-coffee-script server files on startup.
+
 ## 1.3.6 - Dec 31 2013
 
 Big dependency/library upgrade release.

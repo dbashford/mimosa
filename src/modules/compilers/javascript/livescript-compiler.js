@@ -1,15 +1,11 @@
 "use strict";
 
-var liveConfig = {}
-  , compilerLib = null
+var compilerLib = null
   , setCompilerLib = function ( _compilerLib ) {
     compilerLib = _compilerLib;
-  }
-  , init = function ( conf ) {
-    liveConfig = conf.livescript;
   };
 
-var compile = function ( file, cb ) {
+var compile = function ( mimosaConfig, file, cb ) {
   var output, error;
 
   if ( !compilerLib ) {
@@ -17,7 +13,7 @@ var compile = function ( file, cb ) {
   }
 
   try {
-    output = compilerLib.compile( file.inputFileText, liveConfig );
+    output = compilerLib.compile( file.inputFileText, mimosaConfig.livescript );
   } catch ( err ) {
     error = err;
   }
@@ -29,7 +25,6 @@ module.exports = {
   base: "livescript",
   compilerType: "javascript",
   defaultExtensions: ["ls"],
-  init: init,
   compile: compile,
   setCompilerLib: setCompilerLib
 };

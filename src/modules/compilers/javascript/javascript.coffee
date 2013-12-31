@@ -35,10 +35,9 @@ _cleanUpSourceMaps = (config, options, next) ->
         else
           done()
 
-_cleanUpSourceMapsRegister = (register, extensions, compilerConfig) ->
+_cleanUpSourceMapsRegister = (register, extensions) ->
   # register remove only if sourcemap as remove is watch workflow
-  if compilerConfig.sourceMap
-    register ['remove'], 'delete', _cleanUpSourceMaps, extensions
+  register ['remove'], 'delete', _cleanUpSourceMaps, extensions
 
   # register clean regardless to ensure any existing source maps are removed during build/clean
   register ['cleanFile'], 'delete', _cleanUpSourceMaps, extensions
@@ -47,14 +46,12 @@ _cleanUpSourceMapsRegister = (register, extensions, compilerConfig) ->
 module.exports = class JSCompiler
 
   constructor: (config, @extensions, @compiler) ->
-    if @compiler.init
-      @compiler.init(config, @extensions)
 
   registration: (config, register) ->
     register ['add','update','buildFile'], 'compile', @_compile, @extensions
 
     if @compiler.cleanUpSourceMaps
-      _cleanUpSourceMapsRegister register, @extensions, @compiler.config() ? {}
+      _cleanUpSourceMapsRegister register, @extensions
 
   _compile: (config, options, next) =>
     hasFiles = options.files?.length > 0
@@ -74,13 +71,13 @@ module.exports = class JSCompiler
       if logger.isDebug
         logger.debug "Calling compiler function for compiler [[ " + @compiler.base + " ]]"
 
-      @compiler.compile file, (err, output, compiledConfig, sourceMap) =>
+      @compiler.compile config, file, (err, output, compilerConfig, sourceMap) =>
         if err
           logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}", {exitIfBuild:true}
         else
           if sourceMap
 
-            if compiledConfig.sourceMapDynamic
+            if compilerConfig.sourceMapDynamic
               sourceMap = JSON.parse(sourceMap)
               sourceMap.sources[0] = file.inputFileName
               sourceMap.sourcesContent = [file.inputFileText];

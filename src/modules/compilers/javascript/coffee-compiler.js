@@ -3,18 +3,15 @@
 var path = require( 'path' )
   , _ = require( 'lodash' )
   , compilerLib = null
-  , coffeeConfig = {}
   , setCompilerLib = function ( _compilerLib ) {
     compilerLib = _compilerLib;
-  }
-  , getConfig = function() { return coffeeConfig; }
-  , init = function ( conf ) {
-    coffeeConfig = conf.coffeescript;
   };
 
-var compile = function ( file, cb ) {
-  var error, output, sourceMap,
-    conf = _.extend( {}, coffeeConfig, { sourceFiles:[ path.basename( file.inputFileName ) + ".src" ] } );
+var compile = function ( mimosaConfig, file, cb ) {
+  var error
+    , output
+    , sourceMap
+    , conf = _.extend( {}, mimosaConfig.coffeescript, { sourceFiles:[ path.basename( file.inputFileName ) + ".src" ] } );
 
   if ( !compilerLib ) {
     compilerLib = require( 'coffee-script' );
@@ -48,7 +45,7 @@ var compile = function ( file, cb ) {
     error = err + " line " + line + ", column " + column;
   }
 
-  cb ( error, output, coffeeConfig, sourceMap );
+  cb ( error, output, mimosaConfig.coffeescript, sourceMap );
 };
 
 
@@ -57,8 +54,6 @@ module.exports = {
   compilerType: "javascript",
   defaultExtensions: ["coffee", "litcoffee"],
   cleanUpSourceMaps: true,
-  init: init,
   compile: compile,
-  setCompilerLib: setCompilerLib,
-  config: getConfig
+  setCompilerLib: setCompilerLib
 };
