@@ -47,7 +47,7 @@ var compile = function ( mimosaConfig, file, cb ) {
 };
 
 module.exports = {
-  base: "iced",
+  name: "iced",
   compilerType: "javascript",
   defaultExtensions: ["iced"],
   cleanUpSourceMaps: true,

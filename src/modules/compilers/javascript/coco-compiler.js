@@ -24,7 +24,7 @@ var compile =  function ( mimosaConfig, file, cb ) {
 };
 
 module.exports = {
-  base: "coco",
+  name: "coco",
   compilerType: "javascript",
   defaultExtensions: ["co", "coco"],
   compile: compile,

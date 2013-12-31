@@ -48,7 +48,7 @@ var compile = function (file, cb) {
 };
 
 module.exports = {
-  base: "hogan",
+  name: "hogan",
   compilerType: "template",
   defaultExtensions: ["hog", "hogan", "hjs"],
   clientLibrary: path.join( __dirname, "client", "hogan-template.js" ),

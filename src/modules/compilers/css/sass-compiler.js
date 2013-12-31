@@ -149,7 +149,7 @@ var determineBaseFiles = function ( allFiles ) {
 };
 
 module.exports = {
-  base: "sass",
+  name: "sass",
   compilerType: "css",
   defaultExtensions: ["scss", "sass"],
   importRegex: importRegex,

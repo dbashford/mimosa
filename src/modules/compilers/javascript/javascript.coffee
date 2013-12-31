@@ -45,13 +45,14 @@ _cleanUpSourceMapsRegister = (register, extensions) ->
 
 module.exports = class JSCompiler
 
-  constructor: (config, @extensions, @compiler) ->
+  constructor: (config, @compiler) ->
 
   registration: (config, register) ->
-    register ['add','update','buildFile'], 'compile', @_compile, @extensions
+    exts = @compiler.extensions(config)
+    register ['add','update','buildFile'], 'compile', @_compile, exts
 
     if @compiler.cleanUpSourceMaps
-      _cleanUpSourceMapsRegister register, @extensions
+      _cleanUpSourceMapsRegister register, @extensions, exts
 
   _compile: (config, options, next) =>
     hasFiles = options.files?.length > 0
@@ -69,7 +70,7 @@ module.exports = class JSCompiler
     options.files.forEach (file) =>
 
       if logger.isDebug
-        logger.debug "Calling compiler function for compiler [[ " + @compiler.base + " ]]"
+        logger.debug "Calling compiler function for compiler [[ " + @compiler.name + " ]]"
 
       @compiler.compile config, file, (err, output, compilerConfig, sourceMap) =>
         if err

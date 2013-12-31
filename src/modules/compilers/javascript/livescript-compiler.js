@@ -22,7 +22,7 @@ var compile = function ( mimosaConfig, file, cb ) {
 };
 
 module.exports = {
-  base: "livescript",
+  name: "livescript",
   compilerType: "javascript",
   defaultExtensions: ["ls"],
   compile: compile,

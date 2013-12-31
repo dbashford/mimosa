@@ -189,7 +189,7 @@ module.exports = class TemplateCompiler
 
       options.files.push
         outputFileText: prefix + mergedText + suffix
-        outputFileName: options.destinationFile(@compiler.base, outputFileConfig.folders)
+        outputFileName: options.destinationFile(@compiler.name, outputFileConfig.folders)
         isTemplate:true
 
     next()
@@ -206,7 +206,7 @@ module.exports = class TemplateCompiler
 
     __removeClientLibrary(@clientPath, done)
     for outputFileConfig in config.template.output
-      __removeClientLibrary(options.destinationFile(@compiler.base, outputFileConfig.folders), done)
+      __removeClientLibrary(options.destinationFile(@compiler.name, outputFileConfig.folders), done)
 
   _testForRemoveClientLibrary: (config, options, next) =>
     if options.files?.length is 0

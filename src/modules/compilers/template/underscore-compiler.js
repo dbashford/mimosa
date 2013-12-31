@@ -48,7 +48,7 @@ var compile = function ( file, cb ) {
 };
 
 module.exports = {
-  base: "underscore",
+  name: "underscore",
   compilerType: "template",
   defaultExtensions:  ["tpl", "underscore"],
   clientLibrary: path.join( __dirname, "client", "underscore.js" ),

@@ -48,7 +48,7 @@ var compile = function ( file, cb ) {
 };
 
 module.exports = {
-  base: "lodash",
+  name: "lodash",
   compilerType: "template",
   defaultExtensions:  ["tmpl", "lodash"],
   clientLibrary: path.join( __dirname, "client", "lodash.js" ),

@@ -47,7 +47,7 @@ var compile = function ( file, cb ) {
 };
 
 module.exports = {
-  base: "dust",
+  name: "dust",
   compilerType: "template",
   defaultExtensions: ["dust"],
   clientLibrary: path.join( __dirname, "client", "dust.js" ),

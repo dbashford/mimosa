@@ -55,7 +55,7 @@ var compile = function ( file, cb ) {
 };
 
 module.exports = {
-  base: "html",
+  name: "html",
   compilerType: "template",
   defaultExtensions: ["template"],
   compile: compile,
