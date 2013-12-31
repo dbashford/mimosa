@@ -15,6 +15,7 @@ NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like 
 Big dependency/library upgrade release.
 
 ### Minor Changes
+* [mimosa #335](https://github.com/dbashford/mimosa/issues/335). mimosa-bower will now put CoffeeScript files pulled in from a bower package into the javascript directory instead of the css directory.
 * Part of prepping for `2.0`, all of the template compilers have been converted from CoffeeScript to JavaScript.
 * The underscore client library was updated to `1.5.2` from `1.5.1`
 * The Ractive client library and the compiler were updated to `0.3.9`
