@@ -122,9 +122,13 @@ exports.join = function(obj, str){
  * Truncate `str` to `len`.
  */
 
-exports.truncate = function(str, len){
+exports.truncate = function(str, len, append){
   str = String(str);
-  return str.substr(0, len);
+  if (str.length > len) {
+    str = str.slice(0, len);
+    if (append) str += append;
+  }
+  return str;
 };
 
 /**

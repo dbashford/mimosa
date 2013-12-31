@@ -19,6 +19,7 @@ NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like 
 * The Lodash client library was updated to `2.4.1`
 * The Handlebars client library was updated to `1.2.0` and the compiler library was updated to `1.2.1`
 * The Emblem compiler was updated to `0.3.6`
+* The EJS compiler was updated to `0.3.6`
 
 ## 1.3.5 - Dec 28 2013
 
