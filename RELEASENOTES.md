@@ -10,6 +10,11 @@
 
 NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like mimosa-coffeescript) may show up in NPM as I build things out. I'll make it clear that those are 2.0 targeted modules. Using them with `1.3.x` will likely cause some odd results.
 
+## 1.3.8 - Jan 1 2014
+
+### Minor Changes
+* [mimosa-bower #34](https://github.com/dbashford/mimosa-bower/pull/34). Fixed bad comment/example in the bower config snippet.
+
 ## 1.3.7 - Dec 31 2013
 
 ### Minor Changes
