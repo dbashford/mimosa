@@ -3,7 +3,7 @@
 _ =      require 'lodash'
 logger = require 'logmimosa'
 
-JavaScriptCompiler = require("./javascript/javascript")
+JavaScriptCompiler = require( "./javascript/javascript" )
 CSSCompiler = require "./css/css"
 TemplateCompiler = require "./template/template"
 
@@ -31,7 +31,6 @@ exports.setupCompilers = (config) ->
       compilers.push mod
 
   for compiler in compilers
-    #setup config.extensions
     exts = compiler.extensions(config)
     config.extensions[compiler.compilerType].push(exts...)
 
@@ -75,8 +74,6 @@ exports.defaults = ->
     module:null
   coco:
     bare:true
-  livescript:
-    bare:true
   stylus:
     use:['nib']
     import:['nib']
@@ -94,11 +91,6 @@ exports.placeholder = ->
     # coco:                       # config settings for coco
       # bare:true                 # whether or not to include the top level wrapper around
                                   # each compiled coco file. Defaults to not wrapping
-                                  # as wrapping with define/require is assumed.
-
-    # livescript:                 # config settings for livescript
-      # bare:true                 # whether or not to include the top level wrapper around
-                                  # each compiled coffeescript file. Defaults to not wrapping
                                   # as wrapping with define/require is assumed.
 
     # stylus:                     # config settings for stylus
