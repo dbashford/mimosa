@@ -73,12 +73,6 @@ exports.defaults = ->
     exclude:[]
   typescript:
     module:null
-  iced:
-    sourceMap:true
-    sourceMapDynamic:true
-    sourceMapExclude:[/\/specs?\//, /_spec.js$/]
-    bare:true
-    runtime:'none'
   coco:
     bare:true
   livescript:
@@ -92,19 +86,6 @@ exports.defaults = ->
 exports.placeholder = ->
   """
   \t
-
-    # iced:                       # config settings for iced coffeescript
-      # sourceMap:true            # whether to generate source during "mimosa watch".
-                                  # Source maps are not generated during "mimosa build"
-                                  # regardless of setting.
-      # sourceMapDynamic: true    # Whether or not to inline the source maps, this adds base64
-                                  # encoded source maps to the compiled file rather than write
-                                  # an extra map file.
-      # sourceMapExclude: [/\\/specs?\\//, /_spec.js$/] # files to exclude from source map generation
-      # bare:true                 # whether or not to include the top level wrapper around each
-                                  # compiled iced file. Defaults to not wrapping as wrapping with
-                                  # define/require is assumed.
-      # runtime:"none"            # No runtime boilerplate is included
 
     # typescript:                 # config settings for typescript
       # module: null              # how compiled tyepscript is wrapped, defaults to no wrapping,
@@ -269,16 +250,6 @@ exports.validate = (config, validators) ->
   if validators.ifExistsIsObject(errors, "copy config", config.copy)
     validators.isArrayOfStrings(errors, "copy.extensions", config.copy.extensions)
     validators.ifExistsFileExcludeWithRegexAndString(errors, "copy.exclude", config.copy, config.watch.sourceDir)
-
-  if validators.ifExistsIsObject(errors, "iced config", config.iced)
-    if config.isBuild
-      config.iced.sourceMap = false
-    else
-      validators.ifExistsFileExcludeWithRegexAndStringWithField(errors, "iced.sourceMapExclude", config.iced, 'sourceMapExclude', config.watch.javascriptDir)
-      if validators.ifExistsIsBoolean(errors, "iced.sourceMapDynamic", config.iced.sourceMapDynamic)
-        if config.isWatch and config.isMinify and config.iced.sourceMapDynamic
-          config.iced.sourceMapDynamic = false
-          logger.debug "mimosa watch called with minify, setting iced.sourceMapDynamic to false to preserve source maps."
 
   if validators.ifExistsIsObject(errors, "typescript config", config.typescript)
     validators.ifExistsIsString(errors, "typescript.module", config.typescript.module)
