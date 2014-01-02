@@ -70,8 +70,6 @@ exports.defaults = ->
   copy:
     extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd","map","md","mp4"]
     exclude:[]
-  typescript:
-    module:null
   stylus:
     use:['nib']
     import:['nib']
@@ -81,10 +79,6 @@ exports.defaults = ->
 exports.placeholder = ->
   """
   \t
-
-    # typescript:                 # config settings for typescript
-      # module: null              # how compiled tyepscript is wrapped, defaults to no wrapping,
-                                  # can be "amd" or "commonjs"
 
     # stylus:                     # config settings for stylus
       # use:['nib']               # names of libraries to use, should match the npm name for
@@ -235,9 +229,6 @@ exports.validate = (config, validators) ->
   if validators.ifExistsIsObject(errors, "copy config", config.copy)
     validators.isArrayOfStrings(errors, "copy.extensions", config.copy.extensions)
     validators.ifExistsFileExcludeWithRegexAndString(errors, "copy.exclude", config.copy, config.watch.sourceDir)
-
-  if validators.ifExistsIsObject(errors, "typescript config", config.typescript)
-    validators.ifExistsIsString(errors, "typescript.module", config.typescript.module)
 
   if validators.ifExistsIsObject(errors, "stylus config", config.stylus)
     validators.ifExistsIsObject(errors, "stylus.define", config.stylus.define)
