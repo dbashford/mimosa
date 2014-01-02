@@ -72,8 +72,6 @@ exports.defaults = ->
     exclude:[]
   typescript:
     module:null
-  coco:
-    bare:true
   stylus:
     use:['nib']
     import:['nib']
@@ -87,11 +85,6 @@ exports.placeholder = ->
     # typescript:                 # config settings for typescript
       # module: null              # how compiled tyepscript is wrapped, defaults to no wrapping,
                                   # can be "amd" or "commonjs"
-
-    # coco:                       # config settings for coco
-      # bare:true                 # whether or not to include the top level wrapper around
-                                  # each compiled coco file. Defaults to not wrapping
-                                  # as wrapping with define/require is assumed.
 
     # stylus:                     # config settings for stylus
       # use:['nib']               # names of libraries to use, should match the npm name for
