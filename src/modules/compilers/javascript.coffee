@@ -6,7 +6,7 @@ fs = require 'fs'
 _ = require "lodash"
 logger = require 'logmimosa'
 
-fileUtils = require '../../../util/file'
+fileUtils = require '../../util/file'
 
 _genMapFileName = (config, file) ->
   extName = path.extname file.inputFileName

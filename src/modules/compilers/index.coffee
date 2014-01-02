@@ -3,7 +3,7 @@
 _ =      require 'lodash'
 logger = require 'logmimosa'
 
-JavaScriptCompiler = require( "./javascript/javascript" )
+JavaScriptCompiler = require( "./javascript" )
 CSSCompiler = require "./css/css"
 TemplateCompiler = require "./template/template"
 
