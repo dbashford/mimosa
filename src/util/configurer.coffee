@@ -313,7 +313,7 @@ processConfig = (opts, callback) ->
 
 _setModulesIntoConfig = (config) ->
   config.installedModules = {}
-  for mod in moduleManager.installedMetadata
-    config.installedModules[mod.name] = mod.mod
+  moduleManager.getConfiguredModules().forEach  (mod) ->
+    config.installedModules[mod.__mimosaModuleName] = mod
 
 module.exports = processConfig
