@@ -70,22 +70,10 @@ exports.defaults = ->
   copy:
     extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd","map","md","mp4"]
     exclude:[]
-  stylus:
-    use:['nib']
-    import:['nib']
-    define:{}
-    includes:[]
 
 exports.placeholder = ->
   """
   \t
-
-    # stylus:                     # config settings for stylus
-      # use:['nib']               # names of libraries to use, should match the npm name for
-                                  # the desired libraries
-      # import:['nib']            # Files to import for compilation
-      # define: {}                # An object containing stylus variable defines
-      # includes: []              # Files to include for compilation
 
     # template:                         # overall template object can be set to null if no
                                         # templates being used
@@ -229,32 +217,5 @@ exports.validate = (config, validators) ->
   if validators.ifExistsIsObject(errors, "copy config", config.copy)
     validators.isArrayOfStrings(errors, "copy.extensions", config.copy.extensions)
     validators.ifExistsFileExcludeWithRegexAndString(errors, "copy.exclude", config.copy, config.watch.sourceDir)
-
-  if validators.ifExistsIsObject(errors, "stylus config", config.stylus)
-    validators.ifExistsIsObject(errors, "stylus.define", config.stylus.define)
-    validators.ifExistsIsArrayOfStrings(errors, "stylus.import", config.stylus.import)
-    validators.ifExistsIsArrayOfStrings(errors, "stylus.includes", config.stylus.includes)
-
-    if validators.ifExistsIsArrayOfStrings(errors, "stylus.use", config.stylus.use)
-
-      config.stylus.resolvedUse = []
-      projectNodeModules = path.resolve process.cwd(), 'node_modules'
-      for imp in config.stylus.use
-        lib = null
-        try
-          lib = require imp
-        catch err
-          try
-            lib = require path.join projectNodeModules, imp
-          catch err
-            console.log err
-            # do nothing
-
-        if lib is null
-          errors.push "Error including stylus use [[ #{imp} ]]"
-        else
-          config.stylus.resolvedUse.push lib()
-
-  validators.ifExistsIsObject(errors, "iced config", config.iced)
 
   errors

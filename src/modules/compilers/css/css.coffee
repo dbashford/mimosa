@@ -22,9 +22,11 @@ __baseOptionsObject = (config, base) ->
 
 module.exports = class CSSCompiler
 
-  constructor: (config, @extensions, @compiler) ->
+  constructor: (config, @compiler) ->
     if @compiler.init
       @compiler.init(config, @extensions)
+
+    @extensions = @compiler.extensions(config)
 
   registration: (config, register) ->
     register ['buildExtension'], 'init',    @_processWatchedDirectories, [@extensions[0]]
@@ -85,7 +87,7 @@ module.exports = class CSSCompiler
         done()
       else fs.exists file.inputFileName, (exists) =>
         if exists
-          @compiler.compile file, config, options, (err, result) =>
+          @compiler.compile config, file, (err, result) =>
             if err
               logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}", {exitIfBuild:true}
             else
