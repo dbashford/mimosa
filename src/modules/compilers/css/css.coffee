@@ -23,9 +23,6 @@ __baseOptionsObject = (config, base) ->
 module.exports = class CSSCompiler
 
   constructor: (config, @compiler) ->
-    if @compiler.init
-      @compiler.init(config, @extensions)
-
     @extensions = @compiler.extensions(config)
 
   registration: (config, register) ->
