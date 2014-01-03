@@ -4,7 +4,7 @@ _ =      require 'lodash'
 logger = require 'logmimosa'
 
 JavaScriptCompiler = require( "./javascript" )
-CSSCompiler = require "./css/css"
+CSSCompiler = require( "./css" )
 TemplateCompiler = require "./template/template"
 
 compilers = []
