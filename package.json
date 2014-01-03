@@ -57,7 +57,6 @@
     "bower"
   ],
   "dependencies": {
-    "jade": "0.35.0",
     "handlebars": "1.2.1",
     "emblem": "0.3.6",
     "hogan.js": "2.0.0",
