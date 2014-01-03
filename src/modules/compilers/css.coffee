@@ -6,7 +6,7 @@ path =   require 'path'
 _ =      require 'lodash'
 logger =    require 'logmimosa'
 
-fileUtils = require '../../../util/file'
+fileUtils = require '../../util/file'
 
 __buildDestinationFile = (config, fileName) ->
   baseCompDir = fileName.replace(config.watch.sourceDir, config.watch.compiledDir)
