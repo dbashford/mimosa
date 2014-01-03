@@ -1,11 +1,14 @@
 "use strict"
 
+path = require 'path'
+fs =   require 'fs'
+
 _ =      require 'lodash'
 logger = require 'logmimosa'
 
 JavaScriptCompiler = require( "./javascript" )
 CSSCompiler = require( "./css" )
-TemplateCompiler = require "./template/template"
+TemplateCompiler = require( "./template" )
 
 compilers = []
 
@@ -95,7 +98,7 @@ exports.placeholder = ->
 
       # outputFileName:                 # outputFileName Alternate Config 1
         # hogan:"hogans"                # Optionally outputFileName can be provided an object of
-        # jade:"jades"                  # file extension to file name in the event you are using
+        # jade:"jades"                  # compiler name to file name in the event you are using
                                         # multiple templating libraries.
 
       # output: [{                      # output Alternate Config 2
@@ -137,9 +140,6 @@ exports.placeholder = ->
 exports.validate = (config, validators) ->
   errors = []
 
-  path = require 'path'
-  fs =   require 'fs'
-
   if validators.ifExistsIsObject(errors, "template config", config.template)
     if config.template.output and config.template.outputFileName
       delete config.template.outputFileName
@@ -154,8 +154,6 @@ exports.validate = (config, validators) ->
     if validators.ifExistsIsString(errors, "template.wrapType", config.template.wrapType)
       if ["common", "amd", "none"].indexOf(config.template.wrapType) is -1
         errors.push "template.wrapType must be one of: 'common', 'amd', 'none'"
-
-    validTCompilers = ["handlebars", "dust", "hogan", "jade", "underscore", "lodash", "ejs", "html", "emblem", "eco","ractive"]
 
     if config.template.nameTransform?
       if typeof config.template.nameTransform is "string"
@@ -194,11 +192,7 @@ exports.validate = (config, validators) ->
             fileNames.push fName
           else if typeof fName is "object" and not Array.isArray(fName)
             for tComp in Object.keys(fName)
-              if validTCompilers.indexOf(tComp) is -1
-                errors.push "template.output.outputFileName key [[ #{tComp} ]] does not match list of valid compilers: [[ #{validTCompilers.join(',')}]]"
-                break
-              else
-                fileNames.push fName[tComp]
+              fileNames.push fName[tComp]
           else
             errors.push "template.outputFileName must be an object or a string."
         else

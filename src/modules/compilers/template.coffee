@@ -6,7 +6,7 @@ fs =   require 'fs'
 _ =      require 'lodash'
 logger = require 'logmimosa'
 
-fileUtils = require '../../../util/file'
+fileUtils = require '../../util/file'
 
 __generateTemplateName = (fileName, config) ->
   nameTransform = config.template.nameTransform
@@ -66,9 +66,8 @@ __templatePreamble = (file) ->
 
 module.exports = class TemplateCompiler
 
-  constructor: (config, @extensions, @compiler) ->
-    if @compiler.init
-      @compiler.init(config, @extensions)
+  constructor: (config, @compiler) ->
+    @extensions = @compiler.extensions(config)
 
     if @compiler.clientLibrary? and config.template.wrapType is 'amd'
       @clientPath = path.basename(@compiler.clientLibrary)
@@ -140,7 +139,7 @@ module.exports = class TemplateCompiler
     options.files.forEach (file, i) =>
       logger.debug "Compiling template [[ #{file.inputFileName} ]]"
       file.templateName = __generateTemplateName(file.inputFileName, config)
-      @compiler.compile file, (err, result) =>
+      @compiler.compile config, file, (err, result) =>
         if err
           logger.error "Template [[ #{file.inputFileName} ]] failed to compile. Reason: #{err}", {exitIfBuild:true}
         else
