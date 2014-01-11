@@ -10,6 +10,10 @@
 
 NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like mimosa-coffeescript) may show up in NPM as I build things out. I'll make it clear that those are 2.0 targeted modules. Using them with `1.3.x` will likely cause some odd results.
 
+## 1.3.9 - Jan 11 2014
+
+* [mimosa #339](https://github.com/dbashford/mimosa/issues/339). `mimosa skel:new` now handles absolute paths for the folder output and better cleans up after itself if something goes wrong.
+
 ## 1.3.8 - Jan 1 2014
 
 ### Minor Changes
