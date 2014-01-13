@@ -12,7 +12,7 @@ copyConfig = (opts) ->
 
   conf = buildConfig()
 
-  currDefaultsPath = path.join path.resolve(''), "mimosa-config-commented.coffee"
+  currDefaultsPath = path.join path.resolve(''), "mimosa-config-documented.coffee"
   logger.debug "Writing config defaults file to #{currDefaultsPath}"
   defaultsConf = """
 
@@ -21,16 +21,18 @@ copyConfig = (opts) ->
 
                  #{conf}
                  """
+
   fs.writeFileSync currDefaultsPath, defaultsConf, 'ascii'
   logger.success "Copied mimosa-config-commented.coffee into current directory."
 
-  mimosaConfigPath = path.join path.resolve(''), "mimosa-config.coffee"
+  mimosaConfigPath = path.join path.resolve(''), "mimosa-config.js"
   if fs.existsSync mimosaConfigPath
-    logger.info "Not writing mimosa-config.coffee file as one exists already."
+    logger.info "Not writing mimosa-config.js file as one exists already."
   else
     logger.debug "Writing config file to #{mimosaConfigPath}"
-    fs.writeFileSync mimosaConfigPath, conf, 'ascii'
-    logger.success "Copied mimosa-config.coffee into current directory."
+    outConfigText = "exports.config = " + JSON.stringify( conf, null, 2 )
+    fs.writeFileSync mimosaConfigPath, outConfigText, 'ascii'
+    logger.success "Copied mimosa-config.js into current directory."
 
   process.exit 0
 
@@ -45,7 +47,6 @@ register = (program, callback) ->
       logger.green('  And also copy a defaults file to keep as reference should you desire to alter and.')
       logger.green('  shrink the mimosa-config.')
       logger.blue( '\n    $ mimosa config\n')
-
 
 module.exports = (program) ->
   register(program, copyConfig)

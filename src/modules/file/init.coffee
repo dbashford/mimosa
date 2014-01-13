@@ -63,7 +63,10 @@ _determineDestinationFile = (config, options) ->
 _initSingleAsset = (config, options, next) ->
   inputFile = options.inputFile
 
+  logger.debug "Destination for file [[ #{inputFile ? "template file"} ]] is [[ ??? ]]"
+
   _determineDestinationFile config, options
+
 
   destinationFile = options.destinationFile(inputFile)
 

@@ -9,6 +9,7 @@ logger = require 'logmimosa'
 JavaScriptCompiler = require( "./javascript" )
 CSSCompiler = require( "./css" )
 TemplateCompiler = require( "./template" )
+CopyCompiler = require( "./copy" )
 
 compilers = []
 
@@ -46,7 +47,7 @@ exports.registration = (config, register) ->
       logger.debug "Creating compiler " + compiler.name
 
     compilerInstance = switch compiler.compilerType
-      when "copy" then new compiler.compiler(config)
+      when "copy" then new CopyCompiler(config, compiler)
       when "javascript" then new JavaScriptCompiler(config, compiler)
       when "template" then new TemplateCompiler(config, compiler)
       when "css" then new CSSCompiler(config, compiler)
@@ -65,9 +66,6 @@ exports.defaults = ->
     commonLibPath: null
     nameTransform:"fileName"
     outputFileName: "javascripts/templates"
-  copy:
-    extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd","map","md","mp4"]
-    exclude:[]
 
 exports.placeholder = ->
   """
@@ -110,15 +108,6 @@ exports.placeholder = ->
                                         # provided for each output entry, and the names
                                         # must be unique.
 
-    ###
-    # the extensions of files to copy from sourceDir to compiledDir. vendor js/css, images, etc.
-    ###
-    # copy:
-      # extensions: ["js","css","png","jpg","jpeg","gif","html","eot","svg","ttf","woff","otf","yaml","kml","ico","htc","htm","json","txt","xml","xsd","map","md","mp4"]
-      # exclude: []       # List of regexes or strings to match files that should not be copied
-                          # but that you might still want processed. String paths can be absolute
-                          # or relative to the watch.sourceDir. Regexes are applied to the entire
-                          # path.
   """
 
 exports.validate = (config, validators) ->
@@ -184,9 +173,5 @@ exports.validate = (config, validators) ->
 
       if fileNames.length isnt _.uniq(fileNames).length
         errors.push "template.output.outputFileName names must be unique."
-
-  if validators.ifExistsIsObject(errors, "copy config", config.copy)
-    validators.isArrayOfStrings(errors, "copy.extensions", config.copy.extensions)
-    validators.ifExistsFileExcludeWithRegexAndString(errors, "copy.exclude", config.copy, config.watch.sourceDir)
 
   errors

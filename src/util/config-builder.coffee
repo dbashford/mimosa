@@ -20,7 +20,7 @@ _configTop = ->
     and do not need to be installed. If a module is listed here that Mimosa is unaware of, Mimosa
     will attempt to install it.
     ###
-    # modules: ['jshint', 'csslint', 'server', 'require', 'minify-js', 'minify-css', 'live-reload', 'bower']
+    # modules: ['copy', 'jshint', 'csslint', 'server', 'require', 'minify-js', 'minify-css', 'live-reload', 'bower']
 
     # watch:
       # sourceDir: "assets"                # directory location of web assets, can be relative to
@@ -70,7 +70,7 @@ buildConfigText = ->
   configText += _configBottom()
 
   if moduleManager.configModuleString?
-    configText = configText.replace("  # modules: ['jshint', 'csslint', 'server', 'require', 'minify-js', 'minify-css', 'live-reload', 'bower']", "  modules: " + moduleManager.configModuleString)
+    configText = configText.replace("  # modules: ['copy', 'jshint', 'csslint', 'server', 'require', 'minify-js', 'minify-css', 'live-reload', 'bower']", "  modules: " + moduleManager.configModuleString)
 
   configText
 

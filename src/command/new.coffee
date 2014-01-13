@@ -8,6 +8,7 @@ logger =   require 'logmimosa'
 
 deps =      require('../../package.json').dependencies
 buildConfig = require '../util/config-builder'
+moduleManager = require '../modules'
 
 setupData = require "./setup.json"
 compilers = setupData.compilers
@@ -15,6 +16,9 @@ views = setupData.views
 servers = setupData.servers
 
 class NewCommand
+
+  outConfig: {}
+  devDependencies:{}
 
   constructor: (@program) ->
 
@@ -32,6 +36,8 @@ class NewCommand
       opts.debug = true
       logger.setDebug()
       process.env.DEBUG = true
+
+    @outConfig.modules = moduleManager.builtIns.map (builtIn) -> builtIn.substring(7)
 
     logger.debug "Project name: #{name}"
 
@@ -99,7 +105,11 @@ class NewCommand
     @_create(name, chosen)
 
   _create: (name, chosen) =>
-    @config = buildConfig()
+    [chosen.javascript.name, chosen.css.name, chosen.template.name].forEach (compName) =>
+      unless compName is "none"
+        @outConfig.modules.push compName
+        @devDependencies["mimosa-" + compName] = "*"
+
     @skeletonPath = path.join __dirname, '..', '..', 'skeleton'
     @_moveDirectoryContents @skeletonPath, @skeletonOutPath
     @_makeChosenCompilerChanges chosen
@@ -146,28 +156,23 @@ class NewCommand
     @_copyCompilerSpecificExampleFiles(chosenCompilers)
 
   _updateConfigForChosenCompilers: (comps) ->
-
     # return if all the defaults were chosen
     return if comps.javascript.isDefault and comps.views.isDefault
 
-    replacements = {}
     unless comps.javascript.isDefault
-      replacements["# server:"]                 = "server:"
+      @outConfig.server ?= {}
 
       # Typescript hack since cannot handle typescript on the server
-      if comps.javascript.base is "typescript"
-        replacements["# path: 'server.coffee'"]   = "path: 'server.js'"
+      if comps.javascript.name is "typescript"
+        @outConfig.server.path = 'server.js'
       else
-        replacements["# path: 'server.coffee'"]   = "path: 'server.#{comps.javascript.defaultExtensions[0]}'"
+        @outConfig.server.path = "server.#{comps.javascript.defaultExtensions[0]}"
 
     unless comps.views.isDefault
-      replacements["# server:"]             = "server:"
-      replacements["# views:"]              = "views:"
-      replacements["# compileWith: 'jade'"] = "compileWith: '#{comps.views.name}'"
-      replacements["# extension: 'jade'"] = "extension: '#{comps.views.extension}'"
-
-    for thiz, that of replacements
-      @config = @config.replace thiz, that
+      @outConfig.server ?= {}
+      @outConfig.server.views ?= {}
+      @outConfig.server.views.compileWith = comps.views.name
+      @outConfig.server.views.extension = comps.views.extension
 
   _copyCompilerSpecificExampleFiles: (comps) ->
     safePaths = _.flatten([comps.javascript.defaultExtensions, comps.css.defaultExtensions, comps.template.defaultExtensions]).map (path) ->
@@ -199,7 +204,7 @@ class NewCommand
     files = allItems.filter (i) -> fs.statSync(path.join(serverPath, i)).isFile()
 
     # Typescript hack since cannot handle typescript on the server
-    if comps.javascript.base is "typescript"
+    if comps.javascript.name is "typescript"
       safePaths.push "\\.js$"
 
     files.filter (file) ->
@@ -210,7 +215,7 @@ class NewCommand
       fs.unlinkSync filePath
 
     # Handle iced vendor file
-    if comps.javascript.base is "iced"
+    if comps.javascript.name is "iced-coffeescript"
       baseIcedPath = path.join(@skeletonOutPath, "assets", "javascripts", "vendor")
       fs.renameSync path.join(baseIcedPath, "iced.js.iced"), path.join(baseIcedPath, "iced.js")
 
@@ -218,7 +223,7 @@ class NewCommand
     if templateView?
       data = fs.readFileSync templateView, "ascii"
       fs.unlinkSync templateView
-      cssFramework = if comps.css.base is "none" then "pure CSS" else comps.css.base
+      cssFramework = if comps.css.name is "none" then "pure CSS" else comps.css.name
       data = data.replace "CSSHERE", cssFramework
       templateView = templateView.replace /-\w+\./, "."
       fs.writeFile templateView, data
@@ -232,13 +237,6 @@ class NewCommand
     logger.debug "Using no server, so removing server resources and config"
     fs.unlinkSync path.join(@skeletonOutPath, "package.json")
     wrench.rmdirSyncRecursive path.join(@skeletonOutPath, "servers")
-
-    @config = @config.replace(/\ \ #?\ ?server:[A-Za-z0-9 \"#\n\r:,.'-]*\n/g, "")
-    @config = @config.replace(/\ \ #?\ ?liveReload:[\]\[A-Za-z0-9 \"#\n\r:,.'-]*/g, "")
-    @config = @config.replace("  # modules:", "  modules:")
-    @config = @config.replace(/(\ \ modules:\ [\[\]\'A-Za-z\,\ -]*)('server', )([\[\]\'A-Za-z\,\ -]*)/g, "$1$3")
-    @config = @config.replace(/(\ \ modules:\ [\[\]\'A-Za-z\,\ -]*)('live-reload', )([\[\]\'A-Za-z\,\ -]*)/g, "$1$3")
-
     @_done()
 
   # remove express files/directories and update config to point to default server
@@ -247,9 +245,9 @@ class NewCommand
     fs.unlinkSync path.join(@skeletonOutPath, "package.json")
     wrench.rmdirSyncRecursive path.join(@skeletonOutPath, "servers")
 
-    @config = @config.replace "# server:", "server:"
-    @config = @config.replace "# defaultServer:", "defaultServer:"
-    @config = @config.replace "# enabled: false           # whether", "enabled: true              # whether"
+    @outConfig.server ?= {}
+    @outConfig.server.defaultServer = enabled: true
+
     @_done()
 
   _usingOwnServer: (name, chosen) ->
@@ -258,10 +256,13 @@ class NewCommand
     packageJson = require(jPath)
     packageJson.name = name if name?
 
-    @removeFromPackageDeps(chosen.javascript.base, "livescript", "LiveScript", packageJson)
-    @removeFromPackageDeps(chosen.javascript.base, "iced", "iced-coffee-script", packageJson)
-    @removeFromPackageDeps(chosen.javascript.base, "coffee", "coffee-script", packageJson)
-    @removeFromPackageDeps(chosen.javascript.base, "coco", "coco", packageJson)
+    if Object.keys(@devDependencies).length > 0
+      packageJson.devDependencies = @devDependencies
+
+    @removeFromPackageDeps(chosen.javascript.name, "livescript", "LiveScript", packageJson)
+    @removeFromPackageDeps(chosen.javascript.name, "iced-coffeescript", "iced-coffee-script", packageJson)
+    @removeFromPackageDeps(chosen.javascript.name, "coffeescript", "coffee-script", packageJson)
+    @removeFromPackageDeps(chosen.javascript.name, "coco", "coco", packageJson)
 
     @removeFromPackageDeps(chosen.views.name, "jade", "jade", packageJson)
     @removeFromPackageDeps(chosen.views.name, "hogan", "hogan.js", packageJson)
@@ -300,8 +301,9 @@ class NewCommand
       delete json.dependencies[lib]
 
   _done: =>
-    configPath = path.join @skeletonOutPath, "mimosa-config.coffee"
-    fs.writeFile configPath, @config, (err) ->
+    configPath = path.join @skeletonOutPath, "mimosa-config.js"
+    outConfigText = "exports.config = " + JSON.stringify( @outConfig, null, 2 )
+    fs.writeFile configPath, outConfigText, (err) ->
       logger.success "New project creation complete!  Execute 'mimosa watch' from inside your project to monitor the file system. Then start coding!"
       process.stdin.destroy()
 
