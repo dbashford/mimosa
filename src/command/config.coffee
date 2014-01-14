@@ -27,7 +27,8 @@ copyConfig = (opts) ->
 
   mimosaConfigPath = path.join path.resolve(''), "mimosa-config.js"
   if fs.existsSync mimosaConfigPath
-    logger.info "Not writing mimosa-config.js file as one exists already."
+    unless opts.suppress
+      logger.info "Not writing mimosa-config.js file as one exists already."
   else
     logger.debug "Writing config file to #{mimosaConfigPath}"
     outConfigText = "exports.config = " + JSON.stringify( conf, null, 2 )
@@ -40,6 +41,7 @@ register = (program, callback) ->
   program
     .command('config')
     .option("-D, --mdebug", "run in debug mode")
+    .option("-s, --suppress", "suppress info message")
     .description("copy the default Mimosa config into the current folder")
     .action(callback)
     .on '--help', =>

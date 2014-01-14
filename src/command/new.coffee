@@ -303,9 +303,20 @@ class NewCommand
   _done: =>
     configPath = path.join @skeletonOutPath, "mimosa-config.js"
     outConfigText = "exports.config = " + JSON.stringify( @outConfig, null, 2 )
-    fs.writeFile configPath, outConfigText, (err) ->
-      logger.success "New project creation complete!  Execute 'mimosa watch' from inside your project to monitor the file system. Then start coding!"
-      process.stdin.destroy()
+    fs.writeFile configPath, outConfigText, (err) =>
+
+      currentDir = process.cwd()
+      process.chdir @skeletonOutPath
+      exec "mimosa config --suppress", (err, sout, serr) =>
+        if err
+          logger.error err
+        else
+          console.log sout
+
+        process.chdir currentDir
+
+        logger.success "New project creation complete!  Execute 'mimosa watch' from inside your project to monitor the file system. Then start coding!"
+        process.stdin.destroy()
 
   _printHelp: ->
     logger.green('  The new command will take you through a series of questions regarding what')
