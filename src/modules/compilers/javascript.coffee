@@ -52,7 +52,7 @@ module.exports = class JSCompiler
     register ['add','update','buildFile'], 'compile', @_compile, exts
 
     if @compiler.cleanUpSourceMaps
-      _cleanUpSourceMapsRegister register, @extensions, exts
+      _cleanUpSourceMapsRegister register, exts
 
   _compile: (config, options, next) =>
     hasFiles = options.files?.length > 0
