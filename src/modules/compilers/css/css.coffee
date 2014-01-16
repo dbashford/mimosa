@@ -184,12 +184,19 @@ module.exports = class CSSCompiler
 
     return unless imports?
 
-    logger.debug "Imports for file [[ #{file} ]]: #{imports}"
-
+    imports2 = []
     for anImport in imports
-
       @compiler.importRegex.lastIndex = 0
-      importPath = @compiler.importRegex.exec(anImport)[1]
+      anImport = @compiler.importRegex.exec(anImport)[1]
+      if @compiler.importSplitRegex
+        spl = anImport.split(@compiler.importSplitRegex);
+        imports2.push.apply(imports2, spl)
+      else
+        imports2.push(anImport)
+    imports = imports2
+
+    for importPath in imports
+
       fullImportFilePath = @compiler.getImportFilePath(file, importPath)
 
       includeFiles = if path.extname(fullImportFilePath) is ".css" and @compiler.canFullyImportCSS
