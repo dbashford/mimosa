@@ -180,20 +180,18 @@ module.exports = class CSSCompiler
   # those imports until entire tree is built
   __importsForFile: (baseFile, file, allFiles) ->
     if fs.existsSync(file)
-      imports = fs.readFileSync(file, 'utf8').match(@compiler.importRegex)
+      importMatches = fs.readFileSync(file, 'utf8').match(@compiler.importRegex)
 
-    return unless imports?
+    return unless importMatches?
 
-    imports2 = []
-    for anImport in imports
+    imports = []
+    for anImport in importMatches
       @compiler.importRegex.lastIndex = 0
       anImport = @compiler.importRegex.exec(anImport)[1]
       if @compiler.importSplitRegex
-        spl = anImport.split(@compiler.importSplitRegex);
-        imports2.push.apply(imports2, spl)
+        imports.push.apply(imports, anImport.split(@compiler.importSplitRegex))
       else
-        imports2.push(anImport)
-    imports = imports2
+        imports.push(anImport)
 
     for importPath in imports
 
