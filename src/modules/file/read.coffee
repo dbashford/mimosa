@@ -8,8 +8,7 @@ class MimosaFileReadModule
 
   registration: (config, register) =>
     e = config.extensions
-    cExts = config.copy.extensions
-    register ['add','update','buildFile'],               'read', @_read, [e.javascript..., cExts...]
+    register ['add','update','buildFile'],               'read', @_read, [e.javascript..., e.copy...]
     register ['add','update','remove','buildExtension'], 'read', @_read, [e.css..., e.template...]
 
   _read: (config, options, next) ->

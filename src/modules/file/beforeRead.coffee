@@ -49,6 +49,6 @@ _fileNeedsCompilingStartup = (config, options, next) ->
     _fileNeedsCompiling(config, options, next)
 
 exports.registration = (config, register) ->
-  allExtensions = [config.extensions.javascript..., config.copy.extensions...]
+  allExtensions = [config.extensions.javascript..., config.extensions.copy...]
   register ['buildFile'],    'beforeRead', _fileNeedsCompilingStartup, allExtensions
   register ['add','update'], 'beforeRead', _fileNeedsCompiling,        allExtensions

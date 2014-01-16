@@ -46,11 +46,12 @@ exports.registration = (config, register) ->
     if logger.isDebug
       logger.debug "Creating compiler " + compiler.name
 
-    compilerInstance = switch compiler.compilerType
-      when "copy" then new CopyCompiler(config, compiler)
-      when "javascript" then new JavaScriptCompiler(config, compiler)
-      when "template" then new TemplateCompiler(config, compiler)
-      when "css" then new CSSCompiler(config, compiler)
+    CompilerClass = switch compiler.compilerType
+      when "copy" then CopyCompiler
+      when "javascript" then JavaScriptCompiler
+      when "template" then TemplateCompiler
+      when "css" then CSSCompiler
+    compilerInstance = new CompilerClass( config, compiler )
     compilerInstance.name = compiler.name
     compilerInstance.registration(config, register)
 

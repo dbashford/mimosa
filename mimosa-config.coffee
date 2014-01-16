@@ -5,7 +5,9 @@ exports.config =
     compiledDir: "lib"
     javascriptDir: null
   coffeescript:
-    bare:true
+    options:
+      bare: true
+      sourceMap: false
   compilers:
     extensionOverrides:
       typescript: null
