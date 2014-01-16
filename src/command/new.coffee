@@ -159,7 +159,7 @@ class NewCommand
     # return if all the defaults were chosen
     return if comps.javascript.isDefault and comps.views.isDefault
 
-    unless comps.javascript.isDefault
+    if (not comps.javascript.isDefault) and (comps.server.name isnt "None")
       @outConfig.server ?= {}
 
       # Typescript hack since cannot handle typescript on the server
@@ -234,6 +234,9 @@ class NewCommand
     wrench.rmdirSyncRecursive path.join(@skeletonOutPath, "view")
 
   _usingNoServer: ->
+    @outConfig.modules.splice(@outConfig.modules.indexOf("server"), 1)
+    @outConfig.modules.splice(@outConfig.modules.indexOf("live-reload"), 1)
+
     logger.debug "Using no server, so removing server resources and config"
     fs.unlinkSync path.join(@skeletonOutPath, "package.json")
     wrench.rmdirSyncRecursive path.join(@skeletonOutPath, "servers")
