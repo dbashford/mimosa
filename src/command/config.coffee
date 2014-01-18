@@ -16,14 +16,16 @@ copyConfig = (opts) ->
   logger.debug "Writing config defaults file to #{currDefaultsPath}"
   defaultsConf = """
 
-                 # THE FOLLOWING IS A COMMENTED VERSION OF THE mimosa-config.coffee WITH
-                 # ALL OF THE MOST RECENT DEFAULTS. THIS FILE IS MEANT FOR REFERENCE ONLY.
+                 # The following is a commented version of the mimosa-config with all of
+                 # the defaults listed. This file is meant for reference only.
 
                  #{conf}
                  """
 
   fs.writeFileSync currDefaultsPath, defaultsConf, 'ascii'
-  logger.success "Copied mimosa-config-commented.coffee into current directory."
+
+  unless opts.suppress
+    logger.success "Copied mimosa-config-commented.coffee into current directory."
 
   mimosaConfigPath = path.join path.resolve(''), "mimosa-config.js"
   if fs.existsSync mimosaConfigPath
@@ -33,7 +35,9 @@ copyConfig = (opts) ->
     logger.debug "Writing config file to #{mimosaConfigPath}"
     outConfigText = "exports.config = " + JSON.stringify( conf, null, 2 )
     fs.writeFileSync mimosaConfigPath, outConfigText, 'ascii'
-    logger.success "Copied mimosa-config.js into current directory."
+
+    unless opts.suppress
+      logger.success "Copied mimosa-config.js into current directory."
 
   process.exit 0
 

@@ -4,6 +4,8 @@
       {
         "prettyName": "Coco - https://github.com/satyr/coco",
         "name": "coco",
+        "library": "coco",
+        "version": "0.9.1",
         "defaultExtensions": [
           "co"
         ]
@@ -12,6 +14,8 @@
         "isDefault": true,
         "prettyName": "(*) CoffeeScript - http://coffeescript.org/",
         "name": "coffeescript",
+        "library": "coffee-script",
+        "version": "1.6.3",
         "defaultExtensions": [
           "coffee"
         ]
@@ -19,6 +23,8 @@
       {
         "prettyName": "Iced CoffeeScript - http://maxtaco.github.com/coffee-script/",
         "name": "iced-coffeescript",
+        "library": "iced-coffee-script",
+        "version": "1.6.3-j",
         "defaultExtensions": [
           "iced"
         ]
@@ -26,6 +32,8 @@
       {
         "prettyName": "LiveScript - http://gkz.github.com/LiveScript/",
         "name": "livescript",
+        "library": "LiveScript",
+        "version": "1.2.0",
         "defaultExtensions": [
           "ls"
         ]
@@ -93,11 +101,6 @@
         "defaultExtensions": ["ejs"]
       },
       {
-        "prettyName": "Emblem - http://emblemjs.com/",
-        "name": "emblem",
-        "defaultExtensions": ["emblem"]
-      },
-      {
         "isDefault": true,
         "prettyName": "(*) Handlebars - http://handlebarsjs.com/",
         "name": "handlebars",
@@ -110,7 +113,7 @@
       },
       {
         "prettyName": "HTML - Just Plain HTML Snippets, no compiling",
-        "name": "html-teplates",
+        "name": "html-templates",
         "defaultExtensions": ["template"]
       },
       {
@@ -147,6 +150,8 @@
     },
     {
       "name":"Express",
+      "library":"express",
+      "version":"3.4.7",
       "prettyName":"(*) Express - http://expressjs.com/",
       "isDefault":true
     },
@@ -158,6 +163,7 @@
   "views": [
     {
       "name":"jade",
+      "version": "0.35.0",
       "prettyName":"(*) Jade - http://jade-lang.com/",
       "library": "jade",
       "extension":"jade",
@@ -165,30 +171,35 @@
     },
     {
       "name":"hogan",
+      "version": "2.0.0",
       "prettyName":"Hogan - http://twitter.github.com/hogan.js/",
       "library": "hogan.js",
       "extension":"hjs"
     },
     {
       "name":"html",
+      "version": "0.8.5",
       "prettyName":"Plain HTML",
       "library": "ejs",
       "extension":"html"
     },
     {
       "name":"ejs",
+      "version": "0.8.5",
       "prettyName":"Embedded JavaScript Templates (EJS) - https://github.com/visionmedia/ejs",
       "library": "ejs",
       "extension":"ejs"
     },
     {
       "name":"handlebars",
+      "version": "1.2.1",
       "prettyName":"Handlebars - http://handlebarsjs.com/",
       "library": "handlebars",
       "extension":"hbs"
     },
     {
       "name":"dust",
+      "version": "2.2.2",
       "prettyName":"Dust - http://linkedin.github.io/dustjs/",
       "library": "dustjs-linkedin",
       "extension":"dust"
