@@ -13,7 +13,7 @@
 * `mimosa config` will now generate a `mimosa-config-documented.coffee` instead of a `mimosa-config-commented.coffee`.
 * `mimosa-copy` is a new module and it is a newly default module.  It handles copying those files that do not require any kind of compilation.
 * `mimosa new` will no longer deliver Emblem assets. It will also not deliver Ember-Handlebars assets. Both of those require Ember and I rather `mimosa new` not be opinionated in that regard.
-* The mimosa-server module will depend on
+* The mimosa-server module will depend on your project for transpiler support.  For example, if Mimosa is running your server and your server is written in CoffeeScript, you'll need to have CoffeeScript installed in your project.
 
 NOTE: While development of `2.0` takes place, some `2.0` targeted modules (like mimosa-coffeescript) may show up in NPM as I build things out. I'll make it clear that those are 2.0 targeted modules. Using them with `1.3.x` will likely cause some odd results.
 
