@@ -7,7 +7,6 @@ _ =        require 'lodash'
 logger =   require 'logmimosa'
 
 deps =      require('../../package.json').dependencies
-buildConfig = require '../util/config-builder'
 moduleManager = require '../modules'
 
 setupData = require "./setup.json"
