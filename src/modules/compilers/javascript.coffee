@@ -86,7 +86,11 @@ module.exports = class JSCompiler
 
               base64SourceMap = new Buffer(JSON.stringify(sourceMap)).toString('base64')
               datauri = 'data:application/json;base64,' + base64SourceMap
-              output = "#{output}\n//@ sourceMappingURL=#{datauri}\n"
+              if compilerConfig.sourceMapConditional
+                output = "#{output}\n//@ sourceMappingURL=#{datauri}\n"
+              else
+                output = "#{output}\n//# sourceMappingURL=#{datauri}\n"
+
 
             else
               whenDone += 2
@@ -105,9 +109,10 @@ module.exports = class JSCompiler
                   logger.error "Error writing map file [[ #{file.sourceMapName} ]], #{err}"
                 done()
 
-              # @ is deprecated but # not widely supported in current release browsers
-              # output = "#{output}\n/*\n//# sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
-              output = "#{output}\n/*\n//@ sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
+              if compilerConfig.sourceMapConditional
+                output = "#{output}\n/*\n//@ sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
+              else
+                output = "#{output}\n/*\n//# sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
 
           file.outputFileText = output
           newFiles.push file

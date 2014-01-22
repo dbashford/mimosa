@@ -19,6 +19,8 @@ This shrinks Mimosa core's footprint by an enormous amount, making it quicker to
 * [mimosa #348](https://github.com/dbashford/mimosa/pull/348). An awesome PR provides support for multi-line SASS imports so that things like Foundation will compile out of the box without orphan file issues.
 
 ### Minor Changes
+* [mimosa #277](https://github.com/dbashford/mimosa/pull/277). mimosa-coffeescript and mimosa-iced-coffeescript both have been switched to the latest source map comment spec.  See [this thread](https://groups.google.com/forum/#!topic/mozilla.dev.js-sourcemap/4uo7Z5nTfUY/discussion) for more details on the difference between conditional and non-conditional source maps.  A configuration has been added to allow for switching back to conditional source maps if your browser does not support the latest spec.
+* [mimosa #340](https://github.com/dbashford/mimosa/pull/340). `mimosa new` can now handle absolute paths.
 * [mimosa-require #27](https://github.com/dbashford/mimosa-require/issues/27). Fixed issue where `mimosa watch` + `--optimize` + template file change would not trigger a rebuild of r.js optimized files.
 * The mimosa-server module now depends on the installed node.js modules of your project for transpiler support.  For example, if Mimosa is running your server and your server is written in CoffeeScript, you'll need to have `coffee-script` installed in your project. mimosa-server will look for it there. This only effects those running node servers in a language that needs to be transpiled.
 
