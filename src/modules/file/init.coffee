@@ -67,8 +67,6 @@ _initSingleAsset = (config, options, next) ->
 
   destinationFile = options.destinationFile(inputFile)
 
-  logger.debug "Destination for file [[ #{inputFile ? "template file"} ]] is [[ #{destinationFile} ]]"
-
   options.files = [{
     inputFileName:inputFile
     outputFileName:destinationFile
@@ -85,6 +83,5 @@ _initMultiAsset = (config, options, next) ->
 
 exports.registration = (config, register) ->
   e = config.extensions
-  cExts = config.copy.extensions
   register ['add','update','remove','cleanFile','buildExtension'], 'init', _initMultiAsset,  [e.template..., e.css...]
-  register ['add','update','remove','cleanFile','buildFile'],      'init', _initSingleAsset, [e.javascript..., cExts...]
+  register ['add','update','remove','cleanFile','buildFile'],      'init', _initSingleAsset, [e.javascript..., e.copy...]

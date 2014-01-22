@@ -1,4 +1,4 @@
-## 2.0.0 (Future) - Jan ?? 2014
+## 2.0.0 - Jan 22 2014
 
 With `2.0` all of Mimosa's compilers, which were previously internal to Mimosa, are now external in their own modules. So, for instance, this means there is now a [mimosa-coffeescript](https://github.com/dbashford/mimosa-coffeescript) module and a [mimosa-stylus](https://github.com/dbashford/mimosa-stylus).  All of the JavaScript transpilers, CSS proprocessors, micro-template compilers, and the copy "compiler" have their own Mimosa modules.
 
@@ -19,6 +19,9 @@ This shrinks Mimosa core's footprint by an enormous amount, making it quicker to
 * [mimosa #348](https://github.com/dbashford/mimosa/pull/348). An awesome PR provides support for multi-line SASS imports so that things like Foundation will compile out of the box without orphan file issues.
 
 ### Minor Changes
+* [mimosa #340](https://github.com/dbashford/mimosa/pull/340). `mimosa new` can now handle absolute paths.
+* [mimosa #333](https://github.com/dbashford/mimosa/pull/333). mimosa-bower now ignores and removes from processing any packages that `bower.paths` cannot track down.
+* [mimosa #277](https://github.com/dbashford/mimosa/pull/277). mimosa-coffeescript and mimosa-iced-coffeescript both have been switched to the latest source map comment spec.  See [this thread](https://groups.google.com/forum/#!topic/mozilla.dev.js-sourcemap/4uo7Z5nTfUY/discussion) for more details on the difference between conditional and non-conditional source maps.  A configuration has been added to allow for switching back to conditional source maps if your browser does not support the latest spec.
 * [mimosa-require #27](https://github.com/dbashford/mimosa-require/issues/27). Fixed issue where `mimosa watch` + `--optimize` + template file change would not trigger a rebuild of r.js optimized files.
 * The mimosa-server module now depends on the installed node.js modules of your project for transpiler support.  For example, if Mimosa is running your server and your server is written in CoffeeScript, you'll need to have `coffee-script` installed in your project. mimosa-server will look for it there. This only effects those running node servers in a language that needs to be transpiled.
 
@@ -33,6 +36,7 @@ This shrinks Mimosa core's footprint by an enormous amount, making it quicker to
 
 ## 1.3.9 - Jan 11 2014
 
+### Minor Changes
 * [mimosa #339](https://github.com/dbashford/mimosa/issues/339). `mimosa skel:new` now handles absolute paths for the folder output and better cleans up after itself if something goes wrong.
 
 ## 1.3.8 - Jan 1 2014

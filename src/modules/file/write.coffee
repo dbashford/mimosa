@@ -10,9 +10,8 @@ class MimosaFileWriteModule
 
   registration: (config, register) ->
     e = config.extensions
-    cExts = config.copy.extensions
     register ['add','update','remove','buildExtension'], 'write', @_write, [e.template..., e.css...]
-    register ['add','update','buildFile'],               'write', @_write, [e.javascript..., cExts...]
+    register ['add','update','buildFile'],               'write', @_write, [e.javascript..., e.copy...]
 
   _write: (config, options, next) =>
     hasFiles = options.files?.length > 0

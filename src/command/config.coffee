@@ -2,7 +2,9 @@ path =   require 'path'
 fs =     require 'fs'
 
 logger = require 'logmimosa'
+
 buildConfig = require '../util/config-builder'
+moduleManager = require '../modules'
 
 copyConfig = (opts) ->
   if opts.mdebug
@@ -12,25 +14,41 @@ copyConfig = (opts) ->
 
   conf = buildConfig()
 
-  currDefaultsPath = path.join path.resolve(''), "mimosa-config-commented.coffee"
+  currDefaultsPath = path.join path.resolve(''), "mimosa-config-documented.coffee"
   logger.debug "Writing config defaults file to #{currDefaultsPath}"
   defaultsConf = """
 
-                 # THE FOLLOWING IS A COMMENTED VERSION OF THE mimosa-config.coffee WITH
-                 # ALL OF THE MOST RECENT DEFAULTS. THIS FILE IS MEANT FOR REFERENCE ONLY.
+                 # The following is a commented version of the mimosa-config with all of
+                 # the defaults listed. This file is meant for reference only.
 
                  #{conf}
                  """
-  fs.writeFileSync currDefaultsPath, defaultsConf, 'ascii'
-  logger.success "Copied mimosa-config-commented.coffee into current directory."
 
-  mimosaConfigPath = path.join path.resolve(''), "mimosa-config.coffee"
-  if fs.existsSync mimosaConfigPath
-    logger.info "Not writing mimosa-config.coffee file as one exists already."
+  fs.writeFileSync currDefaultsPath, defaultsConf, 'ascii'
+
+  unless opts.suppress
+    logger.success "Copied mimosa-config-documented.coffee into current directory."
+
+  mimosaConfigPath = path.join path.resolve(''), "mimosa-config.js"
+  mimosaConfigPathCoffee = path.join path.resolve(''), "mimosa-config.coffee"
+
+  if fs.existsSync(mimosaConfigPath) or fs.existsSync(mimosaConfigPathCoffee)
+    unless opts.suppress
+      logger.info "Not writing mimosa-config file as one exists already."
   else
     logger.debug "Writing config file to #{mimosaConfigPath}"
-    fs.writeFileSync mimosaConfigPath, conf, 'ascii'
-    logger.success "Copied mimosa-config.coffee into current directory."
+    outConfigText = if moduleManager.configModuleString
+      modArray = JSON.parse(moduleManager.configModuleString)
+      modObj = modules:modArray
+      "exports.config = " + JSON.stringify( modObj, null, 2 )
+    else
+      modObj = modules: ['copy', 'jshint', 'csslint', 'server', 'require', 'minify-js', 'minify-css', 'live-reload', 'bower']
+      "exports.config = " + JSON.stringify( modObj, null, 2 )
+
+    fs.writeFileSync mimosaConfigPath, outConfigText, 'ascii'
+
+    unless opts.suppress
+      logger.success "Copied mimosa-config.js into current directory."
 
   process.exit 0
 
@@ -38,6 +56,7 @@ register = (program, callback) ->
   program
     .command('config')
     .option("-D, --mdebug", "run in debug mode")
+    .option("-s, --suppress", "suppress info message")
     .description("copy the default Mimosa config into the current folder")
     .action(callback)
     .on '--help', =>
@@ -45,7 +64,6 @@ register = (program, callback) ->
       logger.green('  And also copy a defaults file to keep as reference should you desire to alter and.')
       logger.green('  shrink the mimosa-config.')
       logger.blue( '\n    $ mimosa config\n')
-
 
 module.exports = (program) ->
   register(program, copyConfig)

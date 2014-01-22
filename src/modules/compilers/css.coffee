@@ -6,7 +6,7 @@ path =   require 'path'
 _ =      require 'lodash'
 logger =    require 'logmimosa'
 
-fileUtils = require '../../../util/file'
+fileUtils = require '../../util/file'
 
 __buildDestinationFile = (config, fileName) ->
   baseCompDir = fileName.replace(config.watch.sourceDir, config.watch.compiledDir)
@@ -22,9 +22,8 @@ __baseOptionsObject = (config, base) ->
 
 module.exports = class CSSCompiler
 
-  constructor: (config, @extensions, @compiler) ->
-    if @compiler.init
-      @compiler.init(config, @extensions)
+  constructor: (config, @compiler) ->
+    @extensions = @compiler.extensions(config)
 
   registration: (config, register) ->
     register ['buildExtension'], 'init',    @_processWatchedDirectories, [@extensions[0]]
@@ -85,7 +84,7 @@ module.exports = class CSSCompiler
         done()
       else fs.exists file.inputFileName, (exists) =>
         if exists
-          @compiler.compile file, config, options, (err, result) =>
+          @compiler.compile config, file, (err, result) =>
             if err
               logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}", {exitIfBuild:true}
             else
@@ -180,16 +179,22 @@ module.exports = class CSSCompiler
   # those imports until entire tree is built
   __importsForFile: (baseFile, file, allFiles) ->
     if fs.existsSync(file)
-      imports = fs.readFileSync(file, 'utf8').match(@compiler.importRegex)
+      importMatches = fs.readFileSync(file, 'utf8').match(@compiler.importRegex)
 
-    return unless imports?
+    return unless importMatches?
 
-    logger.debug "Imports for file [[ #{file} ]]: #{imports}"
+    logger.debug "Imports for file [[ #{file} ]]: #{importMatches}"
 
-    for anImport in imports
-
+    imports = []
+    for anImport in importMatches
       @compiler.importRegex.lastIndex = 0
-      importPath = @compiler.importRegex.exec(anImport)[1]
+      anImport = @compiler.importRegex.exec(anImport)[1]
+      if @compiler.importSplitRegex
+        imports.push.apply(imports, anImport.split(@compiler.importSplitRegex))
+      else
+        imports.push(anImport)
+    for importPath in imports
+
       fullImportFilePath = @compiler.getImportFilePath(file, importPath)
 
       includeFiles = if path.extname(fullImportFilePath) is ".css" and @compiler.canFullyImportCSS

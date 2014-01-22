@@ -6,7 +6,7 @@ fs = require 'fs'
 _ = require "lodash"
 logger = require 'logmimosa'
 
-fileUtils = require '../../../util/file'
+fileUtils = require '../../util/file'
 
 _genMapFileName = (config, file) ->
   extName = path.extname file.inputFileName
@@ -45,13 +45,14 @@ _cleanUpSourceMapsRegister = (register, extensions) ->
 
 module.exports = class JSCompiler
 
-  constructor: (config, @extensions, @compiler) ->
+  constructor: (config, @compiler) ->
 
   registration: (config, register) ->
-    register ['add','update','buildFile'], 'compile', @_compile, @extensions
+    exts = @compiler.extensions(config)
+    register ['add','update','buildFile'], 'compile', @_compile, exts
 
     if @compiler.cleanUpSourceMaps
-      _cleanUpSourceMapsRegister register, @extensions
+      _cleanUpSourceMapsRegister register, exts
 
   _compile: (config, options, next) =>
     hasFiles = options.files?.length > 0
@@ -69,7 +70,7 @@ module.exports = class JSCompiler
     options.files.forEach (file) =>
 
       if logger.isDebug
-        logger.debug "Calling compiler function for compiler [[ " + @compiler.base + " ]]"
+        logger.debug "Calling compiler function for compiler [[ " + @compiler.name + " ]]"
 
       @compiler.compile config, file, (err, output, compilerConfig, sourceMap) =>
         if err
@@ -85,7 +86,11 @@ module.exports = class JSCompiler
 
               base64SourceMap = new Buffer(JSON.stringify(sourceMap)).toString('base64')
               datauri = 'data:application/json;base64,' + base64SourceMap
-              output = "#{output}\n//@ sourceMappingURL=#{datauri}\n"
+              if compilerConfig.sourceMapConditional
+                output = "#{output}\n//@ sourceMappingURL=#{datauri}\n"
+              else
+                output = "#{output}\n//# sourceMappingURL=#{datauri}\n"
+
 
             else
               whenDone += 2
@@ -104,9 +109,10 @@ module.exports = class JSCompiler
                   logger.error "Error writing map file [[ #{file.sourceMapName} ]], #{err}"
                 done()
 
-              # @ is deprecated but # not widely supported in current release browsers
-              # output = "#{output}\n/*\n//# sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
-              output = "#{output}\n/*\n//@ sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
+              if compilerConfig.sourceMapConditional
+                output = "#{output}\n/*\n//@ sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
+              else
+                output = "#{output}\n/*\n//# sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
 
           file.outputFileText = output
           newFiles.push file

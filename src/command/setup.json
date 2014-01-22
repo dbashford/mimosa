@@ -3,7 +3,9 @@
     "javascript": [
       {
         "prettyName": "Coco - https://github.com/satyr/coco",
-        "base": "coco",
+        "name": "coco",
+        "library": "coco",
+        "version": "0.9.1",
         "defaultExtensions": [
           "co"
         ]
@@ -11,35 +13,41 @@
       {
         "isDefault": true,
         "prettyName": "(*) CoffeeScript - http://coffeescript.org/",
-        "base": "coffee",
+        "name": "coffeescript",
+        "library": "coffee-script",
+        "version": "1.6.3",
         "defaultExtensions": [
           "coffee"
         ]
       },
       {
         "prettyName": "Iced CoffeeScript - http://maxtaco.github.com/coffee-script/",
-        "base": "iced",
+        "name": "iced-coffeescript",
+        "library": "iced-coffee-script",
+        "version": "1.6.3-j",
         "defaultExtensions": [
           "iced"
         ]
       },
       {
         "prettyName": "LiveScript - http://gkz.github.com/LiveScript/",
-        "base": "livescript",
+        "name": "livescript",
+        "library": "LiveScript",
+        "version": "1.2.0",
         "defaultExtensions": [
           "ls"
         ]
       },
       {
         "prettyName": "None (Raw JavaScript)",
-        "base": "none",
+        "name": "none",
         "defaultExtensions": [
           "js"
         ]
       },
       {
         "prettyName": "TypeScript - http://www.typescriptlang.org",
-        "base": "typescript",
+        "name": "typescript",
         "defaultExtensions": [
           "ts"
         ]
@@ -48,21 +56,21 @@
     "css": [
       {
         "prettyName": "LESS - http://lesscss.org/",
-        "base": "less",
+        "name": "less",
         "defaultExtensions": [
           "less"
         ]
       },
       {
         "prettyName": "None (Raw CSS)",
-        "base": "none",
+        "name": "none",
         "defaultExtensions": [
           "css"
         ]
       },
       {
         "prettyName": "SASS - http://sass-lang.com/",
-        "base": "sass",
+        "name": "sass",
         "defaultExtensions": [
           "scss"
         ]
@@ -70,7 +78,7 @@
       {
         "isDefault": true,
         "prettyName": "(*) Stylus - http://learnboost.github.com/stylus/",
-        "base": "stylus",
+        "name": "stylus",
         "defaultExtensions": [
           "styl"
         ]
@@ -79,63 +87,58 @@
     "template": [
       {
         "prettyName": "(*) Dust - https://github.com/linkedin/dustjs/",
-        "base": "dust",
+        "name": "dust",
         "defaultExtensions": ["dust"]
       },
       {
         "prettyName": "Embedded CoffeeScript Templates (ECO) - https://github.com/sstephenson/eco",
-        "base": "eco",
+        "name": "eco",
         "defaultExtensions": ["eco"]
       },
       {
         "prettyName": "Embedded JavaScript Templates (EJS) - https://github.com/visionmedia/ejs",
-        "base": "ejs",
+        "name": "ejs",
         "defaultExtensions": ["ejs"]
-      },
-      {
-        "prettyName": "Emblem - http://emblemjs.com/",
-        "base": "emblem",
-        "defaultExtensions": ["emblem"]
       },
       {
         "isDefault": true,
         "prettyName": "(*) Handlebars - http://handlebarsjs.com/",
-        "base": "handlebars",
+        "name": "handlebars",
         "defaultExtensions": ["hbs"]
       },
       {
         "prettyName": "Hogan - http://twitter.github.com/hogan.js/",
-        "base": "hogan",
+        "name": "hogan",
         "defaultExtensions": ["hogan"]
       },
       {
         "prettyName": "HTML - Just Plain HTML Snippets, no compiling",
-        "base": "html",
+        "name": "html-templates",
         "defaultExtensions": ["template"]
       },
       {
         "prettyName": "Jade - http://jade-lang.com/",
-        "base": "jade",
+        "name": "jade",
         "defaultExtensions": ["jade"]
       },
       {
         "prettyName": "LoDash - http://lodash.com/docs#template",
-        "base": "lodash",
+        "name": "lodash",
         "defaultExtensions": ["tmpl"]
       },
       {
         "prettyName": "None (No Templating)",
-        "base": "none",
+        "name": "none",
         "defaultExtensions": ["html"]
       },
       {
         "prettyName": "Ractive - http://www.ractivejs.org/",
-        "base": "ractive",
+        "name": "ractive",
         "defaultExtensions": ["rtv"]
       },
       {
         "prettyName": "Underscore - http://underscorejs.org/#template",
-        "base": "underscore",
+        "name": "underscore",
         "defaultExtensions": ["tpl"]
       }
     ]
@@ -147,6 +150,8 @@
     },
     {
       "name":"Express",
+      "library":"express",
+      "version":"3.4.7",
       "prettyName":"(*) Express - http://expressjs.com/",
       "isDefault":true
     },
@@ -158,6 +163,7 @@
   "views": [
     {
       "name":"jade",
+      "version": "0.35.0",
       "prettyName":"(*) Jade - http://jade-lang.com/",
       "library": "jade",
       "extension":"jade",
@@ -165,30 +171,35 @@
     },
     {
       "name":"hogan",
+      "version": "2.0.0",
       "prettyName":"Hogan - http://twitter.github.com/hogan.js/",
       "library": "hogan.js",
       "extension":"hjs"
     },
     {
       "name":"html",
+      "version": "0.8.5",
       "prettyName":"Plain HTML",
       "library": "ejs",
       "extension":"html"
     },
     {
       "name":"ejs",
+      "version": "0.8.5",
       "prettyName":"Embedded JavaScript Templates (EJS) - https://github.com/visionmedia/ejs",
       "library": "ejs",
       "extension":"ejs"
     },
     {
       "name":"handlebars",
+      "version": "1.2.1",
       "prettyName":"Handlebars - http://handlebarsjs.com/",
       "library": "handlebars",
       "extension":"hbs"
     },
     {
       "name":"dust",
+      "version": "2.2.2",
       "prettyName":"Dust - http://linkedin.github.io/dustjs/",
       "library": "dustjs-linkedin",
       "extension":"dust"
