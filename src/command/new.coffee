@@ -20,10 +20,11 @@ outConfig = {}
 devDependencies ={}
 packageJson = null
 skeletonOutPath = process.cwd()
+windowsDrive = /^[A-Za-z]:\\/
 
 printHelp = ->
   logger.green('  The new command will take you through a series of questions regarding what')
-  logger.green('  JavaScript meta-language, CSS meta-language, micro-templating library, server')
+  logger.green('  JavaScript transpiler, CSS preprocessor, micro-templating library, server')
   logger.green('  and server view technology you would like to use to build your project. Once')
   logger.green('  you have answered the questions, Mimosa will create a directory using the name')
   logger.green('  you provided, and place a project skeleton inside of it.  That project skeleton')
@@ -39,7 +40,7 @@ printHelp = ->
 
 moveDirectoryContents = (sourcePath, outPath) ->
   unless fs.existsSync outPath
-    fs.mkdirSync outPath
+    wrench.mkdirSyncRecursive outPath, 0o0777
 
   for item in wrench.readdirSyncRecursive(sourcePath)
     fullSourcePath = path.join sourcePath, item
@@ -283,12 +284,12 @@ prompting = ->
   logger.green "  favorites. Feel free to hit the web to research your selections, Mimosa will"
   logger.green "  be here when you get back."
 
-  logger.green "\n  To start, please choose your JavaScript meta-language: \n"
+  logger.green "\n  To start, please choose your JavaScript transpiler: \n"
 
   program.choose _.pluck(compilers.javascript, 'prettyName'), (i) ->
     logger.blue "\n  You chose #{compilers.javascript[i].prettyName}."
     chosen = {javascript: compilers.javascript[i]}
-    logger.green "\n  Choose your CSS meta-language:\n"
+    logger.green "\n  Choose your CSS preprocessor:\n"
     program.choose _.pluck(compilers.css, 'prettyName'), (i) ->
       logger.blue "\n  You chose #{compilers.css[i].prettyName}."
       chosen.css = compilers.css[i]
@@ -307,6 +308,10 @@ prompting = ->
             logger.green "\n  Creating and setting up your project... \n"
             create(chosen)
 
+
+isSystemPath = (str) ->
+  windowsDrive.test(str) or str.indexOf("/") is 0
+
 newProject = (name, opts) ->
   if opts.mdebug
     opts.debug = true
@@ -318,8 +323,13 @@ newProject = (name, opts) ->
   logger.debug "Project name: #{name}"
 
   if name
-    projectName = name
-    outPath = path.join process.cwd(), projectName
+    outPath = if isSystemPath(name)
+      projectName = path.basename(projectName)
+      name
+    else
+      projectName = name
+      path.join process.cwd(), projectName
+
     if fs.existsSync outPath
       logger.error "Directory/file exists at [[ #{outPath} ]], cannot continue."
       process.exit 0
