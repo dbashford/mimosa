@@ -1,4 +1,6 @@
-## 2.0.0 - Jan 23/24 2014
+## 2.0.0 - Jan 23 2014
+
+Note: Some skeletons may take some time to be updated for the changes to `2.0`.  All skeletons at least have a pending pull request to make the needed changes.
 
 With `2.0` all of Mimosa's compilers, which were previously internal to Mimosa, are now external in their own modules. So, for instance, this means there is now a [mimosa-coffeescript](https://github.com/dbashford/mimosa-coffeescript) module and a [mimosa-stylus](https://github.com/dbashford/mimosa-stylus).  All of the JavaScript transpilers, CSS proprocessors, micro-template compilers, and the copy "compiler" have their own Mimosa modules.
 
