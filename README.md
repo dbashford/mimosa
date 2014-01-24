@@ -9,7 +9,7 @@
 
 ## Quick Start
 
-There is a ton of docs on [the site](http://www.mimosa.io) to get you started, but here's a quick start.
+There are a ton of docs on [the site](http://www.mimosa.io) to get you started, but here's a quick start.
 
 * Install [node.js](http://nodejs.org/).  A `.10` version.
 * `npm install -g mimosa`
