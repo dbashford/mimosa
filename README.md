@@ -4,20 +4,20 @@
 
 ### Questions?
 
-[Google Group](https://groups.google.com/forum/#!forum/mimosajs)
-[Twitter @mimosajs](https://twitter.com/mimosajs/)
+* [Google Group](https://groups.google.com/forum/#!forum/mimosajs)
+* [Twitter @mimosajs](https://twitter.com/mimosajs/)
 
 ## Quick Start
 
 There is a ton of docs on [the site](http://www.mimosa.io) to get you started, but here's a quick start.
 
-1) Install [node.js](http://nodejs.org/).  A `.10` version.
-2) `npm install -g mimosa`
-3) `mimosa new testproject`
-4) Follow the prompts to choose some assets
-5) `cd testproject`
-6) `mimosa watch -s`
-7) http://localhost:3000
+* Install [node.js](http://nodejs.org/).  A `.10` version.
+* `npm install -g mimosa`
+* `mimosa new testproject`
+* Follow the prompts to choose some assets
+* `cd testproject`
+* `mimosa watch -s`
+* http://localhost:3000
 
 Now you are ready to rock!
 
