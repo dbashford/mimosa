@@ -1,12 +1,37 @@
-[Visit the Mimosa Website](http://www.mimosa.io)
-
 [![Build Status](https://travis-ci.org/dbashford/mimosa.png?branch=master)](https://travis-ci.org/dbashford/mimosa)
+
+[Visit the Mimosa Website](http://www.mimosa.io) for all sorts of Mimosa documentation goodness.
+
+### Questions?
+
+[Google Group](https://groups.google.com/forum/#!forum/mimosajs)
+[Twitter @mimosajs](https://twitter.com/mimosajs/)
+
+## Quick Start
+
+There is a ton of docs on [the site](http://www.mimosa.io) to get you started, but here's a quick start.
+
+1) Install [node.js](http://nodejs.org/).  A `.10` version.
+2) `npm install -g mimosa`
+3) `mimosa new testproject`
+4) Follow the prompts to choose some assets
+5) `cd testproject`
+6) `mimosa watch -s`
+7) http://localhost:3000
+
+Now you are ready to rock!
+
+Maybe you want to start with something other than an empty app?  Maybe you want to start with a preconfigured Ember app for instance?
+
+`mimosa skel:list`
+
+That will get you a list of the skeletons currently available for Mimosa that might help jumpstart your app.
 
 ## License
 
 (The MIT License)
 
-Copyright (c) 2012 David Bashford
+Copyright (c) 2014 David Bashford
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
