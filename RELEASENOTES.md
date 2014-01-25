@@ -1,3 +1,8 @@
+## 2.0.1 - Jan ?? 2014
+
+### Major Changes
+* __New Module: [mimosa-generator](https://github.com/dbasford/mimosa-regenerator). This module will transpile your ES6 generators down to valid ES5 javascript.
+
 ## 2.0.0 - Jan 23 2014
 
 Note: Some skeletons may take some time to be updated for the changes to `2.0`.  All skeletons at least have a pending pull request to make the needed changes.
