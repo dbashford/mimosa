@@ -60,9 +60,9 @@ register = (program, callback) ->
     .description("copy the default Mimosa config into the current folder")
     .action(callback)
     .on '--help', =>
-      logger.green('  The config command will copy the default Mimosa config to the current directory.')
-      logger.green('  And also copy a defaults file to keep as reference should you desire to alter and.')
-      logger.green('  shrink the mimosa-config.')
+      logger.green('  The config command will create a mimosa-config.js in the current directory. It will')
+      logger.green('  also create a mimosa-config-documented.coffee which contains all of the various')
+      logger.green('  configuration documentation for each module that is a part of your project.')
       logger.blue( '\n    $ mimosa config\n')
 
 module.exports = (program) ->
