@@ -1,6 +1,7 @@
 ## 2.0.2 - Jan 27 2014
 
 ### Minor Changes
+* [skelmimosa #22](https://github.com/dbashford/skelmimosa/issues/22). `mimosa skel:new` will now automatically clean up any `.gitkeep` files that might be laying around the skeleton.
 * [mimosa #351](https://github.com/dbashford/mimosa/issues/251). Fixed problem with `mimosa new` and folders that had both dashes and dots in the name, like `/www.my-site.com/`.
 
 ## 2.0.1 - Jan 26 2014
