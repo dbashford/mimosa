@@ -1,10 +1,11 @@
 ## 2.0.1 - Jan 26 2014
 
-### Minor Changes
-* Fixed `mimosa config` help message.
-
 ### Major Changes
 * __New Module: [mimosa-generator](https://github.com/dbasford/mimosa-regenerator). This module will transpile your ES6 generators down to valid ES5 javascript.
+
+### Minor Changes
+* [mimosa-web-package #9](https://github.com/dbashford/mimosa-web-package/pull/9). This PR to web-package allows config files to be outside the root of the distributed web package.
+* Fixed `mimosa config` help message.
 
 ## 2.0.0 - Jan 23 2014
 
