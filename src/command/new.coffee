@@ -172,7 +172,7 @@ copyCompilerSpecificExampleFiles = (comps) ->
     fs.unlinkSync templateView
     cssFramework = if comps.css.name is "none" then "pure CSS" else comps.css.name
     data = data.replace "CSSHERE", cssFramework
-    templateView = templateView.replace /-\w+\./, "."
+    templateView = templateView.replace /-\w+\.(\w+)$/, ".$1"
     fs.writeFile templateView, data
 
 moveViews = (chosen) ->

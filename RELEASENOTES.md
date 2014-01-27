@@ -1,3 +1,8 @@
+## 2.0.2 - Jan 27 2014
+
+### Minor Changes
+* [mimosa #351](https://github.com/dbashford/mimosa/issues/251). Fixed problem with `mimosa new` and folders that had both dashes and dots in the name, like `/www.my-site.com/`.
+
 ## 2.0.1 - Jan 26 2014
 
 ### Major Changes
