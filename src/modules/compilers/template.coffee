@@ -85,15 +85,16 @@ module.exports = class TemplateCompiler
     register ['buildExtension'],        'compile',      @_compile,     [@extensions[0]]
     register ['add','update','remove'], 'compile',      @_compile,     @extensions
 
-    register ['remove'], 'init', @_testForRemoveClientLibrary, @extensions
-
     register ['cleanFile'],             'init',         @_removeFiles, @extensions
 
     register ['buildExtension'],        'afterCompile', @_merge,       [@extensions[0]]
     register ['add','update','remove'], 'afterCompile', @_merge,       @extensions
 
-    register ['add','update'],   'afterCompile', @_readInClientLibrary, @extensions
-    register ['buildExtension'], 'afterCompile', @_readInClientLibrary, [@extensions[0]]
+    if config.template.writeLibrary
+      register ['remove'], 'init', @_testForRemoveClientLibrary, @extensions
+
+      register ['add','update'],   'afterCompile', @_readInClientLibrary, @extensions
+      register ['buildExtension'], 'afterCompile', @_readInClientLibrary, [@extensions[0]]
 
   _gatherFiles: (config, options, next) =>
     options.files = []

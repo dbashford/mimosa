@@ -1,3 +1,11 @@
+## 2.0.4 - Jan 28 2014
+
+### Major Changes
+* __New Module: [mimosa-handlebars-on-window](https://github.com/dbasford/mimosa-handlebars-on-window). A dead simple module that will alter `handlebars.js` source slightly to attach `Handlebars` to the `window` object. Solves some current issues with Ember.js and r.js optimized builds.  Also allows for managing Handlebars via Bower.
+
+### Minor Changes
+* [mimosa #354](https://github.com/dbashford/mimosa/issues/354). Added `template.writeLibrary` config to allow for not writing template libraries, like `handlebars.js`.  By default Mimosa's template compiler functionality will write an AMD version of the client library.
+
 ## 2.0.3 - Jan 27 2014
 
 ### Minor Changes

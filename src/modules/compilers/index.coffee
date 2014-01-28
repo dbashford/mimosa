@@ -63,6 +63,7 @@ exports.registration = (config, register) ->
 
 exports.defaults = ->
   template:
+    writeLibrary: true
     wrapType: "amd"
     commonLibPath: null
     nameTransform:"fileName"
@@ -74,6 +75,8 @@ exports.placeholder = ->
 
     # template:                         # overall template object can be set to null if no
                                         # templates being used
+      # writeLibrary: true              # Whether or not to write a client library for
+                                        # any template compilers
       # nameTransform: "fileName"       # means by which Mimosa creates the name for each
                                         # template, options: default "fileName" is name of file,
                                         # "filePath" is path of file after watch.sourceDir
@@ -115,6 +118,8 @@ exports.validate = (config, validators) ->
   errors = []
 
   if validators.ifExistsIsObject(errors, "template config", config.template)
+    validators.ifExistsIsBoolean( errors, "template.writeLibrary", config.template.writeLibrary )
+
     if config.template.output and config.template.outputFileName
       delete config.template.outputFileName
 
