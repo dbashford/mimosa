@@ -1,10 +1,10 @@
 {
   "name": "mimosa",
   "preferGlobal": "true",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "homepage": "http://www.mimosa.io",
   "author": "David Bashford",
-  "description": "A modern browser development toolkit and application assembler. Compile, lint, optimize, serve and more.",
+  "description": "A lighting-fast, modular, next generation browser development tool.",
   "contributors": [
     {
       "name": "David Bashford",

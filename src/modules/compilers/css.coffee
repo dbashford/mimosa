@@ -165,7 +165,7 @@ module.exports = class CSSCompiler
       includeToBaseHash[fileName]?
 
   __getAllFiles: (config) =>
-    files = fileUtils.readdirSyncRecursive(config.watch.sourceDir, config.watch.exclude, config.watch.excludeRegex)
+    files = fileUtils.readdirSyncRecursive(config.watch.sourceDir, config.watch.exclude, config.watch.excludeRegex, true)
       .filter (file) =>
         @extensions.some (ext) ->
           fileExt = file.slice(-(ext.length+1))
