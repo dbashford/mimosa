@@ -1,3 +1,8 @@
+## 2.0.5 - Jan ?? 2014
+
+### Minor Changes
+* [mimosa-coffeelint #2](https://github.com/dbashford/mimosa-coffeelint/pull/2). Via PR, got coffeelint working with mimosa 2.0.  Also upgraded coffeelint.
+
 ## 2.0.4 - Jan 28 2014
 
 ### Major Changes
