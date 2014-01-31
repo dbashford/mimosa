@@ -1,9 +1,12 @@
-## 2.0.5 - Feb ?? 2014
+## 2.0.5 - Jan 31 2014
 
 ### Minor Changes
+* [mimosa-require #28](https://github.com/dbashford/mimosa-require/pull/28). Fixed issue where the r.js `optimize` flag could not be overridden.
+* [skelmimosa](https://github.com/dbashford/skelmimosa). Updated `mod:list` be more compact, view better with fewer columns.  Updated dependencies.
+
+### External Module Updates
 * [mimosa-coffeelint #2](https://github.com/dbashford/mimosa-coffeelint/pull/2). Via PR, got coffeelint working with mimosa 2.0.  Also upgraded coffeelint.
 * [mimosa-coffeescript](https://github.com/dbashford/mimosa-coffeescript) and  [mimosa-iced-coffeescript](https://github.com/dbashford/mimosa-iced-coffeescript) were both updated to their latest versions with the release of CoffeeScript 1.7.
-* [skelmimosa](https://github.com/dbashford/skelmimosa). Updated `mod:list` be more compact, view better with fewer columns.  Updated dependencies.
 
 ## 2.0.4 - Jan 28 2014
 
