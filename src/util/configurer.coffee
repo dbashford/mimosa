@@ -312,6 +312,7 @@ processConfig = (opts, callback) ->
 
 
 _setModulesIntoConfig = (config) ->
+  config.logger = logger
   config.installedModules = {}
   moduleManager.getConfiguredModules().forEach  (mod) ->
     config.installedModules[mod.__mimosaModuleName] = mod
