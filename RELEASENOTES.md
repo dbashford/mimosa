@@ -3,6 +3,7 @@
 ### Minor Changes
 * [mimosa-coffeelint #2](https://github.com/dbashford/mimosa-coffeelint/pull/2). Via PR, got coffeelint working with mimosa 2.0.  Also upgraded coffeelint.
 * [mimosa-coffeescript](https://github.com/dbashford/mimosa-coffeescript) and  [mimosa-iced-coffeescript](https://github.com/dbashford/mimosa-iced-coffeescript) were both updated to their latest versions with the release of CoffeeScript 1.7.
+* [skelmimosa](https://github.com/dbashford/skelmimosa). Updated `mod:list` be more compact, view better with fewer columns.  Updated dependencies.
 
 ## 2.0.4 - Jan 28 2014
 
