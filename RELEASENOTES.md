@@ -1,3 +1,8 @@
+## 2.0.6 - Feb 1 2014
+
+### Minor Changes
+* [mimosa #356](https://github.com/dbashford/mimosa/issues/356). Now registering coffeescript if coffeescript config file detected.
+
 ## 2.0.5 - Jan 31 2014
 
 ### Minor Changes
