@@ -6,7 +6,7 @@ fs =   require 'fs'
 wrench = require 'wrench'
 logger = require 'logmimosa'
 _      = require 'lodash'
-require 'coffee-script'
+coffeescript = require 'coffee-script'
 
 validators =    require './validators'
 moduleManager = require '../modules'
@@ -150,7 +150,10 @@ _validateWatchConfig = (config) ->
   errors
 
 _requireConfig = (configPath) ->
-  if path.extname configPath
+  extname = path.extname configPath
+  if extname
+    if extname is ".coffee"
+      coffeescript.register()
     require configPath
   else
     raw = fs.readFileSync configPath, "utf8"
