@@ -1,3 +1,14 @@
+## 2.1.0 (upcoming) - Feb ?? 2014
+
+This release will almost entirely be logging related.
+
+* The logger itself will be attached to the `mimosaConfig` that Mimosa provides to all of the modules when the module's code is called. This removes the need for every module to have a dependency on the logger and means all the modules will use the same version: the one that Mimosa core has.
+* Previous the logging config was under `growl` and the only configuration for logging related to when and if to send growl messages.  That will be changing, so the root config object will now simple be `logger`.
+* Added to the new `logger.growl` config will be an `enabled` flag which is a quick means to disable growling entirely.
+* Added to the `logger` config will be `warn`, `info`, and `success` flags which will control whether or not those log messages get written to the console.
+* Some folks have issues seeing some of the log messages because of the colors they use in their terminals. The colors and styling for `error`, `warn`, `info` and `success` will be configurable.
+* Going to try and do some work to colorize the important pieces of log messages. Up to this point the names of files have been surrounded with double brackets, like `[[ /some/file ]]`.  Where possible the double brackets will be removed and the contents will be specifically colorized.
+
 ## 2.0.6 - Feb 1 2014
 
 ### Minor Changes
