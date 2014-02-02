@@ -9,6 +9,7 @@ This release will almost entirely be logging related.
 * Some folks have issues seeing some of the log messages because of the colors they use in their terminals. The colors and styling for `debug`, `error`, `warn`, `info` and `success` will be configurable.
 * Going to try and do some work to colorize the important pieces of log messages. Up to this point the names of files have been surrounded with double brackets, like `[[ /some/file ]]`.  Where possible the double brackets will be removed and the contents will be specifically colorized.
 * All of the modules I have control over will be updated to remove the `logmimosa` dependency and use the `mimosaConfig.log` library.
+* For a short period of time the old `growl` config will be deprecated but supported.
 
 ## 2.0.6 - Feb 1 2014
 
