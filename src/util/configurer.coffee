@@ -104,7 +104,11 @@ _validateWatchConfig = (config) ->
   if typeof config.watch.compiledDir is "string"
     config.watch.compiledDir = validators.determinePath config.watch.compiledDir, config.root
     if not fs.existsSync(config.watch.compiledDir) and not config.isForceClean
-      logger.info "Did not find compiled directory [[ #{config.watch.compiledDir} ]], so making it for you"
+      if config.logger?.info?
+        if config.logger.info.enabled
+          logger.info "Did not find compiled directory [[ #{config.watch.compiledDir} ]], so making it for you"
+      else
+        logger.info "Did not find compiled directory [[ #{config.watch.compiledDir} ]], so making it for you"
       wrench.mkdirSyncRecursive config.watch.compiledDir, 0o0777
   else
     errors.push "watch.compiledDir must be a string"
@@ -132,11 +136,16 @@ _validateWatchConfig = (config) ->
 
   if validators.ifExistsIsBoolean(errors, "watch.usePolling", config.watch.usePolling)
     if process.platform isnt 'win32' and config.watch.usePolling is false
-      logger.warn """
+      msg = """
           You have turned polling off (usePolling:false) but you are on not on Windows. If you
           experience EMFILE issues, this is why. usePolling:false does not function properly on
           other operating systems.
         """
+      if config.logger?.warn?
+        if config.logger.warn.enabled
+          logger.info msg
+      else
+        logger.info msg
 
   if validators.ifExistsIsObject(errors, "vendor config", config.vendor)
     if validators.ifExistsIsString(errors, "vendor.javascripts", config.vendor.javascripts)
@@ -272,8 +281,6 @@ processConfig = (opts, callback) ->
     logger.warn "No configuration file found (mimosa-config.coffee/mimosa-config.js/mimosa-config), running from current directory using Mimosa's defaults."
     logger.warn "Run 'mimosa config' to copy the default Mimosa configuration to the current directory."
 
-  logger.debug "Your mimosa config:\n#{JSON.stringify(config, null, 2)}"
-
   if opts.profile
     unless config.profileLocation
       config.profileLocation = "profiles"
@@ -309,13 +316,19 @@ processConfig = (opts, callback) ->
       process.exit 1
     else
       _setModulesIntoConfig newConfig
-      logger.debug "Full mimosa config:\n#{JSON.stringify(newConfig, null, 2)}"
       logger.setConfig newConfig
+
+      if logger.isDebug()
+        logger.debug "******************"
+        logger.debug "Your mimosa config:\n#{JSON.stringify(config, null, 2)}"
+        logger.debug "******************"
+        logger.debug "Full mimosa config:\n#{JSON.stringify(newConfig, null, 2)}"
+        logger.debug "******************"
+
       callback newConfig, modules
 
-
 _setModulesIntoConfig = (config) ->
-  config.logger = logger
+  config.log = logger
   config.installedModules = {}
   moduleManager.getConfiguredModules().forEach  (mod) ->
     config.installedModules[mod.__mimosaModuleName] = mod

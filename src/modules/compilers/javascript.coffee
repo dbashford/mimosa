@@ -69,7 +69,7 @@ module.exports = class JSCompiler
 
     options.files.forEach (file) =>
 
-      if logger.isDebug
+      if logger.isDebug()
         logger.debug "Calling compiler function for compiler [[ " + @compiler.name + " ]]"
 
       @compiler.compile config, file, (err, output, compilerConfig, sourceMap) =>

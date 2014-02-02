@@ -80,7 +80,7 @@ createWithDefaults = ->
   chosen.server =     (servers.filter              (item) -> item.isDefault)[0]
   chosen.views =      (views.filter                (item) -> item.isDefault)[0]
 
-  if logger.isDebug
+  if logger.isDebug()
     logger.debug "Chosen items :\n#{JSON.stringify(chosen, null, 2)}"
 
   create(chosen)
@@ -273,7 +273,7 @@ writeConfigs = ->
       process.stdin.destroy()
 
 prompting = ->
-  if logger.isDebug
+  if logger.isDebug()
     logger.debug "Compilers :\n#{JSON.stringify(compilers, null, 2)}"
 
   logger.green "\n  Mimosa will guide you through technology selection and project creation. For"

@@ -30,7 +30,7 @@ _testDifferentTemplateLibraries = (config, options, next) ->
 exports.setupCompilers = (config) ->
   for modName, mod of config.installedModules
     if mod.compilerType
-      if logger.isDebug
+      if logger.isDebug()
         logger.debug( "Found compiler [[ #{mod.name} ]], adding to array of compilers");
       compilers.push mod
 
@@ -43,7 +43,7 @@ exports.setupCompilers = (config) ->
 
 exports.registration = (config, register) ->
   for compiler in compilers
-    if logger.isDebug
+    if logger.isDebug()
       logger.debug "Creating compiler " + compiler.name
 
     CompilerClass = switch compiler.compilerType
@@ -55,7 +55,7 @@ exports.registration = (config, register) ->
     compilerInstance.name = compiler.name
     compilerInstance.registration(config, register)
 
-    if logger.isDebug
+    if logger.isDebug()
       logger.debug "Done with compiler " + compiler.name
 
   if config.template

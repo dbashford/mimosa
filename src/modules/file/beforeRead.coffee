@@ -35,7 +35,7 @@ _fileNeedsCompiling = (config, options, next) ->
         if isNewer
           newFiles.push file
         else
-          if logger.isDebug
+          if logger.isDebug()
             logger.debug "Not processing [[ #{file.inputFileName} ]] as it is not newer than destination file."
         done()
 
