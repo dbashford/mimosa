@@ -27,7 +27,8 @@ class MimosaFileWriteModule
       if file.outputFileText is ""
         logger.warn "Compile of file [[ #{file.inputFileName} ]] resulted in empty output."
 
-      logger.debug "Writing file [[ #{file.outputFileName} ]]"
+      if logger.isDebug()
+        logger.debug "Writing file [[ #{file.outputFileName} ]]"
 
       fileUtils.writeFile file.outputFileName, file.outputFileText, (err) =>
         if err?

@@ -14,9 +14,12 @@ class MimosaFileDeleteModule
     fileName = options.destinationFile(options.inputFile)
     fs.exists fileName, (exists) ->
       unless exists
-        logger.debug "File does not exist? [[ #{fileName} ]]"
+        if logger.isDebug()
+          logger.debug "File does not exist? [[ #{fileName} ]]"
         return next()
-      logger.debug "Removing file [[ #{fileName} ]]"
+
+      if logger.isDebug()
+        logger.debug "Removing file [[ #{fileName} ]]"
       fs.unlink fileName, (err) ->
         if err
           logger.error "Failed to delete file [[ #{fileName} ]]"

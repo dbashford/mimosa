@@ -25,7 +25,8 @@ class MimosaCleanModule
     _.sortBy(directories, 'length').reverse().forEach (dir) ->
       dirPath = path.join(config.watch.compiledDir, dir)
       if fs.existsSync dirPath
-        logger.debug "Deleting directory [[ #{dirPath} ]]"
+        if logger.isDebug()
+          logger.debug "Deleting directory [[ #{dirPath} ]]"
         try
           fs.rmdirSync dirPath
           logger.success "Deleted empty directory [[ #{dirPath} ]]"

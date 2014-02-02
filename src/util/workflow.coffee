@@ -189,7 +189,8 @@ module.exports = class WorkflowManager
   hash:{}
 
   _finishedWithFile: (options) =>
-    logger.debug "Finished with file: [[ #{options.inputFile} ]]"
+    if logger.isDebug()
+      logger.debug "Finished with file: [[ #{options.inputFile} ]]"
     #@doneFiles.push(options.inputFile)
     #console.log _.difference(@initialFiles, @doneFiles)
     #console.log "finished #{@initialFilesHandled + 1} of #{@initialFileCount}"

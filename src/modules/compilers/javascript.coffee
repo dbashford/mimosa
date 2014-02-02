@@ -30,7 +30,8 @@ _cleanUpSourceMaps = (config, options, next) ->
             if err
               logger.error "Error deleting file [[ #{f} ]], #{err}"
             else
-              logger.debug "Deleted file [[ #{f} ]]"
+              if logger.isDebug()
+                logger.debug "Deleted file [[ #{f} ]]"
             done()
         else
           done()

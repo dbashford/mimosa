@@ -37,7 +37,8 @@ __removeClientLibrary = (clientPath, cb) ->
   if clientPath?
     fs.exists clientPath, (exists) ->
       if exists
-        logger.debug "Removing client library [[ #{clientPath} ]]"
+        if logger.isDebug()
+          logger.debug "Removing client library [[ #{clientPath} ]]"
         fs.unlink clientPath, (err) ->
           logger.success "Deleted file [[ #{clientPath} ]]" unless err
           cb()
@@ -138,7 +139,8 @@ module.exports = class TemplateCompiler
 
     newFiles = []
     options.files.forEach (file, i) =>
-      logger.debug "Compiling template [[ #{file.inputFileName} ]]"
+      if logger.isDebug()
+        logger.debug "Compiling template [[ #{file.inputFileName} ]]"
       file.templateName = __generateTemplateName(file.inputFileName, config)
       @compiler.compile config, file, (err, result) =>
         if err
@@ -220,7 +222,8 @@ module.exports = class TemplateCompiler
       logger.debug "Not going to write template client library"
       return next()
 
-    logger.debug "Adding template client library [[ #{@compiler.clientLibrary} ]] to list of files to write"
+    if logger.isDebug()
+      logger.debug "Adding template client library [[ #{@compiler.clientLibrary} ]] to list of files to write"
 
     fs.readFile @compiler.clientLibrary, "utf8", (err, data) =>
       if err

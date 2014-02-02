@@ -292,10 +292,13 @@ processConfig = (opts, callback) ->
       catch err
         return logger.fatal "Improperly formatted configuration file [[ #{profileConfigPath} ]]: #{err}"
 
-      logger.debug "Profile config:\n#{JSON.stringify(profileConfig, null, 2)}"
+      if logger.isDebug()
+        logger.debug "Profile config:\n#{JSON.stringify(profileConfig, null, 2)}"
 
       config = _extend config, profileConfig
-      logger.debug "mimosa config after profile applied:\n#{JSON.stringify(config, null, 2)}"
+
+      if logger.isDebug()
+        logger.debug "mimosa config after profile applied:\n#{JSON.stringify(config, null, 2)}"
     else
       return logger.fatal "Profile provided but not found at [[ #{path.join('profiles', opts.profile)} ]]"
 

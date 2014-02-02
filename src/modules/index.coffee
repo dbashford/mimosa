@@ -159,8 +159,9 @@ configured = (moduleNames, callback) ->
 
             process.exit 0
 
-        logger.debug "NPM INSTALL standard out\n#{sout}"
-        logger.debug "NPM INSTALL standard err\n#{serr}"
+        #logger.debug "NPM INSTALL standard out\n#{sout}"
+        #logger.debug "NPM INSTALL standard err\n#{serr}"
+
         processModule()
 
   processModule()

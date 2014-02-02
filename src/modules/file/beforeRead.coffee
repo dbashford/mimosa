@@ -43,7 +43,8 @@ _fileNeedsCompilingStartup = (config, options, next) ->
   # force compiling on startup to build require dependency tree
   # but not for vendor javascript
   if config.__forceJavaScriptRecompile and options.isJSNotVendor
-    logger.debug "File [[ #{options.inputFile} ]] NEEDS compiling/copying"
+    if logger.isDebug()
+      logger.debug "File [[ #{options.inputFile} ]] NEEDS compiling/copying"
     next()
   else
     _fileNeedsCompiling(config, options, next)

@@ -55,7 +55,9 @@ module.exports = class CSSCompiler
       # file is include so need to find bases to compile for it
       bases = @includeToBaseHash[options.inputFile]
       if bases?
-        logger.debug "Bases files for [[ #{options.inputFile} ]]\n#{bases.join('\n')}"
+        if logger.isDebug()
+          logger.debug "Bases files for [[ #{options.inputFile} ]]\n#{bases.join('\n')}"
+
         for base in bases
           options.files.push __baseOptionsObject(config, base)
       # else
@@ -111,10 +113,12 @@ module.exports = class CSSCompiler
           includeTime = fs.statSync(include).mtime
           baseTime = fs.statSync(basePath).mtime
           if includeTime > baseTime
-            logger.debug "Base [[ #{base} ]] needs compiling because [[ #{include} ]] has been changed recently"
+            if logger.isDebug()
+              logger.debug "Base [[ #{base} ]] needs compiling because [[ #{include} ]] has been changed recently"
             baseFilesToCompileNow.push(base)
         else
-          logger.debug "Base file [[ #{base} ]] hasn't been compiled yet, needs compiling"
+          if logger.isDebug()
+            logger.debug "Base file [[ #{base} ]] hasn't been compiled yet, needs compiling"
           baseFilesToCompileNow.push(base)
 
     # Determine if any bases need to be compiled based on their own merit
@@ -122,10 +126,12 @@ module.exports = class CSSCompiler
       baseCompiledPath = __buildDestinationFile(config, base)
       if fs.existsSync baseCompiledPath
         if fs.statSync(base).mtime > fs.statSync(baseCompiledPath).mtime
-          logger.debug "Base file [[ #{base} ]] needs to be compiled, it has been changed recently"
+          if logger.isDebug()
+            logger.debug "Base file [[ #{base} ]] needs to be compiled, it has been changed recently"
           baseFilesToCompileNow.push(base)
       else
-        logger.debug "Base file [[ #{base} ]] hasn't been compiled yet, needs compiling"
+        if logger.isDebug()
+          logger.debug "Base file [[ #{base} ]] hasn't been compiled yet, needs compiling"
         baseFilesToCompileNow.push(base)
 
     baseFilesToCompile = _.uniq(baseFilesToCompileNow)
@@ -183,7 +189,8 @@ module.exports = class CSSCompiler
 
     return unless importMatches?
 
-    logger.debug "Imports for file [[ #{file} ]]: #{importMatches}"
+    if logger.isDebug()
+      logger.debug "Imports for file [[ #{file} ]]: #{importMatches}"
 
     imports = []
     for anImport in importMatches
@@ -207,10 +214,12 @@ module.exports = class CSSCompiler
       for includeFile in includeFiles
         hash = @includeToBaseHash[includeFile]
         if hash?
-          logger.debug "Adding base file [[ #{baseFile} ]] to list of base files for include [[ #{includeFile} ]]"
+          if logger.isDebug()
+            logger.debug "Adding base file [[ #{baseFile} ]] to list of base files for include [[ #{includeFile} ]]"
           hash.push(baseFile) if hash.indexOf(baseFile) is -1
         else
           if fs.existsSync includeFile
-            logger.debug "Creating base file entry for include file [[ #{includeFile} ]], adding base file [[ #{baseFile} ]]"
+            if logger.isDebug()
+              logger.debug "Creating base file entry for include file [[ #{includeFile} ]], adding base file [[ #{baseFile} ]]"
             @includeToBaseHash[includeFile] = [baseFile]
         @__importsForFile(baseFile, includeFile, allFiles)
