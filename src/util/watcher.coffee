@@ -27,7 +27,7 @@ class Watcher
     watcher.on "unlink", @workflow.remove
     watcher.on "add", (f) => if @throttle > 0 then @adds.push(f) else @workflow.add(f)
 
-    logger.info "Watching #{@config.watch.sourceDir}" if @persist
+    logger.info "Watching [[ #{@config.watch.sourceDir} ]]" if @persist
 
     if @throttle > 0
       logger.debug "Throttle is set, setting interval at 100 milliseconds"
