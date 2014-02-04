@@ -7,10 +7,18 @@ This release will almost entirely be logging related.
 * Added to the new `logger.growl` config will be an `enabled` flag which is a quick means to disable growling entirely.
 * Added to the `logger` config will be `warn.enabled`, `info.enabled`, `success.enabled`, and `error.enabled` flags which will control whether or not those log messages get written to the console.
 * Some folks have issues seeing some of the log messages because of the colors they use in their terminals. The colors and styling for `debug`, `error`, `warn`, `info` and `success` will be configurable.
-* Going to try and do some work to colorize the important pieces of log messages. Up to this point the names of files have been surrounded with double brackets, like `[[ /some/file ]]`.  Where possible the double brackets will be removed and the contents will be specifically colorized.
+* The log messages themselves will be generally less colorful.  Rather than colorize entire lines of log, only the status code will be colorized.
+* Added to the `logger` config is a `embeddedText` object which will configure colorizing of text in error message that is wrapped with `[[`/`]]`. That text will be colorized separately, the brackets removed and if the content is a file path, the path will be shortened to be relative.
 * All of the modules I have control over will be updated to remove the `logmimosa` dependency and use the `mimosaConfig.log` library.
 * The various `onSuccess` flags for `javascript`, `css`, etc are being eliminated.  `onSuccess` will be a flag itself rather than an object.
 * For a short period of time the old `growl` config will be deprecated but supported with the exception being the various `onSuccess` flags
+
+## 2.1.0 - Feb ?? 2014
+
+### Major Changes
+* [mimosa #355](https://github.com/dbashford/mimosa/issues/355). The new `logger` config allows for Growl to be outright turned off.  `logger.grunt.enabled`.
+* [mimosa #344](https://github.com/dbashford/mimosa/issues/344). The new `logger` config allows for turning on/off `info`, `warn`, `error`, and `success` log levels.
+* [mimosa #336](https://github.com/dbashford/mimosa/issues/336). The new `logger` config allows for turning on/off `info`, `warn`, `error`, and `success` log levels.
 
 ## 2.0.6 - Feb 1 2014
 
