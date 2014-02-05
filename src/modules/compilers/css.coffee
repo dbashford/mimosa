@@ -193,6 +193,7 @@ module.exports = class CSSCompiler
         imports.push.apply(imports, anImport.split(@compiler.importSplitRegex))
       else
         imports.push(anImport)
+
     for importPath in imports
 
       fullImportFilePath = @compiler.getImportFilePath(file, importPath)
@@ -201,11 +202,13 @@ module.exports = class CSSCompiler
         [fullImportFilePath]
       else
         allFiles.filter (f) =>
-          f = f.replace(path.extname(f), '') unless @compiler.partialKeepsExtension
+          if path.extname( fullImportFilePath ) is ''
+            f = f.replace(path.extname(f), '')
           f.slice(-fullImportFilePath.length) is fullImportFilePath
 
       for includeFile in includeFiles
         hash = @includeToBaseHash[includeFile]
+
         if hash?
           logger.debug "Adding base file [[ #{baseFile} ]] to list of base files for include [[ #{includeFile} ]]"
           hash.push(baseFile) if hash.indexOf(baseFile) is -1
@@ -213,4 +216,5 @@ module.exports = class CSSCompiler
           if fs.existsSync includeFile
             logger.debug "Creating base file entry for include file [[ #{includeFile} ]], adding base file [[ #{baseFile} ]]"
             @includeToBaseHash[includeFile] = [baseFile]
+
         @__importsForFile(baseFile, includeFile, allFiles)
