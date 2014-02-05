@@ -16,7 +16,7 @@ This release will almost entirely be logging related.
 ## 2.1.0 - Feb ?? 2014
 
 ### Major Changes
-* [mimosa #355](https://github.com/dbashford/mimosa/issues/355). The new `logger` config allows for Growl to be outright turned off.  `logger.grunt.enabled`.
+* [mimosa #355](https://github.com/dbashford/mimosa/issues/355). The new `logger` config allows for Growl to be outright turned off.  `logger.growl.enabled`.
 * [mimosa #344](https://github.com/dbashford/mimosa/issues/344). The new `logger` config allows for turning on/off `info`, `warn`, `error`, and `success` log levels.
 * [mimosa #336](https://github.com/dbashford/mimosa/issues/336). The new `logger` config allows for turning on/off `info`, `warn`, `error`, and `success` log levels.
 * [mimosa-sprite](https://github.com/dbashford/mimosa-sprite/). mimosa-sprite now supports LESS and SASS output.
