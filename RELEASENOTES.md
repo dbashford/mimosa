@@ -29,6 +29,8 @@ This release will almost entirely be logging related.
 * [mimosa #358](https://github.com/dbashford/mimosa/issues/358). Some updates to CSS compilation to handle widely varying import syntax as compilers improve and allow different types of syntax.
 * [mimosa-less](https://github.com/dbashford/mimosa-less/) and [mimosa-sass](https://github.com/dbashford/mimosa-sass/) were both updated to allow for handing variable import syntax.
 * [mimosa-less](https://github.com/dbashford/mimosa-less/). Fixed mimosa-less logic for finding the base less files.
+* [mimosa-handlebars](https://github.com/dbashford/mimosa-handlebars/). Bumped handlebars version to `1.1`
+
 
 ## 2.0.7 - Feb 5 2014
 
