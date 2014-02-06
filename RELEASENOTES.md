@@ -2,27 +2,37 @@
 
 This release will almost entirely be logging related.
 
-* The logger itself will be attached to the `mimosaConfig` that Mimosa provides to all of the modules when the module's code is called. This removes the need for every module to have a dependency on the logger and means all the modules will use the same version: the one that Mimosa core has.
-* Previous the logging config was under `growl` and the only configuration for logging related to when and if to send growl messages.  That will be changing, so the root config object will now simple be `logger`.
-* Added to the new `logger.growl` config will be an `enabled` flag which is a quick means to disable growling entirely.
-* Added to the `logger` config will be `warn.enabled`, `info.enabled`, `success.enabled`, and `error.enabled` flags which will control whether or not those log messages get written to the console.
+### Still being worked
+
 * Some folks have issues seeing some of the log messages because of the colors they use in their terminals. The colors and styling for `debug`, `error`, `warn`, `info` and `success` will be configurable.
 * The log messages themselves will be generally less colorful.  Rather than colorize entire lines of log, only the status code will be colorized.
 * Added to the `logger` config is a `embeddedText` object which will configure colorizing of text in error message that is wrapped with `[[`/`]]`. That text will be colorized separately, the brackets removed and if the content is a file path, the path will be shortened to be relative.
+* The logger itself will be attached to the `mimosaConfig` that Mimosa provides to all of the modules when the module's code is called. This removes the need for every module to have a dependency on the logger and means all the modules will use the same version: the one that Mimosa core has.
 * All of the modules I have control over will be updated to remove the `logmimosa` dependency and use the `mimosaConfig.log` library.
-* The various `onSuccess` flags for `javascript`, `css`, etc are being eliminated.  `onSuccess` will be a flag itself rather than an object.
-* For a short period of time the old `growl` config will be deprecated but supported with the exception being the various `onSuccess` flags
 
-## 2.1.0 - Feb ?? 2014
+### Finished
 
 ### Major Changes
+* Previous the logging config was under `growl` and the only configuration for logging related to when and if to send growl messages.  That will be changing, so the root config object will now simple be `logger`. For a short period of time the old `growl` config will be deprecated but supported with the exception being the various `onSuccess` flags.
 * [mimosa #355](https://github.com/dbashford/mimosa/issues/355). The new `logger` config allows for Growl to be outright turned off.  `logger.growl.enabled`.
 * [mimosa #344](https://github.com/dbashford/mimosa/issues/344). The new `logger` config allows for turning on/off `info`, `warn`, `error`, and `success` log levels.
 * [mimosa #336](https://github.com/dbashford/mimosa/issues/336). The new `logger` config allows for turning on/off `info`, `warn`, `error`, and `success` log levels.
+* The various `growl` `onSuccess` flags for `javascript`, `css`, etc are not being carried over to the new `logger` config.  `onSuccess` will be a flag itself rather than an object.
+
+## 2.0.8 - Feb 6 2014
+
+### Major Changes
 * [mimosa-sprite](https://github.com/dbashford/mimosa-sprite/). mimosa-sprite now supports LESS and SASS output.
 
 ### Minor Changes
+* [mimosa #359](https://github.com/dbashford/mimosa/issues/359). `.mp3` was added to the default [copy compiler](https://github.com/dbashford/mimosa-copy/).
+* [mimosa #358](https://github.com/dbashford/mimosa/issues/358). Some updates to CSS compilation to handle widely varying import syntax as compilers improve and allow different types of syntax.
+* [mimosa-less](https://github.com/dbashford/mimosa-less/) and [mimosa-sass](https://github.com/dbashford/mimosa-sass/) were both updated to allow for handing variable import syntax.
 * [mimosa-less](https://github.com/dbashford/mimosa-less/). Fixed mimosa-less logic for finding the base less files.
+
+## 2.0.7 - Feb 5 2014
+
+This release just solved some problems with NPM not properly installing Mimosa.
 
 ## 2.0.6 - Feb 1 2014
 
