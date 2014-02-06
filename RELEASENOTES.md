@@ -30,6 +30,7 @@ This release will almost entirely be logging related.
 * [mimosa-less](https://github.com/dbashford/mimosa-less/) and [mimosa-sass](https://github.com/dbashford/mimosa-sass/) were both updated to allow for handing variable import syntax.
 * [mimosa-less](https://github.com/dbashford/mimosa-less/). Fixed mimosa-less logic for finding the base less files.
 * [mimosa-handlebars](https://github.com/dbashford/mimosa-handlebars/). Bumped handlebars version to `1.1`
+* [mimosa-ember-handlebars](https://github.com/dbashford/mimosa-ember-handlebars/). Bumped handlebars version to `1.1`
 
 
 ## 2.0.7 - Feb 5 2014
