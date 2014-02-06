@@ -52,6 +52,10 @@ module.exports = class CSSCompiler
     options.files = options.files.filter @__notCompilerFile
 
     if @_isInclude(options.inputFile, @includeToBaseHash)
+      # check to see if also is base
+      if @baseFiles.indexOf(options.inputFile) > -1
+        options.files.push __baseOptionsObject(config, options.inputFile)
+
       # file is include so need to find bases to compile for it
       bases = @includeToBaseHash[options.inputFile]
       if bases?
@@ -194,27 +198,35 @@ module.exports = class CSSCompiler
       else
         imports.push(anImport)
 
+    # iterate over all the import paths in the file
     for importPath in imports
 
-      fullImportFilePath = @compiler.getImportFilePath(file, importPath)
+      fullImportFilePaths = @compiler.getImportFilePath(file, importPath)
+      unless Array.isArray(fullImportFilePaths)
+        fullImportFilePaths = [fullImportFilePaths]
 
-      includeFiles = if path.extname(fullImportFilePath) is ".css" and @compiler.canFullyImportCSS
-        [fullImportFilePath]
-      else
-        allFiles.filter (f) =>
-          if path.extname( fullImportFilePath ) is ''
-            f = f.replace(path.extname(f), '')
-          f.slice(-fullImportFilePath.length) is fullImportFilePath
+      # iterate over the all the possible forms of the full path for the import on the file system
+      for fullImportFilePath in fullImportFilePaths
 
-      for includeFile in includeFiles
-        hash = @includeToBaseHash[includeFile]
-
-        if hash?
-          logger.debug "Adding base file [[ #{baseFile} ]] to list of base files for include [[ #{includeFile} ]]"
-          hash.push(baseFile) if hash.indexOf(baseFile) is -1
+        includeFiles = if path.extname(fullImportFilePath) is ".css" and @compiler.canFullyImportCSS
+          [fullImportFilePath]
         else
-          if fs.existsSync includeFile
-            logger.debug "Creating base file entry for include file [[ #{includeFile} ]], adding base file [[ #{baseFile} ]]"
-            @includeToBaseHash[includeFile] = [baseFile]
+          allFiles.filter (f) =>
+            if path.extname( fullImportFilePath ) is ''
+              f = f.replace(path.extname(f), '')
+            f.slice(-fullImportFilePath.length) is fullImportFilePath
 
-        @__importsForFile(baseFile, includeFile, allFiles)
+        # now we've found files for includes on the file system, iterate over them
+        for includeFile in includeFiles
+
+          hash = @includeToBaseHash[includeFile]
+
+          if hash?
+            logger.debug "Adding base file [[ #{baseFile} ]] to list of base files for include [[ #{includeFile} ]]"
+            hash.push(baseFile) if hash.indexOf(baseFile) is -1
+          else
+            if fs.existsSync includeFile
+              logger.debug "Creating base file entry for include file [[ #{includeFile} ]], adding base file [[ #{baseFile} ]]"
+              @includeToBaseHash[includeFile] = [baseFile]
+
+          @__importsForFile(baseFile, includeFile, allFiles)
