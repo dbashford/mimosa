@@ -222,6 +222,8 @@ _extractPrecompileFunctionSource = (configSource) ->
   return ""
 
 _validateSettings = (config, modules) ->
+  config.log = logger
+
   errors = _validateWatchConfig(config)
 
   if errors.length is 0
@@ -331,7 +333,6 @@ processConfig = (opts, callback) ->
       callback newConfig, modules
 
 _setModulesIntoConfig = (config) ->
-  config.log = logger
   config.installedModules = {}
   moduleManager.getConfiguredModules().forEach  (mod) ->
     config.installedModules[mod.__mimosaModuleName] = mod
