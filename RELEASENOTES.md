@@ -1,23 +1,20 @@
 ## 2.1.0 (upcoming) - Feb ?? 2014
 
-This release will almost entirely be logging related.
-
-### Still being worked
-
-* Some folks have issues seeing some of the log messages because of the colors they use in their terminals. The colors and styling for `debug`, `error`, `warn`, `info` and `success` will be configurable.
-* The log messages themselves will be generally less colorful.  Rather than colorize entire lines of log, only the status code will be colorized.
-* Added to the `logger` config is a `embeddedText` object which will configure colorizing of text in error message that is wrapped with `[[`/`]]`. That text will be colorized separately, the brackets removed and if the content is a file path, the path will be shortened to be relative.
-* The logger itself will be attached to the `mimosaConfig` that Mimosa provides to all of the modules when the module's code is called. This removes the need for every module to have a dependency on the logger and means all the modules will use the same version: the one that Mimosa core has.
-* All of the modules I have control over will be updated to remove the `logmimosa` dependency and use the `mimosaConfig.log` library.
-
-### Finished
+This release is entirely logging related.
 
 ### Major Changes
 * Previous the logging config was under `growl` and the only configuration for logging related to when and if to send growl messages.  That will be changing, so the root config object will now simple be `logger`. For a short period of time the old `growl` config will be deprecated but supported with the exception being the various `onSuccess` flags.
 * [mimosa #355](https://github.com/dbashford/mimosa/issues/355). The new `logger` config allows for Growl to be outright turned off.  `logger.growl.enabled`.
 * [mimosa #344](https://github.com/dbashford/mimosa/issues/344). The new `logger` config allows for turning on/off `info`, `warn`, `error`, and `success` log levels.
-* [mimosa #336](https://github.com/dbashford/mimosa/issues/336). The new `logger` config allows for turning on/off `info`, `warn`, `error`, and `success` log levels.
+* [mimosa #341](https://github.com/dbashford/mimosa/issues/341). With `2.1` mimosa now places the `logmimosa` instance on the mimosa-config object that gets passed to all of the modules for registration and for workflow execution.  It can be accessed at `mimosaConfig.log`.
+* All of the modules maintained by me (dbashford) have had their `logmimosa` dependency removed.  Now all of those modules depend on the `logmimosa` that resides in Mimosa core.  This will let Mimosa core maintain the single logger instance which now has much more dynamic configuration.
+* [mimosa #336](https://github.com/dbashford/mimosa/issues/336). The colorization of log messages has been changed dramatically. Previously the entire message was given a color.  Now only a single `ERROR`, `WARN`, `Debug`, `Info` string at the beginning of the log message is colorized.  Also, most messages had the key piece of the message wrapped in `[[`/`]]`.  Now by default the brackets are stripped and the contents of the brackets are given a different color.  The content of the brackets usually constituted an important piece of the message so it now draws focus.  Additionally it the content inside the brackets contains a file path, the path is shortened to be relative to the root directory of the project.  Previously it contained the absolute path.  All color options are configurable if the colors set in the defaults do not do it for you.
 * The various `growl` `onSuccess` flags for `javascript`, `css`, etc are not being carried over to the new `logger` config.  `onSuccess` will be a flag itself rather than an object.
+
+### Breaking Changes
+* All of the modules have been updated to use the latest logging functionality.  The newest modules must be used with Mimosa `2.1` as the expect Mimosa to pass them the logger.  Using the most up to date modules with older versions of Mimosa will result in errors.
+* Version `2.1` will work fine with older versions of modules except that the logging messages will bounce back and forth between the new logging (mimosa core `2.1`) and the old logging (from the module)
+* If you were using (overriding) the `growl.onsuccess` flags, you'll find those flags are no longer available.  They have been removed.
 
 ## 2.0.8 - Feb 6 2014
 
