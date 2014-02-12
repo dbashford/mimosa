@@ -32,7 +32,7 @@ deleteMod = (name, opts) ->
       break
 
   unless found
-    return logger.error "Module named #{name} is not currently installed so it cannot be uninstalled."
+    return logger.error "Module named [[ #{name} ]] is not currently installed so it cannot be uninstalled."
 
   currentDir = process.cwd()
   mimosaPath = path.join __dirname, '..', '..'
@@ -45,7 +45,7 @@ deleteMod = (name, opts) ->
     else
       if serr
         logger.error serr
-      logger.success "Uninstall of '#{name}' successful"
+      logger.success "Uninstall of [[ #{name} ]] successful"
 
     logger.debug "NPM UNINSTALL standard out\n#{sout}"
     logger.debug "NPM UNINSTALL standard err\n#{serr}"

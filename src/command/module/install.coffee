@@ -49,7 +49,7 @@ _installModule = (name, done) ->
     else
       console.log sout
       console.log serr
-      logger.success "Install of '#{name}' successful"
+      logger.success "Install of [[ #{name} ]] successful"
 
     logger.debug "NPM INSTALL standard out\n#{sout}"
     logger.debug "NPM INSTALL standard err\n#{serr}"

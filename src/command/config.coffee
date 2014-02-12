@@ -27,7 +27,7 @@ copyConfig = (opts) ->
   fs.writeFileSync currDefaultsPath, defaultsConf, 'ascii'
 
   unless opts.suppress
-    logger.success "Copied mimosa-config-documented.coffee into current directory."
+    logger.success "Copied [[ mimosa-config-documented.coffee ]] into current directory."
 
   mimosaConfigPath = path.join path.resolve(''), "mimosa-config.js"
   mimosaConfigPathCoffee = path.join path.resolve(''), "mimosa-config.coffee"
@@ -48,7 +48,7 @@ copyConfig = (opts) ->
     fs.writeFileSync mimosaConfigPath, outConfigText, 'ascii'
 
     unless opts.suppress
-      logger.success "Copied mimosa-config.js into current directory."
+      logger.success "Copied [[ mimosa-config.js ]] into current directory."
 
   process.exit 0
 
