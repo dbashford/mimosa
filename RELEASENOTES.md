@@ -1,4 +1,9 @@
-## 2.1.0 (upcoming) - Feb ?? 2014
+## 2.1.1 - Feb ?? 2014
+
+### Major Changes
+* [mimosa-less #1, #2](https://github.com/dbashford/mimosa-less/pull/2). Via a great PR, mimosa-less now support less source maps.  Moar source maps ftw.
+
+## 2.1.0 - Feb 12 2014
 
 This release is entirely logging related.
 
