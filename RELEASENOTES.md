@@ -1,3 +1,8 @@
+## 2.1.2 - Feb 15 2014
+
+### Minor Changes
+* [mimosa #365](https://github.com/dbashford/mimosa/issues/365). mimosa-require will now build r.js configs one step earlier in the mimosa workflows, from `beforeOptimize` to `init`, so that modules that tweak the r.js config before r.js is run can register for `beforeOptimize` safely and not have `modules` array order be an issue.
+
 ## 2.1.1 - Feb 15 2014
 
 ### Major Changes
