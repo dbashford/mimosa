@@ -65,7 +65,7 @@
     "chokidar": "0.6.3",
     "request": "2.33.0",
     "logmimosa": "1.0.2",
-    "skelmimosa": "0.7.2",
+    "skelmimosa": "0.8.0",
     "mimosa-server": "1.3.0",
     "mimosa-minify-js": "1.1.0",
     "mimosa-minify-css": "1.1.0",
