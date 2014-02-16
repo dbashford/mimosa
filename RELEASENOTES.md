@@ -1,14 +1,11 @@
-## 2.1.2 - Feb 15 2014
-
-### Minor Changes
-* [mimosa #365](https://github.com/dbashford/mimosa/issues/365). mimosa-require will now build r.js configs one step earlier in the mimosa workflows, from `beforeOptimize` to `init`, so that modules that tweak the r.js config before r.js is run can register for `beforeOptimize` safely and not have `modules` array order be an issue.
-
-## 2.1.1 - Feb 15 2014
+## 2.1.1, 2.1.2, 2.1.3 - Feb 15 2014
 
 ### Major Changes
 * [mimosa-less #1, #2](https://github.com/dbashford/mimosa-less/pull/2). Via a great PR, mimosa-less now support less source maps.  Moar source maps ftw.
 
 ### Minor Changes
+* Bumped JSHint to latest version to solve some issues with handling code output by EmberScript
+* [mimosa #365](https://github.com/dbashford/mimosa/issues/365). mimosa-require will now build r.js configs one step earlier in the mimosa workflows, from `beforeOptimize` to `init`, so that modules that tweak the r.js config before r.js is run can register for `beforeOptimize` safely and not have `modules` array order be an issue.
 * Bumped logmimosa version in skelmimosa package.
 
 ## 2.1.0 - Feb 12 2014
