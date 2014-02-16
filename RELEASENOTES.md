@@ -1,6 +1,7 @@
 ## 2.1.1, 2.1.2, 2.1.3 - Feb 15 2014
 
 ### Major Changes
+* [mimosa-emberscript](https://github.com/dbashford/mimosa-emberscript). New JavaScript compiler for [EmberScript](http://emberscript.com/). Includes creation of source maps.
 * [mimosa-less #1, #2](https://github.com/dbashford/mimosa-less/pull/2). Via a great PR, mimosa-less now support less source maps.  Moar source maps ftw.
 
 ### Minor Changes
