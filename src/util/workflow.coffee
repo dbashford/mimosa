@@ -143,6 +143,11 @@ module.exports = class WorkflowManager
         else
           return logger.warn "No module has registered for extension: [[ #{options.extension} ]], file: [[ #{options.inputFile} ]]"
 
+      if @config.timer && @config.timer.enabled
+        options.timer = {
+          start: process.hrtime()
+        }
+
     i = 0
     next = =>
       if i < @types[type].length
@@ -190,7 +195,10 @@ module.exports = class WorkflowManager
 
   _finishedWithFile: (options) =>
     if logger.isDebug()
-      logger.debug "Finished with file: [[ #{options.inputFile} ]]"
+      logger.debug "Finished with file [[ #{options.inputFile} ]]"
+
+    @_writeTime(options)
+
     #@doneFiles.push(options.inputFile)
     #console.log _.difference(@initialFiles, @doneFiles)
     #console.log "finished #{@initialFilesHandled + 1} of #{@initialFileCount}"
@@ -212,3 +220,17 @@ module.exports = class WorkflowManager
     # wrap up, buildDone
     @_executeWorkflowStep {}, 'postBuild', =>
       if @buildDoneCallback? then @buildDoneCallback()
+
+  _writeTime: (options) ->
+    if options.timer
+      options.timer.end = process.hrtime()
+      timeStart = options.timer.start[0] * 1000 + options.timer.start[1] / 1000
+      timeEnd = options.timer.end[0] * 1000 + options.timer.end[1] / 1000
+      time = Math.round(timeEnd - timeStart)
+      if time > 1750
+        time = (time / 1000).toFixed(2) + " milliseconds"
+      else
+        time = time + " microseconds"
+
+      logger.info "Finished with file [[ #{options.inputFile} ]] in [[ #{time} ]]"
+
