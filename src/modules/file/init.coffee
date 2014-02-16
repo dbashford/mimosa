@@ -1,7 +1,6 @@
 "use strict"
 
 path = require 'path'
-fs =   require 'fs'
 
 logger = require 'logmimosa'
 
@@ -13,7 +12,7 @@ _determineDestinationFile = (config, options) ->
 
   options.destinationFile = if exts.template.indexOf(ext) > -1
     options.isTemplate = true
-    (compilerName, folders) =>
+    (compilerName, folders) ->
       for outputConfig in config.template.output
         if outputConfig.folders is folders
           outputFileName = outputConfig.outputFileName
@@ -25,12 +24,12 @@ _determineDestinationFile = (config, options) ->
     destFunct = if exts.copy.indexOf(ext) > -1
       options.isCopy = true
       (watchDir, compiledDir) ->
-        (fileName) =>
+        (fileName) ->
           fileName.replace(watchDir, compiledDir)
     else if exts.javascript.indexOf(ext) > -1
       options.isJavascript = true
       (watchDir, compiledDir) ->
-        (fileName) =>
+        (fileName) ->
           baseCompDir = fileName.replace(watchDir, compiledDir)
           baseCompDir.substring(0, baseCompDir.lastIndexOf(".")) + ".js"
     else if exts.css.indexOf(ext) > -1

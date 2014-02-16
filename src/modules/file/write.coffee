@@ -1,40 +1,34 @@
 "use strict"
 
-fs =   require 'fs'
-
 logger = require 'logmimosa'
 
 fileUtils = require '../../util/file'
 
-class MimosaFileWriteModule
+_write = (config, options, next) ->
+  hasFiles = options.files?.length > 0
+  return next() unless hasFiles
 
-  registration: (config, register) ->
-    e = config.extensions
-    register ['add','update','remove','buildExtension'], 'write', @_write, [e.template..., e.css...]
-    register ['add','update','buildFile'],               'write', @_write, [e.javascript..., e.copy...]
+  i = 0
+  done = ->
+    next() if ++i is options.files.length
 
-  _write: (config, options, next) =>
-    hasFiles = options.files?.length > 0
-    return next() unless hasFiles
+  options.files.forEach (file) ->
+    return done() if (file.outputFileText isnt "" and not file.outputFileText) or not file.outputFileName
 
-    i = 0
-    done = =>
-      next() if ++i is options.files.length
+    if file.outputFileText is ""
+      logger.warn "Compile of file [[ #{file.inputFileName} ]] resulted in empty output."
 
-    options.files.forEach (file) =>
-      return done() if (file.outputFileText isnt "" and not file.outputFileText) or not file.outputFileName
+    if logger.isDebug()
+      logger.debug "Writing file [[ #{file.outputFileName} ]]"
 
-      if file.outputFileText is ""
-        logger.warn "Compile of file [[ #{file.inputFileName} ]] resulted in empty output."
+    fileUtils.writeFile file.outputFileName, file.outputFileText, (err) ->
+      if err?
+        logger.error "Failed to write new file [[ #{file.outputFileName} ]], Error: #{err}"
+      else
+        logger.success "Wrote file [[ #{file.outputFileName} ]]", options
+      done()
 
-      if logger.isDebug()
-        logger.debug "Writing file [[ #{file.outputFileName} ]]"
-
-      fileUtils.writeFile file.outputFileName, file.outputFileText, (err) =>
-        if err?
-          logger.error "Failed to write new file [[ #{file.outputFileName} ]], Error: #{err}"
-        else
-          logger.success "Compiled/copied [[ #{file.outputFileName} ]]", options
-        done()
-
-module.exports = new MimosaFileWriteModule()
+exports.registration = (config, register) ->
+  e = config.extensions
+  register ['add','update','remove','buildExtension'], 'write', _write, [e.template..., e.css...]
+  register ['add','update','buildFile'],               'write', _write, [e.javascript..., e.copy...]
