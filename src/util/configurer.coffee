@@ -21,6 +21,8 @@ baseDefaults =
   minMimosaVersion:null
   requiredMimosaVersion:null
   modules: [ 'copy', 'jshint', 'csslint', 'server', 'require', 'minify-js', 'minify-css', 'live-reload', 'bower']
+  timer:
+    enabled: false
   watch:
     sourceDir: "assets"
     compiledDir: "public"
