@@ -2,7 +2,7 @@
 
 ### Major Changes
 * __New Module: [mimosa-eslint](https://github.com/dbashford/mimosa-eslint). An [ESLint](http://www.eslint.org) module allows for performing next gen static analysis.
-* [mimosa-require #29](https://github.com/dbashford/mimosa-require/issues/29). HUGE change for require.js users. mimosa-require will now use r.js' own esprima code to determine your dependencies and requirejs configuration. This will dramatically improve if not eliminate any false reports back from mimosa-require.
+* [mimosa-require #29](https://github.com/dbashford/mimosa-require/issues/29). HUGE change for require.js users. mimosa-require will now use r.js' own esprima code to determine your dependencies and requirejs configuration. This will dramatically improve if not eliminate any false reports back from mimosa-require.  [Read more on the blog.](http://dbashford.github.io/mimosa-2-1-4-require-js-support-improvements-thx-r-js-esprima/index.html)
 
 ## 2.1.1, 2.1.2, 2.1.3 - Feb 15 2014
 
