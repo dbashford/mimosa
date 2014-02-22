@@ -1,8 +1,11 @@
-## 2.1.5 - Feb ?? 2014
+## 2.1.5 - Feb 22 2014
 
 ### Major Changes
 * __New Module__: [mimosa-stream-copy](https://github.com/dbashford/mimosa-stream-copy). Some files, like images or txt or font files, don't need to have anything done to them by any module. They just need to be copied from point A to point B. Source to public. mimosa-stream-copy will copy those files using super-fast streams and then stop the processing of those files.  Copying didn't take a long time without streams, but with this module it takes no time at all.
 * __New Module__: [mimosa-minify-img](https://github.com/dbashford/mimosa-minify-img). This module adds a `mimosa minimage` command that will minify/optimize `png`, `gif`, `jpg` and `jpeg` files.
+
+### Minor Changes
+* Fixed issue with mimosa-require crashing on files not parsing properly
 
 ## 2.1.4 - Feb 20 2014
 
