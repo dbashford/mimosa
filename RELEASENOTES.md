@@ -1,3 +1,9 @@
+## 2.1.6 - Feb 22 2014
+
+### Major Changes
+* __New Module__: [mimosa-nunjucks](https://github.com/dbashford/mimosa-nunjucks). New module to support compiling [nunjucks](http://jlongster.github.io/nunjucks/) micro-templates.
+* [mimosa #232](https://github.com/dbashford/mimosa/issues/232). Added scaffolding to `mimosa new` for nunjucks.
+
 ## 2.1.5 - Feb 22 2014
 
 ### Major Changes

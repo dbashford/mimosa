@@ -1,7 +1,7 @@
 {
   "name": "mimosa",
   "preferGlobal": "true",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "homepage": "http://www.mimosa.io",
   "author": "David Bashford",
   "description": "A lighting-fast, modular, next generation browser development tool.",
@@ -39,6 +39,7 @@
     "lodash",
     "hogan",
     "ractive",
+    "nunjucks",
     "amd",
     "require",
     "requirejs",
