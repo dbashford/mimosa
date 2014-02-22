@@ -132,6 +132,11 @@
         "defaultExtensions": ["html"]
       },
       {
+        "prettyName": "Nunjucks - http://jlongster.github.io/nunjucks/",
+        "name": "nunjucks",
+        "defaultExtensions": ["njs"]
+      },
+      {
         "prettyName": "Ractive - http://www.ractivejs.org/",
         "name": "ractive",
         "defaultExtensions": ["rtv"]
