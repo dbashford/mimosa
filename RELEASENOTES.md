@@ -16,14 +16,14 @@
 ## 2.1.4 - Feb 20 2014
 
 ### Major Changes
-* __New Module: [mimosa-eslint](https://github.com/dbashford/mimosa-eslint). An [ESLint](http://www.eslint.org) module allows for performing next gen static analysis.
+* __New Module__: [mimosa-eslint](https://github.com/dbashford/mimosa-eslint). An [ESLint](http://www.eslint.org) module allows for performing next gen static analysis.
 * [mimosa-require #29](https://github.com/dbashford/mimosa-require/issues/29). HUGE change for require.js users. mimosa-require will now use r.js' own esprima code to determine your dependencies and requirejs configuration. This will dramatically improve if not eliminate any false reports back from mimosa-require.  [Read more on the blog.](http://dbashford.github.io/mimosa-2-1-4-require-js-support-improvements-thx-r-js-esprima/index.html)
 
 ## 2.1.1, 2.1.2, 2.1.3 - Feb 15 2014
 
 ### Major Changes
-* __New Module: [mimosa-emberscript](https://github.com/dbashford/mimosa-emberscript). New JavaScript compiler for [EmberScript](http://emberscript.com/). Includes creation of source maps.
-* __New Module: [mimosa-groundskeeper](https://github.com/dbashford/mimosa-groundskeeper). A static analysis and code clean-up tool.  This will remove things like `console.log` and `debugger` statements from your code as well as pragmas. This wraps the great [groundskeeper tool](https://github.com/Couto/groundskeeper) and allows for all the same functionality.
+* __New Module__: [mimosa-emberscript](https://github.com/dbashford/mimosa-emberscript). New JavaScript compiler for [EmberScript](http://emberscript.com/). Includes creation of source maps.
+* __New Module__: [mimosa-groundskeeper](https://github.com/dbashford/mimosa-groundskeeper). A static analysis and code clean-up tool.  This will remove things like `console.log` and `debugger` statements from your code as well as pragmas. This wraps the great [groundskeeper tool](https://github.com/Couto/groundskeeper) and allows for all the same functionality.
 
 * [mimosa-less #1, #2](https://github.com/dbashford/mimosa-less/pull/2). Via a great PR, mimosa-less now support less source maps.  Moar source maps ftw.
 
@@ -86,7 +86,7 @@ This release just solved some problems with NPM not properly installing Mimosa.
 ## 2.0.4 - Jan 28 2014
 
 ### Major Changes
-* __New Module: [mimosa-handlebars-on-window](https://github.com/dbasford/mimosa-handlebars-on-window). A dead simple module that will alter `handlebars.js` source slightly to attach `Handlebars` to the `window` object. Solves some current issues with Ember.js and r.js optimized builds.  Also allows for managing Handlebars via Bower.
+* __New Module__: [mimosa-handlebars-on-window](https://github.com/dbasford/mimosa-handlebars-on-window). A dead simple module that will alter `handlebars.js` source slightly to attach `Handlebars` to the `window` object. Solves some current issues with Ember.js and r.js optimized builds.  Also allows for managing Handlebars via Bower.
 
 ### Minor Changes
 * [mimosa #354](https://github.com/dbashford/mimosa/issues/354). Added `template.writeLibrary` config to allow for not writing template libraries, like `handlebars.js`.  By default Mimosa's template compiler functionality will write an AMD version of the client library.
@@ -105,7 +105,7 @@ This release just solved some problems with NPM not properly installing Mimosa.
 ## 2.0.1 - Jan 26 2014
 
 ### Major Changes
-* __New Module: [mimosa-generator](https://github.com/dbasford/mimosa-regenerator). This module will transpile your ES6 generators down to valid ES5 javascript.
+* __New Module__: [mimosa-generator](https://github.com/dbasford/mimosa-regenerator). This module will transpile your ES6 generators down to valid ES5 javascript.
 
 ### Minor Changes
 * [mimosa-web-package #9](https://github.com/dbashford/mimosa-web-package/pull/9). This PR to web-package allows config files to be outside the root of the distributed web package.
