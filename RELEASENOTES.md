@@ -6,6 +6,7 @@
 
 ### Minor Changes
 * [mimosa #368](https://github.com/dbashford/mimosa/issues/368). Updated mimosa-server to allow for `server.js` to be a default `server.path`. The code will now look for both `server.coffee` and `server.js` if a specific file path is not provided.
+* [mimosa #368](https://github.com/dbashford/mimosa/issues/368). `mimosa new` will no longer override `server.path` if JavaScript or TypeScript picked as transpiler.
 * [mimosa-sass #2](https://github.com/dbashford/mimosa-sass/pull/2). Added `includePaths` as additional configuration option for mimosa-sass.
 
 ## 2.1.6 - Feb 22 2014
