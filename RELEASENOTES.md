@@ -2,6 +2,7 @@
 
 ### Major Changes
 * __New Module__: [mimosa-minify-svg](https://github.com/dbashford/mimosa-minify-svg). New module to support minification of SVG assets.
+* __New Module__: [mimosa-minify-html](https://github.com/dbashford/mimosa-minify-html). New module to support minification of HTML assets.
 
 ### Minor Changes
 * [mimosa-sass #2](https://github.com/dbashford/mimosa-sass/pull/2). Added `includePaths` as additional configuration option for mimosa-sass.
