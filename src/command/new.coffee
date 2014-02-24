@@ -89,14 +89,10 @@ updateConfigForChosenCompilers = (comps) ->
   # return if all the defaults were chosen
   return if comps.javascript.isDefault and comps.views.isDefault
 
-  if (not comps.javascript.isDefault) and (comps.server.name isnt "None")
+  # server.coffee and server.js are both assumed by mimosa-server
+  if (not comps.javascript.isDefault) and (comps.server.name isnt "None") and (comps.javascript.name isnt "none") and (comps.javascript.name isnt "typescript")
     outConfig.server ?= {}
-
-    # Typescript hack since cannot handle typescript on the server
-    if comps.javascript.name is "typescript"
-      outConfig.server.path = 'server.js'
-    else
-      outConfig.server.path = "server.#{comps.javascript.defaultExtensions[0]}"
+    outConfig.server.path = "server.#{comps.javascript.defaultExtensions[0]}"
 
   unless comps.views.isDefault
     outConfig.server ?= {}
