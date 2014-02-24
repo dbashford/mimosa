@@ -35,7 +35,6 @@
 ### Major Changes
 * __New Module__: [mimosa-emberscript](https://github.com/dbashford/mimosa-emberscript). New JavaScript compiler for [EmberScript](http://emberscript.com/). Includes creation of source maps.
 * __New Module__: [mimosa-groundskeeper](https://github.com/dbashford/mimosa-groundskeeper). A static analysis and code clean-up tool.  This will remove things like `console.log` and `debugger` statements from your code as well as pragmas. This wraps the great [groundskeeper tool](https://github.com/Couto/groundskeeper) and allows for all the same functionality.
-
 * [mimosa-less #1, #2](https://github.com/dbashford/mimosa-less/pull/2). Via a great PR, mimosa-less now support less source maps.  Moar source maps ftw.
 
 ### Minor Changes
