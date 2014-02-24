@@ -1,4 +1,4 @@
-## 2.1.7 - Feb ?? 2014
+## 2.1.7 - Feb 23 2014
 
 ### Major Changes
 * __New Module__: [mimosa-minify-svg](https://github.com/dbashford/mimosa-minify-svg). New module to support minification of SVG assets.
