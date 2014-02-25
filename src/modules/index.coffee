@@ -176,7 +176,6 @@ modulesWithCommands = ->
   mods
 
 module.exports =
-  builtIns:             builtIns
   installedMetadata:    meta
   getConfiguredModules: configured
   all:                  all

@@ -6,21 +6,19 @@ wrench =   require 'wrench'
 _ =        require 'lodash'
 logger =   require 'logmimosa'
 
-deps =      require('../../package.json').dependencies
-moduleManager = require '../modules'
-
 setupData = require "./setup.json"
 compilers = setupData.compilers
 views = setupData.views
 servers = setupData.servers
-
 program = null
 projectName = null
-outConfig = {}
 devDependencies ={}
 packageJson = null
 skeletonOutPath = process.cwd()
 windowsDrive = /^[A-Za-z]:\\/
+outConfig = {
+  modules:[ 'copy', 'server', 'jshint', 'csslint', 'require', 'minify-js', 'minify-css', 'live-reload', 'bower' ]
+}
 
 printHelp = ->
   logger.green('  The new command will take you through a series of questions regarding what')
@@ -314,8 +312,6 @@ newProject = (name, opts) ->
     logger.setDebug()
     process.env.DEBUG = true
 
-  outConfig.modules = moduleManager.builtIns.map (builtIn) -> builtIn.substring(7)
-
   logger.debug "Project name: #{name}"
 
   if name
@@ -336,8 +332,8 @@ newProject = (name, opts) ->
   else
     prompting()
 
-register = (prog) ->
-  program = prog
+register = (_program) ->
+  program = _program
   program
     .command('new [name]')
     .description("create a skeleton matching Mimosa's defaults, which includes a basic Express setup")
