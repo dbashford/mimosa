@@ -1,7 +1,11 @@
-## 2.1.9 - Feb ?? 2014
+## 2.1.9 - Feb 25 2014
 
 ### Major Changes
 * __New Skeleton__: [webapp](https://github.com/dbashford/MimosaWebAppSkeleton). A basic web app skeleton for a require.js application without client libraries.  Includes testing, minification of all assets and packaging.
+
+### Minor Changes
+* [mimosa #369](https://github.com/dbashford/mimosa/issues/369). Erroring out during `mimosa build` in a few more places, including in mimosa-require when files don't esprima parse correctly.
+* Continuing to eliminate leading `#` in module placeholders.
 
 ## 2.1.8 - Feb 24 2014
 
