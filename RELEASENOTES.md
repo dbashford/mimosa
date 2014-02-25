@@ -1,8 +1,7 @@
 ## 2.1.9 - Feb ?? 2014
 
 ### Major Changes
-* __New Module__: [webapp](https://github.com/dbashford/MimosaWebAppSkeleton). A basic web app skeleton for a require.js application without client libraries.  Includes testing, minification of all assets and packaging.
-
+* __New Skeleton__: [webapp](https://github.com/dbashford/MimosaWebAppSkeleton). A basic web app skeleton for a require.js application without client libraries.  Includes testing, minification of all assets and packaging.
 
 ## 2.1.8 - Feb 24 2014
 
