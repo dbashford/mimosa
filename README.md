@@ -4,6 +4,7 @@
 
 ### Questions?
 
+* [![Gitter chat](https://badges.gitter.im/dbashford/mimosa.png)](https://gitter.im/dbashford/mimosa)
 * [Google Group](https://groups.google.com/forum/#!forum/mimosajs)
 * [Twitter @mimosajs](https://twitter.com/mimosajs/)
 
