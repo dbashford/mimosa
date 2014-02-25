@@ -28,7 +28,7 @@ __generateTemplateName = (fileName, config) ->
         nameTransform filePath
 
       if typeof returnFilepath isnt "string"
-        logger.error "Application of template.nameTransform for file [[ #{fileName} ]] did not result in string"
+        logger.error "Application of template.nameTransform for file [[ #{fileName} ]] did not result in string", {exitIfBuild:true}
         "nameTransformFailed"
       else
         returnFilepath

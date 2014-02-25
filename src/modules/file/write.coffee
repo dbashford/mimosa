@@ -23,7 +23,7 @@ _write = (config, options, next) ->
 
     fileUtils.writeFile file.outputFileName, file.outputFileText, (err) ->
       if err?
-        logger.error "Failed to write new file [[ #{file.outputFileName} ]], Error: #{err}"
+        logger.error "Failed to write new file [[ #{file.outputFileName} ]], Error: #{err}", {exitIfBuild:true}
       else
         logger.success "Wrote file [[ #{file.outputFileName} ]]", options
       done()

@@ -16,7 +16,7 @@ _read = (config, options, next) ->
     return done() unless file.inputFileName?
     fs.readFile file.inputFileName, (err, text) ->
       if err?
-        logger.error "Failed to read file [[ #{file.inputFileName} ]], #{err}"
+        logger.error "Failed to read file [[ #{file.inputFileName} ]], #{err}", {exitIfBuild:true}
       else
         if options.isJavascript or options.isCSS or options.isTemplate
           text = text.toString()
