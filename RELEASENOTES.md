@@ -1,3 +1,8 @@
+## 2.1.8 - Feb 24 2014
+
+### Minor Changes
+* [mimosa #368](https://github.com/dbashford/mimosa/issues/368). Fixed issue with 368 where web-package was not getting new default.
+
 ## 2.1.7 - Feb 23 2014
 
 ### Major Changes
