@@ -1,3 +1,8 @@
+## 2.1.10 - Feb 25 2014
+
+### Major Changes
+* __New Module__: [mimosa-autoprefixer](https://github.com/dbashford/mimosa-autoprefixer). Will automatically apply CSS vendor prefixes. Includes source map support.
+
 ## 2.1.9 - Feb 25 2014
 
 ### Major Changes
