@@ -27,5 +27,9 @@ registerCommand = (buildFirst, isDebug, callback) ->
 
 module.exports = (program) ->
   for mod in modules.modulesWithCommands()
-    mod.registerCommand program, registerCommand
-
+    # older API just took two commands, newer API,
+    # as of 2.1.10 allows passing of logger
+    if mod.registerCommand.length is 2
+      mod.registerCommand program, registerCommand
+    else
+      mod.registerCommand program, logger, registerCommand

@@ -1,1 +1,0 @@
-And this is coming from another {{name}} template that is concatenated into a single template file with the others.

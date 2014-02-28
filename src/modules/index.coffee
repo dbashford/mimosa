@@ -6,7 +6,8 @@ path = require 'path'
 
 _ =      require 'lodash'
 logger = require 'logmimosa'
-skels = require 'skelmimosa'
+skels =  require 'skelmimosa'
+newmod = require 'newmimosa'
 
 compilers =     require './compilers'
 file =          require './file'
@@ -166,7 +167,7 @@ configured = (moduleNames, callback) ->
 
   processModule()
 
-all = [compilers, logger, file, skels].concat _.pluck(meta, 'mod')
+all = [compilers, logger, file, skels, newmod].concat _.pluck(meta, 'mod')
 
 modulesWithCommands = ->
   mods = []

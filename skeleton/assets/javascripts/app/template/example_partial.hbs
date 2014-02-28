@@ -1,1 +1,0 @@
-Aaaaand this is coming from a Handlebars partial, which does not need to be registered with Handlebars.registerPartial.  It just works!

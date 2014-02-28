@@ -1,9 +1,0 @@
-$, templates <- define <[jquery templates]>
-
-class ExampleView
-  render: !(element)->
-    ($ element)
-      &append(templates.example.render {name:'Hogan', css:'CSSHERE'}, templates)
-      &append(templates.'another-example'.render {name:'Hogan'}, templates)
-
-ExampleView
