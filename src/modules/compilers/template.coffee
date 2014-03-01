@@ -47,15 +47,16 @@ __removeClientLibrary = (clientPath, cb) ->
   else
     cb()
 
-__testForSameTemplateName = (fileNames) ->
-  templateHash = {}
-  fileNames.forEach (fileName) ->
-    templateName = path.basename(fileName, path.extname(fileName))
-    if templateHash[templateName]?
-      logger.error "Files [[ #{templateHash[templateName]} ]] and [[ #{fileName} ]] result in templates of the same name " +
+__testForSameTemplateName = (files) ->
+  nameHash = {}
+  files.forEach (file) ->
+    templateName = file.tName
+    fileName = file.fName
+    if nameHash[templateName]
+      logger.error "Files [[ #{nameHash[templateName]} ]] and [[ #{fileName} ]] result in templates of the same name " +
                    "being created.  You will want to change the name for one of them or they will collide."
     else
-      templateHash[templateName] = fileName
+      nameHash[templateName] = fileName
 
 __templatePreamble = (file) ->
   """
@@ -179,7 +180,7 @@ module.exports = class TemplateCompiler
       options.files.forEach (file) =>
         for folder in outputFileConfig.folders
           if file.inputFileName?.indexOf(path.join(folder, path.sep)) is 0
-            mergedFiles.push file.inputFileName
+            mergedFiles.push {tName: file.templateName, fName: file.inputFileName}
             unless config.isOptimize
               mergedText += __templatePreamble file
             mergedText += file.outputFileText
