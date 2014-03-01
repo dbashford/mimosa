@@ -1,6 +1,7 @@
 ## 2.1.10 - Feb 28 2014
 
 ### Major Changes
+* [mimosa #376](https://github.com/dbashford/mimosa/issues/376). Fixed issue with duplicate template names being improperly reported.
 * [mimosa #375](https://github.com/dbashford/mimosa/issues/375). All of the `mimosa new` code, the command as well as the skeleton files, have been pulled into [newmimosa](https://github.com/dbashford/newmimosa/) and are brought into mimosa as a dependency.
 * __New Module__: [mimosa-autoprefixer](https://github.com/dbashford/mimosa-autoprefixer). Will automatically apply CSS vendor prefixes. Includes source map support.
 
