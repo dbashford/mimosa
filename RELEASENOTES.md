@@ -1,3 +1,9 @@
+## 2.1.11 - Mar 3 2014
+
+### Minor Changes
+* Continuing to eliminate leading `#` in module placeholders.
+* [mimosa-jshint](https://github.com/dbashford/mimosa-jshint/) has been updated to include the latest jshint.  The latest jshint includes support for `import 'foo'` es6 module syntax.
+
 ## 2.1.10 - Feb 28 2014
 
 ### Major Changes
