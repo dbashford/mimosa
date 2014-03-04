@@ -1,3 +1,8 @@
+## 2.1.13 - Mar 4 2014
+
+### Minor Changes
+* [mimosa-jshint](https://github.com/dbashford/mimosa-jshint/) now allows the `.jshintrc` to have comments.  Previously it had to be 100% valid JSON and comments were not allowed.
+
 ## 2.1.12 - Mar 4 2014
 
 ### Minor Changes
