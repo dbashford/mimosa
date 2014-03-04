@@ -1,3 +1,8 @@
+## 2.1.12 - Mar 4 2014
+
+### Minor Changes
+* [mimosa-require #30](https://github.com/dbashford/mimosa-require/issues/30). Adds support for [css](https://github.com/guybedford/require-css) plugin. Will not treat paths as javascript paths and will verify path exists in file system.
+
 ## 2.1.11 - Mar 3 2014
 
 ### Minor Changes
