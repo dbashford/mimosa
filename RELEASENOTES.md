@@ -1,3 +1,8 @@
+## 2.1.14 - Mar 4 2014
+
+### Minor Changes
+* Quick patch for previous JSHint fixes.
+
 ## 2.1.13 - Mar 4 2014
 
 ### Minor Changes
