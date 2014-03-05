@@ -65,18 +65,18 @@
     "commander": "1.3.2",
     "chokidar": "0.6.3",
     "request": "2.33.0",
-    "logmimosa": "1.0.2",
+    "logmimosa": "1.0.3",
     "skelmimosa": "1.0.0",
     "newmimosa": "1.0.0",
     "mimosa-server": "1.3.3",
-    "mimosa-minify-js": "1.1.0",
-    "mimosa-minify-css": "1.1.0",
+    "mimosa-minify-js": "1.1.1",
+    "mimosa-minify-css": "1.1.1",
     "mimosa-jshint": "1.1.4",
-    "mimosa-csslint": "1.1.0",
+    "mimosa-csslint": "1.1.1",
     "mimosa-live-reload": "1.1.1",
     "mimosa-require": "2.0.5",
     "mimosa-bower": "1.4.1",
-    "mimosa-copy": "1.1.0"
+    "mimosa-copy": "1.1.1"
   },
   "license": "MIT",
   "engines": {
