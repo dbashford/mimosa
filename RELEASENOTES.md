@@ -1,3 +1,8 @@
+## 2.1.15 - Mar ?? 2014
+
+### Minor Changes
+* [mimosa-emblem](https://github.com/dbashford/mimosa-emblem/) has been updated to the latest versions of emblem and handlebars.
+
 ## 2.1.14 - Mar 4 2014
 
 ### Minor Changes
