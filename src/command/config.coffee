@@ -18,7 +18,7 @@ copyConfig = (opts) ->
   logger.debug "Writing config defaults file to #{currDefaultsPath}"
   defaultsConf = """
 
-                 # The following is a commented version of the mimosa-config with all of
+                 # The following is a version of the mimosa-config with all of
                  # the defaults listed. This file is meant for reference only.
 
                  #{conf}

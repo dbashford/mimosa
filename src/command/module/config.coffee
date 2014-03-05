@@ -32,8 +32,8 @@ register = (program, callback) ->
     .description("Print out the configuration snippet for a module to the console")
     .action(callback)
     .on '--help', =>
-      logger.green('  The mod:config command will print out the default commented out CoffeeScript snippet ')
-      logger.green('  for the given named Mimosa module. If there is already a mimosa-config.coffee in the')
+      logger.green('  The mod:config command will print out the default CoffeeScript snippet for the')
+      logger.green('  given named Mimosa module. If there is already a mimosa-config.coffee in the')
       logger.green('  current directory, Mimosa will not copy the file in.')
       logger.blue( '\n    $ mimosa mod:config [nameOfModule]\n')
 

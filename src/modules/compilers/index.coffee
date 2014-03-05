@@ -73,25 +73,25 @@ exports.placeholder = ->
   """
   \t
 
-    # template:                         # overall template object can be set to null if no
-                                        # templates being used
-      # writeLibrary: true              # Whether or not to write a client library for
-                                        # any template compilers
-      # nameTransform: "fileName"       # means by which Mimosa creates the name for each
-                                        # template, options: default "fileName" is name of file,
-                                        # "filePath" is path of file after watch.sourceDir
-                                        # with the extension dropped, a supplied regex can be
-                                        # used to remove any unwanted portions of the filePath,
-                                        # and a provided function will be called with the
-                                        # filePath as input
-      # wrapType: "amd"                 # The type of module wrapping for the output templates
-                                        # file. Possible values: "amd", "common", "none".
-      # commonLibPath: null             # Valid when wrapType is 'common'. The path to the
-                                        # client library. Some libraries do not have clients
-                                        # therefore this is not strictly required when choosing
-                                        # the common wrapType.
-      # outputFileName: "javascripts/templates"  # the file all templates are compiled into,
-                                                 # is relative to watch.sourceDir.
+    template:                         # overall template object can be set to null if no
+                                      # templates being used
+      writeLibrary: true              # Whether or not to write a client library for
+                                      # any template compilers
+      nameTransform: "fileName"       # means by which Mimosa creates the name for each
+                                      # template, options: default "fileName" is name of file,
+                                      # "filePath" is path of file after watch.sourceDir
+                                      # with the extension dropped, a supplied regex can be
+                                      # used to remove any unwanted portions of the filePath,
+                                      # and a provided function will be called with the
+                                      # filePath as input
+      wrapType: "amd"                 # The type of module wrapping for the output templates
+                                      # file. Possible values: "amd", "common", "none".
+      commonLibPath: null             # Valid when wrapType is 'common'. The path to the
+                                      # client library. Some libraries do not have clients
+                                      # therefore this is not strictly required when choosing
+                                      # the common wrapType.
+      outputFileName: "javascripts/templates"  # the file all templates are compiled into,
+                                               # is relative to watch.sourceDir.
 
       # outputFileName:                 # outputFileName Alternate Config 1
         # hogan:"hogans"                # Optionally outputFileName can be provided an object of
