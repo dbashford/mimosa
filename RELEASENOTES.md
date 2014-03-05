@@ -1,4 +1,7 @@
-## 2.1.15 - Mar ?? 2014
+## 2.1.15 - Mar 5 2014
+
+### Major Changes
+* A vast majority of the `mimosa-config-documented.coffee` properties will now show up uncommented.  This should make the `-documented` file easier to read and make it play nicer with syntax highlighting.
 
 ### Minor Changes
 * [mimosa-emblem](https://github.com/dbashford/mimosa-emblem/) has been updated to the latest versions of emblem and handlebars.
