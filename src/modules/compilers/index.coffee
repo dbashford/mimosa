@@ -28,6 +28,10 @@ _testDifferentTemplateLibraries = (config, options, next) ->
   next()
 
 exports.setupCompilers = (config) ->
+
+  if compilers.length
+    compilers = []
+
   for modName, mod of config.installedModules
     if mod.compilerType
       if logger.isDebug()
