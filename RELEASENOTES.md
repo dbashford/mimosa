@@ -1,3 +1,8 @@
+## 2.1.16 - Mar 7 2014
+
+### Minor Changes
+* [mimosa-ember-handlebars #2](https://github.com/dbashford/mimosa-ember-handlebars/issues/2/). Fixed issue in mimosa core where compilers were getting registered twice during `mimosa build`.
+
 ## 2.1.15 - Mar 5 2014
 
 ### Major Changes
