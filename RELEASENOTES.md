@@ -2,6 +2,7 @@
 
 ### Minor Changes
 * Added `file.write` helper to mimosaConfig being passed around.  Saves modules from needing to deal with recursive directory creation.
+* [mimosa-testem-require #10](https://github.com/dbashford/mimosa-testem-require/issues/10). Via PR all the libraries, sinon, chai, mocha, and sinon-chai, have been upgraded to their latest versions.
 
 ## 2.1.16 - Mar 7 2014
 
