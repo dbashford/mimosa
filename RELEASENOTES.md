@@ -1,3 +1,8 @@
+## 2.1.17 - Mar ?? 2014
+
+### Minor Changes
+* Added `file.write` helper to mimosaConfig being passed around.  Saves modules from needing to deal with recursive directory creation.
+
 ## 2.1.16 - Mar 7 2014
 
 ### Minor Changes

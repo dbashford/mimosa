@@ -11,6 +11,7 @@ coffeescript = require 'coffee-script'
 validators =    require './validators'
 moduleManager = require '../modules'
 Module =        require 'module'
+fileUtils =     require '../util/file'
 
 PRECOMPILE_FUN_REGION_START_RE         = /^(.*)\smimosa-config:\s*{/
 PRECOMPILE_FUN_REGION_END_RE           = /\smimosa-config:\s*}/
@@ -223,9 +224,14 @@ _extractPrecompileFunctionSource = (configSource) ->
 
   return ""
 
-_validateSettings = (config, modules) ->
+_setUpHelpers = (config) ->
+  config.helpers =
+    file:
+      write: fileUtils.writeFile
+      
   config.log = logger
 
+_validateSettings = (config, modules) ->
   errors = _validateWatchConfig(config)
 
   if errors.length is 0
@@ -264,6 +270,7 @@ _applyAndValidateDefaults = (config, callback) ->
   moduleManager.getConfiguredModules moduleNames, (modules) ->
     config.root = process.cwd()
     config = _extend _moduleDefaults(modules), config
+    _setUpHelpers(config)
     [errors, config] = _validateSettings(config, modules)
     err = if errors.length is 0
       logger.debug "No mimosa config errors"
