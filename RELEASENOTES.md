@@ -1,8 +1,9 @@
-## 2.1.17 - Mar ?? 2014
+## 2.1.17 - Mar 7 2014
 
 ### Minor Changes
 * Added `file.write` helper to mimosaConfig being passed around.  Saves modules from needing to deal with recursive directory creation.
 * [mimosa-testem-require #10](https://github.com/dbashford/mimosa-testem-require/issues/10). Via PR all the libraries, sinon, chai, mocha, and sinon-chai, have been upgraded to their latest versions.
+* [mimosa-ember-handlebars #3](https://github.com/dbashford/mimosa-ember-handlebars/issues/3/). Updated the Ember portion of the compiler.
 
 ## 2.1.16 - Mar 7 2014
 
