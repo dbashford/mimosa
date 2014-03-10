@@ -1,3 +1,8 @@
+## 2.1.18 - Mar 10 2014
+
+### Minor Changes
+* [mimosa #379](https://github.com/dbashford/mimosa/issues/379). mimosa-bower now handles `package.json` `main` a bit better, checking to see if the reference is to a folder/file and adjusting accordingly.
+
 ## 2.1.17 - Mar 7 2014
 
 ### Minor Changes
