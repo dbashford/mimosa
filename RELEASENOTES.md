@@ -1,3 +1,9 @@
+## 2.1.19 - Mar ?? 2014
+
+### Major Changes
+* __New Module__: [mimosa-react](https://github.com/dbashford/mimosa-uncss). A new JavaScript compiler.  This compiles your React/JSX templates to JavaScript.
+* __New Module__: [mimosa-uncss](https://github.com/dbashford/mimosa-uncss). Run this module over your css files and eliminate all the unused CSS from your application.  I ran this over my company's corporate sit and saved 77%!
+
 ## 2.1.18 - Mar 10 2014
 
 ### Minor Changes
