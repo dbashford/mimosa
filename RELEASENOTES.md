@@ -5,6 +5,9 @@
 * __New Module__: [mimosa-react](https://github.com/dbashford/mimosa-uncss). A new JavaScript compiler.  This compiles your React/JSX templates to JavaScript.
 * __New Module__: [mimosa-uncss](https://github.com/dbashford/mimosa-uncss). Run this module over your css files and eliminate all the unused CSS from your application.  I ran this over my company's corporate sit and saved 77%!
 
+### Minor Changes
+* [mimosa-web-package #11](https://github.com/dbashford/mimosa-web-package/pull/11). Now properly registering coffeescript/iced in `app.js`.
+
 ## 2.1.18 - Mar 10 2014
 
 ### Minor Changes
