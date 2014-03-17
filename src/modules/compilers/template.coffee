@@ -71,7 +71,7 @@ module.exports = class TemplateCompiler
   constructor: (config, @compiler) ->
     @extensions = @compiler.extensions(config)
 
-    if @compiler.clientLibrary? and config.template.wrapType is 'amd'
+    if @compiler.clientLibrary and (config.template.wrapType is 'amd' or config.template.writeLibrary)
       @clientPath = path.basename(@compiler.clientLibrary)
       @clientPath = path.join config.vendor.javascripts, @clientPath
       @clientPath = @clientPath.replace config.watch.sourceDir, config.watch.compiledDir

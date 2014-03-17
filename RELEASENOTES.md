@@ -1,4 +1,4 @@
-## 2.1.19 - Mar ?? 2014
+## 2.1.19 - Mar 17 2014
 
 ### Major Changes
 * __New Skeleton __: [react-backbone](https://github.com/dbashford/MimosaReactBackboneTodoList). A React, Backbone, Require.js, Bower Todo App.
@@ -6,6 +6,7 @@
 * __New Module__: [mimosa-uncss](https://github.com/dbashford/mimosa-uncss). Run this module over your css files and eliminate all the unused CSS from your application.  I ran this over my company's corporate sit and saved 77%!
 
 ### Minor Changes
+* [mimosa & mimosa-ractive #1](https://github.com/dbashford/mimosa-ractive/issues/1). Mimosa's template compilers come with their own client libraries.  The determining factor for whether or not mimosa writes those libraries has been whether or not you are using AMD. Not long ago a `writeLibrary` config property was added.  This properly will now determine whether or not to write the client library.
 * [mimosa-web-package #11](https://github.com/dbashford/mimosa-web-package/pull/11). Now properly registering coffeescript/iced in `app.js`.
 
 ## 2.1.18 - Mar 10 2014
