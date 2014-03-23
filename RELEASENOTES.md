@@ -1,3 +1,13 @@
+## 2.1.20 - Mar 23 2014
+
+### Major Changes
+* __New Module__: [mimosa-vault](https://github.com/breathe/mimosa-vault). Mimosa module which uses the [vault](https://github.com/jcoglan/vault/tree/master/node) project to generate passwords derived from a secret key.
+* __New Module__: [mimosa-inline-css-import](https://github.com/jbruni/mimosa-inline-css-import).  Will inline your CSS @import code into your stylesheet.
+* [mimosa-require #31](https://github.com/dbashford/mimosa-require/issues/31). mimosa-require now has better support for require.js plugins. A new `require.verify.plugins` config allows you to configure which plugins you are using and what the extensions for those plugins are so the plugin paths can be validated.
+
+### Minor Changes
+* [mimosa-browserify](https://github.com/JonET/mimosa-browserify). By default source maps are now turned off during `mimosa build`.
+
 ## 2.1.19 - Mar 17 2014
 
 ### Major Changes

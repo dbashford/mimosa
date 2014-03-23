@@ -1,7 +1,7 @@
 {
   "name": "mimosa",
   "preferGlobal": "true",
-  "version": "2.1.19",
+  "version": "2.1.20",
   "homepage": "http://www.mimosa.io",
   "author": "David Bashford",
   "description": "A lightning-fast, modular, next generation browser development tool.",
@@ -74,7 +74,7 @@
     "mimosa-jshint": "1.1.4",
     "mimosa-csslint": "1.1.1",
     "mimosa-live-reload": "1.1.1",
-    "mimosa-require": "2.0.5",
+    "mimosa-require": "2.1.0",
     "mimosa-bower": "1.4.3",
     "mimosa-copy": "1.1.1"
   },
