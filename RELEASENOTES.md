@@ -1,3 +1,8 @@
+## 2.1.21 - Mar ?? 2014
+
+### Minor Changes
+* [mimosa-client-jade-static #7](https://github.com/dbashford/mimosa-client-jade-static/pull/7). Now if compile fails during build the mimosa process will exit with error code.
+
 ## 2.1.20 - Mar 23 2014
 
 ### Major Changes
