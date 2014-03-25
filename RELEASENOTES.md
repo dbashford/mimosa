@@ -2,6 +2,8 @@
 
 ### Major Changes
 * [mimosa-ember-handlebars #4](https://github.com/dbashford/mimosa-ember-handlebars/issues/4). Bumped version to `2.0.0` after removing `lib` option and switching to using npm installed packages for specific versions.  Now uses [ember-template-compiler](https://github.com/toranb/ember-template-compiler).
+* [mimosa-emblem](https://github.com/dbashford/mimosa-emblem). Bumped version to `2.0.0` after removing `handlebarsLib` option and switching to using npm installed packages for specific versions.  Now uses [ember-template-compiler](https://github.com/toranb/ember-template-compiler).
+
 
 ### Minor Changes
 * [mimosa-client-jade-static #7](https://github.com/dbashford/mimosa-client-jade-static/pull/7). Now if compile fails during build the mimosa process will exit with error code.
