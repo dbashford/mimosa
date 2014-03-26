@@ -21,7 +21,7 @@
 ## 2.1.19 - Mar 17 2014
 
 ### Major Changes
-* __New Skeleton __: [react-backbone](https://github.com/dbashford/MimosaReactBackboneTodoList). A React, Backbone, Require.js, Bower Todo App.
+* __New Skeleton__: [react-backbone](https://github.com/dbashford/MimosaReactBackboneTodoList). A React, Backbone, Require.js, Bower Todo App.
 * __New Module__: [mimosa-react](https://github.com/dbashford/mimosa-uncss). A new JavaScript compiler.  This compiles your React/JSX templates to JavaScript.
 * __New Module__: [mimosa-uncss](https://github.com/dbashford/mimosa-uncss). Run this module over your css files and eliminate all the unused CSS from your application.  I ran this over my company's corporate sit and saved 77%!
 
