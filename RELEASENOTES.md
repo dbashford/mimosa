@@ -1,3 +1,8 @@
+## 2.1.22 - Mar ?? 2014
+
+### Minor Changes
+* [mimosa-client-jade-static #8](https://github.com/dbashford/mimosa-client-jade-static/pull/8). Brought client-jade-static to latest jade version.
+
 ## 2.1.21 - Mar 26 2014
 
 ### Major Changes
