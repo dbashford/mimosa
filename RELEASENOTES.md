@@ -1,6 +1,7 @@
-## 2.1.22 - Mar ?? 2014
+## 2.1.22 - Mar 29 2014
 
 ### Minor Changes
+* [mimosa #385](https://github.com/dbashford/mimosa/issues/385). mimosa-minify-css now allows configuring of the [clean-css options](https://github.com/GoalSmashers/clean-css#how-to-use-clean-css-programmatically). By default mimosa-minify-css will not strip `@import`s.
 * [mimosa-client-jade-static #8](https://github.com/dbashford/mimosa-client-jade-static/pull/8). Brought client-jade-static to latest jade version.
 * [mimosa-jade #1](https://github.com/dbashford/mimosa-jade/pull/1). Brought jade up to `1.3.0` of jade.
 
