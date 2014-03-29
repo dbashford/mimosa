@@ -1,6 +1,6 @@
 "use strict"
 
-module.exports = class CopyCompiler
+module.exports = class MiscCompiler
 
   constructor: (config, @compiler) ->
     @extensions = @compiler.extensions(config)

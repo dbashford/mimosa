@@ -9,7 +9,7 @@ logger = require 'logmimosa'
 JavaScriptCompiler = require( "./javascript" )
 CSSCompiler = require( "./css" )
 TemplateCompiler = require( "./template" )
-CopyCompiler = require( "./copy" )
+MiscCompiler = require( "./misc" )
 
 compilers = []
 
@@ -51,7 +51,8 @@ exports.registration = (config, register) ->
       logger.debug "Creating compiler " + compiler.name
 
     CompilerClass = switch compiler.compilerType
-      when "copy" then CopyCompiler
+      when "copy" then MiscCompiler
+      when "misc" then MiscCompiler
       when "javascript" then JavaScriptCompiler
       when "template" then TemplateCompiler
       when "css" then CSSCompiler
