@@ -1,3 +1,8 @@
+## 2.1.23 - Mar 29 2014
+
+### Major Changes
+* __New Module__: [mimosa-jade-static](https://github.com/emirotin/mimosa-jade-static). A new template compiler, jade-static automatically executes compiled jade templates to generate the HTML.  It then does all that normal template compilers do.  It merges the HTML strings into a single file.
+
 ## 2.1.22 - Mar 29 2014
 
 ### Minor Changes
