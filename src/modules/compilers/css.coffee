@@ -20,12 +20,19 @@ __baseOptionsObject = (config, base) ->
   inputFileText:null
   outputFileText:null
 
+_init = (config, options, next) ->
+  options.destinationFile = (fileName) ->
+    __buildDestinationFile config, fileName
+  next()
+
 module.exports = class CSSCompiler
 
   constructor: (config, @compiler) ->
     @extensions = @compiler.extensions(config)
 
   registration: (config, register) ->
+    register ['add','update','remove','cleanFile','buildExtension'], 'init', _init, @extensions
+
     register ['buildExtension'], 'init',    @_processWatchedDirectories, [@extensions[0]]
     register ['buildExtension'], 'init',    @_findBasesToCompileStartup, [@extensions[0]]
     register ['buildExtension'], 'compile', @_compile,                   [@extensions[0]]

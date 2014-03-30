@@ -50,10 +50,32 @@ module.exports = class JSCompiler
 
   registration: (config, register) ->
     exts = @compiler.extensions(config)
-    register ['add','update','buildFile'], 'compile', @_compile, exts
+
+    register(
+      ['add','update','remove','cleanFile','buildFile'],
+      'init',
+      @_determineOutputFile,
+      exts)
+
+    register(
+      ['add','update','buildFile'],
+      'compile',
+      @_compile,
+      exts)
 
     if @compiler.cleanUpSourceMaps
       _cleanUpSourceMapsRegister register, exts
+
+  _determineOutputFile: (config, options, next) ->
+    if options.files and options.files.length
+      options.destinationFile = (fileName) ->
+        baseCompDir = fileName.replace(config.watch.sourceDir, config.watch.compiledDir)
+        baseCompDir.substring(0, baseCompDir.lastIndexOf(".")) + ".js"
+
+      options.files.forEach (file) ->
+        file.outputFileName = options.destinationFile( file.inputFileName )
+
+    next()
 
   _compile: (config, options, next) =>
     hasFiles = options.files?.length > 0

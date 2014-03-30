@@ -66,6 +66,17 @@ __templatePreamble = (file) ->
   //\n
   """
 
+_init = (config, options, next) ->
+  options.destinationFile = (compilerName, folders) ->
+    for outputConfig in config.template.output
+      if outputConfig.folders is folders
+        outputFileName = outputConfig.outputFileName
+        if outputFileName[compilerName]
+          return path.join(config.watch.compiledDir, outputFileName[compilerName] + ".js")
+        else
+          return path.join(config.watch.compiledDir, outputFileName + ".js")
+  next()
+
 module.exports = class TemplateCompiler
 
   constructor: (config, @compiler) ->
@@ -81,6 +92,8 @@ module.exports = class TemplateCompiler
 
   registration: (config, register) ->
     @requireRegister = config.installedModules['mimosa-require']
+
+    register ['add','update','remove','cleanFile','buildExtension'], 'init', _init, @extensions
 
     register ['buildExtension'],        'init',         @_gatherFiles, [@extensions[0]]
     register ['add','update','remove'], 'init',         @_gatherFiles, @extensions
