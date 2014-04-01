@@ -22,20 +22,22 @@ module.exports = class MiscCompiler
       @extensions)
 
   _determineOutputFile: (config, options, next) =>
-    if options.files and options.files.length
+    # if destinationFile is already there,
+    # ignore all this, don't want these compilers
+    # overwriting compiler with same extension
+    if options.files and options.files.length and !options.destinationFile
+
       if @compiler.compilerType is "copy"
         options.destinationFile = (fileName) ->
           fileName.replace(config.watch.sourceDir, config.watch.compiledDir)
 
         options.files.forEach (file) ->
           file.outputFileName = options.destinationFile( file.inputFileName )
-        next()
       else
         if @compiler.determineOutputFile
           @compiler.determineOutputFile( config, options, next )
         else
           if logger.isDebug()
             logger.debug "compiler [[ " + @compiler.name + " ]] does not have determineOutputFile function."
-          next()
-    else
-      next()
+
+    next()

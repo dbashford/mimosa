@@ -45,6 +45,16 @@ exports.setupCompilers = (config) ->
   for type, extensions of config.extensions
     config.extensions[type] = _.uniq(extensions)
 
+  # sort copy and misc to the end of compilers list
+  # as they are not to override other compilers,
+  # for instance if two compilers both register
+  # for same extension
+  if config.resortCompilers
+    backloadCompilers = ["copy", "misc"]
+    copyMisc = _.remove compilers, (comp) ->
+      backloadCompilers.indexOf( comp.compilerType ) > -1
+    compilers = compilers.concat copyMisc
+
 exports.registration = (config, register) ->
   for compiler in compilers
     if logger.isDebug()

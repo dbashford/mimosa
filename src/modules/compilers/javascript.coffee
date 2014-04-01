@@ -3,7 +3,6 @@
 path = require 'path'
 fs = require 'fs'
 
-_ = require "lodash"
 logger = require 'logmimosa'
 
 fileUtils = require '../../util/file'

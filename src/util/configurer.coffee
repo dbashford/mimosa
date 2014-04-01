@@ -22,6 +22,7 @@ baseDefaults =
   minMimosaVersion:null
   requiredMimosaVersion:null
   modules: [ 'copy', 'jshint', 'csslint', 'server', 'require', 'minify-js', 'minify-css', 'live-reload', 'bower']
+  resortCompilers: true  
   timer:
     enabled: false
   watch:
@@ -228,7 +229,7 @@ _setUpHelpers = (config) ->
   config.helpers =
     file:
       write: fileUtils.writeFile
-      
+
   config.log = logger
 
 _validateSettings = (config, modules) ->
