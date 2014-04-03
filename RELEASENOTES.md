@@ -1,3 +1,9 @@
+## 2.1.24 - Apr ?? 2014
+
+### Minor Changes
+* [server-template-compile](https://github.com/dbashford/mimosa-server-template-compile/). server-template-compile now will prettify HTML output if not using `minify` or `optimize` flags.
+
+
 ## 2.1.23 - Mar 29 2014
 
 ### Major Changes
