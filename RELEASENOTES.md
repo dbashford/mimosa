@@ -1,8 +1,11 @@
 ## 2.1.24 - Apr ?? 2014
 
+### Major Changes
+* __New Module__: [mimosa-d3-on-window](https://github.com/dbasford/mimosa-d3-on-window). Attaches d3 to the `window` object by modifying the source library. Allows for continuing to use bower to pull in d3 as build tool will always update d3 to attach it to `window`.
+* __New Module__: [mimosa-adhoc-module](https://github.com/dbasford/mimosa-adhoc-module). A super simple and super powerful module. This module lets you register simple one-off modules that are local to your codebase by simply `require`ing them into your `mimosa-config`.
+
 ### Minor Changes
 * [server-template-compile](https://github.com/dbashford/mimosa-server-template-compile/). server-template-compile now will prettify HTML output if not using `minify` or `optimize` flags.
-
 
 ## 2.1.23 - Mar 29 2014
 
