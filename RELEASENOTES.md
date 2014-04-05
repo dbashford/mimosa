@@ -1,4 +1,11 @@
-## 2.1.24 - Apr ?? 2014
+## 2.2.0 - Apr ?? 2014
+
+### Major Changes
+* [mimosa #382](https://github.com/dbashford/mimosa/issues/382). Mimosa is heavily extension based. Mimosa and its modules determine when to do what based on a file's extension.  Occasionally the same extension needs to have different things done. One example is for the upcoming [traceur module](https://github.com/CraigCav/mimosa-traceur). mimosa-traceur wants to compile `.js` files to `.js` files.  Meanwhile, the [copy module](https://github.com/dbashford/mimosa-copy) wants to copy `.js` files to `.js` files.  Both of those modules want to process `.js` files and having them clash will cause issues.  If a copy compiler processes a file after the traceur compiler, it will overwrite the compiling done by traceur.
+
+    With `2.2` some things have changed with how compilers sort themselves out. Chiefly, those compilers that self-identify as `copy` or `misc` (as opposed to `javascript`, `css` or `template`) will be sorted to the end of the queue for priority for processing a file.  copy is very much a default sort of behavior, and if anything else wants to manage a file that is also managed by the copy compiler, copy should not win that conflict. So, as in the case above, if both traceur and copy want to process a `.js` file, traceur should do it and the copy compiler shouldn't.
+
+    There is minor potential for this change to cause people some trouble, but it is largely unlikely.  Still, it was worth the larger version bump.
 
 ### Major Changes
 * __New Module__: [mimosa-d3-on-window](https://github.com/dbasford/mimosa-d3-on-window). Attaches d3 to the `window` object by modifying the source library. Allows for continuing to use bower to pull in d3 as build tool will always update d3 to attach it to `window`.
