@@ -8,8 +8,8 @@
     There is minor potential for this change to cause people some trouble, but it is largely unlikely.  Still, it was worth the larger version bump.
 
 ### Major Changes
-* __New Module__: [mimosa-d3-on-window](https://github.com/dbasford/mimosa-d3-on-window). Attaches d3 to the `window` object by modifying the source library. Allows for continuing to use bower to pull in d3 as build tool will always update d3 to attach it to `window`.
-* __New Module__: [mimosa-adhoc-module](https://github.com/dbasford/mimosa-adhoc-module). A super simple and super powerful module. This module lets you register simple one-off modules that are local to your codebase by simply `require`ing them into your `mimosa-config`.
+* __New Module__: [mimosa-d3-on-window](https://github.com/dbashford/mimosa-d3-on-window). Attaches d3 to the `window` object by modifying the source library. Allows for continuing to use bower to pull in d3 as build tool will always update d3 to attach it to `window`.
+* __New Module__: [mimosa-adhoc-module](https://github.com/dbashford/mimosa-adhoc-module). A super simple and super powerful module. This module lets you register simple one-off modules that are local to your codebase by simply `require`ing them into your `mimosa-config`.
 
 ### Minor Changes
 * [server-template-compile](https://github.com/dbashford/mimosa-server-template-compile/). server-template-compile now will prettify HTML output if not using `minify` or `optimize` flags.
@@ -222,7 +222,7 @@ This release just solved some problems with NPM not properly installing Mimosa.
 ## 2.0.4 - Jan 28 2014
 
 ### Major Changes
-* __New Module__: [mimosa-handlebars-on-window](https://github.com/dbasford/mimosa-handlebars-on-window). A dead simple module that will alter `handlebars.js` source slightly to attach `Handlebars` to the `window` object. Solves some current issues with Ember.js and r.js optimized builds.  Also allows for managing Handlebars via Bower.
+* __New Module__: [mimosa-handlebars-on-window](https://github.com/dbashford/mimosa-handlebars-on-window). A dead simple module that will alter `handlebars.js` source slightly to attach `Handlebars` to the `window` object. Solves some current issues with Ember.js and r.js optimized builds.  Also allows for managing Handlebars via Bower.
 
 ### Minor Changes
 * [mimosa #354](https://github.com/dbashford/mimosa/issues/354). Added `template.writeLibrary` config to allow for not writing template libraries, like `handlebars.js`.  By default Mimosa's template compiler functionality will write an AMD version of the client library.
@@ -241,7 +241,7 @@ This release just solved some problems with NPM not properly installing Mimosa.
 ## 2.0.1 - Jan 26 2014
 
 ### Major Changes
-* __New Module__: [mimosa-generator](https://github.com/dbasford/mimosa-regenerator). This module will transpile your ES6 generators down to valid ES5 javascript.
+* __New Module__: [mimosa-generator](https://github.com/dbashford/mimosa-regenerator). This module will transpile your ES6 generators down to valid ES5 javascript.
 
 ### Minor Changes
 * [mimosa-web-package #9](https://github.com/dbashford/mimosa-web-package/pull/9). This PR to web-package allows config files to be outside the root of the distributed web package.
