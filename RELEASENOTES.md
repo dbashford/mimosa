@@ -6,14 +6,13 @@
     With `2.2` some things have changed with how compilers sort themselves out. Chiefly, those compilers that self-identify as `copy` or `misc` (as opposed to `javascript`, `css` or `template`) will be sorted to the end of the queue for priority for processing a file.  copy is very much a default sort of behavior, and if anything else wants to manage a file that is also managed by the copy compiler, copy should not win that conflict. So, as in the case above, if both traceur and copy want to process a `.js` file, traceur should do it and the copy compiler shouldn't.
 
     There is minor potential for this change to cause people some trouble, but it is largely unlikely.  Still, it was worth the larger version bump.
-
-### Major Changes
 * __New Module__: [mimosa-d3-on-window](https://github.com/dbashford/mimosa-d3-on-window). Attaches d3 to the `window` object by modifying the source library. Allows for continuing to use bower to pull in d3 as build tool will always update d3 to attach it to `window`.
 * __New Module__: [mimosa-adhoc-module](https://github.com/dbashford/mimosa-adhoc-module). A super simple and super powerful module. This module lets you register simple one-off modules that are local to your codebase by simply `require`ing them into your `mimosa-config`.
 * [mimosa-coffeelint #3](https://github.com/dbashford/mimosa-coffeelint/pull/3). Via PR, coffeelint will now lint iced coffeescript files assuming you are using the mimosa-iced-coffeescript compiler.
 
 ### Minor Changes
 * [server-template-compile](https://github.com/dbashford/mimosa-server-template-compile/). server-template-compile now will prettify HTML output if not using `minify` or `optimize` flags.
+* [mimosa-web-package #12](https://github.com/dbashford/mimosa-web-package/pull/12). `npm install` is now run with `--production` flag.
 
 ## 2.1.23 - Mar 29 2014
 
