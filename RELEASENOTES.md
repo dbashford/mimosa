@@ -14,7 +14,11 @@
 ### Minor Changes
 * [server-template-compile](https://github.com/dbashford/mimosa-server-template-compile/). server-template-compile now will prettify HTML output if not using `minify` or `optimize` flags.
 * [mimosa-web-package #12](https://github.com/dbashford/mimosa-web-package/pull/12). `npm install` is now run with `--production` flag.
+* [mimosa-web-package #13](https://github.com/dbashford/mimosa-web-package/issues/13). Added `.travis.yml` to list of default excluded files from bundle.
+* [mimosa-web-package #14](https://github.com/dbashford/mimosa-web-package/issues/14). Added `useEntireConfig` setting. Previously web-package would pluck what it thought was the important portions of the `mimosa-config` out and create the `config.js` with it.  This setting allows for using the entire config.
 * [mimosa-coffeelint #4](https://github.com/dbashford/mimosa-coffeelint/pull/4). Improvements to logging.
+* [mimosa-stylus #2](https://github.com/dbashford/mimosa-stylus/issues/2). stylus compiler now supports `@require` syntax for bringing files in.
+
 
 ## 2.1.23 - Mar 29 2014
 
