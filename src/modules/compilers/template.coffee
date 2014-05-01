@@ -77,7 +77,21 @@ __destFile = (config) ->
           return path.join(config.watch.compiledDir, outputFileName + ".js")
 
 _init = (config, options, next) ->
-  options.destinationFile = __destFile(config);
+  # if processing a file, check and see if that file
+  # is inside a folder to be wrapped up in template file
+  # before laying claim to that file for the template compiler
+  if options.inputFile
+    for outputFileConfig in config.template.output
+      for folder in outputFileConfig.folders
+        if options.inputFile.indexOf(path.join(folder, path.sep)) is 0
+          options.destinationFile = __destFile(config);
+          return next()
+  else
+    # if not processing a file, then processing extension
+    # in which case lay claim to the extension as it
+    # was specifically registered
+    options.destinationFile = __destFile(config);
+
   next()
 
 module.exports = class TemplateCompiler
@@ -96,7 +110,7 @@ module.exports = class TemplateCompiler
   registration: (config, register) ->
     @requireRegister = config.installedModules['mimosa-require']
 
-    register ['add','update','remove','buildExtension'], 'init', _init, @extensions
+    register ['add','update','remove','buildExtension','buildFile'], 'init', _init, @extensions
 
     register ['buildExtension'],        'init',         @_gatherFiles, [@extensions[0]]
     register ['add','update','remove'], 'init',         @_gatherFiles, @extensions
@@ -116,6 +130,9 @@ module.exports = class TemplateCompiler
 
   _gatherFiles: (config, options, next) =>
     options.files = []
+
+    # consider simplifying if init takes care of whether or not
+    # compiler should be invoked
     for outputFileConfig in config.template.output
       if options.inputFile?
         for folder in outputFileConfig.folders
