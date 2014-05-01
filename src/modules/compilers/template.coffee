@@ -84,12 +84,14 @@ _init = (config, options, next) ->
     for outputFileConfig in config.template.output
       for folder in outputFileConfig.folders
         if options.inputFile.indexOf(path.join(folder, path.sep)) is 0
+          options.isTemplateFile = true
           options.destinationFile = __destFile(config);
           return next()
   else
     # if not processing a file, then processing extension
     # in which case lay claim to the extension as it
     # was specifically registered
+    options.isTemplateFile = true
     options.destinationFile = __destFile(config);
 
   next()
@@ -129,6 +131,8 @@ module.exports = class TemplateCompiler
       register ['buildExtension'], 'afterCompile', @_readInClientLibrary, [@extensions[0]]
 
   _gatherFiles: (config, options, next) =>
+    return next() unless options.isTemplateFile
+
     options.files = []
 
     # consider simplifying if init takes care of whether or not
@@ -168,8 +172,8 @@ module.exports = class TemplateCompiler
         outputFileText:null
 
   _compile: (config, options, next) =>
-    hasFiles = options.files?.length > 0
-    return next() unless hasFiles
+    return next() unless options.isTemplateFile
+    return next() unless options.files.length
 
     newFiles = []
     options.files.forEach (file, i) =>
@@ -190,8 +194,8 @@ module.exports = class TemplateCompiler
           next()
 
   _merge: (config, options, next) =>
-    hasFiles = options.files?.length > 0
-    return next() unless hasFiles
+    return next() unless options.isTemplateFile
+    return next() unless options.files.length
 
     libPath = @__libraryPath()
     prefix = @compiler.prefix config, libPath
@@ -247,6 +251,8 @@ module.exports = class TemplateCompiler
       __removeClientLibrary(outFile, done)
 
   _testForRemoveClientLibrary: (config, options, next) =>
+    return next() unless options.isTemplateFile
+
     if options.files?.length is 0
       logger.info "No template files left, removing template based assets"
       @_removeFiles(config, options, next)
@@ -254,6 +260,8 @@ module.exports = class TemplateCompiler
       next()
 
   _readInClientLibrary: (config, options, next) =>
+    return next() unless options.isTemplateFile
+
     if !@clientPath? or fs.existsSync @clientPath
       logger.debug "Not going to write template client library"
       return next()
