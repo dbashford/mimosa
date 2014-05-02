@@ -173,7 +173,7 @@ module.exports = class TemplateCompiler
 
   _compile: (config, options, next) =>
     return next() unless options.isTemplateFile
-    return next() unless options.files.length
+    return next() unless options.files?.length
 
     newFiles = []
     options.files.forEach (file, i) =>
@@ -195,7 +195,7 @@ module.exports = class TemplateCompiler
 
   _merge: (config, options, next) =>
     return next() unless options.isTemplateFile
-    return next() unless options.files.length
+    return next() unless options.files?.length
 
     libPath = @__libraryPath()
     prefix = @compiler.prefix config, libPath
