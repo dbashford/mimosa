@@ -1,29 +1,25 @@
 ## 2.2.0 - May ?? 2014
 
 ### Major Changes
-* [mimosa #382](https://github.com/dbashford/mimosa/issues/382). Mimosa is heavily extension based. Mimosa and its modules determine when to do what based on a file's extension.  Occasionally the same extension needs to have different things done. One example is for the upcoming [traceur module](https://github.com/CraigCav/mimosa-traceur). mimosa-traceur wants to compile `.js` files to `.js` files.  Meanwhile, the [copy module](https://github.com/dbashford/mimosa-copy) wants to copy `.js` files to `.js` files.  Both of those modules want to process `.js` files and having them clash will cause issues.  If a copy compiler processes a file after the traceur compiler, it will overwrite the compiling done by traceur.
-
-    With `2.2` some things have changed with how compilers sort themselves out. Chiefly, those compilers that self-identify as `copy` or `misc` (as opposed to `javascript`, `css` or `template`) will be sorted to the end of the queue for priority for processing a file.  copy is very much a default sort of behavior, and if anything else wants to manage a file that is also managed by the copy compiler, copy should not win that conflict. So, as in the case above, if both traceur and copy want to process a `.js` file, traceur should do it and the copy compiler shouldn't.
-
-    There is minor potential for this change to cause people some trouble, but it is largely unlikely.  Still, it was worth the larger version bump.
+* __New Skeleton__: [marionette-semantic](https://github.com/Anachron/mimosa-marionette). Marionette, RequireJS, Express, Jade, Bower, CoffeeScript, LESS, Semantic-UI and more.
 * __New Module__:[mimosa-testem-qunit](https://github.com/neverfox/mimosa-testem-qunit). A port of the mimosa-testem-require module to use qunit instead of mocha.
 * __New Module__: [mimosa-d3-on-window](https://github.com/dbashford/mimosa-d3-on-window). Attaches d3 to the `window` object by modifying the source library. Allows for continuing to use bower to pull in d3 as build tool will always update d3 to attach it to `window`.
 * __New Module__: [mimosa-adhoc-module](https://github.com/dbashford/mimosa-adhoc-module). A super simple and super powerful module. This module lets you register simple one-off modules that are local to your codebase by simply `require`ing them into your `mimosa-config`.
-* [mimosa-coffeelint #3](https://github.com/dbashford/mimosa-coffeelint/pull/3). Via PR, coffeelint will now lint iced coffeescript files assuming you are using the mimosa-iced-coffeescript compiler.
+* __New Module__: [mimosa-jade-static](https://github.com/emirotin/mimosa-jade-static). A new template compiler, jade-static automatically executes compiled jade templates to generate the HTML.  It then does all that normal template compilers do.  It merges the HTML strings into a single file.
+* [mimosa #382](https://github.com/dbashford/mimosa/issues/382). Mimosa is heavily extension based. Mimosa and its modules determine when to do what based on a file's extension.  Occasionally the same extension needs to have different things done. One example is when you want to have some `.html` based templates bundled together by Mimosa's [HTML-Template compiler](https://github.com/dbashford/mimosa-html-templates) and you want to have some `.html` files simply copied from the source directory to the compiled directory.  In that case two dramatically different compilers need to be invoked for the exact same file types.
+
+    With `2.2` some things have changed with how compilers sort themselves out. Chiefly, those compilers that self-identify as `copy` or `misc` (as opposed to `javascript`, `css` or `template`) will be sorted to the end of the queue for priority for processing a file.  copy is very much a default sort of behavior, and if anything else wants to manage a file that is also managed by the copy compiler, copy should not win that conflict. So, as in the case above, if both the template compiler and the copy compiler both want to process an `.html` file, the template compiler will win.
+
+    There is minor potential for this change to cause people some trouble, but it is largely unlikely.  Still, it was worth the larger version bump.
 
 ### Minor Changes
+* [mimosa-coffeelint #3](https://github.com/dbashford/mimosa-coffeelint/pull/3). Via PR, coffeelint will now lint iced coffeescript files assuming you are using the mimosa-iced-coffeescript compiler.
 * [server-template-compile](https://github.com/dbashford/mimosa-server-template-compile/). server-template-compile now will prettify HTML output if not using `minify` or `optimize` flags.
 * [mimosa-web-package #12](https://github.com/dbashford/mimosa-web-package/pull/12). `npm install` is now run with `--production` flag.
 * [mimosa-web-package #13](https://github.com/dbashford/mimosa-web-package/issues/13). Added `.travis.yml` to list of default excluded files from bundle.
 * [mimosa-web-package #14](https://github.com/dbashford/mimosa-web-package/issues/14). Added `useEntireConfig` setting. Previously web-package would pluck what it thought was the important portions of the `mimosa-config` out and create the `config.js` with it.  This setting allows for using the entire config.
 * [mimosa-coffeelint #4](https://github.com/dbashford/mimosa-coffeelint/pull/4). Improvements to logging.
 * [mimosa-stylus #2](https://github.com/dbashford/mimosa-stylus/issues/2). stylus compiler now supports `@require` syntax for bringing files in.
-
-
-## 2.1.23 - Mar 29 2014
-
-### Major Changes
-* __New Module__: [mimosa-jade-static](https://github.com/emirotin/mimosa-jade-static). A new template compiler, jade-static automatically executes compiled jade templates to generate the HTML.  It then does all that normal template compilers do.  It merges the HTML strings into a single file.
 
 ## 2.1.22 - Mar 29 2014
 
