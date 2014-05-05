@@ -1,10 +1,8 @@
 "use strict"
 
-fs =   require 'fs'
-
-logger = require 'logmimosa'
-
 _read = (config, options, next) ->
+  fs =   require 'fs'
+
   hasFiles = options.files?.length > 0
   return next() unless hasFiles
 
@@ -16,13 +14,12 @@ _read = (config, options, next) ->
     return done() unless file.inputFileName?
     fs.readFile file.inputFileName, (err, text) ->
       if err?
-        logger.error "Failed to read file [[ #{file.inputFileName} ]], #{err}", {exitIfBuild:true}
+        config.log.error "Failed to read file [[ #{file.inputFileName} ]], #{err}", {exitIfBuild:true}
       else
         if options.isJavascript or options.isCSS or options.isTemplate
           text = text.toString()
         file.inputFileText = text
       done()
-
 
 exports.registration = (config, register) ->
   e = config.extensions

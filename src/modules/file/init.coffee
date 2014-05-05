@@ -1,8 +1,7 @@
 "use strict"
 
-fileUtils = require '../../util/file'
-
 _initSingleAsset = (config, options, next) ->
+  fileUtils = require '../../util/file'
   fileUtils.setFileFlags( config, options )
 
   options.files = [{
@@ -15,6 +14,7 @@ _initSingleAsset = (config, options, next) ->
   next()
 
 _initMultiAsset = (config, options, next) ->
+  fileUtils = require '../../util/file'
   fileUtils.setFileFlags( config, options )
   options.files = []
   next()

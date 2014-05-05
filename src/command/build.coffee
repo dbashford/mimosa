@@ -4,7 +4,6 @@ build = (opts) =>
   Watcher =  require '../util/watcher'
   Cleaner = require '../util/cleaner'
 
-
   if opts.mdebug
     opts.debug = true
     logger.setDebug()

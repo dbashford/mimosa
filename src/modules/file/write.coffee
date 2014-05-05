@@ -1,10 +1,9 @@
 "use strict"
 
-logger = require 'logmimosa'
-
-fileUtils = require '../../util/file'
 
 _write = (config, options, next) ->
+  fileUtils = require '../../util/file'
+
   hasFiles = options.files?.length > 0
   return next() unless hasFiles
 
@@ -16,16 +15,16 @@ _write = (config, options, next) ->
     return done() if (file.outputFileText isnt "" and not file.outputFileText) or not file.outputFileName
 
     if file.outputFileText is ""
-      logger.warn "Compile of file [[ #{file.inputFileName} ]] resulted in empty output."
+      config.log.warn "Compile of file [[ #{file.inputFileName} ]] resulted in empty output."
 
-    if logger.isDebug()
-      logger.debug "Writing file [[ #{file.outputFileName} ]]"
+    if config.log.isDebug()
+      config.log.debug "Writing file [[ #{file.outputFileName} ]]"
 
     fileUtils.writeFile file.outputFileName, file.outputFileText, (err) ->
       if err?
-        logger.error "Failed to write new file [[ #{file.outputFileName} ]], Error: #{err}", {exitIfBuild:true}
+        config.log.error "Failed to write new file [[ #{file.outputFileName} ]], Error: #{err}", {exitIfBuild:true}
       else
-        logger.success "Wrote file [[ #{file.outputFileName} ]]", options
+        config.log.success "Wrote file [[ #{file.outputFileName} ]]", options
       done()
 
 exports.registration = (config, register) ->

@@ -1,24 +1,22 @@
 "use strict"
 
-fs = require 'fs'
-
-logger = require 'logmimosa'
-
 _delete = (config, options, next) ->
+  fs = require 'fs'
+
   fileName = options.destinationFile(options.inputFile)
   fs.exists fileName, (exists) ->
     unless exists
-      if logger.isDebug()
-        logger.debug "File does not exist? [[ #{fileName} ]]"
+      if config.log.isDebug()
+        config.log.debug "File does not exist? [[ #{fileName} ]]"
       return next()
 
-    if logger.isDebug()
-      logger.debug "Removing file [[ #{fileName} ]]"
+    if config.log.isDebug()
+      config.log.debug "Removing file [[ #{fileName} ]]"
     fs.unlink fileName, (err) ->
       if err
-        logger.error "Failed to delete file [[ #{fileName} ]]"
+        config.log.error "Failed to delete file [[ #{fileName} ]]"
       else
-        logger.success "Deleted file [[ #{fileName} ]]", options
+        config.log.success "Deleted file [[ #{fileName} ]]", options
       next()
 
 exports.registration = (config, register) ->

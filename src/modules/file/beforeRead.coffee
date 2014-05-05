@@ -2,10 +2,6 @@
 
 path = require 'path'
 
-logger = require 'logmimosa'
-
-fileUtils = require '../../util/file'
-
 allExtensions = null
 
 _notValidExtension = (file) ->
@@ -31,20 +27,21 @@ _fileNeedsCompiling = (config, options, next) ->
       newFiles.push file
       done()
     else
+      fileUtils = require '../../util/file'
       fileUtils.isFirstFileNewer file.inputFileName, file.outputFileName, (isNewer) ->
         if isNewer
           newFiles.push file
         else
-          if logger.isDebug()
-            logger.debug "Not processing [[ #{file.inputFileName} ]] as it is not newer than destination file."
+          if config.log.isDebug()
+            config.log.debug "Not processing [[ #{file.inputFileName} ]] as it is not newer than destination file."
         done()
 
 _fileNeedsCompilingStartup = (config, options, next) ->
   # force compiling on startup to build require dependency tree
   # but not for vendor javascript
   if config.__forceJavaScriptRecompile and options.isJSNotVendor
-    if logger.isDebug()
-      logger.debug "File [[ #{options.inputFile} ]] NEEDS compiling/copying"
+    if config.log.isDebug()
+      config.log.debug "File [[ #{options.inputFile} ]] NEEDS compiling/copying"
     next()
   else
     _fileNeedsCompiling(config, options, next)

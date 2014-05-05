@@ -9,10 +9,6 @@ clean = require './clean'
 
 modules = [init, beforeRead, read, write, del, clean]
 
-class MimosaFileModule
-
-  registration: (config, register) ->
-    modules.forEach (module) ->
-      module.registration(config, register)
-
-module.exports = new MimosaFileModule()
+exports.registration = (config, register) ->
+  modules.forEach (module) ->
+    module.registration(config, register)
