@@ -1,3 +1,11 @@
+## 2.2.1 - May 5 2014
+
+### Major Changes
+* Beginning process of speeding up startup performance.  Delayed loading of modules in `skelmimosa` and in mimosa core.  Should improve startup a good deal.  More to come.
+
+### Minor Changes
+* [mimosa #390](https://github.com/dbashford/mimosa/issues/390). Fixing bug introduced with `2.2.0`, mimosa startup getting stuck if no javascript files have changed.
+
 ## 2.2.0 - May 5 2014
 
 The slim possibility of a breaking change with [mimosa #382](https://github.com/dbashford/mimosa/issues/382) necessitated the bump to `2.2`, otherwise the number of changes to Mimosa's core was minimal.  It has been awhile since there was a release and plenty of modules and skeletons have been released since.
