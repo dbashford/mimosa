@@ -77,7 +77,7 @@ module.exports = class JSCompiler
     next()
 
   _compile: (config, options, next) =>
-    return unless options.files?.length
+    return next() unless options.files?.length
 
     i = 0
     newFiles = []
