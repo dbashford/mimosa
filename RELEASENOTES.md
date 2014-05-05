@@ -1,4 +1,10 @@
-## 2.2.0 - May ?? 2014
+## 2.2.0 - May 5 2014
+
+The slim possibility of a breaking change with [mimosa #382](https://github.com/dbashford/mimosa/issues/382) necessitated the bump to `2.2`, otherwise the number of changes to Mimosa's core was minimal.  It has been awhile since there was a release and plenty of modules and skeletons have been released since.
+
+Wrapping up and releasing this change to core clears the way to get back to features and bug fixes with various key modules.
+
+Next up is an attack on startup time.  Mimosa is super-fast once it gets going, but it can be a bit of a bear when it first starts up and there are a number of simple changes that can be made that should begin to address that.
 
 ### Major Changes
 * __New Skeleton__: [marionette-semantic](https://github.com/Anachron/mimosa-marionette). Marionette, RequireJS, Express, Jade, Bower, CoffeeScript, LESS, Semantic-UI and more.
