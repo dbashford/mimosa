@@ -1,12 +1,10 @@
-path =   require 'path'
-fs =     require 'fs'
-
-logger = require 'logmimosa'
-
-buildConfig = require '../util/config-builder'
-moduleManager = require '../modules'
-
 copyConfig = (opts) ->
+  path =   require 'path'
+  fs =     require 'fs'
+  logger = require 'logmimosa'
+  buildConfig = require '../util/config-builder'
+  moduleManager = require '../modules'
+
   if opts.mdebug
     opts.debug = true
     logger.setDebug()
@@ -59,7 +57,8 @@ register = (program, callback) ->
     .option("-s, --suppress", "suppress info message")
     .description("copy the default Mimosa config into the current folder")
     .action(callback)
-    .on '--help', =>
+    .on '--help', ->
+      logger = require 'logmimosa'
       logger.green('  The config command will create a mimosa-config.js in the current directory. It will')
       logger.green('  also create a mimosa-config-documented.coffee which contains all of the various')
       logger.green('  configuration documentation for each module that is a part of your project.')

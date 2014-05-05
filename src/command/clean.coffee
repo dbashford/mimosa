@@ -1,12 +1,10 @@
-fs =      require 'fs'
-
-wrench =  require 'wrench'
-logger =  require 'logmimosa'
-
-Cleaner = require '../util/cleaner'
-configurer = require '../util/configurer'
-
 clean = (opts) ->
+  fs =  require 'fs'
+  wrench =  require 'wrench'
+  logger =  require 'logmimosa'
+  configurer = require '../util/configurer'
+  Cleaner = require '../util/cleaner'
+
   if opts.mdebug
     opts.debug = true
     logger.setDebug()
@@ -36,7 +34,8 @@ register = (program, callback) =>
     .option("-D, --mdebug", "run in debug mode")
     .description("clean out all of the compiled assets from the compiled directory")
     .action(callback)
-    .on '--help', =>
+    .on '--help', ->
+      logger =  require 'logmimosa'
       logger.green('  The clean command will remove all of the compiled assets from the configured compiledDir. After')
       logger.green('  the assets are deleted, any empty directories left over are also removed. Mimosa will also remove any')
       logger.green('  Mimosa copied assets, like template libraries. It will not remove anything that did not originate')

@@ -2,7 +2,6 @@ http = require 'http'
 
 color  = require('ansi-color').set
 logger = require 'logmimosa'
-request = require 'request'
 childProcess = require 'child_process'
 
 moduleMetadata = require('../../modules').installedMetadata
@@ -95,6 +94,7 @@ list = (opts) ->
     proxy = stdout.replace /(\r\n|\n|\r)/gm, ''
     if !error && proxy != 'null'
       options.proxy = proxy
+    request = require 'request'
     request options, (error, client, response) ->
       if error != null
         console.log(error)

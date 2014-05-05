@@ -1,32 +1,31 @@
-fs = require 'fs'
-
-logger =  require 'logmimosa'
-wrench =  require 'wrench'
-
-configurer = require '../util/configurer'
-
-Watcher = require '../util/watcher'
-Cleaner = require '../util/cleaner'
-
 watch = (opts) =>
+  fs = require 'fs'
+  logger =  require 'logmimosa'
+
   if opts.mdebug
     opts.debug = true
     logger.setDebug()
     process.env.DEBUG = true
 
   opts.watch = true
+
+  configurer = require '../util/configurer'
   configurer opts, (config, modules) =>
     instWatcher = ->
       config.isClean = false
+      Watcher = require '../util/watcher'
       new Watcher(config, modules, true)
 
     if opts.delete
       if fs.existsSync config.watch.compiledDir
+        wrench =  require 'wrench'
         wrench.rmdirSyncRecursive config.watch.compiledDir
         logger.success "[[ #{config.watch.compiledDir} ]] has been removed"
+
         instWatcher()
     else if opts.clean or config.needsClean
       config.isClean = true
+      Cleaner = require '../util/cleaner'
       new Cleaner(config, modules, instWatcher)
     else
       instWatcher()
@@ -44,6 +43,7 @@ register = (program, callback) =>
     .option("-D, --mdebug", "run in debug mode")
     .action(callback)
     .on '--help', =>
+      logger =  require 'logmimosa'
       logger.green('  The watch command will observe your source directory and compile or copy your assets when they change.')
       logger.green('  When the watch command starts up, it will make an initial pass through your assets and compile or copy')
       logger.green('  any assets that are newer then their companion compiled assets in the compiled directory.  The watch')

@@ -1,10 +1,10 @@
-logger = require 'logmimosa'
-
-configurer = require '../util/configurer'
-Watcher =  require '../util/watcher'
-Cleaner = require '../util/cleaner'
-
 build = (opts) =>
+  logger = require 'logmimosa'
+  configurer = require '../util/configurer'
+  Watcher =  require '../util/watcher'
+  Cleaner = require '../util/cleaner'
+
+
   if opts.mdebug
     opts.debug = true
     logger.setDebug()
