@@ -1,3 +1,8 @@
+## 2.2.2/2.2.3 - May 6 2014
+
+### Major Changes
+* More performance improvements, almost entirely lazy loading of libraries. 
+
 ## 2.2.1 - May 5 2014
 
 ### Major Changes
