@@ -1,7 +1,12 @@
+## 2.2.4 - May ? 2014
+
+### Major Changes
+* __New Module__:[mimosa-svgs-to-iconfonts](https://github.com/dbashford/mimosa-svgs-to-iconfonts). Turns sets of `.svg` files into sets of `.svg`, `.eot`, `.woff`, `.ttf` font files and a corresponding `.css` file. Check out the [example app](https://github.com/dbashford/MimosaIconFontsExample) to see it working.
+
 ## 2.2.2/2.2.3 - May 6 2014
 
 ### Major Changes
-* More performance improvements, almost entirely lazy loading of libraries. 
+* More performance improvements, almost entirely lazy loading of libraries.
 
 ## 2.2.1 - May 5 2014
 
