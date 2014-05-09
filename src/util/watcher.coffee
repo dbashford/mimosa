@@ -22,6 +22,10 @@ class Watcher
       usePolling: @config.watch.usePolling
 
     watcher = watch.watch @config.watch.sourceDir, watchConfig
+
+    process.on 'STOPMIMOSA', ->
+      watcher.close()
+
     watcher.on "error", (error) -> logger.warn "File watching error: #{error}"
     watcher.on "change", @workflow.update
     watcher.on "unlink", @workflow.remove

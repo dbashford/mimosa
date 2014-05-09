@@ -1,7 +1,8 @@
-## 2.2.4 - May ? 2014
+## 2.2.4 - May 09 2014
 
 ### Major Changes
 * __New Module__:[mimosa-svgs-to-iconfonts](https://github.com/dbashford/mimosa-svgs-to-iconfonts). Turns sets of `.svg` files into sets of `.svg`, `.eot`, `.woff`, `.ttf` font files and a corresponding `.css` file. Check out the [example app](https://github.com/dbashford/MimosaIconFontsExample) to see it working.
+* mimosa-server's server and mimosa's watcher will now respond to a `STOPMIMOSA` signal that is sent through the Mimosa process via `process.send( "STOPMIMOSA" );`. This will more easily allow forked processes to shut down all of a Mimosa's process' activities.
 
 ## 2.2.2/2.2.3 - May 6 2014
 
