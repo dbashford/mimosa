@@ -1,3 +1,8 @@
+## 2.2.5 - May ? 2014
+
+### Major Changes
+* __New Module__:[mimosa-restart](https://github.com/dbashford/mimosa-restart). Restarts Mimosa within the same process when the `watch.compiledDir` is deleted. 
+
 ## 2.2.4 - May 09 2014
 
 ### Major Changes
