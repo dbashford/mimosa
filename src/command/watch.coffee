@@ -1,6 +1,7 @@
-watch = (opts) =>
+watch = (opts) ->
   fs = require 'fs'
   logger =  require 'logmimosa'
+  configurer = require '../util/configurer'
 
   if opts.mdebug
     opts.debug = true
@@ -9,8 +10,12 @@ watch = (opts) =>
 
   opts.watch = true
 
-  configurer = require '../util/configurer'
-  configurer opts, (config, modules) =>
+  if opts.cleanall
+    fileUtils = require '../util/file'
+    fileUtils.removeDotMimosa()
+    logger.info("Removed .mimosa directory.")
+
+  configurer opts, (config, modules) ->
     instWatcher = ->
       config.isClean = false
       Watcher = require '../util/watcher'
@@ -30,19 +35,20 @@ watch = (opts) =>
     else
       instWatcher()
 
-register = (program, callback) =>
+register = (program, callback) ->
   program
     .command('watch')
     .description("watch the filesystem and compile assets")
     .option("-s, --server",   "run a server that will serve up the assets in the compiled directory")
     .option("-o, --optimize", "run require.js optimization after each js file compile")
     .option("-m, --minify", "minify each asset as it is compiled using uglify")
-    .option("-c, --clean", "clean the compiled directory before you begin the watch, this forces a recompile of all your assets")
+    .option("-c, --clean", "clean the compiled directory before the watch begins, this forces a recompile of all your assets")
+    .option("-C, --cleanall", "clean the compiled directory and the .mimosa directory before the watch begins")
     .option("-d, --delete", "remove the compiled directory entirely before starting")
     .option("-P, --profile <profileName>", "select a mimosa profile")
     .option("-D, --mdebug", "run in debug mode")
     .action(callback)
-    .on '--help', =>
+    .on '--help', ->
       logger =  require 'logmimosa'
       logger.green('  The watch command will observe your source directory and compile or copy your assets when they change.')
       logger.green('  When the watch command starts up, it will make an initial pass through your assets and compile or copy')
@@ -59,6 +65,10 @@ register = (program, callback) =>
       logger.green('  has the effect of forcing a recompile of all of your assets.')
       logger.blue( '\n    $ mimosa watch --clean')
       logger.blue( '    $ mimosa watch -c\n')
+      logger.green('  Pass a \'cleanall\' flag and Mimosa will first clean out all your assets before starting the watch.  This')
+      logger.green('  has the effect of forcing a recompile of all of your assets. This clean will also remove the .mimosa directory.')
+      logger.blue( '\n    $ mimosa watch --cleanall')
+      logger.blue( '    $ mimosa watch -C\n')
       logger.green('  Pass a \'delete\' flag and Mimosa will first remove the compiled directory before starting the watch.')
       logger.blue( '\n    $ mimosa watch --delete')
       logger.blue( '    $ mimosa watch -d\n')
@@ -74,7 +84,7 @@ register = (program, callback) =>
       logger.green('  can break them) but you still want everything together in a single file.')
       logger.blue( '\n    $ mimosa watch --minify')
       logger.blue( '    $ mimosa watch -m\n')
-      logger.green('  Pass a \'profile\' flag and the name of a Mimosa profile to run with mimosa config overrides from a profile.')
+      logger.green('  Pass a \'profile\' flag and the name of a Mimosa profile to run with.')
       logger.blue( '\n    $ mimosa clean --profile build')
       logger.blue( '    $ mimosa clean -P build')
 

@@ -12,6 +12,11 @@ clean = (opts) ->
 
   opts.clean = true
 
+  if opts.cleanall
+    fileUtils = require '../util/file'
+    fileUtils.removeDotMimosa()
+    logger.info("Removed .mimosa directory.")
+
   configurer opts, (config, modules) =>
     if opts.force
       if fs.existsSync config.watch.compiledDir
@@ -30,6 +35,7 @@ register = (program, callback) =>
   program
     .command('clean')
     .option("-f, --force", "completely delete your compiledDir")
+    .option("-C, --cleanall", "deletes the .mimosa directory as part of the clean")
     .option("-P, --profile <profileName>", "select a mimosa profile")
     .option("-D, --mdebug", "run in debug mode")
     .description("clean out all of the compiled assets from the compiled directory")
@@ -48,7 +54,10 @@ register = (program, callback) =>
       logger.green('  forcibly remove the entire compiledDir, use the \'force\' flag.')
       logger.blue( '\n    $ mimosa clean -force')
       logger.blue( '    $ mimosa clean -f\n')
-      logger.green('  Pass a \'profile\' flag and the name of a Mimosa profile to run with mimosa config overrides from a profile.')
+      logger.green('  Pass a \'cleanall\' flag and Mimosa remove the .mimosa directory as part of the clean.')
+      logger.blue( '\n    $ mimosa clean --cleanall')
+      logger.blue( '    $ mimosa clean -C\n')
+      logger.green('  Pass a \'profile\' flag and the name of a Mimosa profile to run with.')
       logger.blue( '\n    $ mimosa clean --profile build')
       logger.blue( '    $ mimosa clean -P build')
 

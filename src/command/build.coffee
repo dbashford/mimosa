@@ -1,4 +1,4 @@
-build = (opts) =>
+build = (opts) ->
   logger = require 'logmimosa'
   configurer = require '../util/configurer'
   Watcher =  require '../util/watcher'
@@ -12,7 +12,13 @@ build = (opts) =>
   logger.info "Beginning build"
   opts.build = true
 
-  configurer opts, (config, modules) =>
+  if opts.cleanall
+    fileUtils = require '../util/file'
+    fileUtils.removeDotMimosa()
+    logger.info("Removed .mimosa directory.")
+
+  configurer opts, (config, modules) ->
+
     doBuild = ->
       config.isClean = false
       new Watcher config, modules, false, ->
@@ -22,10 +28,11 @@ build = (opts) =>
     config.isClean = true
     new Cleaner(config, modules, doBuild)
 
-register = (program, callback) =>
+register = (program, callback) ->
   program
     .command('build')
     .description("make a single pass through assets, compile them, and optionally package them")
+    .option("-C, --cleanall", "deletes the .mimosa directory before building")
     .option("-o, --optimize", "run r.js optimization after building")
     .option("-m, --minify", "minify each asset as it is compiled using uglify")
     .option("-p, --package", "use modules that perform packaging")
@@ -34,10 +41,15 @@ register = (program, callback) =>
     .option("-P, --profile <profileName>", "select a mimosa profile")
     .option("-D, --mdebug", "run in debug mode")
     .action(callback)
-    .on '--help', =>
+    .on '--help', ->
+      logger = require 'logmimosa'
       logger.green('  The build command will make a single pass through your assets and bulid any that need building')
       logger.green('  and then exit.')
       logger.blue( '\n    $ mimosa build\n')
+      logger.green('  Pass a \'cleanall\' flag and Mimosa remove the .mimosa directory before building. The \'build\' command')
+      logger.green('  already runs a code clean.')
+      logger.blue( '\n    $ mimosa build --cleanall')
+      logger.blue( '    $ mimosa build -C\n')
       logger.green('  Pass an \'optimize\' flag and Mimosa will use requirejs to optimize your assets and provide you')
       logger.green('  with single files for the named requirejs modules. ')
       logger.blue( '\n    $ mimosa build --optimize')
@@ -61,7 +73,7 @@ register = (program, callback) =>
       logger.green('  Pass a \'errorout\' flag if you want the build to stop as soon as a critical error occurs.')
       logger.blue( '\n    $ mimosa build --errorout')
       logger.blue( '    $ mimosa build -e\n')
-      logger.green('  Pass a \'profile\' flag and the name of a Mimosa profile to run with mimosa config overrides from a profile.')
+      logger.green('  Pass a \'profile\' flag and the name of a Mimosa profile to run with.')
       logger.blue( '\n    $ mimosa build --profile build')
       logger.blue( '    $ mimosa build -P build')
 

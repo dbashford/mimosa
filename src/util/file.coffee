@@ -1,7 +1,12 @@
 path = require 'path'
 fs = require 'fs'
-
 logger = require 'logmimosa'
+
+exports.removeDotMimosa = ->
+  dotMimosaDir = path.join(process.cwd(), ".mimosa")
+  if fs.existsSync(dotMimosaDir)
+    wrench = require 'wrench'
+    wrench.rmdirSyncRecursive(dotMimosaDir)
 
 exports.isCSS = isCSS = (fileName) ->
   path.extname(fileName) is ".css"
