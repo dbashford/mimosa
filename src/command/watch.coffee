@@ -11,6 +11,7 @@ watch = (opts) ->
   opts.watch = true
 
   if opts.cleanall
+    opts.clean = true
     fileUtils = require '../util/file'
     fileUtils.removeDotMimosa()
     logger.info("Removed .mimosa directory.")
