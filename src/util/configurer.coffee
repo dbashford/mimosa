@@ -22,7 +22,7 @@ baseDefaults =
   minMimosaVersion:null
   requiredMimosaVersion:null
   modules: [ 'copy', 'jshint', 'csslint', 'server', 'require', 'minify-js', 'minify-css', 'live-reload', 'bower']
-  resortCompilers: true  
+  resortCompilers: true
   timer:
     enabled: false
   watch:
@@ -241,6 +241,7 @@ _validateSettings = (config, modules) ->
       css: ['css']
       template: []
       copy: []
+      misc:[]
     config.watch.compiledJavascriptDir = validators.determinePath config.watch.javascriptDir, config.watch.compiledDir
   else
     return [errors, {}]
