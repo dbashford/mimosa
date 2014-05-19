@@ -5,6 +5,7 @@
 * All compilers are wrapped in a parent for their type.  So, in mimosa core, there is a JavaScript compiler wrapper for all the JavaScript compilers.  Previously, that wrapper would call a `compile` function on its wrapped compiler and that was the only compiler function that would get called as part of workflow processing.  Now a compiler can register for anything else by implementing its own `registration` function like every other non-compiler module.
 
 ### Minor Changes
+* [mimosa-server #5](https://github.com/dbashford/mimosa-server/pull/5) (@ropez). This PR adds the ability for the mimosa-config to set variables for the views that Mimosa's default server uses from a Mimosa application.  `server.views.options` will now be added to the global variable config for a server view before serving it, allowing you to add custom variables to your server templates.
 * [mimosa #391](https://github.com/dbashford/mimosa/issues/391). Add `misc` to compiler extension array.
 
 ## 2.2.5 - May 13 2014
