@@ -17,7 +17,7 @@ var modCommands = function() {
     require( './command/module/config' )( program );
   }
   modCommandsAdded = true;
-}
+};
 
 var makeTopLevelHelp = function() {
   process.argv[2] = '--help';
@@ -36,7 +36,7 @@ var makeTopLevelHelp = function() {
     console.log( '    --prof, Log statistical profiling information (implies --log-code)');
     console.log( "\n" );
   });
-}
+};
 
 require( './command/watch' )( program );
 require( './command/config' )( program );
@@ -61,7 +61,7 @@ if ( process.argv.length === 2 || ( process.argv.length > 2 && ( process.argv[2]
       if ( arg.indexOf( "mod:" ) === 0 ) {
         modCommands();
       }
-    })
+    });
   }
 }
 
