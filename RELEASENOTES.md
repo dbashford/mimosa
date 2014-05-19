@@ -3,6 +3,7 @@
 ### Major Changes
 * Related to [mimosa #391](https://github.com/dbashford/mimosa/issues/391), the `misc` compiler type -- added a month or so ago to represent those compilers which don't fit neatly into copying, javascript/css transpiling or template compiling -- have been thought through a bit more.  Now files having an extension mapped to a `misc` compiler will be read, their output will be written, and their output will be cleaned up during clean processing.
 * All compilers are wrapped in a parent for their type.  So, in mimosa core, there is a JavaScript compiler wrapper for all the JavaScript compilers.  Previously, that wrapper would call a `compile` function on its wrapped compiler and that was the only compiler function that would get called as part of workflow processing.  Now a compiler can register for anything else by implementing its own `registration` function like every other non-compiler module.
+* To see a sample `misc` compiler, checkout the [MimosaMiscCompilerExample project](https://github.com/dbashford/MimosaMiscCompilerExample).
 
 ### Minor Changes
 * [mimosa-server #5](https://github.com/dbashford/mimosa-server/pull/5) (@ropez). This PR adds the ability for the mimosa-config to set variables for the views that Mimosa's default server uses from a Mimosa application.  `server.views.options` will now be added to the global variable config for a server view before serving it, allowing you to add custom variables to your server templates.
