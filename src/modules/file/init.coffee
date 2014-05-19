@@ -22,4 +22,4 @@ _initMultiAsset = (config, options, next) ->
 exports.registration = (config, register) ->
   e = config.extensions
   register ['add','update','remove','cleanFile','buildExtension'], 'init', _initMultiAsset,  [e.template..., e.css...]
-  register ['add','update','remove','cleanFile','buildFile'],      'init', _initSingleAsset, [e.javascript..., e.copy...]
+  register ['add','update','remove','cleanFile','buildFile'],      'init', _initSingleAsset, [e.javascript..., e.copy..., e.misc...]

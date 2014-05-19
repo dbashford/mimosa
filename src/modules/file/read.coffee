@@ -23,5 +23,5 @@ _read = (config, options, next) ->
 
 exports.registration = (config, register) ->
   e = config.extensions
-  register ['add','update','buildFile'],               'read', _read, [e.javascript..., e.copy...]
+  register ['add','update','buildFile'],               'read', _read, [e.javascript..., e.copy..., e.misc...]
   register ['add','update','remove','buildExtension'], 'read', _read, [e.css..., e.template...]

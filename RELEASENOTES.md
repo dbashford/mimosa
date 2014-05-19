@@ -1,4 +1,13 @@
-## 2.2.5 - May ? 2014
+## 2.2.6 - May 19 2014
+
+### Major Changes
+* Related to [mimosa #391](https://github.com/dbashford/mimosa/issues/391), the `misc` compiler type -- added a month or so ago to represent those compilers which don't fit neatly into copying, javascript/css transpiling or template compiling -- have been thought through a bit more.  Now files having an extension mapped to a `misc` compiler will be read, their output will be written, and their output will be cleaned up during clean processing.
+* All compilers are wrapped in a parent for their type.  So, in mimosa core, there is a JavaScript compiler wrapper for all the JavaScript compilers.  Previously, that wrapper would call a `compile` function on its wrapped compiler and that was the only compiler function that would get called as part of workflow processing.  Now a compiler can register for anything else by implementing its own `registration` function like every other non-compiler module.
+
+### Minor Changes
+* [mimosa #391](https://github.com/dbashford/mimosa/issues/391). Add `misc` to compiler extension array.
+
+## 2.2.5 - May 13 2014
 
 ### Major Changes
 * As a part of [mimosa-bower #37](https://github.com/dbashford/mimosa-bower/issues/37), a new flag has been added to the `watch`, `build` and `clean` commands.  Add a `-C/--cleanall` and as Mimosa starts up it will remove the `.mimosa` directory. This allows for a forced reinstall of Bower components and forces other modules to rebuild their `.mimosa` cache.

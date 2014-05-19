@@ -35,7 +35,7 @@ module.exports = class MiscCompiler
           file.outputFileName = options.destinationFile( file.inputFileName )
       else
         if @compiler.determineOutputFile
-          @compiler.determineOutputFile( config, options, next )
+          @compiler.determineOutputFile( config, options )          
         else
           if logger.isDebug()
             logger.debug "compiler [[ " + @compiler.name + " ]] does not have determineOutputFile function."

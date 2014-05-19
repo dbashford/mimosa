@@ -3,6 +3,10 @@
 _delete = (config, options, next) ->
   fs = require 'fs'
 
+  # has no discernable output file
+  unless options.destinationFile
+    return next()
+
   fileName = options.destinationFile(options.inputFile)
   fs.exists fileName, (exists) ->
     unless exists
@@ -21,4 +25,4 @@ _delete = (config, options, next) ->
 
 exports.registration = (config, register) ->
   e = config.extensions
-  register ['remove','cleanFile'], 'delete', _delete, [e.javascript..., e.css..., e.copy...]
+  register ['remove','cleanFile'], 'delete', _delete, [e.javascript..., e.css..., e.copy..., e.misc...]

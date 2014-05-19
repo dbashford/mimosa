@@ -30,4 +30,4 @@ _write = (config, options, next) ->
 exports.registration = (config, register) ->
   e = config.extensions
   register ['add','update','remove','buildExtension'], 'write', _write, [e.template..., e.css...]
-  register ['add','update','buildFile'],               'write', _write, [e.javascript..., e.copy...]
+  register ['add','update','buildFile'],               'write', _write, [e.javascript..., e.copy..., e.misc...]
