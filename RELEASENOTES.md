@@ -1,3 +1,8 @@
+## 2.2.7 - May 28 2014
+
+### Minor Changes
+* [mimosa #392](https://github.com/dbashford/mimosa/issues/392). Added `watch.delay` to handle cases when file events are sent before the file is finished being saved.
+
 ## 2.2.6 - May 19 2014
 
 ### Major Changes
