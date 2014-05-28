@@ -41,6 +41,10 @@ _configTop = ->
                                          # running hot, it is best to leave this setting alone.
       interval: 100                      # Interval of file system polling.
       binaryInterval: 300                # Interval of file system polling for binary files
+      delay: 0                           # For file adds/updates, a forced delay before Mimosa
+                                         # begins processing a file. This helps solve cases when
+                                         # a file system event is created before the file system
+                                         # is actually finished writing the file. Delay is in millis.
 
     vendor:                              # settings for vendor assets
       javascripts: "javascripts/vendor"  # location, relative to the watch.sourceDir, of vendor

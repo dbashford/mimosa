@@ -27,16 +27,31 @@ class Watcher
       watcher.close()
 
     watcher.on "error", (error) -> logger.warn "File watching error: #{error}"
-    watcher.on "change", @workflow.update
+    watcher.on "change", (f) => @_fileUpdated('update', f)
     watcher.on "unlink", @workflow.remove
-    watcher.on "add", (f) => if @throttle > 0 then @adds.push(f) else @workflow.add(f)
+    watcher.on "add", (f) =>
+      if @throttle > 0
+        @adds.push(f)
+      else
+        @_fileUpdated('add', f)
 
-    logger.info "Watching [[ #{@config.watch.sourceDir} ]]" if @persist
+    if @persist
+      logger.info "Watching [[ #{@config.watch.sourceDir} ]]"
 
     if @throttle > 0
       logger.debug "Throttle is set, setting interval at 100 milliseconds"
       @intervalId = setInterval(@_pullFiles, 100)
       @_pullFiles()
+
+  _fileUpdated: (eventType, f) =>
+    # sometimes events can be sent before
+    # file isn't finished being written
+    if @config.watch.delay > 0
+      setTimeout =>
+       @workflow[eventType](f)
+      , @config.watch.delay
+    else
+      @workflow[eventType](f)
 
   _buildDoneCallback: =>
     logger.buildDone()

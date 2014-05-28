@@ -34,6 +34,7 @@ baseDefaults =
     interval: 100
     binaryInterval: 300
     usePolling: true
+    delay: 0
   vendor:
     javascripts: "javascripts/vendor"
     stylesheets: "stylesheets/vendor"
