@@ -1,3 +1,8 @@
+## 2.2.8 - May 30 2014
+
+### Minor Changes
+* Bumped version of mimosa-minify-js
+
 ## 2.2.7 - May 28 2014
 
 ### Minor Changes
