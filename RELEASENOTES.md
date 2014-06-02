@@ -1,3 +1,8 @@
+## 2.2.8 - June 2 2014
+
+### Minor Changes
+* [mimosa #395](https://github.com/dbashford/mimosa/issues/395). Invalid `bower.json` will no longer crash `mimosa watch` after startup.
+
 ## 2.2.8 - May 30 2014
 
 ### Minor Changes
