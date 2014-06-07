@@ -1,3 +1,9 @@
+## 2.2.11 - June 7 2014
+
+### Minor Changes
+* [mimosa-require #35](https://github.com/dbashford/mimosa-require/issues/35). r.js rebuilds should now happen on file change during `mimosa watch`.
+* [mimosa-require #36](https://github.com/dbashford/mimosa-require/issues/36). Fixed issue with `module` based builds bombing during `mimosa watch`.  Should be able to re-run builds with file changes during `mimosa watch`.
+
 ## 2.2.10 - June 7 2014
 
 ### Minor Changes
