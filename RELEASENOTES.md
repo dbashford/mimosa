@@ -1,4 +1,9 @@
-## 2.2.8 - June 2 2014
+## 2.2.10 - June 7 2014
+
+### Minor Changes
+* [mimosa-live-reload #5](https://github.com/dbashford/mimosa/pull/5). live-reload will now just refresh your CSS rather than reload the page if your "additional directories" have a `.css` file that changes.
+
+## 2.2.9 - June 2 2014
 
 ### Minor Changes
 * [mimosa #395](https://github.com/dbashford/mimosa/issues/395). Invalid `bower.json` will no longer crash `mimosa watch` after startup.
