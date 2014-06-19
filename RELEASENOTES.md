@@ -1,3 +1,11 @@
+## 2.2.12 - June ?? 2014
+
+### Major Changes
+* __New Skeleton__: [knockout](https://github.com/h-taylor/mimosa-knockout). Knockout, RequireJS, Less, Bower, Jasmine.
+
+### Minor Changes
+* [mimosa-web-package #18](https://github.com/dbashford/mimosa-web-package/issues/18). A PR fixed issue with `app.js` being generated when it wasn't needed. 
+
 ## 2.2.11 - June 7 2014
 
 ### Minor Changes
