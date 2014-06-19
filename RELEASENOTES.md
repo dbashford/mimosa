@@ -1,4 +1,4 @@
-## 2.2.12 - June ?? 2014
+## 2.2.12 - June 19 2014
 
 ### Major Changes
 * __New Skeleton__: [knockout](https://github.com/h-taylor/mimosa-knockout). Knockout, RequireJS, Less, Bower, Jasmine.
