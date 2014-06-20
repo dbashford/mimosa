@@ -1,3 +1,8 @@
+## 2.2.13 - June ?? 2014
+
+### Major Changes
+* __New Module__: [mimosa-cjsx](https://github.com/mtscout6/mimosa-cjsx). A Coffeescript + React/JSX compiler.
+
 ## 2.2.12 - June 19 2014
 
 ### Major Changes
