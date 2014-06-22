@@ -1,7 +1,10 @@
-## 2.2.13 - June ?? 2014
+## 2.2.13 - June 22 2014
 
 ### Major Changes
 * __New Module__: [mimosa-cjsx](https://github.com/mtscout6/mimosa-cjsx). A Coffeescript + React/JSX compiler.
+
+### Minor Changes
+[mimosa #396](https://github.com/dbashford/mimosa/issues/396). Added `--nolazy` pass-through to node.
 
 ## 2.2.12 - June 19 2014
 

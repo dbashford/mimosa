@@ -23,6 +23,7 @@ process.argv.slice(2).forEach(function(arg){
     case '--expose-gc':
       args.unshift('--expose-gc');
       break;
+    case '--nolazy':  
     case '--gc-global':
     case '--harmony':
     case '--harmony-proxies':
