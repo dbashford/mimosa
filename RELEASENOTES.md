@@ -1,4 +1,4 @@
-## 2.2.14 - June ?? 2014
+## 2.2.14 - June 23 2014
 
 ### Major Changes
 [mimosa #397](https://github.com/dbashford/mimosa/issues/397). You can now provide multiple profiles at the command line. Ex: `mimosa build -P foo#bar`.  Profiles are applied from left to right.  So, in this case if the `bar` profile contains the same configuration as the `foo` profile, the `bar` profile information will overwrite foo.
