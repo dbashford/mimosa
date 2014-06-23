@@ -1,3 +1,8 @@
+## 2.2.14 - June ?? 2014
+
+### Minor Changes
+* [mimosa-server #6](https://github.com/dbashford/mimosa-server/issues/6). Exposing the server file and the server object on the mimosaConfig.  Can now access file and object from anywhere that has access to mimosaConfig.
+
 ## 2.2.13 - June 22 2014
 
 ### Major Changes
