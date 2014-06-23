@@ -299,22 +299,25 @@ processConfig = (opts, callback) ->
     unless config.profileLocation
       config.profileLocation = "profiles"
 
-    profileConfigPath = _findConfigPath path.join(config.profileLocation, opts.profile)
-    if profileConfigPath?
-      try
-        profileConfig = _requireConfig(profileConfigPath).config
-      catch err
-        return logger.fatal "Improperly formatted configuration file [[ #{profileConfigPath} ]]: #{err}"
+    opts.profile.split("#").forEach (profileName) ->
 
-      if logger.isDebug()
-        logger.debug "Profile config:\n#{JSON.stringify(profileConfig, null, 2)}"
+      profileConfigPath = _findConfigPath path.join(config.profileLocation, profileName)
+      if profileConfigPath?
+        try
+          profileConfig = _requireConfig(profileConfigPath).config
+        catch err
+          return logger.fatal "Improperly formatted configuration file [[ #{profileConfigPath} ]]: #{err}"
 
-      config = _extend config, profileConfig
+        if logger.isDebug()
+          logger.debug "Profile config:\n#{JSON.stringify(profileConfig, null, 2)}"
 
-      if logger.isDebug()
-        logger.debug "mimosa config after profile applied:\n#{JSON.stringify(config, null, 2)}"
-    else
-      return logger.fatal "Profile provided but not found at [[ #{path.join('profiles', opts.profile)} ]]"
+        config = _extend config, profileConfig
+
+        if logger.isDebug()
+          logger.debug "mimosa config after profile applied:\n#{JSON.stringify(config, null, 2)}"
+      else
+        return logger.fatal "Profile provided but not found at [[ #{path.join('profiles', profileName)} ]]"
+
 
   config.isServer =    opts?.server
   config.isOptimize =  opts?.optimize
