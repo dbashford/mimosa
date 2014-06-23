@@ -1,5 +1,8 @@
 ## 2.2.14 - June ?? 2014
 
+### Major Changes
+[mimosa #397](https://github.com/dbashford/mimosa/issues/397). You can now provide multiple profiles at the command line. Ex: `mimosa build -P foo#bar`.  Profiles are applied from left to right.  So, in this case if the `bar` profile contains the same configuration as the `foo` profile, the `bar` profile information will overwrite foo.
+
 ### Minor Changes
 * [mimosa-server #6](https://github.com/dbashford/mimosa-server/issues/6). Exposing the server file and the server object on the mimosaConfig.  Can now access file and object from anywhere that has access to mimosaConfig.
 * [mimosa-server-reload #7](https://github.com/dbashford/mimosa-server-reload/issues/7). Calling `preMimosaRestart` function if it exists to allow users to clean up connections, etc before restarting server.
