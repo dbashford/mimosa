@@ -2,6 +2,7 @@
 
 ### Minor Changes
 * [mimosa-server #6](https://github.com/dbashford/mimosa-server/issues/6). Exposing the server file and the server object on the mimosaConfig.  Can now access file and object from anywhere that has access to mimosaConfig.
+* [mimosa-server-reload #7](https://github.com/dbashford/mimosa-server-reload/issues/7). Calling `preMimosaRestart` function if it exists to allow users to clean up connections, etc before restarting server.
 
 ## 2.2.13 - June 22 2014
 
