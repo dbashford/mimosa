@@ -1,3 +1,9 @@
+## 2.2.15 - June 30 2014
+
+### Minor Changes
+* [mimosa #398](https://github.com/dbashford/mimosa/issues/398). Updated `mimosa new` message to be more clear.
+* [mimosa-web-package #21](https://github.com/dbashford/mimosa-web-package/issues/21). Fixed mismatch between what new coffeescript projects were outputting as version numbers and what web-package was outputting for its `app.js` file.
+
 ## 2.2.14 - June 23 2014
 
 ### Major Changes
