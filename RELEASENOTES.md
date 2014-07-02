@@ -1,3 +1,7 @@
+## 2.2.16 - July ?? 2014
+
+* [mimosa-web-package #21](https://github.com/dbashford/mimosa-web-package/issues/21). Now properly handling users possibly having coffeescript 1.6 v 1.7.
+
 ## 2.2.15 - June 30 2014
 
 ### Minor Changes
