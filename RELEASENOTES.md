@@ -1,5 +1,10 @@
-## 2.2.16 - July ?? 2014
+## 2.2.16 - July 7 2014
 
+### Major Changes
+* __New Module__: [mimosa-css-colorguard](https://github.com/dbashford/mimosa-css-colorguard). Will catch when colors in your CSS are close enough that maybe one ought to be eliminated.  Wraps the [css-colorguard](https://github.com/SlexAxton/css-colorguard) library.
+
+### Minor Changes
+* mimosa now assigns `isVendor` flag to individual files in its `options.files` array for processing of CSS.
 * [mimosa-web-package #21](https://github.com/dbashford/mimosa-web-package/issues/21). Now properly handling users possibly having coffeescript 1.6 v 1.7.
 
 ## 2.2.15 - June 30 2014

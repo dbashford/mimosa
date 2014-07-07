@@ -152,6 +152,8 @@ module.exports = class CSSCompiler
 
     if options.files.length > 0
       options.isVendor = fileUtils.isVendorCSS(config, options.files[0].inputFileName)
+      options.files.forEach (f) ->
+        f.isVendor = fileUtils.isVendorCSS(config, f.inputFileName)
 
     options.isCSS = true
 
