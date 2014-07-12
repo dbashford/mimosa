@@ -4,6 +4,7 @@
 * [mimosa-web-package #20](https://github.com/dbashford/mimosa-web-package/issues/20)/[mimosa-web-package #22](https://github.com/dbashford/mimosa-web-package/issues/22). Huge archive generation updates. web-package can now create a `.zip` file for you. Additionally you can set `archiveName` to `null` to not generate an archive at all. And `"mimosa-config-documented.coffee",".mimosa","bower.json"` were added to the default set of files to leave out of the archive. web-package was bumped to `2.0`.
 
 ### Minor Changes
+* [mimosa-jade #20](https://github.com/dbashford/mimosa-jade/issues/4). Updated `jade-runtime` to latest. Updated jade to `1.3.1`.
 
 ## 2.2.16 - July 7 2014
 
