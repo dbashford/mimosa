@@ -3,16 +3,32 @@ registerCommand = (buildFirst, isDebug, callback) ->
   logger = require 'logmimosa'
 
   # manage multiple formats
+  opts = {}
+
   if callback
-    if isDebug
-      logger.setDebug()
-      process.env.DEBUG = true
+    # full (buildFirst, isDebug, callback)
+    opts.mdebug = isDebug
+    opts.buildFirst = buildFirst
   else
+    # is 2 parameters, can be (opts, callback) or
+    # older (buildFirst, callback)
+
     callback = isDebug
+    if typeof buildFirst is "boolean"
+      # is (buildFirst, callback)
+      opts.mdebug = false
+      opts.buildFirst = buildFirst
+    else
+      # is (opts, callback)
+      opts = buildFirst
+
+  if opts.mdebug
+    logger.setDebug()
+    process.env.DEBUG = true
 
   configurer = require '../util/configurer'
-  configurer {}, (config, mods) ->
-    if buildFirst
+  configurer opts, (config, mods) ->
+    if opts.buildFirst
       Cleaner = require '../util/cleaner'
       Watcher =  require '../util/watcher'
 

@@ -1,9 +1,10 @@
-## 2.2.17 - July ?? 2014
+## 2.2.17 - July 13 2014
 
 ### Major Changes
 * [mimosa-web-package #20](https://github.com/dbashford/mimosa-web-package/issues/20)/[mimosa-web-package #22](https://github.com/dbashford/mimosa-web-package/issues/22). Huge archive generation updates. web-package can now create a `.zip` file for you. Additionally you can set `archiveName` to `null` to not generate an archive at all. And `"mimosa-config-documented.coffee",".mimosa","bower.json"` were added to the default set of files to leave out of the archive. web-package was bumped to `2.0`.
 
 ### Minor Changes
+* [mimosa #403](https://github.com/dbashford/mimosa/issues/403). The signature to `retrieveConfig`, used when creating commands (like `mimosa sprite`) from external modules, has been simplified to `opts, callback`.  This allows for things like profiles to be passed.  The previous signature, `buildFirst, debug, callback` is still supported.  The previous first paramter, `buildFirst` should be attached to `opts` as `opts.buildFirst` and `debug` as `opts.mdebug`.
 * [mimosa-jade #20](https://github.com/dbashford/mimosa-jade/issues/4). Updated `jade-runtime` to latest. Updated jade to `1.3.1`.
 
 ## 2.2.16 - July 7 2014
