@@ -1,3 +1,8 @@
+## 2.2.18 - July ?? 2014
+
+### Minor Changes
+* [mimosa-sprite](https://github.com/dbashford/mimosa-sprite) was updated to match new `retrieveConfig` signature.  It also had its dependencies updated.
+
 ## 2.2.17 - July 13 2014
 
 ### Major Changes
