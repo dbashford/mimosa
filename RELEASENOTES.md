@@ -2,6 +2,8 @@
 
 ### Minor Changes
 * [mimosa-sprite](https://github.com/dbashford/mimosa-sprite) was updated to match new `retrieveConfig` signature.  It also had its dependencies updated.
+* [mimosa-coffeelint](https://github.com/dbashford/mimosa-coffeelint). Updated coffelint dependency from `1.0.7` to `1.5.2`.
+* [mimosa-server-template-compile](https://github.com/dbashford/mimosa-server-template-compile). Updated `hogan.js` from `2.0.0` to `3.0.2`
 
 ## 2.2.17 - July 13 2014
 
