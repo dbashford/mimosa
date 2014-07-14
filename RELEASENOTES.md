@@ -1,6 +1,7 @@
-## 2.2.18 - July ?? 2014
+## 2.2.18 - July 14 2014
 
 ### Minor Changes
+* [mimosa-bower #39](https://github.com/dbashford/mimosa-bower/issues/39). Bumped to latest bower which fixes some recently caused trouble for those using latest bower via command line.
 * [mimosa-plato](https://github.com/dbashford/mimosa-plato). Bumped to latest plato.
 * [mimosa-sprite](https://github.com/dbashford/mimosa-sprite) was updated to match new `retrieveConfig` signature.  It also had its dependencies updated.
 * [mimosa-minify-img](https://github.com/dbashford/mimosa-minify-img) was updated to latest image-min. Update includes removal of one of the previously avaiable config attributes.
