@@ -3,6 +3,7 @@
 ### Minor Changes
 * [mimosa-plato](https://github.com/dbashford/mimosa-plato). Bumped to latest plato.
 * [mimosa-sprite](https://github.com/dbashford/mimosa-sprite) was updated to match new `retrieveConfig` signature.  It also had its dependencies updated.
+* [mimosa-minify-img](https://github.com/dbashford/mimosa-minify-img) was updated to latest image-min. Update includes removal of one of the previously avaiable config attributes.
 * [mimosa-coffeelint](https://github.com/dbashford/mimosa-coffeelint). Updated coffelint dependency from `1.0.7` to `1.5.2`.
 * [mimosa-server-template-compile](https://github.com/dbashford/mimosa-server-template-compile). Updated `hogan.js` from `2.0.0` to `3.0.2`
 * [mimosa-require-lint #1](https://github.com/dbashford/mimosa-require-lint/issues/1). Fixed error when parsing AST and node was null.
