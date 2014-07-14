@@ -1,3 +1,11 @@
+## 2.2.19 - July ?? 2014
+
+### Major Changes
+* __New Module__: [mimosa-fix-rjs-ember](https://github.com/dbashford/mimosa-fix-rjs-ember). Addresses issues with r.js optimization + ember.js beta/canary builds
+
+### Minor Changes
+
+
 ## 2.2.18 - July 14 2014
 
 ### Minor Changes
