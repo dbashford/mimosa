@@ -4,7 +4,9 @@
 * __New Module__: [mimosa-fix-rjs-ember](https://github.com/dbashford/mimosa-fix-rjs-ember). Addresses issues with r.js optimization + ember.js beta/canary builds
 
 ### Minor Changes
-
+* Updated [mimosa-ractive](https://github.com/dbashford/mimosa-ractive) to latest compiler and client library.
+* Updated [mimosa-hogan](https://github.com/dbashford/mimosa-hogan) to latest compiler and client library.
+* Updated [mimosa-jshint](https://github.com/dbashford/mimosa-jshint) to latest version of jshint 
 
 ## 2.2.18 - July 14 2014
 
