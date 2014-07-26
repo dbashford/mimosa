@@ -6,7 +6,10 @@
 ### Minor Changes
 * Updated [mimosa-ractive](https://github.com/dbashford/mimosa-ractive) to latest compiler and client library.
 * Updated [mimosa-hogan](https://github.com/dbashford/mimosa-hogan) to latest compiler and client library.
-* Updated [mimosa-jshint](https://github.com/dbashford/mimosa-jshint) to latest version of jshint 
+* Updated [mimosa-dust](https://github.com/dbashford/mimosa-dust) to latest compiler and client library.
+* Updated [mimosa-jshint](https://github.com/dbashford/mimosa-jshint) to latest version of jshint
+* Updated [mimosa-minify-css](https://github.com/dbashford/mimosa-minify-css) to latest version of clean-css
+
 
 ## 2.2.18 - July 14 2014
 
