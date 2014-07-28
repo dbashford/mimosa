@@ -8,7 +8,9 @@
 * Updated [mimosa-hogan](https://github.com/dbashford/mimosa-hogan) to latest compiler and client library.
 * Updated [mimosa-dust](https://github.com/dbashford/mimosa-dust) to latest compiler and client library.
 * Updated [mimosa-jshint](https://github.com/dbashford/mimosa-jshint) to latest version of jshint
+* Updated [mimosa-stylus](https://github.com/dbashford/mimosa-stylus) to latest version of stylus and nib.
 * Updated [mimosa-minify-css](https://github.com/dbashford/mimosa-minify-css) to latest version of clean-css
+* Updated [mimosa-minify-js](https://github.com/dbashford/mimosa-minify-js) to latest version of uglify
 
 
 ## 2.2.18 - July 14 2014
