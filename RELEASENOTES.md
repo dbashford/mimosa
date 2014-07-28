@@ -9,6 +9,7 @@
 * Updated [mimosa-dust](https://github.com/dbashford/mimosa-dust) to latest compiler and client library.
 * Updated [mimosa-jshint](https://github.com/dbashford/mimosa-jshint) to latest version of jshint
 * Updated [mimosa-stylus](https://github.com/dbashford/mimosa-stylus) to latest version of stylus and nib.
+* Updated [mimosa-react](https://github.com/dbashford/mimosa-react) to latest version of react-tools.
 * Updated [mimosa-minify-css](https://github.com/dbashford/mimosa-minify-css) to latest version of clean-css
 * Updated [mimosa-minify-js](https://github.com/dbashford/mimosa-minify-js) to latest version of uglify
 
