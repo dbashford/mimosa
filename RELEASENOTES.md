@@ -1,4 +1,9 @@
-## 2.2.19 - July ?? 2014
+## 2.3.0 - August ?? 2014
+
+### Minor Changes
+# [mimosa-csslint](https://github.com/dbashford/mimosa-csslint) now runs `beforeWrite` which allows any transforms to occur to css prior to being linted. For instance, if using the autoprefixer module, this allows for vendor prefixes to be applied before running CSSLint.
+
+## 2.2.19 - July 28 2014
 
 ### Major Changes
 * __New Module__: [mimosa-fix-rjs-ember](https://github.com/dbashford/mimosa-fix-rjs-ember). Addresses issues with r.js optimization + ember.js beta/canary builds
