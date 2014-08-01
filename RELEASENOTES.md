@@ -1,4 +1,7 @@
-## 2.3.0 - August ?? 2014
+## 2.2.20 - August 1 2014
+
+### Major Changes
+# [mimosa-require](https://github.com/dbashford/mimosa-require) had a small (1-line) update that resulted in big performance improvements for large requirejs based applications.  Some of the developers on my team (without SSDs) saw the speed of their build cut in half.  I highly recommend you check it out. I'd love to get some `time mimosa build` diffs from folks upgrading to `2.2.20`.
 
 ### Minor Changes
 # [mimosa-csslint](https://github.com/dbashford/mimosa-csslint) now runs `beforeWrite` which allows any transforms to occur to css prior to being linted. For instance, if using the autoprefixer module, this allows for vendor prefixes to be applied before running CSSLint.
