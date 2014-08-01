@@ -1,13 +1,13 @@
 ## 2.2.20 - August 1 2014
 
 ### Major Changes
-# [mimosa-require](https://github.com/dbashford/mimosa-require) had a small (1-line) update that resulted in big performance improvements for large requirejs based applications.  Some of the developers on my team (without SSDs) saw the speed of their build cut in half.  I highly recommend you check it out. I'd love to get some `time mimosa build` diffs from folks upgrading to `2.2.20`.
+* [mimosa-require](https://github.com/dbashford/mimosa-require) had a small (1-line) update that resulted in big performance improvements for large requirejs based applications.  Some of the developers on my team (without SSDs) saw the speed of their build cut in half.  I highly recommend you check it out. I'd love to get some `time mimosa build` diffs from folks upgrading to `2.2.20`.
 
 ### Minor Changes
-# [mimosa-csslint](https://github.com/dbashford/mimosa-csslint) now runs `beforeWrite` which allows any transforms to occur to css prior to being linted. For instance, if using the autoprefixer module, this allows for vendor prefixes to be applied before running CSSLint.
-# [mimosa-just-copy #3](https://github.com/dbashford/mimosa-just-copy/pull/3). Previously just-copy was only capable of "just copying" files to the output location Mimosa would have otherwise copied the file. A great PR added the ability to specify an entirely different output location for input files.  See the docs for details.
-# [mimosa-handlebars #1](https://github.com/dbashford/mimosa-handlebars/issues/1), fixed the client library, making it the same version as the compiler.
-# [mimosa-emblem](https://github.com/dbashford/mimosa-emblem/), fixed client library bug.
+* [mimosa-csslint](https://github.com/dbashford/mimosa-csslint) now runs `beforeWrite` which allows any transforms to occur to css prior to being linted. For instance, if using the autoprefixer module, this allows for vendor prefixes to be applied before running CSSLint.
+* [mimosa-just-copy #3](https://github.com/dbashford/mimosa-just-copy/pull/3). Previously just-copy was only capable of "just copying" files to the output location Mimosa would have otherwise copied the file. A great PR added the ability to specify an entirely different output location for input files.  See the docs for details.
+* [mimosa-handlebars #1](https://github.com/dbashford/mimosa-handlebars/issues/1), fixed the client library, making it the same version as the compiler.
+* [mimosa-emblem](https://github.com/dbashford/mimosa-emblem/), fixed client library bug.
 
 ## 2.2.19 - July 28 2014
 
