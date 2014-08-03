@@ -1,3 +1,9 @@
+## 2.3.0 - August ?? 2014
+
+### Major Changes
+* `mimosa new` has been updated to deliver the latest Express `4.7.2`
+* `mimosa new` has been updated to include a new server option: Express w/socket.io. This delivers the same Express skeleton, except with socket.io already included. 
+
 ## 2.2.20 - August 1 2014
 
 ### Major Changes
