@@ -2,7 +2,10 @@
 
 ### Major Changes
 * `mimosa new` has been updated to deliver the latest Express `4.7.2`
-* `mimosa new` has been updated to include a new server option: Express w/socket.io. This delivers the same Express skeleton, except with socket.io already included. 
+* `mimosa new` has been updated to include a new server option: Express w/socket.io. This delivers the same Express skeleton, except with socket.io already included.
+
+### Minor Changes
+* Addressed timing issues with [mimosa-server-reload](https://github.com/dbashford/mimosa-server-reload). Now server should not be restarted until the previous instance has been fully closed out.
 
 ## 2.2.20 - August 1 2014
 
