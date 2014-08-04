@@ -1,11 +1,15 @@
 ## 2.3.0 - August ?? 2014
 
 ### Major Changes
-* `mimosa new` has been updated to deliver the latest Express `4.7.2`
+* `mimosa new` has been updated to deliver the latest Express: `4.7.2`
 * `mimosa new` has been updated to include a new server option: Express w/socket.io. This delivers the same Express skeleton, except with socket.io already included.
+* [mimosa-live-reload](https://github.com/dbashford/mimosa-live-reload) has been updated to solve a recent issue with updating CSS in Chrome. Previously CSS would not update in Chrome until Chrome received focus.  So if you were in your text editor and made a change, you'd have to hover over Chrome to see the change take effect.  This is fixed.  The solution is slightly hacky but the result is what you'd expect, the CSS is re-evaluated whether focus is given or not.  It solves the problem by first breaking the URL of the stylesheet before fixing it.  This is transparent while staring at the UI, but if looking at the network pane, you'll see a red line where the UI attempted to bring in a file that did not exist. This will just have to be documented, understood and ignored.  This behavior will only take place in Chrome.  All other browsers will continue to work the same way.
 
 ### Minor Changes
 * Addressed timing issues with [mimosa-server-reload](https://github.com/dbashford/mimosa-server-reload). Now server should not be restarted until the previous instance has been fully closed out.
+* [mimosa-minify-js](https://github.com/dbashford/mimosa-minify-js/pull/2) added a `mangleNames` property to the minifyJS config. It defaults to `true`, which leaves current functionality intact but when set to `false` variable names will not be altered.
+* [mimosa-server](https://github.com/dbashford/mimosa-server) had all its built-in template compilers updated to the latest.
+
 
 ## 2.2.20 - August 1 2014
 
