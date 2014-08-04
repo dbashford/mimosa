@@ -74,8 +74,8 @@
     "mimosa-csslint": "1.2.0",
     "mimosa-bower": "1.6.0",
     "mimosa-copy": "1.2.0",
-    "mimosa-server": "1.5.0",
-    "mimosa-live-reload": "1.1.4",
+    "mimosa-server": "1.6.0",
+    "mimosa-live-reload": "1.2.0",
     "mimosa-require": "2.2.0"
   },
   "license": "MIT",
