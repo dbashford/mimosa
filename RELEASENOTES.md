@@ -15,6 +15,11 @@
 * [mimosa-minify-js](https://github.com/dbashford/mimosa-minify-js/pull/2) added a `mangleNames` property to the minifyJS config. It defaults to `true`, which leaves current functionality intact but when set to `false` variable names will not be altered.
 * [mimosa-server](https://github.com/dbashford/mimosa-server) had all its built-in template compilers updated to the latest.
 
+## 2.2.21 - August 6 2014
+
+### Minor Changes
+* Removed leftover logs from sync debugging.
+
 ## 2.2.20 - August 1 2014
 
 ### Major Changes

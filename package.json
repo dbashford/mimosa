@@ -76,7 +76,7 @@
     "mimosa-copy": "1.2.0",
     "mimosa-server": "1.6.0",
     "mimosa-live-reload": "1.2.0",
-    "mimosa-require": "2.2.0"
+    "mimosa-require": "2.2.1"
   },
   "license": "MIT",
   "engines": {
