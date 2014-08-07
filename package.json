@@ -67,7 +67,7 @@
     "request": "2.33.0",
     "logmimosa": "1.0.3",
     "skelmimosa": "1.2.0",
-    "newmimosa": "1.1.3",
+    "newmimosa": "2.0.0",
     "mimosa-minify-js": "1.1.5",
     "mimosa-minify-css": "1.3.0",
     "mimosa-jshint": "1.1.6",
