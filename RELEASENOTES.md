@@ -1,4 +1,4 @@
-## 2.3.0 - August ?? 2014
+## 2.3.0 - August 13 2014
 
 ### Huge Changes
 * `mimosa new` has been updated to include a new server option: [Hapi](http://hapijs.com/). Now with `mimosa new` you can get a Hapi project ready to go with one of the templating options (Jade, Handlebars, Hogan, Dust, EJS, HTML).
