@@ -5,6 +5,7 @@
 * `mimosa new` has been updated to include a new server option: Express w/socket.io. This delivers the same Express skeleton, except with socket.io already included.
 
 ### Major Changes
+* __New Module__: [mimosa-rpm-package](https://github.com/dretay/mimosa-rpm-package) works much like the popular web-package module, but uses [easy-rpm](https://github.com/panitw/easy-rpm) to create an RPM archive of an application.
 * __New Skeleton__: [hapi-angular-browserify](https://github.com/rclayton/mimosa-browserify-hapi-angular). An Angular app served up via Hapi and bundled with browserify.  Is coded in CoffeeScript.
 * `mimosa new` has been updated to deliver the latest Express: `4.7.2`
 * [mimosa-live-reload](https://github.com/dbashford/mimosa-live-reload) has been updated to solve a recent issue with updating CSS in Chrome. Previously CSS would not update in Chrome until Chrome received focus.  So if you were in your text editor and made a change, you'd have to hover over Chrome to see the change take effect.  This is fixed.  The solution is slightly hacky but the result is what you'd expect, the CSS is re-evaluated whether focus is given or not.  It solves the problem by first breaking the URL of the stylesheet before fixing it.  This is transparent while staring at the UI, but if looking at the network pane, you'll see a red line where the UI attempted to bring in a file that did not exist. This will just have to be documented, understood and ignored.  This behavior will only take place in Chrome.  All other browsers will continue to work the same way.
