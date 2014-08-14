@@ -1,4 +1,9 @@
-## 2.3.0 - August 13 2014
+## 2.3.1 - August 13 2014
+
+### Minor Changes
+* [mimosa-require #39](https://github.com/dbashford/mimosa-require/issues/39). mimosa-require will no longer turn off a forced recompile if another module has chosen to force one.
+
+## 2.3.0 - August 12 2014
 
 ### Huge Changes
 * `mimosa new` has been updated to include a new server option: [Hapi](http://hapijs.com/). Now with `mimosa new` you can get a Hapi project ready to go with one of the templating options (Jade, Handlebars, Hogan, Dust, EJS, HTML).
