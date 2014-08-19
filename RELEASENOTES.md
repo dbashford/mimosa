@@ -1,3 +1,9 @@
+## 2.3.2 - August ?? 2014
+
+### Major Changes
+* __New Module__: [mimosa-ember-module-import](https://github.com/dretay/mimosa-ember-module-import) will use some conventions to build out a complete set `require` definitions for all your Ember related code. See the GH for details.
+* __New Skeleton__: [MimosaEmberSkeleton](https://github.com/dbashford/MimosaEmberSkeleton) uses the new [ember-module-import](https://github.com/dretay/mimosa-ember-module-import) is a port of the Ember Blogger example. Uses ES6 modules, automatic ember manifest generation, SASS, Express and comes ready to optimize and bundle. This skeleton is loaded and ready to go.  Testing support for Ember coming soon!
+
 ## 2.3.1 - August 13 2014
 
 ### Minor Changes
