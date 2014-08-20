@@ -295,7 +295,19 @@ processConfig = (opts, callback) ->
     logger.warn "No configuration file found (mimosa-config.coffee/mimosa-config.js/mimosa-config), running from current directory using Mimosa's defaults."
     logger.warn "Run 'mimosa config' to copy the default Mimosa configuration to the current directory."
 
+  defaultProfileLocation = path.join( process.cwd(), ".mimosa_profile")
+  if fs.existsSync( defaultProfileLocation )
+    defaultProfileText = fs.readFileSync( defaultProfileLocation, "utf8" )
+    defaultProfiles = defaultProfileText.split("\n")
+
+    if opts.profile
+      opts.profile = [defaultProfiles, opts.profile].join('#')
+    else
+      opts.profile = defaultProfiles.join("#")
+
   if opts.profile
+    logger.info( "Applying build profiles:", opts.profile.split("#").join(", ") )
+
     unless config.profileLocation
       config.profileLocation = "profiles"
 
@@ -317,7 +329,6 @@ processConfig = (opts, callback) ->
           logger.debug "mimosa config after profile applied:\n#{JSON.stringify(config, null, 2)}"
       else
         return logger.fatal "Profile provided but not found at [[ #{path.join('profiles', profileName)} ]]"
-
 
   config.isServer =    opts?.server
   config.isOptimize =  opts?.optimize
