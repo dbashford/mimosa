@@ -1,3 +1,8 @@
+## 2.3.4 - August 21 2014
+
+### Minor Changes
+* Fixed small bug in validators noticed after pulling them out of mimosa.
+
 ## 2.3.3 - August 21 2014
 
 ### Minor Changes
