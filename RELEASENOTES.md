@@ -1,4 +1,9 @@
-## 2.3.2 - August ?? 2014
+## 2.3.3 - August 21 2014
+
+### Minor Changes
+* To ease testing of modules, Mimosa's configuration validation code has been pulled out and placed in a separate NPM module: [validatemimosa](https://github.com/dbashford/validatemimosa). Mimosa now includes this library.  But now Mimosa modules can include this library as a testing dependency to test and validation routines it runs through.
+
+## 2.3.2 - August 20 2014
 
 ### Major Changes
 * __New Module__: [mimosa-ember-module-import](https://github.com/dretay/mimosa-ember-module-import) will use some conventions to build out a complete set `require` definitions for all your Ember related code. See the GH for details.
