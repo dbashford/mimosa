@@ -298,12 +298,12 @@ processConfig = (opts, callback) ->
   defaultProfileLocation = path.join( process.cwd(), ".mimosa_profile")
   if fs.existsSync( defaultProfileLocation )
     defaultProfileText = fs.readFileSync( defaultProfileLocation, "utf8" )
-    defaultProfiles = defaultProfileText.split("\n")
-
-    if opts.profile
-      opts.profile = [defaultProfiles, opts.profile].join('#')
-    else
-      opts.profile = defaultProfiles.join("#")
+    if defaultProfileText.trim().length > 0
+      defaultProfiles = defaultProfileText.split("\n")
+      if opts.profile
+        opts.profile = [defaultProfiles, opts.profile].join('#')
+      else
+        opts.profile = defaultProfiles.join("#")
 
   if opts.profile
     logger.info( "Applying build profiles:", opts.profile.split("#").join(", ") )

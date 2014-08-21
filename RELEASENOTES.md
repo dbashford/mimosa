@@ -1,3 +1,8 @@
+## 2.3.5 - August 21 2014
+
+### Minor Changes
+* [mimosa #407](https://github.com/dbashford/mimosa/issues/407). Addressing issues with an empty `.mimosa_profile`.
+
 ## 2.3.4 - August 21 2014
 
 ### Minor Changes
