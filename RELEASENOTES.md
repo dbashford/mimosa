@@ -1,4 +1,4 @@
-## 2.3.6 - August 23 2014
+## 2.3.6/2.3.7 - August 23 2014
 
 ### Minor Changes
 * [mimosa-bower #41](https://github.com/dbashford/mimosa-bower/pull/41). Fixed issue with `mimosa bower:install` command.
