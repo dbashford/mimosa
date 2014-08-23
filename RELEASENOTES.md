@@ -1,3 +1,8 @@
+## 2.3.6 - Auguest ?? 2014
+
+### Major Chnges
+* __New Skeleton__ [Durandal-Foundation-NoAlmond] (https://github.com/DrSammyD/Durandal-Foundation-No-Almond-Mimosa-Skeleton). A Durandal skeleton project with a ton of integrated libraries, working optimization, an Express server with Handlebars server views, and Bower integration.
+
 ## 2.3.5 - August 21 2014
 
 ### Minor Changes
