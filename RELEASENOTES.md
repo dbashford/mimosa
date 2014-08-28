@@ -1,6 +1,7 @@
 ## 2.3.8 - August 28 2014
 
 ### Major Changes
+* __New Skeleton__: [MimosaTypeScript](https://github.com/dbashford/MimosaTypeScript). The first TypeScript skeleton! This includes the new improved typescript compiler support (see next bullet) but also includes a Hapi server, Less for CSS pre-processing, and dust for templates.
 * [mimosa-typescript #1](https://github.com/dbashford/mimosa-typescript/issues/1). Major upgrade in TypeScript support.  Adds source maps, adds ability to exclude `.d.ts` files from compilation.  Upgrades typescript library itself to latest.
 
 ### Minor Changes
