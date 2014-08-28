@@ -93,6 +93,8 @@ module.exports = class JSCompiler
       if logger.isDebug()
         logger.debug "Calling compiler function for compiler [[ " + @compiler.name + " ]]"
 
+      file.isVendor = options.isVendor
+
       @compiler.compile config, file, (err, output, compilerConfig, sourceMap) =>
         if err
           logger.error "File [[ #{file.inputFileName} ]] failed compile. Reason: #{err}", {exitIfBuild:true}
