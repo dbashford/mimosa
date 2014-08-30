@@ -1,3 +1,8 @@
+## 2.3.9 - September ?? 2014
+
+### Minor Changes
+* Addressed timing issues with [mimosa-server-reload](https://github.com/dbashford/mimosa-server-reload) that caused the reload to fire at the end of startup.
+
 ## 2.3.8 - August 28 2014
 
 ### Major Changes
