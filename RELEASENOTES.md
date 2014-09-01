@@ -1,6 +1,7 @@
-## 2.3.9 - September ?? 2014
+## 2.3.9 - September 1 2014
 
 ### Minor Changes
+* Updated validatemimosa so that modules have utility method for checking RegExp
 * Addressed timing issues with [mimosa-server-reload](https://github.com/dbashford/mimosa-server-reload) that caused the reload to fire at the end of startup.
 
 ## 2.3.8 - August 28 2014
