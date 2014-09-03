@@ -1,3 +1,8 @@
+## 2.3.9/2.3.11 - September ? 2014
+
+### Major Changes
+* __New Module__: [mimosa-minify-json](https://github.com/dbashford/mimosa-minify-json) will.. minify JSON! As with all minification modules, minification occurs when the `-m/--minify` flag is ticked.
+
 ## 2.3.9/2.3.10 - September 1 2014
 
 ### Minor Changes
