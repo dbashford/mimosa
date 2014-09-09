@@ -1,4 +1,7 @@
-## 2.3.11 - September ?? 2014
+## 2.3.11 - September 9 2014
+
+### Minor Changes
+* Updated validators so that `isObject` no longer accepts `null` and the validations that expect things to exist don't just check `null`.
 
 ### Major Changes
 * __New Module__: [mimosa-defeature](https://github.com/peluja1012/mimosa-defeature) will slice flagged features out of an application at build time. Effects CSS, JavaScript and templates. Use this to hide features that aren't quite ready, or to remove features from a product that a client doesn't need or hasn't paid for.
