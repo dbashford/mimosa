@@ -1,3 +1,8 @@
+## 2.3.12 - September ?? 2014
+
+### Major Changes
+* __Upgraded Module__: [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple) has received some upgrades. It is now written in JavaScript. It now has a suite of tests for most of its functionality. The messaging as been improved slightly. And you can now pass multiple `testemConfig` files if you have multiple test harnesses.
+
 ## 2.3.11 - September 9 2014
 
 ### Minor Changes
