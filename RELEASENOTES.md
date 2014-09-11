@@ -1,7 +1,10 @@
-## 2.3.12 - September ?? 2014
+## 2.3.12 - September 11 2014
 
 ### Major Changes
 * __Upgraded Module__: [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple) has received some upgrades. It is now written in JavaScript. It now has a suite of tests for most of its functionality. The messaging as been improved slightly. And you can now pass multiple `testemConfig` files if you have multiple test harnesses.
+
+### Minor Changes
+* Updated validators so that when an property is set to `false` it isn't considered not being there.
 
 ## 2.3.11 - September 9 2014
 
