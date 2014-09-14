@@ -1,3 +1,8 @@
+## 2.3.15 - September 14 2014
+
+### Minor Changes
+* [mimosa-ember-module-import #2](https://github.com/dbashford/mimosa-ember-module-import/issues/2). Fixes ember-module-import on Windows.
+
 ## 2.3.14 - September 14 2014
 
 ### Minor Changes
