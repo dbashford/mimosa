@@ -1,3 +1,8 @@
+## 2.3.14 - September 14 2014
+
+### Minor Changes
+* [mimosa-require](https://github.com/dbashford/mimosa-require) had a small change to when it ran its code in mimosa's workflows to allow for other modules to get their tasks done before mimosa-require runs validation.
+
 ## 2.3.12/2.3.13 - September 11 2014
 
 ### Major Changes
@@ -14,7 +19,7 @@
 ### Major Changes
 * __New Module__: [mimosa-defeature](https://github.com/peluja1012/mimosa-defeature) will slice flagged features out of an application at build time. Effects CSS, JavaScript and templates. Use this to hide features that aren't quite ready, or to remove features from a product that a client doesn't need or hasn't paid for.
 * __New Module__: [mimosa-minify-json](https://github.com/dbashford/mimosa-minify-json) will.. minify JSON! As with all minification modules, minification occurs when the `-m/--minify` flag is ticked.
-* __Upgraded Module__:[mimosa-require](https://github.com/dbashford/mimosa-minify-json) has been updated to use the latest require.js, but Mimosa core has not been updated to use the latest mimosa-require.  [Read more about why.](http://dbashford.github.io/bumping-require-js-but-not-for-mimosa-yet/index.html)
+* __Upgraded Module__:[mimosa-require](https://github.com/dbashford/mimosa-require) has been updated to use the latest require.js, but Mimosa core has not been updated to use the latest mimosa-require.  [Read more about why.](http://dbashford.github.io/bumping-require-js-but-not-for-mimosa-yet/index.html)
 
 ## 2.3.9/2.3.10 - September 1 2014
 
