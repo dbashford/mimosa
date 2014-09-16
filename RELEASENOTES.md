@@ -1,3 +1,8 @@
+## 2.3.16 - September ? 2014
+
+### Major Changes
+* __New Module__: [mimosa-esperanto-es6-modules](https://github.com/dbashford/mimosa-esperanto-es6-modules). Transpiles es6 module syntax to es5 commonjs/amd. [esperanto](https://github.com/Rich-Harris/esperanto) is a faster more straight forward alternative to the es6-module-transpiler.  It is for now a little less flexible, but if you do not have a mix of named and default exports in your application it is 100% worth making the switch to use esperanto.
+
 ## 2.3.15 - September 14 2014
 
 ### Minor Changes
