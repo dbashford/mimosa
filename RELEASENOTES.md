@@ -1,3 +1,8 @@
+## 2.3.17 - September 24 2014
+
+### Minor Changes
+* [mimosa-minify-css #1](https://github.com/dbashford/mimosa-minify-css/issues/1). Catching if text for file is null.
+
 ## 2.3.16 - September 23 2014
 
 ### Major Changes
