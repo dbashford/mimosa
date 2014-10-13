@@ -1,3 +1,8 @@
+## 2.3.18 - October ?? 2014
+
+### Minor Changes
+* [mimosa-livescript #1](https://github.com/dbashford/mimosa-livescript/pull/1). Pushing to latest LiveScript.
+
 ## 2.3.17 - September 24 2014
 
 ### Minor Changes
