@@ -2,6 +2,9 @@
 
 ### Minor Changes
 * [mimosa-livescript #1](https://github.com/dbashford/mimosa-livescript/pull/1). Pushing to latest LiveScript.
+* [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple). Forcing testem tests to exit during build when `-e` flag is ticked.
+* [mimosa-ember-test](https://github.com/dbashford/mimosa-ember-test). Bumped to latest testem-simple.
+* [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). Bumped to latest testem-simple.
 
 ## 2.3.17 - September 24 2014
 
