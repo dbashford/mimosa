@@ -5,7 +5,7 @@
 * [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple). Forcing testem tests to exit during build when `-e` flag is ticked.
 * [mimosa-ember-test](https://github.com/dbashford/mimosa-ember-test). Bumped to latest testem-simple.
 * [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). Bumped to latest testem-simple.
-* [mimosa-server](https://github.com/dbashford/mimosa-server). Default server now sending pretty printed jade during dev.
+* [mimosa-server](https://github.com/dbashford/mimosa-server). Default server now sending pretty printed jade during dev. [See discussion](https://groups.google.com/forum/#!topic/mimosajs/BHeTf728lbQ)
 
 ## 2.3.17 - September 24 2014
 
