@@ -1,10 +1,11 @@
-## 2.3.18 - October ?? 2014
+## 2.3.18 - October 13 2014
 
 ### Minor Changes
 * [mimosa-livescript #1](https://github.com/dbashford/mimosa-livescript/pull/1). Pushing to latest LiveScript.
 * [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple). Forcing testem tests to exit during build when `-e` flag is ticked.
 * [mimosa-ember-test](https://github.com/dbashford/mimosa-ember-test). Bumped to latest testem-simple.
 * [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). Bumped to latest testem-simple.
+* [mimosa-server](https://github.com/dbashford/mimosa-server). Default server now sending pretty printed jade during dev.
 
 ## 2.3.17 - September 24 2014
 
