@@ -1,3 +1,8 @@
+## 2.3.19 - October ? 2014
+
+### Minor Changes
+* [mimosa-handlebars](https://github.com/dbashford/mimosa-handlebars). Pushed Handlebars to 2.0.
+
 ## 2.3.18 - October 13 2014
 
 ### Minor Changes
