@@ -1,5 +1,8 @@
 ## 2.3.19 - October ? 2014
 
+### Major Changes
+* [mimosa-sass](https://github.com/dbashford/mimosa-sass) now includes inline (dynamic) source maps for node compiled SASS.
+
 ### Minor Changes
 * [mimosa-handlebars](https://github.com/dbashford/mimosa-handlebars). Pushed Handlebars to 2.0.
 
