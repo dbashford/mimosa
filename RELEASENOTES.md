@@ -1,10 +1,11 @@
-## 2.3.19 - October ? 2014
+## 2.3.19 - October 26 2014
 
 ### Major Changes
 * [mimosa-sass](https://github.com/dbashford/mimosa-sass) now includes inline (dynamic) source maps for node compiled SASS.
 
 ### Minor Changes
 * [mimosa-handlebars](https://github.com/dbashford/mimosa-handlebars). Pushed Handlebars to 2.0.
+* [mimosa #414](https://github.com/dbashford/mimosa/issues/414). Fixed lingering commonjs flag from recent mimosa-require parsing refactor.
 
 ## 2.3.18 - October 13 2014
 
