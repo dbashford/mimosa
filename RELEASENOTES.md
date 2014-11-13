@@ -1,3 +1,9 @@
+## 2.3.20 - November ? 2014
+
+### Minor Changes
+* [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple). Adjusted to handle when configFile is not array (as with testem-require).
+* [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). Bumped to latest testem-simple.
+
 ## 2.3.19 - October 26 2014
 
 ### Major Changes
