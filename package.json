@@ -1,7 +1,7 @@
 {
   "name": "mimosa",
   "preferGlobal": "true",
-  "version": "2.3.19",
+  "version": "2.3.20",
   "homepage": "http://www.mimosa.io",
   "author": "David Bashford",
   "description": "A lightning-fast, modular, next generation browser development tool.",
@@ -76,7 +76,7 @@
     "mimosa-bower": "1.6.2",
     "mimosa-copy": "1.2.0",
     "mimosa-server": "1.6.1",
-    "mimosa-live-reload": "1.2.0",
+    "mimosa-live-reload": "1.2.1",
     "mimosa-require": "2.3.1"
   },
   "license": "MIT",
