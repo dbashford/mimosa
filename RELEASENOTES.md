@@ -1,6 +1,7 @@
-## 2.3.20 - November ? 2014
+## 2.3.20 - November 19 2014
 
 ### Minor Changes
+* Bumped mimosa-live-reload to latest socket.io to bypass some installation issues.
 * [mimosa-testem-simple](https://github.com/dbashford/mimosa-testem-simple). Adjusted to handle when configFile is not array (as with testem-require).
 * [mimosa-testem-require](https://github.com/dbashford/mimosa-testem-require). Bumped to latest testem-simple.
 
