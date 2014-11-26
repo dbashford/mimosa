@@ -1,3 +1,8 @@
+## 2.3.21 - December ? 2014
+
+### Minor Changes
+* [esperanto-es6-modules](https://github.com/dbashford/mimosa-esperanto-es6-modules). Updated to latest esperanto (options changed, so check it out before upgrading) which includes support for source maps.
+
 ## 2.3.20 - November 19 2014
 
 ### Minor Changes
