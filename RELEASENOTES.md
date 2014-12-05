@@ -1,7 +1,9 @@
-## 2.3.21 - December ? 2014
+## 2.3.21 - December 4 2014
 
 ### Minor Changes
+* * __New Module__: [mimosa-jscs](https://github.com/al-broco/mimosa-jscs) wraps the popular [JSCS](https://github.com/jscs-dev/node-jscs) tool which performs JavaScript style checking.
 * [esperanto-es6-modules](https://github.com/dbashford/mimosa-esperanto-es6-modules). Updated to latest esperanto (options changed, so check it out before upgrading) which includes support for source maps.
+* [mimosa-require #41](https://github.com/dbashford/mimosa-require/issues/41). Shims and shim depedencies will now have their paths checked against directory aliases.
 
 ## 2.3.20 - November 19 2014
 
