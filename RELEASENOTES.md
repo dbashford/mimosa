@@ -1,3 +1,8 @@
+## 2.3.22 - December 10 2014
+* __New Module__: [mimosa-ember-env](https://github.com/dbashford/mimosa-ember-env) will include `EmberENV` setup calls at the top of your ember.js vendor libs.
+* __New Skeleton__: [MimosaEmberHTMLBars](https://github.com/dbashford/MimosaEmberHTMLBarsSkeleton). The Cadillac of Ember + Mimosa skeletons. Includes support for HTMLBars, QUnit/Testem, automatical Ember module manifest generation, EmberENV inclusion, as well as all the other features that come with most Mimosa apps: live reload, server support, Bower integration, ES6 module transpiling, SASS compiling (via node or Ruby), a all sorts of minification/concatenation/optimization.
+* Updated validations to add excludes and allow includes to behave like excludes.
+
 ## 2.3.21 - December 4 2014
 
 ### Minor Changes
