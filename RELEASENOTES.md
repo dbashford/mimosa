@@ -1,6 +1,19 @@
+## 2.3.23 - December ?? 2014
+
+### Minor Changes
+* [mimosa-jscs](https://github.com/al-broco/mimosa-jscs) continues to improve, adding support for `maxErrors`, `additionalRules`, and `esnext`
+* [mimosa-combine #14](https://github.com/dbashford/mimosa-combine/issues/14). Added an `include` option that allows you to pick and choose specific files to be included.  This lets you pick a few to include from a large group of files in a folder rather than have to `exclude` a large list.
+* [mimosa-combine](https://github.com/dbashford/mimosa-combine). Addressed issue involving `removeCombined` and multiple folder entries.
+* [mimosa-combine #15](https://github.com/dbashford/mimosa-combine/issues/15). Fixed an issue with binary files being removed unexpectedly.
+* [mimosa-combine #16](https://github.com/dbashford/mimosa-combine/issues/16). Added ability to provide custom transforms that can modify files being transformed before they are combined.  [Details here](https://github.com/dbashford/mimosa-combine#transform-functions).
+
 ## 2.3.22 - December 10 2014
+
+### Major Changes
 * __New Module__: [mimosa-ember-env](https://github.com/dbashford/mimosa-ember-env) will include `EmberENV` setup calls at the top of your ember.js vendor libs.
 * __New Skeleton__: [MimosaEmberHTMLBars](https://github.com/dbashford/MimosaEmberHTMLBarsSkeleton). The Cadillac of Ember + Mimosa skeletons. Includes support for HTMLBars, QUnit/Testem, automatical Ember module manifest generation, EmberENV inclusion, as well as all the other features that come with most Mimosa apps: live reload, server support, Bower integration, ES6 module transpiling, SASS compiling (via node or Ruby), a all sorts of minification/concatenation/optimization.
+
+### Minor Changes
 * Updated validations to add excludes and allow includes to behave like excludes.
 
 ## 2.3.21 - December 4 2014
