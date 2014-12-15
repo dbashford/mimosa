@@ -6,6 +6,7 @@
 * [mimosa-combine](https://github.com/dbashford/mimosa-combine). Addressed issue involving `removeCombined` and multiple folder entries.
 * [mimosa-combine #15](https://github.com/dbashford/mimosa-combine/issues/15). Fixed an issue with binary files being removed unexpectedly.
 * [mimosa-combine #16](https://github.com/dbashford/mimosa-combine/issues/16). Added ability to provide custom transforms that can modify files being transformed before they are combined.  [Details here](https://github.com/dbashford/mimosa-combine#transform-functions).
+* [mimosa #418, mimosa-restart](https://github.com/dbashford/mimosa/issues/418). [mimosa-restart](https://github.com/dbashford/mimosa-restart) has been updated to allow for configurable restart paths and to allow for mimosa to be restarted when things are both removed and updated. The [example config](https://github.com/dbashford/mimosa-restart#example-configuration) has a really good example of how this would be used, which includes restarting mimosa when the `mimosa-config` is updated.
 
 ## 2.3.22 - December 10 2014
 
