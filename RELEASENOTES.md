@@ -1,5 +1,13 @@
 ## 2.3.23 - December ?? 2014
 
+### Major Changes
+* [mimosa-combine #19](https://github.com/dbashford/mimosa-combine/issues/19). mimosa-combine now includes, by default, source maps for the files it combines. These source maps will not incorporate existing source maps, and they will not factor in any changes made by transform functions.
+
+### Minor Changes
+* [mimosa-combine #21](https://github.com/dbashford/mimosa-combine/issues/21). Since they are not used, existing source maps are removed from combined files before they are combined.
+
+## 2.3.23 - December 15 2014
+
 ### Minor Changes
 * [mimosa-jscs](https://github.com/al-broco/mimosa-jscs) continues to improve, adding support for `maxErrors`, `additionalRules`, and `esnext`
 * [mimosa-combine #14](https://github.com/dbashford/mimosa-combine/issues/14). Added an `include` option that allows you to pick and choose specific files to be included.  This lets you pick a few to include from a large group of files in a folder rather than have to `exclude` a large list.
