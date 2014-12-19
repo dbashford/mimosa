@@ -81,6 +81,10 @@ module.exports = class CSSCompiler
       if options.lifeCycleType isnt 'remove' and path.extname(options.inputFile) isnt ".css"
         options.files.push __baseOptionsObject(config, options.inputFile)
 
+    # protect against compiling the same file multiple times
+    # ... circular references and such
+    options.files = _.uniq options.files, (f) -> f.outputFileName
+
     next()
 
   _compile: (config, options, next) =>
@@ -247,4 +251,7 @@ module.exports = class CSSCompiler
                 logger.debug "Creating base file entry for include file [[ #{includeFile} ]], adding base file [[ #{baseFile} ]]"
               @includeToBaseHash[includeFile] = [baseFile]
 
-          @__importsForFile(baseFile, includeFile, allFiles)
+          if baseFile is includeFile
+            logger.info "Circular import reference found in file [[ #{baseFile} ]]"
+          else
+            @__importsForFile(baseFile, includeFile, allFiles)
