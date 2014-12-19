@@ -1,9 +1,10 @@
-## 2.3.24 - December ?? 2014
+## 2.3.24 - December 19 2014
 
 ### Major Changes
 * [mimosa-combine #19](https://github.com/dbashford/mimosa-combine/issues/19). mimosa-combine now includes, by default, source maps for the files it combines. These source maps will not incorporate existing source maps, and they will not factor in any changes made by transform functions.
 
 ### Minor Changes
+* [mimosa #420](https://github.com/dbashford/mimosa/issues/420). Handle circular references among CSS imports.
 * [mimosa-combine #21](https://github.com/dbashford/mimosa-combine/issues/21). Since they are not used, existing source maps are removed from combined files before they are combined.
 
 ## 2.3.23 - December 15 2014
