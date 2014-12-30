@@ -1,3 +1,8 @@
+## 2.3.25 - December 30 2014
+
+### Minor Changes
+* Using `util.inspect` to avoid circular logging issues.
+
 ## 2.3.24 - December 19 2014
 
 ### Major Changes

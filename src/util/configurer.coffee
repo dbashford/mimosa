@@ -350,10 +350,11 @@ processConfig = (opts, callback) ->
       logger.setConfig newConfig
 
       if logger.isDebug()
+        util = require('util')
         logger.debug "******************"
         logger.debug "Your mimosa config:\n#{JSON.stringify(config, null, 2)}"
         logger.debug "******************"
-        logger.debug "Full mimosa config:\n#{JSON.stringify(newConfig, null, 2)}"
+        logger.debug "Full mimosa config:\n#{util.inspect(newConfig)}"
         logger.debug "******************"
 
       callback newConfig, modules
