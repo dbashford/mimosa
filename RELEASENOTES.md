@@ -1,3 +1,23 @@
+## 2.4.0 - Jan/Feb ? 2015
+
+Work towards a `2.4.0` has begun.  Looking for across the board library updates as well as a few other big changes.  Keep eyes peeled here as any updates will get added to this list.  Hoping for a late January release.
+
+As updates to external modules are listed here, know that you can use them right away by updating your mimosa config.  For instance to use the latest bower (1.8.1 as of this writing), updating your `modules` array to point to `bower@1.8.1`.
+
+### Major Changes
+* [mimosa-bower #44](https://github.com/dbashford/mimosa-bower/issues/44). You can now use a regex to match packages to a `strategy`:
+  ```javascript
+    strategy: {
+      "/^jquery/": "vendorRoot"
+    }
+  ```
+* [mimosa-bower #40](https://github.com/dbashford/mimosa-bower/issues/40). This adds a new `together` strategy that allows for keeping js/css assets together inside a specific directory.  Also added was a `togetherRoot` path where those packages with a `together` strategy are placed.  `togetherRoot` is `components` by default.  For an example, check out the [polymer demo app](https://github.com/brzpegasus/mimosa-polymer-demo) which keeps all of the polymer components (and their `.html`, `.css` and `.js`) inside the `components` folder.
+
+### Minor Changes
+* [mimosa-minify-css](https://github.com/dbashford/mimosa-minify-css) has been updated to the latest version of [clean-css](https://github.com/jakubpawlowicz/clean-css)
+* [mimosa-live-reload #6](https://github.com/dbashford/mimosa-live-reload/pull/6). Fixed a small bug with script finding.
+* [mimosa-live-reload](https://github.com/dbashford/mimosa-live-reload). Updated to latest and updated socket.io.
+
 ## 2.3.25 - December 30 2014
 
 ### Minor Changes
