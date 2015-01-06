@@ -16,6 +16,7 @@ As updates to external modules are listed here, know that you can use them right
 ### Minor Changes
 * [mimosa-minify-css](https://github.com/dbashford/mimosa-minify-css) has been updated to the latest version of [clean-css](https://github.com/jakubpawlowicz/clean-css)
 * [mimosa-live-reload #6](https://github.com/dbashford/mimosa-live-reload/pull/6). Fixed a small bug with script finding.
+* [mimosa-live-reload #7](https://github.com/dbashford/mimosa-live-reload/issues/7). Readdressed the hack for getting Chrome to repaint CSS updates whether or not it has focus.
 * [mimosa-live-reload](https://github.com/dbashford/mimosa-live-reload). Updated to latest and updated socket.io.
 
 ## 2.3.25 - December 30 2014
