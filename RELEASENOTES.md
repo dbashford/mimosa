@@ -12,6 +12,8 @@ As updates to external modules are listed here, know that you can use them right
     }
   ```
 * [mimosa-bower #40](https://github.com/dbashford/mimosa-bower/issues/40). This adds a new `together` strategy that allows for keeping js/css assets together inside a specific directory.  Also added was a `togetherRoot` path where those packages with a `together` strategy are placed.  `togetherRoot` is `components` by default.  For an example, check out the [polymer demo app](https://github.com/brzpegasus/mimosa-polymer-demo) which keeps all of the polymer components (and their `.html`, `.css` and `.js`) inside the `components` folder.
+* [mimosa-minify-js](https://github.com/dbashford/mimosa-minify-js) no longer supports writing `.map` files. Starting with version `v2.0.0` of that module (released), all source maps will be inline base64 encoded maps.
+* [mimosa-minify-js](https://github.com/dbashford/mimosa-minify-js) will now find any embedded inline base64 encoded source maps and use them as input to minification so that you can have multi-stage source maps. This allows source maps to go from minified js back to JavaScript and back to whatever your code may have been before it was JavaScript, like CoffeeScript or es6 flavored JavaScript.
 
 ### Minor Changes
 * [mimosa-minify-css](https://github.com/dbashford/mimosa-minify-css) has been updated to the latest version of [clean-css](https://github.com/jakubpawlowicz/clean-css)
