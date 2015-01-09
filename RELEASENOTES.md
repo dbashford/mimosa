@@ -20,7 +20,10 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-live-reload #6](https://github.com/dbashford/mimosa-live-reload/pull/6). Fixed a small bug with script finding.
 * [mimosa-live-reload #7](https://github.com/dbashford/mimosa-live-reload/issues/7). Readdressed the hack for getting Chrome to repaint CSS updates whether or not it has focus.
 * [mimosa-live-reload](https://github.com/dbashford/mimosa-live-reload). Updated to latest and updated socket.io.
-* [mimosa-copy](https://github.com/dbashford/mimosa-copy/issues/1). Added `.swf` to default copy extensions.
+* [mimosa-copy #1](https://github.com/dbashford/mimosa-copy/issues/1). Added `.swf` to default copy extensions.
+* [mimosa-csslint #4](https://github.com/dbashford/mimosa-csslint/issues/4). Now properly recognizes vendor files on startup.
+* [mimosa-csslint](https://github.com/dbashford/mimosa-csslint/). Updated to latest csslint.
+* [mimosa-jshint](https://github.com/dbashford/mimosa-jshint/). Updated to latest jshint.
 
 ## 2.3.25 - December 30 2014
 
