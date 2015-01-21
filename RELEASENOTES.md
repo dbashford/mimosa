@@ -5,6 +5,8 @@ Work towards a `2.4.0` has begun.  Looking for across the board library updates 
 As updates to external modules are listed here, know that you can use them right away by updating your mimosa config.  For instance to use the latest bower (1.8.1 as of this writing), updating your `modules` array to point to `bower@1.8.1`.
 
 ### Major Changes
+* __New Module__ [mimosa-rename](https://github.com/dbashford/mimosa-rename) allows you to rename files before they are written.
+* __New Module__ [mimosa-twig](https://github.com/dbashford/mimosa-twig) supports twig as a client side templating library.
 * [mimosa-bower #44](https://github.com/dbashford/mimosa-bower/issues/44). You can now use a regex to match packages to a `strategy`:
   ```javascript
     strategy: {
