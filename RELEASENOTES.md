@@ -1,4 +1,4 @@
-## 2.4.0 - Jan/Feb ? 2015
+## 2.4.0/3.0.0 - Jan/Feb ? 2015
 
 Work towards a `2.4.0` has begun.  Looking for across the board library updates as well as a few other big changes.  Keep eyes peeled here as any updates will get added to this list.  Hoping for a late January release.
 
