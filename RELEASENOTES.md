@@ -19,6 +19,7 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-minify-js](https://github.com/dbashford/mimosa-minify-js) will now find any embedded inline base64 encoded source maps and use them as input to minification so that you can have multi-stage source maps. This allows source maps to go from minified js back to JavaScript and back to whatever your code may have been before it was JavaScript, like CoffeeScript or es6 flavored JavaScript.
 * [newmimosa](https://github.com/dbashford/newmimosa). `mimosa new` now delivers the latest of all its assets.  This includes a big update to Hapi `0.8.1` as well as some fixes for nunjucks apps.
 * [newmimosa](https://github.com/dbashford/newmimosa). `mimosa new` no longer makes recommendations.  It also no longer supports the `--defaults/-d` flag.
+* [newmimosa](https://github.com/dbashford/newmimosa). Cleaned up some bad boilerplate code and incorporated Twig templates.
 
 ### Minor Changes
 * [mimosa-minify-css](https://github.com/dbashford/mimosa-minify-css) has been updated to the latest version of [clean-css](https://github.com/jakubpawlowicz/clean-css)
