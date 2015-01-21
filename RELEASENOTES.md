@@ -15,6 +15,8 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-require #42](https://github.com/dbashford/mimosa-require/issues/42). Addressed an issue which was preventing re-bundling/optimizing of applications during `mimosa watch`. Should now again be able to run `mimosa watch -o`, change files, and have the act of changing files re-run r.js and re-optimize your app.
 * [mimosa-minify-js](https://github.com/dbashford/mimosa-minify-js) no longer supports writing `.map` files. Starting with version `v2.0.0` of that module (released), all source maps will be inline base64 encoded maps.
 * [mimosa-minify-js](https://github.com/dbashford/mimosa-minify-js) will now find any embedded inline base64 encoded source maps and use them as input to minification so that you can have multi-stage source maps. This allows source maps to go from minified js back to JavaScript and back to whatever your code may have been before it was JavaScript, like CoffeeScript or es6 flavored JavaScript.
+* [newmimosa](https://github.com/dbashford/newmimosa). `mimosa new` now delivers the latest of all its assets.  This includes a big update to Hapi `0.8.1` as well as some fixes for nunjucks apps.
+* [newmimosa](https://github.com/dbashford/newmimosa). `mimosa new` no longer makes recommendations.  It also no longer supports the `--defaults/-d` flag.
 
 ### Minor Changes
 * [mimosa-minify-css](https://github.com/dbashford/mimosa-minify-css) has been updated to the latest version of [clean-css](https://github.com/jakubpawlowicz/clean-css)
@@ -25,6 +27,8 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-csslint #4](https://github.com/dbashford/mimosa-csslint/issues/4). Now properly recognizes vendor files on startup.
 * [mimosa-csslint](https://github.com/dbashford/mimosa-csslint/). Updated to latest csslint.
 * [mimosa-jshint](https://github.com/dbashford/mimosa-jshint/). Updated to latest jshint.
+* [mimosa-typescript](https://github.com/dbashford/mimosa-typescript/). Pinned typescript versions to fix compilation issues.
+* [mimosa-coffeescript](https://github.com/dbashford/mimosa-coffeescript/), [mimosa-iced-coffeescript](https://github.com/dbashford/mimosa-iced-coffeescript/), and [mimosa-livescript](https://github.com/dbashford/mimosa-livescript/) have been updated to the latest compiler versions.
 
 ## 2.3.25 - December 30 2014
 
