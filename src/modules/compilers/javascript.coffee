@@ -133,9 +133,9 @@ module.exports = class JSCompiler
                 done()
 
               if compilerConfig.sourceMapConditional
-                output = "#{output}\n/*\n//@ sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
+                output = "#{output}\n//@ sourceMappingURL=#{path.basename(file.sourceMapName)}\n"
               else
-                output = "#{output}\n/*\n//# sourceMappingURL=#{path.basename(file.sourceMapName)}\n*/\n"
+                output = "#{output}\n//# sourceMappingURL=#{path.basename(file.sourceMapName)}\n"
 
           file.outputFileText = output
           newFiles.push file

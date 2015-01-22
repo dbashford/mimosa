@@ -1,7 +1,12 @@
+## 2.3.26 - January 22 2014
+
+### Minor Changes
+* Adjusted how source map comments are included in transpiled JavaScript files.
+
 ## 2.3.26 - January 12 2014
 
 ### Minor Changes
-* [mimosa #422](https://github.com/dbashford/mimosa/issues/422). Now calls to `logger.fatal` will automatically exit with non-0 status code. 
+* [mimosa #422](https://github.com/dbashford/mimosa/issues/422). Now calls to `logger.fatal` will automatically exit with non-0 status code.
 
 ## 2.3.25 - December 30 2014
 
