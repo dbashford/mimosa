@@ -1,4 +1,9 @@
-## 2.3.26 - January 22 2014
+## 2.3.28 - January 22 2014
+
+### Minor Changes
+* More work with mimosa-live-reload to get CSS reloading to work properly in Chrome.
+
+## 2.3.27 - January 22 2014
 
 ### Minor Changes
 * Adjusted how source map comments are included in transpiled JavaScript files.
