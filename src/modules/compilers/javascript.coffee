@@ -32,12 +32,17 @@ module.exports = class JSCompiler
 
     next()
 
-  __sourceMap: (file, output, sourceMapStr) ->
-    sourceMap = JSON.parse(sourceMapStr)
+  __sourceMap: (file, output, sourceMap) ->
+    # parse source map to object
+    if typeof sourceMap is "string"
+      sourceMap = JSON.parse(sourceMap)
+
+    if !sourceMap.sources
+      sourceMap.sources = []
+
     sourceMap.sources[0] = file.inputFileName
     sourceMap.sourcesContent = [file.inputFileText];
     sourceMap.file = file.outputFileName;
-    console.log(sourceMap)
 
     base64SourceMap = new Buffer(JSON.stringify(sourceMap)).toString('base64')
     datauri = 'data:application/json;base64,' + base64SourceMap
