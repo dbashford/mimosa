@@ -33,6 +33,10 @@ module.exports = class JSCompiler
     next()
 
   __sourceMap: (file, output, sourceMap) ->
+    # already has source map?
+    if output.indexOf("sourceMappingURL=") > -1
+      return output
+
     # parse source map to object
     if typeof sourceMap is "string"
       sourceMap = JSON.parse(sourceMap)
