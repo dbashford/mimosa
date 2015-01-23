@@ -4,6 +4,9 @@ Work towards a `2.4.0` has begun.  Looking for across the board library updates 
 
 As updates to external modules are listed here, know that you can use them right away by updating your mimosa config.  For instance to use the latest bower (1.8.1 as of this writing), updating your `modules` array to point to `bower@1.8.1`.
 
+### Possible Breaking Changes
+* [mimosa #425](https://github.com/dbashford/mimosa/issues/425). Support for non-inline source maps has been removed from mimosa-core. Mimosa's JavaScript compilers will no longer create `.map` and `.src` files.  All JavaScript source maps will be inlined as support for inline source maps is wide. Additionally conditional source map comments, `//#`, are no longer allowed.
+
 ### Major Changes
 * __New Module__ [mimosa-rename](https://github.com/dbashford/mimosa-rename) allows you to rename files before they are written.
 * __New Module__ [mimosa-twig](https://github.com/dbashford/mimosa-twig) supports twig as a client side templating library.
@@ -22,6 +25,8 @@ As updates to external modules are listed here, know that you can use them right
 * [newmimosa](https://github.com/dbashford/newmimosa). Cleaned up some bad boilerplate code and incorporated Twig templates.
 
 ### Minor Changes
+* [mimosa #427](https://github.com/dbashford/mimosa/issues/427). mimosa core's base JavaScript compiler can now handle both object and string source maps.
+* [mimosa #426](https://github.com/dbashford/mimosa/issues/426). mimosa core's base JavaScript compiler will now recognize if an inline source map is in place before adding a new one.
 * [mimosa-minify-css](https://github.com/dbashford/mimosa-minify-css) has been updated to the latest version of [clean-css](https://github.com/jakubpawlowicz/clean-css)
 * [mimosa-live-reload #6](https://github.com/dbashford/mimosa-live-reload/pull/6). Fixed a small bug with script finding.
 * [mimosa-live-reload #7](https://github.com/dbashford/mimosa-live-reload/issues/7). Readdressed the hack for getting Chrome to repaint CSS updates whether or not it has focus.
