@@ -8,6 +8,7 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa #425](https://github.com/dbashford/mimosa/issues/425). Support for non-inline source maps has been removed from mimosa-core. Mimosa's JavaScript compilers will no longer create `.map` and `.src` files.  All JavaScript source maps will be inlined as support for inline source maps is wide. Additionally conditional source map comments, `//#`, are no longer allowed.
 
 ### Major Changes
+* __New Module__ [mimosa-hogan-static](https://github.com/dbashford/mimosa-hogan-static) will compile hogan templates into individual `.html` files. This module gives you the means to provide your hogan templates with a variable context, a list of partials, and a list of global settings to use across all of your templates.
 * __New Module__ [mimosa-rename](https://github.com/dbashford/mimosa-rename) allows you to rename files before they are written.
 * __New Module__ [mimosa-twig](https://github.com/dbashford/mimosa-twig) supports twig as a client side templating library.
 * [mimosa-bower #44](https://github.com/dbashford/mimosa-bower/issues/44). You can now use a regex to match packages to a `strategy`:
