@@ -8,7 +8,7 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa #425](https://github.com/dbashford/mimosa/issues/425). Support for non-inline source maps has been removed from mimosa-core. Mimosa's JavaScript compilers will no longer create `.map` and `.src` files.  All JavaScript source maps will be inlined as support for inline source maps is wide. Additionally conditional source map comments, `//#`, are no longer allowed.
 
 ### Major Changes
-* __New Module__ [mimosa-npm-web-dependencies](https://github.com/dbashford/mimosa-npm-web-dependencies) will let you install NPM dependencies into your web app, and if that dependency has a big dependency tree, it will use browserify to bundle the dependency before injecting it. 
+* __New Module__ [mimosa-npm-web-dependencies](https://github.com/dbashford/mimosa-npm-web-dependencies) will let you install NPM dependencies into your web app, and if that dependency has a big dependency tree, it will use browserify to bundle the dependency before injecting it.
 * __New Module__ [mimosa-hogan-static](https://github.com/dbashford/mimosa-hogan-static) will compile hogan templates into individual `.html` files. This module gives you the means to provide your hogan templates with a variable context, a list of partials, and a list of global settings to use across all of your templates.
 * __New Module__ [mimosa-rename](https://github.com/dbashford/mimosa-rename) allows you to rename files before they are written.
 * __New Module__ [mimosa-twig](https://github.com/dbashford/mimosa-twig) supports twig as a client side templating library.
@@ -39,6 +39,21 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-jshint](https://github.com/dbashford/mimosa-jshint/). Updated to latest jshint.
 * [mimosa-typescript](https://github.com/dbashford/mimosa-typescript/). Pinned typescript versions to fix compilation issues.
 * [mimosa-coffeescript](https://github.com/dbashford/mimosa-coffeescript/), [mimosa-iced-coffeescript](https://github.com/dbashford/mimosa-iced-coffeescript/), and [mimosa-livescript](https://github.com/dbashford/mimosa-livescript/) have been updated to the latest compiler versions.
+
+## 2.3.28 - January 22 2014
+
+### Minor Changes
+* More work with mimosa-live-reload to get CSS reloading to work properly in Chrome.
+
+## 2.3.27 - January 22 2014
+
+### Minor Changes
+* Adjusted how source map comments are included in transpiled JavaScript files.
+
+## 2.3.26 - January 12 2014
+
+### Minor Changes
+* [mimosa #422](https://github.com/dbashford/mimosa/issues/422). Now calls to `logger.fatal` will automatically exit with non-0 status code.
 
 ## 2.3.25 - December 30 2014
 
