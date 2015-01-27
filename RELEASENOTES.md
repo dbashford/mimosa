@@ -1,6 +1,6 @@
 ## 3.0.0 - Feb ? 2015
 
-Work towards a `3.0.0` has begun.  Looking for across the board library updates as well as a few other big changes.  Keep eyes peeled here as any updates will get added to this list.  Hoping for a late January release.
+Work towards a `3.0.0` in under way. Looking for across the board library updates as well as a few other big changes.  Keep eyes peeled here as any updates will get added to this list.  Hoping for a mid/late Feb release.
 
 As updates to external modules are listed here, know that you can use them right away by updating your mimosa config.  For instance to use the latest bower (1.8.1 as of this writing), updating your `modules` array to point to `bower@1.8.1`.
 
