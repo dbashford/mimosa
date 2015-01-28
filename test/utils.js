@@ -36,7 +36,26 @@ var fakeMimosaConfig = function() {
   return _.cloneDeep(fakeMimosaConfigObj);
 };
 
+var testRegistration = function( mod, cb ) {
+  var workflows, step, writeFunction, extensions;
+
+  mod.registration( fakeMimosaConfig(), function( _workflows, _step , _writeFunction, _extensions ) {
+    workflows = _workflows;
+    step = _step;
+    writeFunction = _writeFunction;
+    extensions = _extensions;
+
+    expect( workflows ).to.be.instanceof( Array );
+    expect( step ).to.be.a( "string" );
+    expect( writeFunction ).to.be.instanceof( Function )
+    expect( extensions ).to.be.instanceof( Array );
+
+    cb( writeFunction );
+  });
+};
+
 module.exports = {
   fileFixture: fileFixture,
-  fakeMimosaConfig: fakeMimosaConfig
+  fakeMimosaConfig: fakeMimosaConfig,
+  testRegistration: testRegistration
 };
