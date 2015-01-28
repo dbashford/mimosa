@@ -29,6 +29,7 @@ class Watcher
     watcher.on "error", (error) -> logger.warn "File watching error: #{error}"
     watcher.on "change", (f) => @_fileUpdated('update', f)
     watcher.on "unlink", @workflow.remove
+    watcher.on "ready", @workflow.ready
     watcher.on "add", (f) =>
       if @throttle > 0
         @adds.push(f)
