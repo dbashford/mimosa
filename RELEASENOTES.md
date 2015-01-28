@@ -1,3 +1,9 @@
+## 2.3.29 - January 27 2014
+
+### Minor Changes
+* [mimosa #429](https://github.com/dbashford/mimosa/issues/429). If no files in source directory, user is warned and workflows continue, previously processing would hang.
+* Mimosa core has been updated to latest chokidar.
+
 ## 2.3.28 - January 22 2014
 
 ### Minor Changes
