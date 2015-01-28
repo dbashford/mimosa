@@ -20,6 +20,8 @@ class Cleaner
 
     @watcher = watch.watch @config.watch.sourceDir, watchConfig
     @watcher.on "add", @workflow.clean
+    @watcher.on "ready", @workflow.ready
+
 
   _cleanDone: =>
     @workflow.postClean =>

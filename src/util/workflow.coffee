@@ -40,44 +40,47 @@ module.exports = class WorkflowManager
 
     @allExtensions = []
     for module in modules
-      module.registration(@config, @register) if module.registration?
+      if module.registration
+        module.registration(@config, @register)
     @allExtensions = _.uniq(@allExtensions)
 
-    @cleanUpRegistration()
-    @determineFileCount()
+    @_cleanUpRegistration()
+    #@_determineFileCount()
 
   initClean: (cb) =>
-    @_executeWorkflowStep {}, 'preClean', cb
+    @_init "preClean", cb
 
   initBuild: (cb) =>
-    @_executeWorkflowStep {}, 'preBuild', =>
-      @determineFileCount()
-      cb()
-
-  determineFileCount: =>
-    w = @config.watch
-    files = fileUtils.readdirSyncRecursive(w.sourceDir, w.exclude, w.excludeRegex, true).filter (f) =>
-      ext = path.extname(f).substring(1)
-      ext.length >= 1 and @allExtensions.indexOf(ext) >= 0
-    @initialFileCount = files.length
-    # @initialFiles = files.map (f) => path.join @config.watch.sourceDir, f
+    @_init "preBuild", cb
 
   postClean: (cb) =>
     @_executeWorkflowStep {}, 'postClean', cb
 
-  cleanUpRegistration: =>
-    logger.debug "Cleaning up unused workflow steps"
+  # ready is called when all files are initially encountered on startup
+  # can't do anything with this because mimosa cares not when the files
+  # are encountered, but when mimosa's intial workflows are done processing
+  # those files.  However, if ready is called and there were no files
+  # processed, then there are no source code files.  Need to info
+  # that to users and then continue on with further workflows
+  ready: =>
+    if @initialFileCount is 0
+      logger.info "No files to be processed"
+      @_initialFileProcessingDone()
 
-    for type, typeReg of @registration
-      for step, stepReg of typeReg
-        if Object.keys(stepReg).length is 0
-          i = 0
-          for st in @types[type]
-            if st is step
-              @types[type].splice(i,1)
-              break
-            i++
-          delete typeReg[step]
+  clean:  (fileName) =>
+    @_executeWorkflowStep(@_buildAssetOptions(fileName), 'cleanFile')
+
+  update: (fileName) =>
+    @_executeWorkflowStep(@_buildAssetOptions(fileName), 'update')
+
+  remove: (fileName) =>
+    @_executeWorkflowStep(@_buildAssetOptions(fileName), 'remove')
+
+  add: (fileName) =>
+    if @startup
+      @_executeWorkflowStep(@_buildAssetOptions(fileName), 'buildFile')
+    else
+      @_executeWorkflowStep(@_buildAssetOptions(fileName), 'add')
 
   register: (types, step, callback, extensions = ['*']) =>
     unless Array.isArray(types)
@@ -115,14 +118,39 @@ module.exports = class WorkflowManager
         @allExtensions.push extension
         @registration[type][step][extension].push callback
 
-  clean:  (fileName) => @_executeWorkflowStep(@_buildAssetOptions(fileName), 'cleanFile')
-  update: (fileName) => @_executeWorkflowStep(@_buildAssetOptions(fileName), 'update')
-  remove: (fileName) => @_executeWorkflowStep(@_buildAssetOptions(fileName), 'remove')
-  add: (fileName) =>
-    if @startup
-      @_executeWorkflowStep(@_buildAssetOptions(fileName), 'buildFile')
+  _init: (step, cb) =>
+    @_executeWorkflowStep {}, step, =>
+      # need to redetermine initial file count
+      @_determineFileCount()
+      cb()
+
+  _determineFileCount: =>
+    w = @config.watch
+    files = fileUtils.readdirSyncRecursive(w.sourceDir, w.exclude, w.excludeRegex, true).filter (f) =>
+      ext = path.extname(f).substring(1)
+      ext.length >= 1 and @allExtensions.indexOf(ext) >= 0
+    @initialFileCount = files.length
+    # @initialFiles = files.map (f) => path.join @config.watch.sourceDir, f
+
+  _cleanUpRegistration: =>
+    #logger.debug "Cleaning up unused workflow steps"
+
+    for type, typeReg of @registration
+      for step, stepReg of typeReg
+        if Object.keys(stepReg).length is 0
+          i = 0
+          for st in @types[type]
+            if st is step
+              @types[type].splice(i,1)
+              break
+            i++
+          delete typeReg[step]
+
+  _initialFileProcessingDone: =>
+    if @config.isClean
+      if @buildDoneCallback? then @buildDoneCallback()
     else
-      @_executeWorkflowStep(@_buildAssetOptions(fileName), 'add')
+      @_buildExtensions()
 
   _buildAssetOptions: (fileName) ->
     ext = path.extname(fileName).toLowerCase()
@@ -191,22 +219,17 @@ module.exports = class WorkflowManager
 
     next()
 
-  hash:{}
-
   _finishedWithFile: (options) =>
     if logger.isDebug()
       logger.debug "Finished with file [[ #{options.inputFile} ]]"
 
-    @_writeTime(options)
+    # @_writeTime(options)
 
     #@doneFiles.push(options.inputFile)
     #console.log _.difference(@initialFiles, @doneFiles)
     #console.log "finished #{@initialFilesHandled + 1} of #{@initialFileCount}"
     if @startup and ++@initialFilesHandled is @initialFileCount
-      if @config.isClean
-        if @buildDoneCallback? then @buildDoneCallback()
-      else
-        @_buildExtensions()
+      @_initialFileProcessingDone()
 
   _buildExtensions: =>
     @startup = false
@@ -233,4 +256,3 @@ module.exports = class WorkflowManager
         time = time + " microseconds"
 
       logger.info "Finished with file [[ #{options.inputFile} ]] in [[ #{time} ]]"
-
