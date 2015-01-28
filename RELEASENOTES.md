@@ -40,6 +40,11 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-typescript](https://github.com/dbashford/mimosa-typescript/). Pinned typescript versions to fix compilation issues.
 * [mimosa-coffeescript](https://github.com/dbashford/mimosa-coffeescript/), [mimosa-iced-coffeescript](https://github.com/dbashford/mimosa-iced-coffeescript/), and [mimosa-livescript](https://github.com/dbashford/mimosa-livescript/) have been updated to the latest compiler versions.
 
+## 2.3.29 - January 27 2014
+
+### Minor Changes
+* [mimosa #429](https://github.com/dbashford/mimosa/issues/429). If no files in source directory, user is warned and workflows continue, previously processing would hang.
+
 ## 2.3.28 - January 22 2014
 
 ### Minor Changes
