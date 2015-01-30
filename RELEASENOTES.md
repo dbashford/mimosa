@@ -40,6 +40,7 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-jshint](https://github.com/dbashford/mimosa-jshint/). Updated to latest jshint.
 * [mimosa-typescript](https://github.com/dbashford/mimosa-typescript/). Pinned typescript versions to fix compilation issues.
 * [mimosa-coffeescript](https://github.com/dbashford/mimosa-coffeescript/), [mimosa-iced-coffeescript](https://github.com/dbashford/mimosa-iced-coffeescript/), and [mimosa-livescript](https://github.com/dbashford/mimosa-livescript/) have been updated to the latest compiler versions.
+* [mimosa-less](https://github.com/dbashford/mimosa-less/) has been updated to the latest less.
 
 ## 2.3.29 - January 27 2014
 
