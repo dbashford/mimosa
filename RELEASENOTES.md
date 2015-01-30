@@ -1,3 +1,8 @@
+## 2.3.30 - January 30 2014
+
+### Minor Changes
+* [skelmimosa #31](https://github.com/dbashford/skelmimosa/issues/31). `mimosa skel:new` will now run a `npm install` inside the created project.
+
 ## 2.3.29 - January 27 2014
 
 ### Minor Changes
