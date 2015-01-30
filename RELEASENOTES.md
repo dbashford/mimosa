@@ -43,6 +43,11 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-coffeescript](https://github.com/dbashford/mimosa-coffeescript/), [mimosa-iced-coffeescript](https://github.com/dbashford/mimosa-iced-coffeescript/), and [mimosa-livescript](https://github.com/dbashford/mimosa-livescript/) have been updated to the latest compiler versions.
 * [mimosa-less](https://github.com/dbashford/mimosa-less/) has been updated to the latest less.
 
+## 2.3.30 - January 30 2014
+
+### Minor Changes
+* [skelmimosa #31](https://github.com/dbashford/skelmimosa/issues/31). `mimosa skel:new` will now run a `npm install` inside the created project.
+
 ## 2.3.29 - January 27 2014
 
 ### Minor Changes
