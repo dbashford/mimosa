@@ -14,7 +14,6 @@ var modCommands = function() {
     require( './command/module/install' )( program );
     require( './command/module/uninstall' )( program );
     require( './command/module/list') ( program );
-    require( './command/module/config' )( program );
   }
   modCommandsAdded = true;
 };
