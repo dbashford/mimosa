@@ -16,7 +16,8 @@ var _write = function( config, options, next ) {
 
       // If the outputText is null/undef or there is no name set then all done
       if ( ( file.outputFileText !== "" && !file.outputFileText ) || !file.outputFileName ) {
-        return done();
+        done();
+        continue;
       }
 
       // if the output text is empty, let user know
