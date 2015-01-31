@@ -99,32 +99,3 @@ exports.readdirSyncRecursive = (baseDir, excludes = [], excludeRegex, ignoreDire
     files
 
   readdirSyncRecursive(baseDir)
-
-exports.setFileFlags = (config, options) ->
-  exts = config.extensions
-  ext = options.extension
-
-  options.isJavascript = false
-  options.isCSS = false
-  options.isVendor = false
-  options.isJSNotVendor = false
-  options.isCopy = false
-
-  if exts.template.indexOf(ext) > -1
-    options.isTemplate = true
-    options.isJavascript = true
-    options.isJSNotVendor = true
-
-  if exts.copy.indexOf(ext) > -1
-    options.isCopy = true
-
-  if exts.javascript.indexOf(ext) > -1 or (options.inputFile and isJavascript(options.inputFile))
-    options.isJavascript = true
-    if options.inputFile
-      options.isVendor = isVendorJS(config, options.inputFile)
-      options.isJSNotVendor = not options.isVendor
-
-  if exts.css.indexOf(ext) > -1 or (options.inputFile and isCSS(options.inputFile))
-    options.isCSS = true
-    if options.inputFile
-      options.isVendor = isVendorCSS(config, options.inputFile)

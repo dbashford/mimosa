@@ -13,6 +13,10 @@ var crypto = require( "crypto" )
       success: function(msg, opts){},
       warn: function(msg, opts){},
       error: function(msg, opts){}
+    },
+    vendor: {
+      javascripts: "javascripts/vendor",
+      stylesheets: "stylesheets/vendor"
     }
   }
   ;
