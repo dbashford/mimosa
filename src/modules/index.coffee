@@ -86,11 +86,6 @@ meta = _.map allInstalled, (modInfo) ->
     logger.error "Unable to read file at [[ #{resolvedPath} ]], possibly a permission issue? \nsystem error : #{err}"
     process.exit 1
 
-metaNames = _.pluck meta, 'name'
-configModuleString = if _.difference(metaNames, builtIns).length > 0
-  names = metaNames.map (name) -> name.replace 'mimosa-', ''
-  JSON.stringify names
-
 configured = (moduleNames, callback) ->
   return configuredModules if configuredModules
 
@@ -180,5 +175,4 @@ module.exports =
   installedMetadata:    meta
   getConfiguredModules: configured
   all:                  all
-  configModuleString:   configModuleString
   modulesWithCommands:  modulesWithCommands

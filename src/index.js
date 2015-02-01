@@ -39,7 +39,6 @@ var makeTopLevelHelp = function() {
 };
 
 require( './command/watch' )( program );
-require( './command/config' )( program );
 require( './command/build' )( program );
 require( './command/clean' )( program );
 require( './command/external' )( program );
