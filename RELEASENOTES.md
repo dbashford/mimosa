@@ -28,6 +28,8 @@ As updates to external modules are listed here, know that you can use them right
 * [newmimosa](https://github.com/dbashford/newmimosa). `mimosa new` no longer makes recommendations.  It also no longer supports the `--defaults/-d` flag.
 * [newmimosa](https://github.com/dbashford/newmimosa). Cleaned up some bad boilerplate code and incorporated Twig templates.
 * [newmimosa](https://github.com/dbashford/newmimosa). Now will insert the new `transpiler` property into the mimosa-server config in the mimosa-config if a transpiled language is chosen.
+* [newmimosa](https://github.com/dbashford/newmimosa). A `mimosa-config-documented.coffee` will no longer be generated when you create a `mimosa new` project.
+
 
 ### Minor Changes
 * [mimosa #427](https://github.com/dbashford/mimosa/issues/427). mimosa core's base JavaScript compiler can now handle both object and string source maps.
