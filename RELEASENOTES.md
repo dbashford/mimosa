@@ -2,7 +2,7 @@
 
 Work towards a `3.0.0` in under way. Looking for across the board library updates as well as a few other big changes.  Keep eyes peeled here as any updates will get added to this list.  Hoping for a mid/late Feb release.
 
-As updates to external modules are listed here, know that you can use them right away by updating your mimosa config.  For instance to use the latest bower (1.8.1 as of this writing), updating your `modules` array to point to `bower@1.8.1`.
+As updates to external modules are listed here, know that you can use them right away by updating your `mimosa-config`.  For instance to use the latest bower (1.8.1 as of this writing), updating your `modules` array to point to `bower@1.8.1`.
 
 ### Possible Breaking Changes
 * [mimosa #425](https://github.com/dbashford/mimosa/issues/425). Support for non-inline source maps has been removed from mimosa-core. Mimosa's JavaScript compilers will no longer create `.map` and `.src` files.  All JavaScript source maps will be inlined as support for inline source maps is wide. Additionally conditional source map comments, `//#`, are no longer allowed.
@@ -14,6 +14,7 @@ As updates to external modules are listed here, know that you can use them right
 * __New Module__ [mimosa-hogan-static](https://github.com/dbashford/mimosa-hogan-static) will compile hogan templates into individual `.html` files. This module gives you the means to provide your hogan templates with a variable context, a list of partials, and a list of global settings to use across all of your templates.
 * __New Module__ [mimosa-rename](https://github.com/dbashford/mimosa-rename) allows you to rename files before they are written.
 * __New Module__ [mimosa-twig](https://github.com/dbashford/mimosa-twig) supports twig as a client side templating library.
+* [mimosa #428](https://github.com/dbashford/mimosa/issues/428) removed the `mimosa config` command, which also removes the `mimosa-config-documented.coffee` file that `mimosa config` and `mimosa new` (via `mimosa config`) would write. Thus continues the simplification of the tool. If its not bolted down...
 * [mimosa-bower #44](https://github.com/dbashford/mimosa-bower/issues/44). You can now use a regex to match packages to a `strategy`:
   ```javascript
     strategy: {
