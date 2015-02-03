@@ -40,14 +40,16 @@ describe( "Mimosa file cleaning workflow module", function(){
 
   var testCallbackWithFiles = function( files, exists ) {
     createWrenchStub(files);
-    var rmdirSyncStub = sinon.stub( fs, "rmdirSync");
-    var existsSyncStub = sinon.stub( fs, "existsSync", function(){
+    var rmdirStub = sinon.stub( fs, "rmdir", function(p, cb){
+      cb();
+    });
+    var existsStub = sinon.stub( fs, "exists", function(p, cb){
       if( exists === true ) {
-        return true
+        cb(true);
       } else if( exists === false ) {
-        return false;
+        cb(false);
       } else {
-        return Math.random() >= 0.5;
+        cb(Math.random() >= 0.5);
       }
     });
     var statSyncStub = sinon.stub( fs, "statSync", function() {
@@ -62,17 +64,17 @@ describe( "Mimosa file cleaning workflow module", function(){
     // if not random, then all directories "do not exist"
     // so no attempt to remove the directory will take place
     if( exists === false) {
-      expect(rmdirSyncStub.callCount).to.eql(0);
+      expect(rmdirStub.callCount).to.eql(0);
     } else if ( exists === true) {
-      expect(rmdirSyncStub.callCount).to.eql(files.length);
+      expect(rmdirStub.callCount).to.eql(files.length);
     }
 
     expect(spy.calledOnce).to.be.true;
-    expect(existsSyncStub.callCount).to.eql(files.length);
+    expect(existsStub.callCount).to.eql(files.length);
     expect(statSyncStub.callCount).to.eql(files.length);
-    fs.existsSync.restore();
+    fs.exists.restore();
     fs.statSync.restore();
-    fs.rmdirSync.restore();
+    fs.rmdir.restore();
   };
 
   it("will call lifecycle callback if one directory in project", function() {
