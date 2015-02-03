@@ -3,7 +3,6 @@ var fs = require( "fs" )
   , sinon = require( "sinon" )
   , utils = require( path.join(process.cwd(), "test", "utils") )
   , readModule = require( path.join(process.cwd(), "lib", "modules", "file", "read") )
-  , fileUtils = require( path.join(process.cwd(), "lib", "util", "file" ) )
   , fakeMimosaConfig = utils.fakeMimosaConfig();
   ;
 

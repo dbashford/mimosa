@@ -3,11 +3,10 @@ var fs = require( "fs" )
   , sinon = require( "sinon" )
   , utils = require( path.join(process.cwd(), "test", "utils") )
   , deleteModule = require( path.join(process.cwd(), "lib", "modules", "file", "delete") )
-  , fileUtils = require( path.join(process.cwd(), "lib", "util", "file" ) )
   , fakeMimosaConfig = utils.fakeMimosaConfig();
   ;
 
-describe( "Mimosa file reading workflow module", function(){
+describe( "Mimosa file deleting workflow module", function(){
   var deleteFunction;
 
   before(function(done) {

@@ -2,6 +2,10 @@ var crypto = require( "crypto" )
   , path = require( "path" )
   , _ = require( 'lodash' )
   , fakeMimosaConfigObj = {
+    watch: {
+      compiledDir:"foo",
+      sourceDir:"bar"
+    },
     extensions: {
       javascript:["js", "coffee"],
       css:["less"],
@@ -40,7 +44,7 @@ var fakeMimosaConfig = function() {
   return _.cloneDeep(fakeMimosaConfigObj);
 };
 
-var testRegistration = function( mod, cb ) {
+var testRegistration = function( mod, cb, noExtensions ) {
   var workflows, step, writeFunction, extensions;
 
   mod.registration( fakeMimosaConfig(), function( _workflows, _step , _writeFunction, _extensions ) {
@@ -52,7 +56,9 @@ var testRegistration = function( mod, cb ) {
     expect( workflows ).to.be.instanceof( Array );
     expect( step ).to.be.a( "string" );
     expect( writeFunction ).to.be.instanceof( Function )
-    expect( extensions ).to.be.instanceof( Array );
+    if ( !noExtensions ) {
+      expect( extensions ).to.be.instanceof( Array );
+    }
 
     cb( writeFunction );
   });
