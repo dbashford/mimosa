@@ -10,12 +10,8 @@ _delete = (config, options, next) ->
   fileName = options.destinationFile(options.inputFile)
   fs.exists fileName, (exists) ->
     unless exists
-      if config.log.isDebug()
-        config.log.debug "File does not exist? [[ #{fileName} ]]"
       return next()
 
-    if config.log.isDebug()
-      config.log.debug "Removing file [[ #{fileName} ]]"
     fs.unlink fileName, (err) ->
       if err
         config.log.error "Failed to delete file [[ #{fileName} ]]"
