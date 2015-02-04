@@ -51,13 +51,16 @@ describe( "Mimosa beforeRead workflow module", function(){
       fakeMimosaConfig.__forceJavaScriptRecompile = true;
       var opts = {
         isJSNotVendor:false,
-        files:["foo"]
+        files:[{
+          inputFileName:"foo.js",
+          outputFileName:"bar.js"
+        }]
       };
-      var forEachSpy = sinon.spy(opts.files, "forEach", function(){});
+      var fileNewerStub = sinon.stub(fileUtils, "isFirstFileNewer", function(a, b, cb){cb(true);});
       startupFunction( fakeMimosaConfig, opts, spy );
       expect( spy.calledOnce ).to.be.true;
-      expect( forEachSpy.calledOnce ).to.be.true;
-      forEachSpy.reset();
+      expect( fileNewerStub.calledOnce ).to.be.true;
+      fileUtils.isFirstFileNewer.restore();
       delete fakeMimosaConfig.__forceJavaScriptRecompile;
     });
 
