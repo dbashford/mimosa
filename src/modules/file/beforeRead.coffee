@@ -8,6 +8,9 @@ _notValidExtension = (file) ->
   ext = path.extname(file.inputFileName).replace(/\./,'')
   allExtensions.indexOf(ext) is -1
 
+# goal is to process files as they come in
+# and determine if the file needs to be processed
+# and if not, remove it from files array
 _fileNeedsCompiling = (config, options, next) ->
   hasFiles = options.files?.length > 0
   return next() unless hasFiles
@@ -20,7 +23,7 @@ _fileNeedsCompiling = (config, options, next) ->
       next()
 
   options.files.forEach (file) ->
-    # if using require verification, forcing compile to assemble require information
+    # if module has asked for recompile to rebuild cached assets
     # or if extension is for file that was placed here, not that originated the workflow
     # like with .css files and CSS proprocessors
     if (options.isJavascript and config.__forceJavaScriptRecompile) or _notValidExtension(file)
@@ -37,8 +40,8 @@ _fileNeedsCompiling = (config, options, next) ->
         done()
 
 _fileNeedsCompilingStartup = (config, options, next) ->
-  # force compiling on startup to build require dependency tree
-  # but not for vendor javascript
+  # modules have the ability to force recompile on startup
+  # often because they have cached data that isn't up to date
   if config.__forceJavaScriptRecompile and options.isJSNotVendor
     if config.log.isDebug()
       config.log.debug "File [[ #{options.inputFile} ]] NEEDS compiling/copying"

@@ -16,7 +16,8 @@ var crypto = require( "crypto" )
     log: {
       success: function(msg, opts){},
       warn: function(msg, opts){},
-      error: function(msg, opts){}
+      error: function(msg, opts){},
+      isDebug: function(){return false;}
     },
     vendor: {
       javascripts: "javascripts/vendor",

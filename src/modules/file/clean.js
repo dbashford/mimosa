@@ -59,7 +59,7 @@ var _clean = function( config, options, next ) {
   // attempt to delete a folder that has a deletable folder inside of it
   var sortedDirectories = _.sortBy( directories, "length" ).reverse();
   for ( var i = 0; i < sortedDirectories.length; i++ ) {
-    var dirPath = path.join( config.watch.compiledDir, sortedDirectories[i]);
+    var dirPath = path.join( config.watch.compiledDir, sortedDirectories[i] );
     fs.exists( dirPath, _removeDirectoryIfExists( config, dirPath, done ) );
   }
 };
