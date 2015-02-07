@@ -40,16 +40,16 @@ describe( "Mimosa file cleaning workflow module", function(){
 
   var testCallbackWithFiles = function( files, exists ) {
     createWrenchStub(files);
-    var rmdirStub = sinon.stub( fs, "rmdir", function(p, cb){
+    var rmdirStub = sinon.stub( fs, "rmdirSync", function(p, cb){
       cb();
     });
-    var existsStub = sinon.stub( fs, "exists", function(p, cb){
+    var existsStub = sinon.stub( fs, "existsSync", function(p, cb){
       if( exists === true ) {
-        cb(true);
+        return true;
       } else if( exists === false ) {
-        cb(false);
+        return false;
       } else {
-        cb(Math.random() >= 0.5);
+        return Math.random() >= 0.5;
       }
     });
     var statSyncStub = sinon.stub( fs, "statSync", function() {
@@ -72,9 +72,9 @@ describe( "Mimosa file cleaning workflow module", function(){
     expect(spy.calledOnce).to.be.true;
     expect(existsStub.callCount).to.eql(files.length);
     expect(statSyncStub.callCount).to.eql(files.length);
-    fs.exists.restore();
+    fs.existsSync.restore();
     fs.statSync.restore();
-    fs.rmdir.restore();
+    fs.rmdirSync.restore();
   };
 
   it("will call lifecycle callback if one directory in project", function() {

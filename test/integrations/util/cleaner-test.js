@@ -37,6 +37,12 @@ var filesDirectoriesInFolder = function(dir){
   return wrench.readdirSyncRecursive(dir).length;
 }
 
+var basicRun = function(sout, projectData, done) {
+  var assetCount = filesDirectoriesInFolder(projectData.publicDir);
+  expect(sout.indexOf("has been cleaned.")).to.above(900);
+  expect(assetCount).to.eql(0);
+  done();
+}
 
 describe("Mimosa's cleaner", function() {
 
@@ -44,21 +50,29 @@ describe("Mimosa's cleaner", function() {
     "when processing completes will remove all code and call the finish callback",
     "cleaner/clean",
     "basic",
+    basicRun
+  );
+
+  runTest(
+    "will ignore files when configured to ignore files",
+    "cleaner/exclude",
+    "basic",
     function(sout, projectData, done) {
       var assetCount = filesDirectoriesInFolder(projectData.publicDir);
-      expect(sout.indexOf("has been cleaned.")).to.above(900);
+      expect(sout.indexOf("has been cleaned.")).to.be.above(900);
+      expect(sout.indexOf("requirejs/require.js")).to.be.above(300);
+      expect(sout.indexOf("main.js")).to.eql(-1);
       expect(assetCount).to.eql(0);
       done();
     }
-  )
+  );
 
-  it("will ignore files when configured to ignore files", function(){
-    var projectData = utils.setupProjectData( "cleaner/clean" );
-  })
-
-  it("works when setting interval", function(){
-    var projectData = utils.setupProjectData( "cleaner/interval" );
-  });
+  // runTest(
+  //   "works when setting interval",
+  //   "cleaner/interval",
+  //   "basic",
+  //   basicRun
+  // );
 
   it("works when setting binaryInterval", function() {
     var projectData = utils.setupProjectData( "cleaner/binaryInterval" );
