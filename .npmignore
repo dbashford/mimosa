@@ -1,0 +1,6 @@
+src
+test
+node_modules
+build.js
+mimosa-config.coffee
+RELEASENOTES.md

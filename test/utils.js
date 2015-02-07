@@ -101,7 +101,7 @@ var setupProject = function( env, inProjectName ) {
 var cleanProject = function( env ) {
   // clean out cache
   if ( fs.existsSync( env.projectDir ) ) {
-    rimraf.sync( env.projectDir );
+    //rimraf.sync( env.projectDir );
   }
 };
 
