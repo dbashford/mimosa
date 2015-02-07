@@ -139,18 +139,7 @@ _validateWatchConfig = (config) ->
   unless typeof config.watch.binaryInterval is "number"
     errors.push "watch.binaryInterval must be a number"
 
-  if validators.ifExistsIsBoolean(errors, "watch.usePolling", config.watch.usePolling)
-    if process.platform isnt 'win32' and config.watch.usePolling is false
-      msg = """
-          You have turned polling off (usePolling:false) but you are on not on Windows. If you
-          experience EMFILE issues, this is why. usePolling:false does not function properly on
-          other operating systems.
-        """
-      if config.logger?.warn?
-        if config.logger.warn.enabled
-          logger.info msg
-      else
-        logger.info msg
+  validators.ifExistsIsBoolean(errors, "watch.usePolling", config.watch.usePolling)
 
   if validators.ifExistsIsObject(errors, "vendor config", config.vendor)
     if validators.ifExistsIsString(errors, "vendor.javascripts", config.vendor.javascripts)

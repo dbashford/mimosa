@@ -37,12 +37,14 @@ var filesDirectoriesInFolder = function(dir){
   return wrench.readdirSyncRecursive(dir).length;
 }
 
-var basicRun = function(sout, projectData, done) {
-  var assetCount = filesDirectoriesInFolder(projectData.publicDir);
-  expect(sout.indexOf("has been cleaned.")).to.above(900);
-  expect(assetCount).to.eql(0);
-  done();
-}
+var basicRun = function(cleanLoc) {
+  return function(sout, projectData, done) {
+    var assetCount = filesDirectoriesInFolder(projectData.publicDir);
+    expect(sout.indexOf("has been cleaned.")).to.above(cleanLoc);
+    expect(assetCount).to.eql(0);
+    done();
+  };
+};
 
 describe("Mimosa's cleaner", function() {
 
@@ -50,7 +52,7 @@ describe("Mimosa's cleaner", function() {
     "when processing completes will remove all code and call the finish callback",
     "cleaner/clean",
     "basic",
-    basicRun
+    basicRun(900)
   );
 
   runTest(
@@ -67,23 +69,24 @@ describe("Mimosa's cleaner", function() {
     }
   );
 
-  // runTest(
-  //   "works when setting interval",
-  //   "cleaner/interval",
-  //   "basic",
-  //   basicRun
-  // );
+  runTest(
+    "works when setting interval",
+    "cleaner/interval",
+    "basic",
+    basicRun(900)
+  );
 
-  it("works when setting binaryInterval", function() {
-    var projectData = utils.setupProjectData( "cleaner/binaryInterval" );
-  });
+  runTest(
+    "works when setting polling to false",
+    "cleaner/polling",
+    "basic",
+    basicRun(900)
+  );
 
-  it("works when setting polling", function() {
-    var projectData = utils.setupProjectData( "cleaner/polling" );
-  });
-
-  it("will clean and exist when no files in asset directory", function() {
-    var projectData = utils.setupProjectData( "cleaner/empty" );
-  });
-
+  runTest(
+    "will clean and exit when no files in asset directory",
+    "cleaner/empty",
+    "empty",
+    basicRun(50)
+  );
 });
