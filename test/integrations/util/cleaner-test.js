@@ -34,6 +34,8 @@ var runTest = function(testSpec, project, codebase, test) {
 };
 
 var filesDirectoriesInFolder = function(dir){
+  var path = require("path")
+  console.log(wrench.readdirSyncRecursive(dir.replace("cleaner/clean/public","")));
   return wrench.readdirSyncRecursive(dir).length;
 }
 
