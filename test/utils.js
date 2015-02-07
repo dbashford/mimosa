@@ -1,6 +1,9 @@
 var crypto = require( "crypto" )
   , path = require( "path" )
-  , _ = require( 'lodash' )
+  , fs = require( "fs" )
+  , _ = require( "lodash" )
+  , wrench = require( "wrench" )
+  , rimraf = require( "rimraf" )
   , fakeMimosaConfigObj = {
     watch: {
       compiledDir:"foo",
@@ -27,7 +30,7 @@ var crypto = require( "crypto" )
   ;
 
 var randomString = function( num ) {
-  return crypto.randomBytes(num || 64).toString('hex');
+  return crypto.randomBytes(num || 64).toString( "hex" );
 };
 
 var fileFixture = function() {
@@ -65,8 +68,48 @@ var testRegistration = function( mod, cb, noExtensions ) {
   });
 };
 
+var setupProjectData = function( projectName ) {
+  var projectPath = projectName.split("/").join(path.sep);
+  var projectDirectory = path.join( __dirname, "harness", "run", projectPath );
+  var mimosaConfig = path.join( projectDirectory, "mimosa-config.js" );
+  var publicDirectory = path.join( projectDirectory, "public" );
+  var javascriptDirectory = path.join( publicDirectory, "javascripts" );
+
+  return {
+    projectPath: projectPath,
+    projectName: projectName,
+    projectDir: projectDirectory,
+    publicDir: publicDirectory,
+    javascriptDir: javascriptDirectory,
+    mimosaConfig: mimosaConfig
+  };
+};
+
+var setupProject = function( env, inProjectName ) {
+  wrench.mkdirSyncRecursive(env.projectDir, 0777);
+
+  // copy project skeleton in
+  var inProjectPath = path.join( __dirname, "harness", "projects", inProjectName );
+  wrench.copyDirSyncRecursive( inProjectPath, env.projectDir, { forceDelete: true } );
+
+  // copy correct mimosa-config in
+  var configInPath = path.join( __dirname, "harness", "configs", env.projectPath + ".js" );
+  var configText = fs.readFileSync( configInPath, "utf8" );
+  fs.writeFileSync(env.mimosaConfig, configText);
+};
+
+var cleanProject = function( env ) {
+  // clean out cache
+  if ( fs.existsSync( env.projectDir ) ) {
+    rimraf.sync( env.projectDir );
+  }
+};
+
 module.exports = {
   fileFixture: fileFixture,
   fakeMimosaConfig: fakeMimosaConfig,
-  testRegistration: testRegistration
+  testRegistration: testRegistration,
+  setupProjectData: setupProjectData,
+  setupProject: setupProject,
+  cleanProject: cleanProject
 };

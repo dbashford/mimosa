@@ -22,7 +22,6 @@ class Cleaner
     @watcher.on "add", @workflow.clean
     @watcher.on "ready", @workflow.ready
 
-
   _cleanDone: =>
     @workflow.postClean =>
       @watcher.close()
