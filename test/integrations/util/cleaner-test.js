@@ -23,7 +23,7 @@ var runTest = function(testSpec, project, codebase, test) {
       process.chdir( projectData.projectDir );
       exec( "mimosa build", function ( err, sout, serr ) {
         exec( "mimosa clean", function ( err, sout, serr ) {
-          console.log("STD OUT")
+          console.log("STD OUT", sout)
           console.log(sout)
           test(sout, projectData, function() {
             done();
