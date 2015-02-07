@@ -23,8 +23,6 @@ var runTest = function(testSpec, project, codebase, test) {
       process.chdir( projectData.projectDir );
       exec( "mimosa build", function ( err, sout, serr ) {
         exec( "mimosa clean", function ( err, sout, serr ) {
-          console.log("STD OUT", sout)
-          console.log(sout)
           test(sout, projectData, function() {
             done();
             process.chdir(cwd);
@@ -36,8 +34,6 @@ var runTest = function(testSpec, project, codebase, test) {
 };
 
 var filesDirectoriesInFolder = function(dir){
-  var path = require("path")
-  console.log(wrench.readdirSyncRecursive(dir.replace("/public","")));
   return wrench.readdirSyncRecursive(dir).length;
 }
 
