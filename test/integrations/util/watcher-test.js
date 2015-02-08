@@ -3,7 +3,7 @@ var exec = require('child_process').exec
   , utils = require( "../../utils" )
   ;
 
-var runTest = function(testSpec, project, codebase, test) {
+var runTest = function(testSpec, project, codebase, cmd, test) {
   describe("", function() {
     var projectData;
 
@@ -20,7 +20,7 @@ var runTest = function(testSpec, project, codebase, test) {
     it(testSpec, function(done){
       var cwd = process.cwd();
       process.chdir( projectData.projectDir );
-      exec( "mimosa build", function ( err, sout, serr ) {
+      exec( "mimosa " + cmd, function ( err, sout, serr ) {
         test(sout, projectData, function() {
           done();
           process.chdir(cwd);
@@ -31,14 +31,15 @@ var runTest = function(testSpec, project, codebase, test) {
 };
 
 var filesDirectoriesInFolder = function(dir){
+  console.log(wrench.readdirSyncRecursive(dir))
   return wrench.readdirSyncRecursive(dir).length;
 }
 
-var basicRun = function(cleanLoc) {
+var basicRun = function(finishedLoc, filesOut) {
   return function(sout, projectData, done) {
     var assetCount = filesDirectoriesInFolder(projectData.publicDir);
-    expect(sout.indexOf("has been cleaned.")).to.above(cleanLoc);
-    expect(assetCount).to.eql(0);
+    expect(sout.indexOf("Finished build")).to.above(finishedLoc);
+    expect(assetCount).to.eql(filesOut);
     done();
   };
 };
@@ -47,11 +48,24 @@ describe("Mimosa's watcher", function() {
 
   describe("on mimosa build", function() {
 
-    it("will run and exit successfully when there are no files in the asset directory")
+    runTest(
+      "will run and exit successfully when there are no files in the asset directory",
+      "watcher/build-empty",
+      "empty",
+      "build",
+      basicRun(100, 0)
+    );
 
     describe("will process all of a projects files into the public directory", function() {
 
-      it("with the default config", function(){});
+      runTest(
+        "with the default config",
+        "watcher/build",
+        "basic",
+        "build",
+        basicRun(500, 11)
+      );    
+
       it("when throttle is set", function(){});
       it("when delay is set", function(){});
       it("when interval is set", function(){});
