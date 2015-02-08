@@ -56,16 +56,24 @@ class Watcher
 
   _buildDoneCallback: =>
     logger.buildDone()
-    clearInterval(@intervalId) if @intervalId? and !@persist
-    @initCallback(@config) if @initCallback?
+
+    if @intervalId? and !@persist
+      clearInterval(@intervalId)
+
+    if @initCallback?
+      @initCallback(@config)
 
   _pullFiles: =>
-    return if @adds.length is 0
+    if @adds.length is 0
+      return
+    
     filesToAdd = if @adds.length <= @throttle
       @adds.splice(0, @adds.length)
     else
       @adds.splice(0, @throttle)
-    @workflow.add(f) for f in filesToAdd
+
+    for f in filesToAdd
+      @workflow.add(f)
 
   _ignoreFunct: (name) =>
     if @config.watch.excludeRegex?

@@ -1,7 +1,6 @@
 var exec = require('child_process').exec
   , wrench = require( "wrench" )
   , utils = require( "../../utils" )
-  , projectData = utils.setupProjectData( "additional-files")
   ;
 
 var runTest = function(testSpec, project, codebase, test) {
