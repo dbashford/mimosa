@@ -1,7 +1,7 @@
 exports.config = {
   modules: ['copy'],
   watch: {
-    delay:100
+    exclude: [/main.js$/, "javascripts/vendor/requirejs/require.js"]
   },
   logger: {
     growl: {
