@@ -106,7 +106,7 @@ describe("Mimosa's watcher", function() {
         "watcher/build-exclude-string",
         "basic",
         "build",
-        basicBuild(400, 8);
+        basicBuild(400, 8)
       );
 
       runTest(
@@ -114,7 +114,7 @@ describe("Mimosa's watcher", function() {
         "watcher/build-exclude-regex",
         "basic",
         "build",
-        basicBuild(400, 8);
+        basicBuild(400, 8)
       );
 
       runTest(
@@ -122,7 +122,7 @@ describe("Mimosa's watcher", function() {
         "watcher/build-exclude-both",
         "basic",
         "build",
-        basicBuild(400, 8);
+        basicBuild(400, 8)
       );
     });
   });
