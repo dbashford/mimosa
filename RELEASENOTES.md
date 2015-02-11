@@ -1,7 +1,7 @@
 ## 2.3.31 - February 11 2014
 
 ### Minor Changes
-* [mimosa #433](https://github.com/dbashford/mimosa/issues/433) removes the `customFds` deprecation warning on startup.
+* [mimosa #433](https://github.com/dbashford/mimosa/issues/433) removes the `customFds` deprecation warning on startup for node `v0.12.0`.
 
 ## 2.3.30 - January 30 2014
 
