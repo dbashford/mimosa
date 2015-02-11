@@ -92,7 +92,7 @@ describe( "Mimosa file writing workflow module", function(){
         function( outputFileName, outputFileText, writeCallback ) {
           expect( outputFileName ).to.equal( options.files[0].outputFileName );
           expect( outputFileText ).to.equal( options.files[0].outputFileText );
-          writeCallback();
+          writeCallback(null, outputFileName);
         }
       );
 
@@ -103,7 +103,6 @@ describe( "Mimosa file writing workflow module", function(){
 
       // will call lifecycle callback once
       expect( callbackSpy.calledOnce ).to.be.true;
-
       // will log success for write of file
       expect( successStub.calledOnce ).to.be.true;
       var calledWithCorrect = successStub.calledWith( "Wrote file [[ " + options.files[0].outputFileName + " ]]" );
@@ -123,7 +122,7 @@ describe( "Mimosa file writing workflow module", function(){
         function( outputFileName, outputFileText, writeCallback ) {
           expect( outputFileName ).to.equal( options.files[0].outputFileName );
           expect( outputFileText ).to.equal( options.files[0].outputFileText );
-          writeCallback(errorText);
+          writeCallback(errorText, outputFileName);
         }
       );
 
@@ -166,7 +165,7 @@ describe( "Mimosa file writing workflow module", function(){
         function( outputFileName, outputFileText, writeCallback ) {
           expect( outputFileName ).to.equal( options.files[i].outputFileName );
           expect( outputFileText ).to.equal( options.files[i++].outputFileText );
-          writeCallback();
+          writeCallback(null, outputFileName);
         }
       );
 
@@ -205,9 +204,9 @@ describe( "Mimosa file writing workflow module", function(){
           expect( outputFileName ).to.equal( options.files[i].outputFileName );
           expect( outputFileText ).to.equal( options.files[i].outputFileText );
           if (i++ === 1) {
-            writeCallback( errorText );
+            writeCallback( errorText, outputFileName );
           } else {
-            writeCallback();
+            writeCallback( null, outputFileName);
           }
         }
       );
