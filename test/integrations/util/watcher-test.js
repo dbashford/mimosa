@@ -1,42 +1,9 @@
-var exec = require('child_process').exec
-  , wrench = require( "wrench" )
-  , utils = require( "../../utils" )
+var utils = require( "../../utils" )
   ;
-
-var runTest = function(testSpec, project, codebase, cmd, test) {
-  describe("", function() {
-    var projectData;
-
-    before(function(){
-      projectData = utils.setupProjectData( project );
-      utils.cleanProject( projectData );
-      utils.setupProject( projectData, codebase );
-    });
-
-    after(function(){
-      utils.cleanProject( projectData );
-    })
-
-    it(testSpec, function(done){
-      var cwd = process.cwd();
-      process.chdir( projectData.projectDir );
-      exec( "mimosa " + cmd, function ( err, sout, serr ) {
-        test(sout, projectData, function() {
-          done();
-          process.chdir(cwd);
-        });
-      });
-    });
-  });
-};
-
-var filesDirectoriesInFolder = function(dir){
-  return wrench.readdirSyncRecursive(dir).length;
-}
 
 var basicBuild = function(finishedLoc, filesOut) {
   return function(sout, projectData, done) {
-    var assetCount = filesDirectoriesInFolder(projectData.publicDir);
+    var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
     expect(sout.indexOf("Finished build")).to.be.above(finishedLoc);
     expect(assetCount).to.eql(filesOut);
     done();
@@ -47,11 +14,10 @@ describe("Mimosa's watcher", function() {
 
   describe("on mimosa build", function() {
 
-    runTest(
+    utils.runBuildThenTest(
       "will run and exit successfully when there are no files in the asset directory",
       "watcher/build-empty",
       "empty",
-      "build",
       basicBuild(100, 0)
     );
 
@@ -59,69 +25,61 @@ describe("Mimosa's watcher", function() {
 
       var basicTest = basicBuild(500, 11);
 
-      runTest(
+      utils.runBuildThenTest(
         "with the default config",
         "watcher/build",
         "basic",
-        "build",
         basicTest
       );
 
-      runTest(
+      utils.runBuildThenTest(
         "when throttle is set",
         "watcher/build-throttle",
         "basic",
-        "build",
         basicTest
       );
 
-      runTest(
+      utils.runBuildThenTest(
         "when delay is set",
         "watcher/build-delay",
         "basic",
-        "build",
         basicTest
       );
 
-      runTest(
+      utils.runBuildThenTest(
         "when interval is set",
         "watcher/build-interval",
         "basic",
-        "build",
         basicTest
       );
 
-      runTest(
+      utils.runBuildThenTest(
         "when polling is set to false",
         "watcher/build-polling",
         "basic",
-        "build",
         basicTest
       );
     });
 
     describe("will exclude files from being processed into the public directory", function() {
-      runTest(
+      utils.runBuildThenTest(
         "via string match",
         "watcher/build-exclude-string",
         "basic",
-        "build",
         basicBuild(400, 8)
       );
 
-      runTest(
+      utils.runBuildThenTest(
         "via regex match",
         "watcher/build-exclude-regex",
         "basic",
-        "build",
         basicBuild(400, 8)
       );
 
-      runTest(
+      utils.runBuildThenTest(
         "via both string and regex match",
         "watcher/build-exclude-both",
         "basic",
-        "build",
         basicBuild(400, 8)
       );
     });
@@ -131,10 +89,43 @@ describe("Mimosa's watcher", function() {
 
     it("will stop watching and exit when STOPMIMOSA is sent");
 
-    describe("will exclude files from being added into the public directory", function() {
-      it("via string exclude");
-      it("via regex exclude");
-      it("via string and regex exclude");
+    describe("will exclude files from being processed into the public directory", function() {
+      // describe("via string exclude", function() {
+      //   runTest(
+      //     "when an excluded file is added",
+      //     "watcher/build-exclude-string-add",
+      //     "basic",
+      //     function(sout, projectData, done) {
+      //       var assetCount = filesDirectoriesInFolder(projectData.publicDir);
+      //       expect(sout.indexOf("Finished build")).to.be.above(finishedLoc);
+      //       expect(assetCount).to.eql(filesOut);
+      //       done();
+      //     };
+      //     basicBuild(400, 8)
+      //   );
+      //
+      //   runTest(
+      //     "when an excluded file is updated",
+      //     "watcher/build-exclude-string-update",
+      //     "basic",
+      //     basicBuild(400, 8)
+      //   );
+      //
+      //   runTest(
+      //     "when an excluded file is deleted",
+      //     "watcher/build-exclude-string-delete",
+      //     "basic",
+      //     basicBuild(400, 8)
+      //   );
+      // });
+
+      describe("via regex exclude", function() {
+
+      });
+
+      describe("via string and regex exclude", function() {
+
+      });
     });
 
     describe("after the initial build", function(){

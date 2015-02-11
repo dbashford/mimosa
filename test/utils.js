@@ -1,6 +1,8 @@
 var crypto = require( "crypto" )
+  , exec = require('child_process').exec
   , path = require( "path" )
   , fs = require( "fs" )
+  , wrench = require( "wrench" )
   , _ = require( "lodash" )
   , wrench = require( "wrench" )
   , rimraf = require( "rimraf" )
@@ -105,11 +107,68 @@ var cleanProject = function( env ) {
   }
 };
 
+var filesAndDirsInFolder = function( dir ) {
+  return wrench.readdirSyncRecursive( dir ).length;
+};
+
+var mimosaCommandTestWrapper = function( testSpec, project, codebase, runCommand) {
+  describe("", function() {
+    var projectData;
+
+    before(function(){
+      projectData = setupProjectData( project );
+      cleanProject( projectData );
+      setupProject( projectData, codebase );
+    });
+
+    after(function(){
+      cleanProject( projectData );
+    })
+
+    it(testSpec, function(done){
+      var cwd = process.cwd();
+      process.chdir( projectData.projectDir );
+      runCommand( projectData, function() {
+        done();
+        process.chdir(cwd);
+      });
+    });
+  });
+};
+
+var runBuildThenTest = function(testSpec, project, codebase, test) {
+
+  var runCommand = function( projectData, cb ) {
+    exec( "mimosa build", function ( err, sout, serr ) {
+      test(sout, projectData, cb)
+    });
+  };
+
+  mimosaCommandTestWrapper( testSpec, project, codebase, runCommand );
+};
+
+var runBuildAndCleanThenTest = function(testSpec, project, codebase, test) {
+
+  var runCommand = function( projectData, cb ) {
+    exec( "mimosa build", function ( err, sout, serr ) {
+      exec( "mimosa clean", function ( err, sout, serr ) {
+        test(sout, projectData, cb);
+      });
+    });
+  };
+
+  mimosaCommandTestWrapper( testSpec, project, codebase, runCommand );
+};
+
+
 module.exports = {
   fileFixture: fileFixture,
   fakeMimosaConfig: fakeMimosaConfig,
   testRegistration: testRegistration,
   setupProjectData: setupProjectData,
   setupProject: setupProject,
-  cleanProject: cleanProject
+  cleanProject: cleanProject,
+  runBuildThenTest: runBuildThenTest,
+  filesAndDirsInFolder: filesAndDirsInFolder,
+  runBuildAndCleanThenTest: runBuildAndCleanThenTest
 };
