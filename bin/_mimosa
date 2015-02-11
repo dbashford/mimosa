@@ -23,7 +23,7 @@ process.argv.slice(2).forEach(function(arg){
     case '--expose-gc':
       args.unshift('--expose-gc');
       break;
-    case '--nolazy':  
+    case '--nolazy':
     case '--gc-global':
     case '--harmony':
     case '--harmony-proxies':
@@ -39,7 +39,7 @@ process.argv.slice(2).forEach(function(arg){
   }
 });
 
-var proc = spawn(process.argv[0], args, { customFds: [0,1,2] });
+var proc = spawn(process.argv[0], args, { stdio: 'inherit' });
 proc.on('exit', function (code, signal) {
   process.on('exit', function(){
     if (signal) {
