@@ -45,7 +45,7 @@ exports.writeFile = (fileName, content, callback) ->
   mkdirRecursive dirname unless fs.existsSync dirname
   fs.writeFile fileName, content, "utf8", (err) ->
     error = if err? then "Failed to write file: #{fileName}, #{err}"
-    callback(error)
+    callback(error, fileName)
 
 exports.isFirstFileNewer = (file1, file2, cb) ->
   return cb(false) unless file1?

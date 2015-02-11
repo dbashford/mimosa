@@ -25,11 +25,11 @@ var _write = function( config, options, next ) {
         config.log.warn( "File [[ " + file.inputFileName + " ]] is empty." );
       }
 
-      fileUtils.writeFile( file.outputFileName, file.outputFileText, function( err ) {
+      fileUtils.writeFile( file.outputFileName, file.outputFileText, function( err, fileName ) {
         if ( err ) {
-          config.log.error( "Failed to write new file [[ " + file.outputFileName + " ]], Error: " + err, {exitIfBuild:true});
+          config.log.error( "Failed to write new file [[ " + fileName + " ]], Error: " + err, {exitIfBuild:true});
         } else {
-          config.log.success( "Wrote file [[ " + file.outputFileName + " ]]", options );
+          config.log.success( "Wrote file [[ " + fileName + " ]]", options );
         }
         done();
       });
