@@ -50,6 +50,11 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-react #1](https://github.com/dbashford/mimosa-react/pull/1) addressed a bug involving empty output.
 * [mimosa-react #2](https://github.com/dbashford/mimosa-react/pull/2) removed the JSX pragma from compiled JSX files.
 
+## 2.3.31 - February 11 2014
+
+### Minor Changes
+* [mimosa #433](https://github.com/dbashford/mimosa/issues/433) removes the `customFds` deprecation warning on startup for node `v0.12.0`.
+
 ## 2.3.30 - January 30 2014
 
 ### Minor Changes
