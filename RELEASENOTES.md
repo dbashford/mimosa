@@ -49,6 +49,7 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-less](https://github.com/dbashford/mimosa-less/) has been updated to the latest less.
 * [mimosa-react #1](https://github.com/dbashford/mimosa-react/pull/1) addressed a bug involving empty output.
 * [mimosa-react #2](https://github.com/dbashford/mimosa-react/pull/2) removed the JSX pragma from compiled JSX files.
+* [mimosa-ember-module-import #3](https://github.com/dbashford/mimosa-ember-module-import/issues/3) normalizes paths written to the file system in the cache to unix style. This prevents cache diffs when teams working on a project are using both Windows and nix.
 
 ## 2.3.31 - February 11 2014
 
