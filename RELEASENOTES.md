@@ -9,6 +9,7 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-server](https://github.com/dbashford/mimosa-server) has had its `packageJSONDir` property removed and the requirement of a `package.json` eliminated. A new property, `transpiler`, has been added. If you are using, for instance, CoffeeScript on the server, then you will want to set the `transpiler` property to the `require`d transpiler library. Ex: `transpiler: require('coffee-script')`
 
 ### Major Changes
+* __New Module__ [mimosa-phantomcss](https://github.com/dbazile/mimosa-phantomcss) will run visual testing using [PhantomCSS](https://github.com/Huddle/PhantomCSS) and Casper.
 * __New Module__ [mimosa-6to5](https://github.com/dbashford/mimosa-6to5) is a new JavaScript compiler that wraps the [6to5](https://6to5.org/) transpiler. 6to5 turns your ES6 JavaScript to ES5 JavaScript.
 * __New Module__ [mimosa-npm-web-dependencies](https://github.com/dbashford/mimosa-npm-web-dependencies) will let you install NPM dependencies into your web app, and if that dependency has a big dependency tree, it will use browserify to bundle the dependency before injecting it.
 * __New Module__ [mimosa-hogan-static](https://github.com/dbashford/mimosa-hogan-static) will compile hogan templates into individual `.html` files. This module gives you the means to provide your hogan templates with a variable context, a list of partials, and a list of global settings to use across all of your templates.
