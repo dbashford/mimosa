@@ -74,16 +74,20 @@ var testRegistration = function( mod, cb, noExtensions ) {
 var setupProjectData = function( projectName ) {
   var projectPath = projectName.split("/").join(path.sep);
   var projectDirectory = path.join( __dirname, "harness", "run", projectPath );
+  var assetsDirectory = path.join( projectDirectory, "assets")
   var mimosaConfig = path.join( projectDirectory, "mimosa-config.js" );
   var publicDirectory = path.join( projectDirectory, "public" );
-  var javascriptDirectory = path.join( publicDirectory, "javascripts" );
+  var javascriptOutDirectory = path.join( publicDirectory, "javascripts" );
+  var javascriptInDirectory = path.join( assetsDirectory, "javascripts" );
 
   return {
     projectPath: projectPath,
     projectName: projectName,
     projectDir: projectDirectory,
+    assetsDir: assetsDirectory,
     publicDir: publicDirectory,
-    javascriptDir: javascriptDirectory,
+    javascriptOutDir: javascriptOutDirectory,
+    javascriptInDir: javascriptInDirectory,
     mimosaConfig: mimosaConfig
   };
 };

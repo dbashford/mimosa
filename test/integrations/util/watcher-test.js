@@ -1,4 +1,6 @@
-var utils = require( "../../utils" )
+var fs = require( "fs" )
+  , path = require( "path" )
+  , utils = require( "../../utils" )
   ;
 
 var basicBuild = function(finishedLoc, filesOut) {
@@ -98,9 +100,19 @@ describe("Mimosa's watcher", function() {
           project: "basic",
           fileSuccessCount: 3,
           postWatch: function(projectData, killCallback) {
+            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+            expect(assetCount).to.eql(8);
+
+            var ignoredFile = path.join( projectData.javascriptInDir, "foo.js")
+
+            console.log(projectData)
+
             killCallback();
           },
           asserts: function(sout, projectData, done) {
+            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+            expect(assetCount).to.eql(8);
+
             // var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
             // expect(sout.indexOf("Finished build")).to.be.above(finishedLoc);
             // expect(assetCount).to.eql(filesOut);
