@@ -143,13 +143,15 @@ var mimosaCommandTestWrapper = function( testOpts, runCommand ) {
 
 var runWatchThenTest = function( testOpts ) {
   var runCommand = function( projectData, cb ) {
-    var data = "";
-    var mimosaProc = spawn( 'mimosa', ['watch'] );
+    var data = ""
+      , finished = false
+      , mimosaProc = spawn( 'mimosa', ['watch'] );
+
     var killAndTest = function() {
       setTimeout( function() {
         mimosaProc.kill("SIGINT");
         testOpts.asserts( data, projectData, cb );
-      }, 200);
+      }, 100);
     };
 
     mimosaProc.stdout.on( 'data', function ( _data ) {
@@ -161,12 +163,17 @@ var runWatchThenTest = function( testOpts ) {
       }
 
       // all the files processed, now what?
-      if ( len === testOpts.fileSuccessCount ) {
+      if ( len === testOpts.fileSuccessCount && !finished) {
         if (testOpts.postWatch) {
-          testOpts.postWatch(projectData, killAndTest);
+          // post watch things need to be delayed
+          // to allow build to transition to watch fully
+          setTimeout( function() {
+            testOpts.postWatch(projectData, killAndTest);
+          }, 800);
         } else {
           killAndTest();
         }
+        finished = true;
       }
     });
   };

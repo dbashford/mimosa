@@ -14,6 +14,8 @@ var basicBuild = function(finishedLoc, filesOut) {
 
 describe("Mimosa's watcher", function() {
 
+  this.timeout(5000);
+
   describe("on mimosa build", function() {
 
     utils.runBuildThenTest({
@@ -93,30 +95,33 @@ describe("Mimosa's watcher", function() {
 
     describe("will exclude files from being processed into the public directory", function() {
 
+      var postWatch = function(projectData, killCallback) {
+        var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+        expect(assetCount).to.eql(8);
+
+        // write one file that will get excluded and
+        // one that will not
+        var ignoredFilePath = path.join( projectData.javascriptInDir, "foo.js")
+        var notIgnoredFilePath = path.join( projectData.javascriptInDir, "bar.js")
+        fs.writeFileSync(ignoredFilePath, "console.log('test')");
+        fs.writeFileSync(notIgnoredFilePath, "console.log('test')");
+        killCallback();
+      };
+
       describe("via string exclude", function() {
         var testOpts = {
           testSpec: "when an excluded file is added",
           configFile: "watcher/watch-exclude-string-add",
           project: "basic",
           fileSuccessCount: 3,
-          postWatch: function(projectData, killCallback) {
+          postWatch: postWatch,
+          asserts: function(sout, projectData, _done) {
             var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-            expect(assetCount).to.eql(8);
+            expect(assetCount).to.eql(9);
 
-            var ignoredFile = path.join( projectData.javascriptInDir, "foo.js")
-
-            console.log(projectData)
-
-            killCallback();
-          },
-          asserts: function(sout, projectData, done) {
-            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-            expect(assetCount).to.eql(8);
-
-            // var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-            // expect(sout.indexOf("Finished build")).to.be.above(finishedLoc);
-            // expect(assetCount).to.eql(filesOut);
-            done();
+            //expect(sout.indexOf("foo.js")).to.eql(-1);
+            expect(sout.indexOf("bar.js")).to.be.above(100);
+            _done();
           }
         }
 

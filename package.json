@@ -84,7 +84,7 @@
     "node": ">=0.10"
   },
   "devDependencies": {
-    "mocha": "1.9.0",
+    "mocha": "2.1.0",
     "chai": "1.5.0",
     "sinon": "1.12.2",
     "rimraf": "2.2.8"
