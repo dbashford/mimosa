@@ -11,7 +11,7 @@ var _spyOutput = function( spy ) {
   return out;
 };
 
-var watchTest = function( testOpts ) {
+var _buildWatchTest = function( testOpts ) {
   describe("", function() {
     var projectData
       , logSpy
@@ -75,6 +75,17 @@ var watchTest = function( testOpts ) {
   });
 };
 
+var buildTest = function( testOpts ) {
+  testOpts.isWatch = false;
+  _buildWatchTest(testOpts);
+}
+
+var watchTest = function( testOpts ) {
+  testOpts.isWatch = true;
+  _buildWatchTest(testOpts);
+}
+
 module.exports = {
   watchTest: watchTest,
+  buildTest: buildTest
 }

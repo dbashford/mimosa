@@ -3,10 +3,9 @@ var fs = require( "fs" )
   , utils = require( "../../utils" )
   ;
 
-var basicBuild = function(finishedLoc, filesOut) {
-  return function(sout, projectData, done) {
+var basicBuild = function(filesOut) {
+  return function(output, projectData, done) {
     var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-    expect(sout.indexOf("Finished build")).to.be.above(finishedLoc);
     expect(assetCount).to.eql(filesOut);
     done();
   };
@@ -18,46 +17,46 @@ describe("Mimosa's watcher", function() {
 
   describe("on mimosa build", function() {
 
-    utils.spawn.buildTest({
+    utils.buildTest({
       testSpec: "will run and exit successfully when there are no files in the asset directory",
       configFile: "watcher/build-empty",
       project: "empty",
-      asserts: basicBuild(100, 0)
+      asserts: basicBuild(0)
     });
 
     describe("will process all of a projects files into the public directory", function() {
 
-      var basicTest = basicBuild(500, 11);
+      var basicTest = basicBuild(11);
 
-      utils.spawn.buildTest({
+      utils.buildTest({
         testSpec: "with the default config",
         configFile: "watcher/build",
         project: "basic",
         asserts: basicTest
       });
 
-      utils.spawn.buildTest({
+      utils.buildTest({
         testSpec: "when throttle is set",
         configFile: "watcher/build-throttle",
         project: "basic",
         asserts: basicTest
       });
 
-      utils.spawn.buildTest({
+      utils.buildTest({
         testSpec: "when delay is set",
         configFile: "watcher/build-delay",
         project: "basic",
         asserts: basicTest
       });
 
-      utils.spawn.buildTest({
+      utils.buildTest({
         testSpec: "when interval is set",
         configFile: "watcher/build-interval",
         project: "basic",
         asserts: basicTest
       });
 
-      utils.spawn.buildTest({
+      utils.buildTest({
         testSpec: "when polling is set to false",
         configFile: "watcher/build-polling",
         project: "basic",
@@ -66,25 +65,25 @@ describe("Mimosa's watcher", function() {
     });
 
     describe("will exclude files from being processed into the public directory", function() {
-      utils.spawn.buildTest({
+      utils.buildTest({
         testSpec: "via string match",
         configFile: "watcher/build-exclude-string",
         project: "basic",
-        asserts: basicBuild(400, 8)
+        asserts: basicBuild(8)
       });
 
-      utils.spawn.buildTest({
+      utils.buildTest({
         testSpec: "via regex match",
         configFile: "watcher/build-exclude-regex",
         project: "basic",
-        asserts: basicBuild(400, 8)
+        asserts: basicBuild(8)
       });
 
-      utils.spawn.buildTest({
+      utils.buildTest({
         testSpec: "via both string and regex match",
         configFile: "watcher/build-exclude-both",
         project: "basic",
-        asserts: basicBuild(400, 8)
+        asserts: basicBuild(8)
       });
     });
   });
@@ -100,7 +99,6 @@ describe("Mimosa's watcher", function() {
           testSpec: "when an excluded file is added",
           configFile: "watcher/watch-exclude-string-add",
           project: "basic",
-          isWatch: true,
           postBuild: function(projectData, cb) {
             var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
             expect(assetCount).to.eql(8);
@@ -131,7 +129,6 @@ describe("Mimosa's watcher", function() {
           testSpec: "when an excluded file is updated",
           configFile: "watcher/watch-exclude-string-update",
           project: "basic",
-          isWatch: true,
           postBuild: function(projectData, cb) {
             var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
             expect(assetCount).to.eql(8);
