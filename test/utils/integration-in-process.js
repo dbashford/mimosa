@@ -51,9 +51,10 @@ var _buildWatchTest = function( testOpts ) {
         config.isClean = false;
         var watcher = new Watcher( config, modules, testOpts.isWatch, function() {
           var finished = function() {
-            if ( testOpts.isWatch ) {
-              watcher.stopWatching();
-            }
+            // stop watching even if build
+            // as watching only stops when process
+            // ends and that won't happen here
+            watcher.stopWatching();
             testOpts.asserts(createSpyOutput(), projectData, done)
           };
 
