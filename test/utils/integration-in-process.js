@@ -76,6 +76,57 @@ var _buildWatchTest = function( testOpts ) {
   });
 };
 
+var cleanTest = function( testOpts ) {
+  describe("", function() {
+    var projectData
+      , logSpy
+      , errSpy
+      , cwd
+      ;
+
+    var createSpyOutput = function() {
+      return {
+        log: _spyOutput( logSpy ),
+        err: _spyOutput( errSpy )
+      };
+    };
+
+    before(function(){
+      projectData = utils.setupProjectData( testOpts.configFile );
+      utils.cleanProject( projectData );
+      utils.setupProject( projectData, testOpts.project );
+      logSpy = sinon.spy(console, "log");
+      errSpy = sinon.spy(console, "error");
+      cwd = process.cwd();
+      process.chdir( projectData.projectDir );
+    });
+
+    after(function(){
+      utils.cleanProject( projectData );
+      logSpy.restore();
+      errSpy.restore();
+      process.chdir(cwd);
+    });
+
+    it(testOpts.testSpec, function(done){
+      var configurer = require( '../../lib/util/configurer' );
+      var cleaner = require( '../../lib/util/cleaner' );
+      var Watcher = require( '../../lib/util/watcher' );
+
+      configurer({clean:true}, function( config, modules ) {
+        config.isClean = true;
+        var watcher = new Watcher( config, modules, testOpts.isWatch, function() {
+          watcher.stopWatching();
+          cleaner( config, modules, function() {
+            // watcher.stopWatching();
+            testOpts.asserts(createSpyOutput(), projectData, done)
+          });
+        });
+      });
+    });
+  });
+};
+
 var buildTest = function( testOpts ) {
   testOpts.isWatch = false;
   _buildWatchTest(testOpts);
@@ -88,5 +139,6 @@ var watchTest = function( testOpts ) {
 
 module.exports = {
   watchTest: watchTest,
-  buildTest: buildTest
+  buildTest: buildTest,
+  cleanTest: cleanTest
 }

@@ -14,6 +14,7 @@ module.exports = {
 
   watchTest: intProcess.watchTest,
   buildTest: intProcess.buildTest,
+  cleanTest: intProcess.cleanTest,
 
   spawn :{
     buildTest: intSpawn.spawnBuildTest,
