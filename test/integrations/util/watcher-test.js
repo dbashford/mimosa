@@ -13,8 +13,6 @@ var basicBuild = function(filesOut) {
 
 describe("Mimosa's watcher", function() {
 
-  //this.timeout(3000);
-
   describe("on mimosa build", function() {
 
     utils.buildTest({
@@ -150,14 +148,31 @@ describe("Mimosa's watcher", function() {
         utils.watchTest(testOpts);
       });
 
-      //
-      //   runTest(
-      //     "when an excluded file is deleted",
-      //     "watcher/build-exclude-string-delete",
-      //     "basic",
-      //     basicBuild(400, 8)
-      //   );
-      // });
+      describe("via string exclude", function() {
+        var testOpts = {
+          testSpec: "when an excluded file is deleted",
+          configFile: "watcher/watch-exclude-string-delete",
+          project: "basic",
+          postBuild: function(projectData, cb) {
+            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+            expect(assetCount).to.eql(8);
+
+            // write one file that will get excluded and
+            // one that will not
+            var ignoredFilePath = path.join( projectData.javascriptInDir, "main.js")
+            fs.unlinkSync(ignoredFilePath);
+            cb();
+          },
+          asserts: function(output, projectData, done) {
+            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+            expect(assetCount).to.eql(8);
+            expect(output.log.indexOf("main.js")).to.eql(-1);
+            done();
+          }
+        }
+
+        utils.watchTest(testOpts);
+      });
 
       describe("via regex exclude", function() {
 
