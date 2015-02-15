@@ -14,11 +14,11 @@ var basicBuild = function(finishedLoc, filesOut) {
 
 describe("Mimosa's watcher", function() {
 
-  this.timeout(5000);
+  //this.timeout(3000);
 
   describe("on mimosa build", function() {
 
-    utils.runBuildThenTest({
+    utils.spawn.buildTest({
       testSpec: "will run and exit successfully when there are no files in the asset directory",
       configFile: "watcher/build-empty",
       project: "empty",
@@ -29,35 +29,35 @@ describe("Mimosa's watcher", function() {
 
       var basicTest = basicBuild(500, 11);
 
-      utils.runBuildThenTest({
+      utils.spawn.buildTest({
         testSpec: "with the default config",
         configFile: "watcher/build",
         project: "basic",
         asserts: basicTest
       });
 
-      utils.runBuildThenTest({
+      utils.spawn.buildTest({
         testSpec: "when throttle is set",
         configFile: "watcher/build-throttle",
         project: "basic",
         asserts: basicTest
       });
 
-      utils.runBuildThenTest({
+      utils.spawn.buildTest({
         testSpec: "when delay is set",
         configFile: "watcher/build-delay",
         project: "basic",
         asserts: basicTest
       });
 
-      utils.runBuildThenTest({
+      utils.spawn.buildTest({
         testSpec: "when interval is set",
         configFile: "watcher/build-interval",
         project: "basic",
         asserts: basicTest
       });
 
-      utils.runBuildThenTest({
+      utils.spawn.buildTest({
         testSpec: "when polling is set to false",
         configFile: "watcher/build-polling",
         project: "basic",
@@ -66,21 +66,21 @@ describe("Mimosa's watcher", function() {
     });
 
     describe("will exclude files from being processed into the public directory", function() {
-      utils.runBuildThenTest({
+      utils.spawn.buildTest({
         testSpec: "via string match",
         configFile: "watcher/build-exclude-string",
         project: "basic",
         asserts: basicBuild(400, 8)
       });
 
-      utils.runBuildThenTest({
+      utils.spawn.buildTest({
         testSpec: "via regex match",
         configFile: "watcher/build-exclude-regex",
         project: "basic",
         asserts: basicBuild(400, 8)
       });
 
-      utils.runBuildThenTest({
+      utils.spawn.buildTest({
         testSpec: "via both string and regex match",
         configFile: "watcher/build-exclude-both",
         project: "basic",
@@ -95,45 +95,64 @@ describe("Mimosa's watcher", function() {
 
     describe("will exclude files from being processed into the public directory", function() {
 
-      var postWatch = function(projectData, killCallback) {
-        var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-        expect(assetCount).to.eql(8);
-
-        // write one file that will get excluded and
-        // one that will not
-        var ignoredFilePath = path.join( projectData.javascriptInDir, "foo.js")
-        var notIgnoredFilePath = path.join( projectData.javascriptInDir, "bar.js")
-        fs.writeFileSync(ignoredFilePath, "console.log('test')");
-        fs.writeFileSync(notIgnoredFilePath, "console.log('test')");
-        killCallback();
-      };
-
       describe("via string exclude", function() {
         var testOpts = {
           testSpec: "when an excluded file is added",
           configFile: "watcher/watch-exclude-string-add",
           project: "basic",
-          fileSuccessCount: 3,
-          postWatch: postWatch,
-          asserts: function(sout, projectData, _done) {
+          isWatch: true,
+          postBuild: function(projectData, cb) {
+            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+            expect(assetCount).to.eql(8);
+
+            // write one file that will get excluded and
+            // one that will not
+            var ignoredFilePath = path.join( projectData.javascriptInDir, "foo.js")
+            var notIgnoredFilePath = path.join( projectData.javascriptInDir, "bar.js")
+            fs.writeFileSync(ignoredFilePath, "console.log('test')");
+            fs.writeFileSync(notIgnoredFilePath, "console.log('test')");
+            cb();
+          },
+          asserts: function(output, projectData, done) {
             var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
             expect(assetCount).to.eql(9);
 
-            //expect(sout.indexOf("foo.js")).to.eql(-1);
-            expect(sout.indexOf("bar.js")).to.be.above(100);
-            _done();
+            expect(output.log.indexOf("foo.js")).to.eql(-1);
+            expect(output.log.indexOf("bar.js")).to.be.above(100);
+            done();
           }
         }
 
-        utils.runWatchThenTest(testOpts);
+        utils.watchTest(testOpts);
       });
-      //
-      //   runTest(
-      //     "when an excluded file is updated",
-      //     "watcher/build-exclude-string-update",
-      //     "basic",
-      //     basicBuild(400, 8)
-      //   );
+
+      describe("via string exclude", function() {
+        var testOpts = {
+          testSpec: "when an excluded file is updated",
+          configFile: "watcher/watch-exclude-string-update",
+          project: "basic",
+          isWatch: true,
+          postBuild: function(projectData, cb) {
+            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+            expect(assetCount).to.eql(8);
+
+            // write one file that will get excluded and
+            // one that will not
+            var ignoredFilePath = path.join( projectData.javascriptInDir, "main.js")
+            fs.writeFileSync(ignoredFilePath, "console.log('test')");
+            cb();
+          },
+          asserts: function(output, projectData, done) {
+            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+            expect(assetCount).to.eql(8);
+            expect(output.log.indexOf("main.js")).to.eql(-1);
+            done();
+          }
+        }
+
+        utils.watchTest(testOpts);
+      });
+
       //
       //   runTest(
       //     "when an excluded file is deleted",

@@ -12,14 +12,14 @@ var basicRun = function(cleanLoc) {
 
 describe("Mimosa's cleaner", function() {
 
-  utils.runBuildAndCleanThenTest({
+  utils.spawn.buildCleanTest({
     testSpec: "when processing completes will remove all code and call the finish callback",
     configFile: "cleaner/clean",
     project: "basic",
     asserts: basicRun(900)
   });
 
-  utils.runBuildAndCleanThenTest({
+  utils.spawn.buildCleanTest({
     testSpec: "will ignore files when configured to ignore files",
     configFile: "cleaner/exclude",
     project: "basic",
@@ -33,21 +33,21 @@ describe("Mimosa's cleaner", function() {
     }
   });
 
-  utils.runBuildAndCleanThenTest({
+  utils.spawn.buildCleanTest({
     testSpec: "works when setting interval",
     configFile: "cleaner/interval",
     project: "basic",
     asserts: basicRun(900)
   });
 
-  utils.runBuildAndCleanThenTest({
+  utils.spawn.buildCleanTest({
     testSpec: "works when setting polling to false",
     configFile: "cleaner/polling",
     project: "basic",
     asserts: basicRun(900)
   });
 
-  utils.runBuildAndCleanThenTest({
+  utils.spawn.buildCleanTest({
     testSpec: "will clean and exit when no files in asset directory",
     configFile: "cleaner/empty",
     project: "empty",
