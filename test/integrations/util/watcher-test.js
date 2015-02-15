@@ -94,10 +94,10 @@ describe("Mimosa's watcher", function() {
 
     describe("will exclude files from being processed into the public directory", function() {
 
-      describe("via string exclude", function() {
-        var testOpts = {
+      var excludeTests = function( files ) {
+        var testOpts1 = {
           testSpec: "when an excluded file is added",
-          configFile: "watcher/watch-exclude-string-add",
+          configFile: files.add,
           project: "basic",
           postBuild: function(projectData, cb) {
             var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
@@ -120,14 +120,11 @@ describe("Mimosa's watcher", function() {
             done();
           }
         }
+        utils.watchTest(testOpts1);
 
-        utils.watchTest(testOpts);
-      });
-
-      describe("via string exclude", function() {
-        var testOpts = {
+        var testOpts2 = {
           testSpec: "when an excluded file is updated",
-          configFile: "watcher/watch-exclude-string-update",
+          configFile: files.update,
           project: "basic",
           postBuild: function(projectData, cb) {
             var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
@@ -147,13 +144,11 @@ describe("Mimosa's watcher", function() {
           }
         }
 
-        utils.watchTest(testOpts);
-      });
+        utils.watchTest(testOpts2);
 
-      describe("via string exclude", function() {
-        var testOpts = {
+        var testOpts3 = {
           testSpec: "when an excluded file is deleted",
-          configFile: "watcher/watch-exclude-string-delete",
+          configFile: files.remove,
           project: "basic",
           postBuild: function(projectData, cb) {
             var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
@@ -173,15 +168,37 @@ describe("Mimosa's watcher", function() {
           }
         }
 
-        utils.watchTest(testOpts);
+        utils.watchTest(testOpts3);
+      };
+
+      describe("via string exclude", function() {
+        var files = {
+          add: "watcher/watch-exclude-string-add",
+          update: "watcher/watch-exclude-string-update",
+          remove: "watcher/watch-exclude-string-delete"
+        };
+
+        excludeTests( files );
       });
 
       describe("via regex exclude", function() {
+        var files = {
+          add: "watcher/watch-exclude-regex-add",
+          update: "watcher/watch-exclude-regex-update",
+          remove: "watcher/watch-exclude-regex-delete"
+        };
 
+        excludeTests( files );
       });
 
       describe("via string and regex exclude", function() {
+        var files = {
+          add: "watcher/watch-exclude-both-add",
+          update: "watcher/watch-exclude-both-update",
+          remove: "watcher/watch-exclude-both-delete"
+        };
 
+        excludeTests( files );
       });
     });
 
