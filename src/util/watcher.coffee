@@ -24,7 +24,10 @@ class Watcher
     watcher = watch.watch @config.watch.sourceDir, watchConfig
 
     process.on 'STOPMIMOSA', ->
-      watcher.close()
+      watcher.close();
+
+    @stopWatching = ->
+      watcher.close();
 
     watcher.on "error", (error) -> logger.warn "File watching error: #{error}"
     watcher.on "change", (f) => @_fileUpdated('update', f)
@@ -66,7 +69,7 @@ class Watcher
   _pullFiles: =>
     if @adds.length is 0
       return
-    
+
     filesToAdd = if @adds.length <= @throttle
       @adds.splice(0, @adds.length)
     else
