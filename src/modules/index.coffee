@@ -87,7 +87,11 @@ meta = _.map allInstalled, (modInfo) ->
     process.exit 1
 
 configured = (moduleNames, callback) ->
-  return configuredModules if configuredModules
+  if configuredModules
+    if !moduleNames
+      return configuredModules
+    else
+      return callback(configuredModules)
 
   # file must be first
   configuredModules = [file, compilers, logger]
