@@ -54,12 +54,14 @@ describe("Mimosa's watcher", function() {
         asserts: basicTest
       });
 
-      utils.buildTest({
-        testSpec: "when polling is set to false",
-        configFile: "watcher/build-polling",
-        project: "basic",
-        asserts: basicTest
-      });
+      if (__dirname.indexOf("/travis/") < 0) {
+        utils.buildTest({
+          testSpec: "when polling is set to false",
+          configFile: "watcher/build-polling",
+          project: "basic",
+          asserts: basicTest
+        });
+      }
     });
 
     describe("will exclude files from being processed into the public directory", function() {

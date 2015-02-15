@@ -36,12 +36,14 @@ describe("Mimosa's cleaner", function() {
     asserts: basicRun
   });
 
-  utils.cleanTest({
-    testSpec: "works when setting polling to false",
-    configFile: "cleaner/polling",
-    project: "basic",
-    asserts: basicRun
-  });
+  if (__dirname.indexOf("/travis/") < 0) {
+    utils.cleanTest({
+      testSpec: "works when setting polling to false",
+      configFile: "cleaner/polling",
+      project: "basic",
+      asserts: basicRun
+    });
+  }
 
   utils.cleanTest({
     testSpec: "will clean and exit when no files in asset directory",
