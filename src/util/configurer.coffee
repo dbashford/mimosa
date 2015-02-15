@@ -18,7 +18,7 @@ PRECOMPILE_FUN_REGION_END_RE           = /\smimosa-config:\s*}/
 PRECOMPILE_FUN_REGION_SEARCH_LINES_MAX = 5
 PRECOMPILE_FUN_REGION_LINES_MAX        = 100
 
-baseDefaults =
+baseDefaults = ->
   minMimosaVersion:null
   requiredMimosaVersion:null
   modules: [ 'copy', 'jshint', 'csslint', 'server', 'require', 'minify-js', 'minify-css', 'live-reload', 'bower']
@@ -254,11 +254,12 @@ _moduleDefaults = (modules) ->
   defs = {}
   for mod in modules when mod.defaults?
     _.extend(defs, mod.defaults())
-  _.extend(defs, baseDefaults)
+  _.extend(defs, baseDefaults())
   defs
 
 _applyAndValidateDefaults = (config, callback) ->
-  moduleNames = config.modules ? baseDefaults.modules
+
+  moduleNames = config.modules ? baseDefaults().modules
   moduleManager.getConfiguredModules moduleNames, (modules) ->
     config.root = process.cwd()
     config = _extend _moduleDefaults(modules), config
