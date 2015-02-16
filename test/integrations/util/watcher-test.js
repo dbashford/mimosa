@@ -11,6 +11,175 @@ var basicBuild = function(filesOut) {
   };
 };
 
+var excludeTests = function( files ) {
+  var testOpts1 = {
+    testSpec: "when an excluded file is added",
+    configFile: files.add,
+    project: "basic",
+    postBuild: function(projectData, cb) {
+      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      expect(assetCount).to.eql(8);
+
+      // write one file that will get excluded and
+      // one that will not
+      var ignoredFilePath = path.join( projectData.javascriptInDir, "foo.js")
+      var notIgnoredFilePath = path.join( projectData.javascriptInDir, "bar.js")
+      fs.writeFileSync(ignoredFilePath, "console.log('test')");
+      fs.writeFileSync(notIgnoredFilePath, "console.log('test')");
+      cb();
+    },
+    asserts: function(output, projectData, done) {
+      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      expect(assetCount).to.eql(9);
+
+      expect(output.log.indexOf("foo.js")).to.eql(-1);
+      expect(output.log.indexOf("bar.js")).to.be.above(100);
+      done();
+    }
+  }
+  utils.watchTest(testOpts1);
+
+  var testOpts2 = {
+    testSpec: "when an excluded file is updated",
+    configFile: files.update,
+    project: "basic",
+    postBuild: function(projectData, cb) {
+      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      expect(assetCount).to.eql(8);
+
+      // write one file that will get excluded and
+      // one that will not
+      var ignoredFilePath = path.join( projectData.javascriptInDir, "main.js")
+      fs.writeFileSync(ignoredFilePath, "console.log('test')");
+      cb();
+    },
+    asserts: function(output, projectData, done) {
+      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      expect(assetCount).to.eql(8);
+      expect(output.log.indexOf("main.js")).to.eql(-1);
+      done();
+    }
+  }
+
+  utils.watchTest(testOpts2);
+
+  var testOpts3 = {
+    testSpec: "when an excluded file is deleted",
+    configFile: files.remove,
+    project: "basic",
+    postBuild: function(projectData, cb) {
+      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      expect(assetCount).to.eql(8);
+
+      // write one file that will get excluded and
+      // one that will not
+      var ignoredFilePath = path.join( projectData.javascriptInDir, "main.js")
+      fs.unlinkSync(ignoredFilePath);
+      cb();
+    },
+    asserts: function(output, projectData, done) {
+      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      expect(assetCount).to.eql(8);
+      expect(output.log.indexOf("main.js")).to.eql(-1);
+      done();
+    }
+  }
+
+  utils.watchTest(testOpts3);
+};
+
+var updateTest = function( conf ) {
+  var testOpts = {
+    testSpec: "will process file updates",
+    configFile: conf,
+    project: "basic",
+    postBuild: function(projectData, cb) {
+      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      expect(assetCount).to.eql(11);
+
+      // write one file that will get excluded and
+      // one that will not
+      var updateFileAssets = path.join( projectData.javascriptInDir, "main.js")
+      fs.writeFileSync(updateFileAssets, "console.log(\"\");");
+      cb();
+    },
+    asserts: function(output, projectData, done) {
+      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      expect(assetCount).to.eql(11);
+
+      // get file from output directory
+      var updateFilePublic = path.join( projectData.javascriptOutDir, "main.js")
+      fs.writeFileSync(updateFilePublic, "console.log(\"\");")
+      done();
+    }
+  }
+  utils.watchTest(testOpts);
+};
+
+var addTest = function( conf ) {
+  var testOpts = {
+    testSpec: "will process file adds",
+    configFile: conf,
+    project: "basic",
+    postBuild: function(projectData, cb) {
+      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      expect(assetCount).to.eql(11);
+
+      // write one file that will get excluded and
+      // one that will not
+      var addFileAssets = path.join( projectData.javascriptInDir, "foo.js")
+      fs.writeFileSync(addFileAssets, "console.log(\"\");");
+      cb();
+    },
+    asserts: function(output, projectData, done) {
+      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      expect(assetCount).to.eql(12);
+      expect(output.log.indexOf("foo.js")).to.be.above(100);
+
+      // get file from output directory
+      var addFilePublic = path.join( projectData.javascriptOutDir, "foo.js")
+      var fileText = fs.readFileSync(addFilePublic).toString();
+      expect(fileText).to.eql("console.log(\"\");");
+      done();
+    }
+  }
+  utils.watchTest(testOpts);
+}
+
+var moveTest = function( conf ) {
+  var testOpts = {
+    testSpec: "will process file moves (add and delete at same time)",
+    configFile: conf,
+    project: "basic",
+    postBuild: function(projectData, cb) {
+      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      expect(assetCount).to.eql(11);
+
+      // write one file that will get excluded and
+      // one that will not
+      var removeFileAssets = path.join( projectData.javascriptInDir, "main.js")
+      var newFileAssets = path.join( projectData.javascriptInDir, "app", "main.js")
+      fs.renameSync(removeFileAssets, newFileAssets);
+      cb();
+    },
+    asserts: function(output, projectData, done) {
+      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      expect(assetCount).to.eql(11);
+
+      // write one file that will get excluded and
+      // one that will not
+      var removeFilePublic = path.join( projectData.javascriptOutDir, "main.js")
+      var newFilePublic = path.join( projectData.javascriptOutDir, "app", "main.js")
+
+      expect(fs.existsSync(removeFilePublic)).to.be.false;
+      expect(fs.existsSync(newFilePublic)).to.be.true;
+      done();
+    }
+  }
+  utils.watchTest(testOpts);
+}
+
+
 describe("Mimosa's watcher", function() {
 
   describe("on mimosa build", function() {
@@ -117,83 +286,6 @@ describe("Mimosa's watcher", function() {
 
     describe("will exclude files from being processed into the public directory", function() {
 
-      var excludeTests = function( files ) {
-        var testOpts1 = {
-          testSpec: "when an excluded file is added",
-          configFile: files.add,
-          project: "basic",
-          postBuild: function(projectData, cb) {
-            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-            expect(assetCount).to.eql(8);
-
-            // write one file that will get excluded and
-            // one that will not
-            var ignoredFilePath = path.join( projectData.javascriptInDir, "foo.js")
-            var notIgnoredFilePath = path.join( projectData.javascriptInDir, "bar.js")
-            fs.writeFileSync(ignoredFilePath, "console.log('test')");
-            fs.writeFileSync(notIgnoredFilePath, "console.log('test')");
-            cb();
-          },
-          asserts: function(output, projectData, done) {
-            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-            expect(assetCount).to.eql(9);
-
-            expect(output.log.indexOf("foo.js")).to.eql(-1);
-            expect(output.log.indexOf("bar.js")).to.be.above(100);
-            done();
-          }
-        }
-        utils.watchTest(testOpts1);
-
-        var testOpts2 = {
-          testSpec: "when an excluded file is updated",
-          configFile: files.update,
-          project: "basic",
-          postBuild: function(projectData, cb) {
-            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-            expect(assetCount).to.eql(8);
-
-            // write one file that will get excluded and
-            // one that will not
-            var ignoredFilePath = path.join( projectData.javascriptInDir, "main.js")
-            fs.writeFileSync(ignoredFilePath, "console.log('test')");
-            cb();
-          },
-          asserts: function(output, projectData, done) {
-            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-            expect(assetCount).to.eql(8);
-            expect(output.log.indexOf("main.js")).to.eql(-1);
-            done();
-          }
-        }
-
-        utils.watchTest(testOpts2);
-
-        var testOpts3 = {
-          testSpec: "when an excluded file is deleted",
-          configFile: files.remove,
-          project: "basic",
-          postBuild: function(projectData, cb) {
-            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-            expect(assetCount).to.eql(8);
-
-            // write one file that will get excluded and
-            // one that will not
-            var ignoredFilePath = path.join( projectData.javascriptInDir, "main.js")
-            fs.unlinkSync(ignoredFilePath);
-            cb();
-          },
-          asserts: function(output, projectData, done) {
-            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-            expect(assetCount).to.eql(8);
-            expect(output.log.indexOf("main.js")).to.eql(-1);
-            done();
-          }
-        }
-
-        utils.watchTest(testOpts3);
-      };
-
       describe("via string exclude", function() {
         var files = {
           add: "watcher/watch-exclude-string-add",
@@ -227,37 +319,11 @@ describe("Mimosa's watcher", function() {
 
     describe("after the initial build", function(){
 
-      var testOpts1 = {
-        testSpec: "will process file adds",
-        configFile: "watcher/watch-add",
-        project: "basic",
-        postBuild: function(projectData, cb) {
-          var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-          expect(assetCount).to.eql(11);
-
-          // write one file that will get excluded and
-          // one that will not
-          var addFileAssets = path.join( projectData.javascriptInDir, "foo.js")
-          fs.writeFileSync(addFileAssets, "console.log(\"\");");
-          cb();
-        },
-        asserts: function(output, projectData, done) {
-          var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-          expect(assetCount).to.eql(12);
-          expect(output.log.indexOf("foo.js")).to.be.above(100);
-
-          // get file from output directory
-          var addFilePublic = path.join( projectData.javascriptOutDir, "foo.js")
-          var fileText = fs.readFileSync(addFilePublic).toString();
-          expect(fileText).to.eql("console.log(\"\");");
-          done();
-        }
-      }
-      utils.watchTest(testOpts1);
+      addTest("watcher/watch-add");
 
       var testOpts2 = {
         testSpec: "will process file deletes",
-        configFile: "watcher/watch-add",
+        configFile: "watcher/watch-delete",
         project: "basic",
         postBuild: function(projectData, cb) {
           var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
@@ -283,101 +349,18 @@ describe("Mimosa's watcher", function() {
       }
       utils.watchTest(testOpts2);
 
-      var testOpts3 = {
-        testSpec: "will process file updates",
-        configFile: "watcher/watch-update",
-        project: "basic",
-        postBuild: function(projectData, cb) {
-          var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-          expect(assetCount).to.eql(11);
-
-          // write one file that will get excluded and
-          // one that will not
-          var updateFileAssets = path.join( projectData.javascriptInDir, "main.js")
-          fs.writeFileSync(updateFileAssets, "console.log(\"\");");
-          cb();
-        },
-        asserts: function(output, projectData, done) {
-          var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-          expect(assetCount).to.eql(11);
-
-          // get file from output directory
-          var updateFilePublic = path.join( projectData.javascriptOutDir, "main.js")
-          fs.writeFileSync(updateFilePublic, "console.log(\"\");")
-          done();
-        }
-      }
-      utils.watchTest(testOpts3);
-
-      var testOpts3 = {
-        testSpec: "will process file moves (add and delete at same time)",
-        configFile: "watcher/watch-update",
-        project: "basic",
-        postBuild: function(projectData, cb) {
-          var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-          expect(assetCount).to.eql(11);
-
-          // write one file that will get excluded and
-          // one that will not
-          var removeFileAssets = path.join( projectData.javascriptInDir, "main.js")
-          var newFileAssets = path.join( projectData.javascriptInDir, "app", "main.js")
-
-          fs.renameSync(removeFileAssets, newFileAssets);
-          cb();
-        },
-        asserts: function(output, projectData, done) {
-          var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-          expect(assetCount).to.eql(11);
-
-          // write one file that will get excluded and
-          // one that will not
-          var removeFilePublic = path.join( projectData.javascriptOutDir, "main.js")
-          var newFilePublic = path.join( projectData.javascriptOutDir, "app", "main.js")
-
-          expect(fs.existsSync(removeFilePublic)).to.be.false;
-          expect(fs.existsSync(newFilePublic)).to.be.true;
-          done();
-        }
-      }
-      utils.watchTest(testOpts3);
+      updateTest("watcher/watch-update");
+      moveTest("watcher/watch-move");
 
       describe("with throttle engaged", function() {
-
-        var testOpts2312 = {
-          testSpec: "will process file adds",
-          configFile: "watcher/watch-add-throttle",
-          project: "basic",
-          postBuild: function(projectData, cb) {
-            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-            expect(assetCount).to.eql(11);
-
-            // write one file that will get excluded and
-            // one that will not
-            var addFileAssets = path.join( projectData.javascriptInDir, "foo.js")
-            fs.writeFileSync(addFileAssets, "console.log(\"\");");
-            cb();
-          },
-          asserts: function(output, projectData, done) {
-            var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
-            expect(assetCount).to.eql(12);
-            expect(output.log.indexOf("foo.js")).to.be.above(100);
-
-            // get file from output directory
-            var addFilePublic = path.join( projectData.javascriptOutDir, "foo.js")
-            var fileText = fs.readFileSync(addFilePublic).toString();
-            expect(fileText).to.eql("console.log(\"\");");
-            done();
-          }
-        }
-        utils.watchTest(testOpts2312);
-
-        it("will process file moves (add and delete at same time)");
+        addTest("watcher/watch-add-throttle");
+        moveTest("watcher/watch-move-throttle");
       });
 
       describe("with delay engaged", function() {
-        it("will process file adds")
-        it("will process file updates");
-        it("will process file moves (add and delete at same time)");
+        updateTest("watcher/watch-update-delay");
+        addTest("watcher/watch-add-delay");
+        moveTest("watcher/watch-move-delay");
       });
     });
 

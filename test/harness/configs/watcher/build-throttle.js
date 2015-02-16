@@ -1,7 +1,7 @@
 exports.config = {
   modules: ['copy'],
   watch: {
-    throttle:1
+    throttle:5
   },
   logger: {
     growl: {

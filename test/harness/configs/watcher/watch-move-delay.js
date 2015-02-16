@@ -1,7 +1,7 @@
 exports.config = {
   modules: ['copy'],
   watch: {
-    throttle:5,
+    delay:50,
     usePolling:false
   },
   logger: {
