@@ -60,6 +60,7 @@ Watcher.prototype.startWatcher = function() {
 Watcher.prototype.fileUpdated = function ( eventType, file ) {
   // sometimes events can be sent before
   // file isn't finished being written
+  // https://github.com/dbashford/mimosa/issues/392
   if ( this.config.watch.delay ) {
     setTimeout( function() {
       this.workflow[eventType]( file );
