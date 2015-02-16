@@ -23,11 +23,12 @@ class Watcher
 
     watcher = watch.watch @config.watch.sourceDir, watchConfig
 
-    process.on 'STOPMIMOSA', ->
+    @stopWatching = ->
+      if @intervalId
+        clearInterval(@intervalId)
       watcher.close();
 
-    @stopWatching = ->
-      watcher.close();
+    process.on 'STOPMIMOSA', @stopWatching
 
     watcher.on "error", (error) -> logger.warn "File watching error: #{error}"
     watcher.on "change", (f) => @_fileUpdated('update', f)
