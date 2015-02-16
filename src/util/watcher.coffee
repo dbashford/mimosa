@@ -1,5 +1,6 @@
 watch =     require 'chokidar'
 logger =    require 'logmimosa'
+watchUtil = require( "./watch-util" )
 
 Workflow = require './workflow'
 
@@ -13,14 +14,7 @@ class Watcher
     @workflow.initBuild @_startWatcher
 
   _startWatcher: =>
-
-    watchConfig =
-      ignored:@_ignoreFunct
-      persistent:@persist
-      interval: @config.watch.interval
-      binaryInterval: @config.watch.binaryInterval
-      usePolling: @config.watch.usePolling
-
+    watchConfig = watchUtil.watchConfig( @config, true );
     watcher = watch.watch @config.watch.sourceDir, watchConfig
 
     @stopWatching = ->
@@ -53,7 +47,7 @@ class Watcher
     # file isn't finished being written
     if @config.watch.delay > 0
       setTimeout =>
-       @workflow[eventType](f)
+        @workflow[eventType](f)
       , @config.watch.delay
     else
       @workflow[eventType](f)
@@ -78,17 +72,5 @@ class Watcher
 
     for f in filesToAdd
       @workflow.add(f)
-
-  _ignoreFunct: (name) =>
-    if @config.watch.excludeRegex?
-      if name.match(@config.watch.excludeRegex)
-        logger.debug "Ignoring file [[ #{name} ]], matches exclude regex"
-        return true
-    if @config.watch.exclude?
-      for exclude in @config.watch.exclude
-        if name.indexOf(exclude) is 0
-          logger.debug "Ignoring file [[ #{name} ]], matches exclude string path"
-          return true
-    false
 
 module.exports = Watcher
