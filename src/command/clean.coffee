@@ -3,7 +3,7 @@ clean = (opts) ->
   wrench =  require 'wrench'
   logger =  require 'logmimosa'
   configurer = require '../util/configurer'
-  cleaner = require '../util/cleaner'
+  Cleaner = require '../util/cleaner'
 
   if opts.mdebug
     opts.debug = true
@@ -27,7 +27,7 @@ clean = (opts) ->
         logger.success "Compiled directory already deleted"
     else
       config.isClean = true
-      cleaner config, modules, ->
+      new Cleaner config, modules, ->
         logger.success "[[ #{config.watch.compiledDir} ]] has been cleaned."
         process.exit 0
 

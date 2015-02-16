@@ -2,32 +2,28 @@ var watch =  require( "chokidar" )
   , _ = require( "lodash" )
   , Workflow = require( "./workflow" )
   , watchUtil = require( "./watch-util" )
-  , config
-  , initCallback
-  , workflow
-  , watcher
   ;
 
-var _cleanDone = function() {
-  workflow.postClean(function postCleanCallback(){
-    watcher.close();
-    initCallback();
-  });
+function Cleaner( config, modules, initCallback ) {
+  this.config = config;
+  this.initCallback = initCallback;
+  var configClone = _.clone( this.config, true );
+  this.workflow = new Workflow( configClone, modules, this.cleanDone.bind( this ) );
+  this.workflow.initClean( this.startWatcher.bind( this ) );
+}
+
+Cleaner.prototype.startWatcher = function() {
+  var watchConfig = watchUtil.watchConfig( this.config, false );
+  this.watcher = watch.watch( this.config.watch.sourceDir, watchConfig );
+  this.watcher.on( "add", this.workflow.clean );
+  this.watcher.on( "ready", this.workflow.ready );
 };
 
-var _startWatcher = function() {
-  var watchConfig = watchUtil.watchConfig( config, false );
-  watcher = watch.watch( config.watch.sourceDir, watchConfig );
-  watcher.on( "add", workflow.clean );
-  watcher.on( "ready", workflow.ready );
+Cleaner.prototype.cleanDone = function() {
+  this.workflow.postClean( function postCleanCallback(){
+    this.watcher.close();
+    this.initCallback();
+  }.bind( this ));
 };
 
-var clean = function( _config, modules, _initCallback ) {
-  config = _config;
-  initCallback = _initCallback;
-  var configClone = _.clone( config, true );
-  workflow = new Workflow( configClone, modules, _cleanDone );
-  workflow.initClean( _startWatcher );
-};
-
-module.exports = clean;
+module.exports = Cleaner;

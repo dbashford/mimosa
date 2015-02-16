@@ -110,14 +110,14 @@ var cleanTest = function( testOpts ) {
 
     it(testOpts.testSpec, function(done){
       var configurer = require( '../../lib/util/configurer' );
-      var cleaner = require( '../../lib/util/cleaner' );
+      var Cleaner = require( '../../lib/util/cleaner' );
       var Watcher = require( '../../lib/util/watcher' );
 
       configurer({clean:true}, function( config, modules ) {
         config.isClean = true;
         var watcher = new Watcher( config, modules, testOpts.isWatch, function() {
           watcher.stopWatching();
-          cleaner( config, modules, function() {
+          new Cleaner( config, modules, function() {
             // watcher.stopWatching();
             testOpts.asserts(createSpyOutput(), projectData, done)
           });

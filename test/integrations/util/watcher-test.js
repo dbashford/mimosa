@@ -177,8 +177,7 @@ var moveTest = function( conf ) {
     }
   }
   utils.watchTest(testOpts);
-}
-
+};
 
 describe("Mimosa's watcher", function() {
 
