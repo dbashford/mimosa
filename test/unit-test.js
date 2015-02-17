@@ -4,3 +4,4 @@ require("./units/modules/file/init-test");
 require("./units/modules/file/delete-test");
 require("./units/modules/file/clean-test");
 require("./units/modules/file/beforeRead-test");
+require("./units/util/file-test");

@@ -21,7 +21,8 @@ exports.isVendorJS = isVendorJS = (config, fileName) ->
   fileName.indexOf(config.vendor.javascripts) is 0
 
 exports.mkdirRecursive = mkdirRecursive = (p, made) ->
-  if !made then made = null
+  if !made
+    made = null
   p = path.resolve(p)
 
   try
@@ -36,20 +37,27 @@ exports.mkdirRecursive = mkdirRecursive = (p, made) ->
         stat = fs.statSync(p);
       catch err2
         throw err
-      if !stat.isDirectory() then throw err
+      if !stat.isDirectory()
+        throw err
     else throw err
   made
 
 exports.writeFile = (fileName, content, callback) ->
   dirname = path.dirname(fileName)
-  mkdirRecursive dirname unless fs.existsSync dirname
+  unless fs.existsSync dirname
+    mkdirRecursive dirname
   fs.writeFile fileName, content, "utf8", (err) ->
-    error = if err? then "Failed to write file: #{fileName}, #{err}"
+    error = null
+    if err
+      error = "Failed to write file: #{fileName}, #{err}"
     callback(error, fileName)
 
 exports.isFirstFileNewer = (file1, file2, cb) ->
-  return cb(false) unless file1?
-  return cb(true) unless file2?
+  unless file1
+    return cb(false)
+
+  unless file2
+    return cb(true)
 
   fs.exists file1, (exists1) ->
     unless exists1
@@ -58,13 +66,13 @@ exports.isFirstFileNewer = (file1, file2, cb) ->
 
     fs.exists file2, (exists2) ->
       unless exists2
-        logger.debug "File missing, so is new file [[ #{file2} ]]"
+        # logger.debug "File missing, so is new file [[ #{file2} ]]"
         return cb(true)
 
       fs.stat file2, (err, stats2) ->
         fs.stat file1, (err, stats1) ->
-          unless stats1? and stats2?
-            logger.debug "Somehow a file went missing [[ #{stats1} ]], [[ #{stats2} ]] "
+          unless stats1 and stats2
+            #logger.debug "Somehow a file went missing [[ #{stats1} ]], [[ #{stats2} ]] "
             return cb(false)
 
           if stats1.mtime > stats2.mtime then cb(true) else cb(false)
@@ -76,7 +84,7 @@ exports.readdirSyncRecursive = (baseDir, excludes = [], excludeRegex, ignoreDire
     curFiles = fs.readdirSync(baseDir).map (f) ->
       path.join(baseDir, f)
 
-    if excludes.length > 0
+    if excludes.length
       curFiles = curFiles.filter (f) ->
         for exclude in excludes
           if f is exclude or f.indexOf(exclude) is 0
