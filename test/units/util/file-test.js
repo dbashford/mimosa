@@ -243,7 +243,7 @@ describe("Mimosa file utility's", function() {
 
     it("will return error if write failed", function(done) {
       var writeFileStub = sinon.stub( fs, "writeFile", function(a, b, c, cb){
-        cb("ITS AN ERROR!", null);
+        cb("ITS AN ERROR!");
       });
       var outFile = path.join( projectRoot, "foo", "bar", "out.file" );
       writeFile( outFile, "fooooo content", function( error, fileName ) {
