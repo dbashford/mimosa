@@ -249,7 +249,7 @@ describe("Mimosa file utility's", function() {
       writeFile( outFile, "fooooo content", function( error, fileName ) {
         expect(error).to.eql(
           "Failed to write file: " +
-          "/Users/dbashford/mygithub/mimosa/mimosa/test/harness/run/writeFile/foo/bar/out.file, ITS AN ERROR!"
+          path.join(process.cwd(), "test/harness/run/writeFile/foo/bar/out.file, ITS AN ERROR!")
         )
         writeFileStub.restore();
         done();
@@ -333,7 +333,6 @@ describe("Mimosa file utility's", function() {
       var file4 = path.join( projectPath, "..", "..", "..", "file4.js");
       [file1, file2, file3, file4].forEach( function( file ) {
         fs.writeFileSync( file, "this is " + file, "utf8" );
-        console.log(file)
       })
     });
 
@@ -348,8 +347,8 @@ describe("Mimosa file utility's", function() {
 
     it("will exclude files specific by string path", function() {
       var filesAndDirectories = readSync(projectRoot,
-        ["/Users/dbashford/mygithub/mimosa/mimosa/test/harness/run/readdir/folder/subfolder/file2.js",
-         "/Users/dbashford/mygithub/mimosa/mimosa/test/harness/run/readdir/folder/file3.js"]);
+        [path.join(process.cwd(), "test/harness/run/readdir/folder/subfolder/file2.js"),
+        path.join(process.cwd(), "test/harness/run/readdir/folder/file3.js")]);
       expect(filesAndDirectories.length).to.eql(5)
     });
 
@@ -365,7 +364,7 @@ describe("Mimosa file utility's", function() {
 
     it("will exclude files specific by regex and string", function() {
       var filesAndDirectories = readSync(projectRoot,
-        ["/Users/dbashford/mygithub/mimosa/mimosa/test/harness/run/readdir/folder/subfolder/file2.js"],
+        [path.join(process.cwd(), "/test/harness/run/readdir/folder/subfolder/file2.js")],
         /(file3.js|file1.js)$/);
       expect(filesAndDirectories.length).to.eql(4)
     });
