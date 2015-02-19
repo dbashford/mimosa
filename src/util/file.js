@@ -15,7 +15,7 @@ exports.isCSS = isCSS = function( fileName ) {
   return path.extname( fileName ) === ".css";
 };
 
-exports.isJavascript = isJavascript = functoin ( fileName ) {
+exports.isJavascript = isJavascript = function ( fileName ) {
   return path.extname( fileName ) === ".js";
 }
 
