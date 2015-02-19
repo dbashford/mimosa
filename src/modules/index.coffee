@@ -12,18 +12,6 @@ newmod = require 'newmimosa'
 compilers =     require './compilers'
 file =          require './file'
 mimosaPackage = require('../../package.json')
-
-builtIns = [
-  'mimosa-copy'
-  'mimosa-server'
-  'mimosa-jshint'
-  'mimosa-csslint'
-  'mimosa-require'
-  'mimosa-minify-js'
-  'mimosa-minify-css'
-  'mimosa-live-reload'
-  'mimosa-bower'
-]
 configuredModules = null
 
 isMimosaModuleName = (str) -> str.indexOf('mimosa-') > -1
@@ -79,7 +67,6 @@ meta = _.map allInstalled, (modInfo) ->
     version: modPack.version
     site:    modPack.homepage
     desc:    modPack.description
-    default: if builtIns.indexOf(modInfo.name) > -1 then "yes" else "no"
     dependencies: modPack.dependencies
   catch err
     resolvedPath = path.resolve requireString

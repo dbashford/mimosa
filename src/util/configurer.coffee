@@ -282,8 +282,8 @@ processConfig = (opts, callback) ->
     catch err
       return logger.fatal "Improperly formatted configuration file [[ #{mainConfigPath} ]]: #{err}"
   else
-    logger.warn "No configuration file found (mimosa-config.coffee/mimosa-config.js/mimosa-config), running from current directory using Mimosa's defaults."
-    logger.warn "Run 'mimosa config' to copy the default Mimosa configuration to the current directory."
+    logger.error "No configuration file found (mimosa-config.coffee/mimosa-config.js), exiting..."
+    process.exit 1
 
   defaultProfileLocation = path.join( process.cwd(), ".mimosa_profile")
   if fs.existsSync( defaultProfileLocation )

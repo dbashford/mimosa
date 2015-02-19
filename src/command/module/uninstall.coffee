@@ -23,7 +23,7 @@ deleteMod = (name, opts) ->
     name = pack.name
 
   unless name.indexOf('mimosa-') is 0
-    return logger.error "Can only delete 'mimosa-' prefixed modules with mod:delete (ex: mimosa-server)."
+    return logger.error "Can only delete 'mimosa-' prefixed modules with mod:uninstall (ex: mimosa-server)."
 
   found = false
   for mod in moduleMetadata
@@ -47,8 +47,8 @@ deleteMod = (name, opts) ->
         logger.error serr
       logger.success "Uninstall of [[ #{name} ]] successful"
 
-    logger.debug "NPM UNINSTALL standard out\n#{sout}"
-    logger.debug "NPM UNINSTALL standard err\n#{serr}"
+    # logger.debug "NPM UNINSTALL standard out\n#{sout}"
+    # logger.debug "NPM UNINSTALL standard err\n#{serr}"
     process.chdir currentDir
     process.exit 0
 
