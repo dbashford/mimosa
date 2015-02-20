@@ -1,8 +1,8 @@
 ## 3.0.0 - March ? 2015
 
-Work towards a `3.0.0` in under way. Looking for across the board library updates as well as a few other big changes.  Keep eyes peeled here as any updates will get added to this list.  Hoping for a mid/late Feb release.
+Work towards a `3.0.0` in under way. Looking for across the board library updates, a large test bed, a conversion of the codebase to JavaScript among many other changes.  Keep eyes peeled here as any updates will get added to this list.
 
-As updates to external modules are listed here, know that you can use them right away by updating your `mimosa-config`.  For instance to use the latest bower (1.8.1 as of this writing), updating your `modules` array to point to `bower@1.8.1`.
+As updates to external modules are listed here, know that you can use them right away by updating your `mimosa-config`.  For instance to use the latest bower (`1.8.1` as of this writing), updating your `modules` array to point to `bower@1.8.1`.
 
 ### Possible Breaking Changes
 * [mimosa #425](https://github.com/dbashford/mimosa/issues/425). Support for non-inline source maps has been removed from mimosa-core. Mimosa's JavaScript compilers will no longer create `.map` and `.src` files.  All JavaScript source maps will be inlined as support for inline source maps is wide. Additionally conditional source map comments, `//#`, are no longer allowed.
@@ -10,7 +10,7 @@ As updates to external modules are listed here, know that you can use them right
 
 ### Major Changes
 * __New Module__ [mimosa-phantomcss](https://github.com/dbazile/mimosa-phantomcss) will run visual testing using [PhantomCSS](https://github.com/Huddle/PhantomCSS) and Casper.
-* __New Module__ [mimosa-6to5](https://github.com/dbashford/mimosa-6to5) is a new JavaScript compiler that wraps the [6to5](https://6to5.org/) transpiler. 6to5 turns your ES6 JavaScript to ES5 JavaScript.
+* __New Module__ [mimosa-babel](https://github.com/dbashford/mimosa-babel) is a new JavaScript compiler that wraps the [babel](https://babeljs.io/) (formerly 6to5) transpiler. babel turns your ES6 JavaScript to ES5 JavaScript.
 * __New Module__ [mimosa-npm-web-dependencies](https://github.com/dbashford/mimosa-npm-web-dependencies) will let you install NPM dependencies into your web app, and if that dependency has a big dependency tree, it will use browserify to bundle the dependency before injecting it.
 * __New Module__ [mimosa-hogan-static](https://github.com/dbashford/mimosa-hogan-static) will compile hogan templates into individual `.html` files. This module gives you the means to provide your hogan templates with a variable context, a list of partials, and a list of global settings to use across all of your templates.
 * __New Module__ [mimosa-rename](https://github.com/dbashford/mimosa-rename) allows you to rename files before they are written.
