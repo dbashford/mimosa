@@ -1,4 +1,4 @@
-## 3.0.0 - Feb ? 2015
+## 3.0.0 - March ? 2015
 
 Work towards a `3.0.0` in under way. Looking for across the board library updates as well as a few other big changes.  Keep eyes peeled here as any updates will get added to this list.  Hoping for a mid/late Feb release.
 
