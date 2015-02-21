@@ -330,6 +330,7 @@ processConfig = (opts, callback) ->
   config.isPackage =   opts?.package
   config.isInstall =   opts?.install
   config.exitOnError = opts?.errorout
+  config.cleanall =    opts?.cleanall
 
   _applyAndValidateDefaults config, (err, newConfig, modules) ->
     if err
