@@ -17,23 +17,17 @@ describe("Mimosa's build command", function() {
       loggerBlueSpy.reset();
     });
 
-    var program = {
-      on: function(flag, cb) {
-        expect(flag).to.eql("--help");
-        cb();
-        expect(loggerGreenSpy.callCount).to.be.above(10);
-        expect(loggerBlueSpy.callCount).to.be.above(10);
-        done()
-        return program;
-      },
-      command: function(){ return program },
-      description: function(){ return program },
-      command: function(){return program },
-      option: function(){return program },
-      action: function(){ return program }
-    }
-    buildCommand( program );
+    var program = utils.fakeProgram();
+    program.on = function(flag, cb) {
+      expect(flag).to.eql("--help");
+      cb();
+      expect(loggerGreenSpy.callCount).to.be.above(10);
+      expect(loggerBlueSpy.callCount).to.be.above(10);
+      done()
+      return program;
+    };
 
+    buildCommand( program );
   });
 
   describe("will set proper config flags", function() {

@@ -113,6 +113,18 @@ var filesAndDirsInFolder = function( dir ) {
   return wrench.readdirSyncRecursive( dir ).length;
 };
 
+var fakeProgram = function() {
+  var program = {
+    on: function() { return program },
+    command: function(){ return program },
+    description: function(){ return program },
+    command: function(){return program },
+    option: function(){return program },
+    action: function(){ return program }
+  };
+  return program;
+};
+
 module.exports = {
   fileFixture: fileFixture,
   fakeMimosaConfig: fakeMimosaConfig,
@@ -120,5 +132,6 @@ module.exports = {
   setupProjectData: setupProjectData,
   setupProject: setupProject,
   cleanProject: cleanProject,
-  filesAndDirsInFolder: filesAndDirsInFolder
+  filesAndDirsInFolder: filesAndDirsInFolder,
+  fakeProgram: fakeProgram
 };

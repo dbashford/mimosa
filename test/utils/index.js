@@ -11,6 +11,7 @@ module.exports = {
   setupProject: utils.setupProject,
   cleanProject: utils.cleanProject,
   filesAndDirsInFolder: utils.filesAndDirsInFolder,
+  fakeProgram: utils.fakeProgram,
 
   watchTest: intProcess.watchTest,
   buildTest: intProcess.buildTest,
