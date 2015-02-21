@@ -79,3 +79,4 @@ register = (program, callback) ->
 
 module.exports = (program) ->
   register(program, build)
+  build
