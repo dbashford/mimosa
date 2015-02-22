@@ -11,3 +11,22 @@ describe("will apply profiles", function() {
     it("when multiple .mimosa_profile and command line profiles are entered");
   });
 });
+
+describe("will set proper config flags", function() {
+  it("--optimize");
+  it("-o");
+  it("--minify");
+  it("-m");
+  it("--package");
+  it("-p");
+  it("--install");
+  it("-i");
+  it("--errorout");
+  it("-e")
+  it("--cleanall");
+  it("-C");
+  it("--mdebug");
+  it("-D");
+  it("-ompieCDP foo");
+  it("--optimize --minify --package --install --errorout --cleanall --mdebug --profile foo")
+});

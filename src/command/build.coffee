@@ -1,4 +1,21 @@
-build = (opts) ->
+logger = null
+Watcher = null
+Cleaner = null
+
+_runBuild = (config, modules) ->
+  config.isClean = false
+  new Watcher config, modules, false, ->
+    logger.success "Finished build"
+    process.exit 0
+
+_runClean = (config, modules) ->
+  config.isClean = true
+  logger.info("Beginning clean");
+  new Cleaner config, modules, ->
+    logger.info("Finished clean");
+    _runBuild( config, modules )
+
+_build = (opts) ->
   logger = require 'logmimosa'
   configurer = require '../util/configurer'
   Watcher =  require '../util/watcher'
@@ -17,18 +34,9 @@ build = (opts) ->
     fileUtils.removeDotMimosa()
     logger.info("Removed .mimosa directory.")
 
-  configurer opts, (config, modules) ->
+  configurer opts, _runClean
 
-    doBuild = ->
-      config.isClean = false
-      new Watcher config, modules, false, ->
-        logger.success "Finished build"
-        process.exit 0
-
-    config.isClean = true
-    new Cleaner(config, modules, doBuild)
-
-register = (program, callback) ->
+register = (program) ->
   program
     .command('build')
     .description("make a single pass through assets, compile them, and optionally package them")
@@ -40,7 +48,7 @@ register = (program, callback) ->
     .option("-e --errorout", "cease processing and error out if the build encounters critical errors")
     .option("-P, --profile <profileName>", "select a mimosa profile")
     .option("-D, --mdebug", "run in debug mode")
-    .action(callback)
+    .action(_build)
     .on '--help', ->
       logger = require 'logmimosa'
       logger.green('  The build command will make a single pass through your assets and bulid any that need building')
@@ -77,6 +85,4 @@ register = (program, callback) ->
       logger.blue( '\n    $ mimosa build --profile build')
       logger.blue( '    $ mimosa build -P build')
 
-module.exports = (program) ->
-  register(program, build)
-  build
+module.exports = register
