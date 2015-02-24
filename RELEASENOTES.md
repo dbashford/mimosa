@@ -52,6 +52,7 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-react #2](https://github.com/dbashford/mimosa-react/pull/2) removed the JSX pragma from compiled JSX files.
 * [mimosa-ember-module-import #3](https://github.com/dbashford/mimosa-ember-module-import/issues/3) normalizes paths written to the file system in the cache to unix style. This prevents cache diffs when teams working on a project are using both Windows and nix.
 * [mimosa-sass #7](https://github.com/dbashford/mimosa-sass/issues/7). Added support for node-sass `2.0`.
+* [mimosa-bower #47](https://github.com/dbashford/mimosa-bower/issues/47). Normalize paths in last installed file so that they do not cause diffs between OSs.
 
 ## 2.3.31 - February 11 2014
 
