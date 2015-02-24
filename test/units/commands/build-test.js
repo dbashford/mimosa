@@ -30,16 +30,4 @@ describe("Mimosa's build command", function() {
     buildCommand( program );
   });
 
-  describe("when debug flag is ticked", function() {
-    it("will set logger to debug mode")
-    it("will set environment to debug mode")
-  });
-
-  describe("will pass proper config", function() {
-    it("to the watcher");
-    it("to the cleaner");
-  });
-
-
-
 });

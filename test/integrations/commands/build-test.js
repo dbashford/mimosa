@@ -1,27 +1,56 @@
 var path = require( "path" )
+  , sinon = require( "sinon" )
+  , logger = require( "logmimosa" )
   , buildCommandPath = path.join( process.cwd(), "lib", "command", "build" )
   , buildCommand = require( buildCommandPath )
   , utils = require( "../../utils" )
   ;
 
 describe("Mimosa's build command", function() {
-  var cwd
-    , testOpts = {
-      configFile: "commands/build-no-flags",
-      project: "basic"
-    };
 
-  before(function(){
-    projectData = utils.setupProjectData( testOpts.configFile );
-    utils.cleanProject( projectData );
-    utils.setupProject( projectData, testOpts.project );
-    cwd = process.cwd();
-    process.chdir( projectData.projectDir );
+  describe("when debug flag is ticked", function() {
+    var cwd
+      , projectData
+      , loggerSpy
+      , testOpts = {
+        configFile: "commands/build-debug",
+        project: "basic"
+      };
+
+    before(function() {
+      projectData = utils.setupProjectData( testOpts.configFile );
+      utils.cleanProject( projectData );
+      utils.setupProject( projectData, testOpts.project );
+      cwd = process.cwd();
+      process.chdir( projectData.projectDir );
+
+      loggerSpy = sinon.spy(logger, "setDebug");
+
+      var fakeProgram = utils.fakeProgram();
+      fakeProgram.action = function( funct ) {
+        funct( {mdebug: true} );
+        return fakeProgram;
+      }
+      buildCommand( fakeProgram );
+    });
+
+    after(function() {
+      utils.cleanProject( projectData );
+      process.chdir(cwd);
+    });
+
+    it("will set logger to debug mode", function() {
+      expect(loggerSpy.calledOnce).to.be.true;
+
+    })
+    it("will set environment to debug mode", function() {
+      expect(process.env.DEBUG).to.eql('true');
+    })
   });
 
-  after(function(){
-    utils.cleanProject( projectData );
-    process.chdir(cwd);
+  describe("will pass proper config", function() {
+    it("to the watcher");
+    it("to the cleaner");
   });
 
   it("will build files");
