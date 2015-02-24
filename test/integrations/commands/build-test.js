@@ -41,19 +41,51 @@ describe("Mimosa's build command", function() {
 
     it("will set logger to debug mode", function() {
       expect(loggerSpy.calledOnce).to.be.true;
-
     })
     it("will set environment to debug mode", function() {
       expect(process.env.DEBUG).to.eql('true');
     })
   });
 
-  describe("will pass proper config", function() {
-    it("to the watcher");
-    it("to the cleaner");
-  });
+  describe("will build files", function( ) {
+    var cwd
+      , projectData
+      , fakeProgram
+      , testOpts = {
+        configFile: "commands/build-command",
+        project: "basic"
+      };
 
-  it("will build files");
+    before(function(){
+      projectData = utils.setupProjectData( testOpts.configFile );
+      utils.cleanProject( projectData );
+      utils.setupProject( projectData, testOpts.project );
+      cwd = process.cwd();
+      process.chdir( projectData.projectDir );
+      var processExitStub = sinon.stub(process, "exit", function(){});
+      fakeProgram = utils.fakeProgram();
+      fakeProgram.action = function( funct ) {
+        funct( {} );
+        return fakeProgram;
+      };
+    });
+
+    after(function() {
+      utils.cleanProject( projectData );
+      process.chdir(cwd);
+      process.exit.restore();
+    });
+
+    it("to the output directory", function(done){
+      buildCommand( fakeProgram );
+      setTimeout(function() {
+        var filesAndFolders = utils.filesAndDirsInFolder(projectData.publicDir)
+        expect( filesAndFolders ).to.eql(11);
+        done();
+      }, 300);
+    });
+
+  });
 
   describe("when --cleanall flag ticked", function() {
     it("will remove .mimosa directory");

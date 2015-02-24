@@ -251,7 +251,7 @@ describe("Mimosa file utility's", function() {
           "Failed to write file: " +
           path.join(process.cwd(), "test/harness/run/writeFile/foo/bar/out.file, ITS AN ERROR!")
         )
-        writeFileStub.restore();
+        fs.writeFile.restore();
         done();
       });
     });

@@ -38,8 +38,8 @@ var _buildWatchTest = function( testOpts ) {
 
     after(function(){
       utils.cleanProject( projectData );
-      logSpy.restore();
-      errSpy.restore();
+      console.log.restore();
+      console.error.restore();
       process.chdir(cwd);
     });
 
