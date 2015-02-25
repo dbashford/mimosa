@@ -34,7 +34,10 @@ var spawnWatchTest = function( testOpts ) {
   var runCommand = function( projectData, cb ) {
     var data = ""
       , finished = false
-      , mimosaProc = spawn( 'mimosa', ['watch'] );
+      , mimosaProc = spawn(
+        'mimosa',
+        [['watch', testOpts.watchFlags || ""].join( " " )]
+      );
 
     var killAndTest = function() {
       setTimeout( function() {
@@ -72,7 +75,7 @@ var spawnWatchTest = function( testOpts ) {
 
 var spawnBuildTest = function(testOpts) {
   var runCommand = function( projectData, cb ) {
-    exec( "mimosa build", function ( err, sout, serr ) {
+    exec( "mimosa build " + testOpts.buildFlags || "", function ( err, sout, serr ) {
       testOpts.asserts(sout, projectData, cb)
     });
   };
@@ -81,8 +84,8 @@ var spawnBuildTest = function(testOpts) {
 
 var spawnBuildCleanTest = function( testOpts ) {
   var runCommand = function( projectData, cb ) {
-    exec( "mimosa build", function ( err, sout, serr ) {
-      exec( "mimosa clean", function ( err, sout, serr ) {
+    exec( "mimosa build " + testOpts.buildFlags || "", function ( err, sout, serr ) {
+      exec( "mimosa clean " + testOpts.cleanFlags || "", function ( err, sout, serr ) {
         testOpts.asserts(sout, projectData, cb);
       });
     });
