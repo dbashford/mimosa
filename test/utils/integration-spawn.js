@@ -76,7 +76,13 @@ var spawnWatchTest = function( testOpts ) {
 var spawnBuildTest = function(testOpts) {
   var runCommand = function( projectData, cb ) {
     exec( "mimosa build " + testOpts.buildFlags || "", function ( err, sout, serr ) {
-      testOpts.asserts(sout, projectData, cb)
+      testOpts.asserts({
+          error:err,
+          sout:sout,
+          serr:serr
+        }
+        , projectData
+        , cb);
     });
   };
   _mimosaCommandTestWrapper( testOpts, runCommand );
@@ -86,7 +92,13 @@ var spawnBuildCleanTest = function( testOpts ) {
   var runCommand = function( projectData, cb ) {
     exec( "mimosa build " + testOpts.buildFlags || "", function ( err, sout, serr ) {
       exec( "mimosa clean " + testOpts.cleanFlags || "", function ( err, sout, serr ) {
-        testOpts.asserts(sout, projectData, cb);
+        testOpts.asserts({
+            error:err,
+            sout:sout,
+            serr:serr
+          }
+          , projectData
+          , cb);
       });
     });
   };

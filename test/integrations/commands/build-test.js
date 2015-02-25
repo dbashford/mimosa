@@ -220,16 +220,64 @@ describe("Mimosa's build command", function() {
     });
   });
 
-  it("will error out if profile not provided")
+  utils.spawn.buildTest({
+    testSpec: "will error out if profile not provided",
+    configFile: "commands/build-error-no-profile",
+    project: "basic",
+    buildFlags:"-P",
+    asserts: function(output, projectData, done) {
+      expect(output.serr.indexOf("argument missing")).to.be.above(30)
+      done();
+    }
+  });
 
   describe("is configured to accept the appropriate flags (will not error out)", function() {
-    it("-ompieCDP foo");
-    it("--optimize --minify --package --install --errorout --cleanall --mdebug --profile foo")
+    utils.spawn.buildTest({
+      testSpec: "-ompieCD",
+      configFile: "commands/build-flags-short",
+      project: "basic",
+      buildFlags:"-ompieCD",
+      asserts: function(output, projectData, done) {
+        expect(output.sout.indexOf("Finished build")).to.be.above(1000)
+        done();
+      }
+    });
+
+    utils.spawn.buildTest({
+      testSpec: "--optimize --minify --package --install --errorout --cleanall --mdebug",
+      configFile: "commands/build-flags-long",
+      project: "basic",
+      buildFlags:"--optimize --minify --package --install --errorout --cleanall --mdebug",
+      asserts: function(output, projectData, done) {
+        expect(output.sout.indexOf("Finished build")).to.be.above(1000)
+        done();
+      }
+    });
+
   });
 
   describe("will error out if a bad flag is provided", function() {
-    it("-f");
-    it("--foo");
-  });
+    utils.spawn.buildTest({
+      testSpec: "-f",
+      configFile: "commands/build-bad-flags-short",
+      project: "basic",
+      buildFlags:"-f",
+      asserts: function(output, projectData, done) {
+        expect(output.serr.indexOf("unknown option")).to.be.above(5)
+        done();
+      }
+    });
 
+
+    utils.spawn.buildTest({
+      testSpec: "--foo",
+      configFile: "commands/build-bad-flags-long",
+      project: "basic",
+      buildFlags:"--foo",
+      asserts: function(output, projectData, done) {
+        expect(output.serr.indexOf("unknown option")).to.be.above(5)
+        done();
+      }
+    });
+  });
 });
