@@ -1,4 +1,7 @@
-var sinon = require( "sinon" )
+var path = require( "path" )
+  , fs = require( "fs" )
+  , wrench = require( "wrench" )
+  , sinon = require( "sinon" )
   , logger = require( "logmimosa" )
   , spawn = require("./spawn")
   , utils = require("../utils")
@@ -160,14 +163,74 @@ var debugSetup = function( commandString, command ) {
       expect(process.env.DEBUG).to.eql('true');
     })
   });
+};
 
-}
+var removesDotMimosa = function( commandString, command ) {
+  describe("when --cleanall flag ticked", function() {
+    var cwd
+      , projectData
+      , commandFunct
+      , nestedFile
+      , mimosaFolder
+      , testOpts = {
+        configFile: "commands/" + commandString + "-remove-dot-mimosa",
+        project: "basic"
+      };
 
+    before(function(){
+      projectData = utils.setupProjectData( testOpts.configFile );
+      utils.cleanProject( projectData );
+      utils.setupProject( projectData, testOpts.project );
+      cwd = process.cwd();
+      process.chdir( projectData.projectDir );
+      fakeProgram = utils.fakeProgram();
+      fakeProgram.action = function( funct ) {
+        commandFunct = funct;
+        return fakeProgram;
+      };
+      var processExitStub = sinon.stub(process, "exit", function(){});
+
+      // create folder
+      mimosaFolder = path.join( projectData.projectDir, ".mimosa", "bower" );
+      wrench.mkdirSyncRecursive( mimosaFolder );
+      nestedFile = path.join( mimosaFolder, "foo.js" );
+      fs.writeFileSync( nestedFile, "foo.js" );
+
+      command( fakeProgram );
+    });
+
+    after(function() {
+      utils.cleanProject( projectData );
+      process.chdir(cwd);
+      process.exit.restore();
+    });
+
+    it("will remove .mimosa directory", function( done ) {
+      expect(fs.existsSync(nestedFile)).to.be.true;
+      expect(fs.existsSync(mimosaFolder)).to.be.true;
+
+      commandFunct( {cleanall: true} );
+      setTimeout( function() {
+        expect(fs.existsSync(nestedFile)).to.be.false;
+        expect(fs.existsSync(mimosaFolder)).to.be.false;
+        done();
+      }, 200);
+    });
+
+    it("will not error out if there is no .mimosa directory", function() {
+      loggerSpy = sinon.spy(logger, "info");
+      commandFunct( {cleanall: true} );
+      expect(loggerSpy.calledWith("Removed .mimosa directory.")).to.be.true;
+      logger.info.restore();
+    });
+  });
+};
 
 module.exports = {
   missingProfile: missingProfile,
   commandHelpTest: commandHelpTest,
   testBadCommandFlags: testBadCommandFlags,
   handlesFlags: handlesFlags,
-  debugSetup: debugSetup
+  debugSetup: debugSetup,
+  removesDotMimosa: removesDotMimosa
 };

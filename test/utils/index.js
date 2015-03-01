@@ -33,7 +33,8 @@ module.exports = {
         invalid: commandUtil.testBadCommandFlags,
         missingProfile: commandUtil.missingProfile,
         handlesFlags: commandUtil.handlesFlags,
-        debugSetup: commandUtil.debugSetup
+        debugSetup: commandUtil.debugSetup,
+        removesDotMimosa: commandUtil.removesDotMimosa
       },
       spawn: {
         build: intSpawn.buildTest,

@@ -127,7 +127,7 @@ if (__dirname.indexOf("/travis/") > 0) {
     buildTest: function(){},
     buildCleanTest: function(){},
     watchTest: function(){},
-    cleanTest: function(){},
+    cleanTest: function(){}
   };
 } else {
   module.exports = {

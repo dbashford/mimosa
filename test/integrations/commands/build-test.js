@@ -57,65 +57,6 @@ describe("Mimosa's build command", function() {
 
   });
 
-  describe("when --cleanall flag ticked", function() {
-    var cwd
-      , projectData
-      , buildFunct
-      , nestedFile
-      , mimosaFolder
-      , testOpts = {
-        configFile: "commands/build-remove-dot-mimosa",
-        project: "basic"
-      };
-
-    before(function(){
-      projectData = utils.setup.projectData( testOpts.configFile );
-      utils.setup.cleanProject( projectData );
-      utils.setup.project( projectData, testOpts.project );
-      cwd = process.cwd();
-      process.chdir( projectData.projectDir );
-      fakeProgram = utils.fake.program();
-      fakeProgram.action = function( funct ) {
-        buildFunct = funct;
-        return fakeProgram;
-      };
-      var processExitStub = sinon.stub(process, "exit", function(){});
-
-      // create folder
-      mimosaFolder = path.join( projectData.projectDir, ".mimosa", "bower" );
-      wrench.mkdirSyncRecursive( mimosaFolder );
-      nestedFile = path.join( mimosaFolder, "foo.js" );
-      fs.writeFileSync( nestedFile, "foo.js" );
-
-      buildCommand( fakeProgram );
-    });
-
-    after(function() {
-      utils.setup.cleanProject( projectData );
-      process.chdir(cwd);
-      process.exit.restore();
-    });
-
-    it("will remove .mimosa directory", function( done ) {
-      expect(fs.existsSync(nestedFile)).to.be.true;
-      expect(fs.existsSync(mimosaFolder)).to.be.true;
-
-      buildFunct( {cleanall: true} );
-      setTimeout( function() {
-        expect(fs.existsSync(nestedFile)).to.be.false;
-        expect(fs.existsSync(mimosaFolder)).to.be.false;
-        done();
-      }, 200);
-    });
-
-    it("will not error out if there is no .mimosa directory", function() {
-      loggerSpy = sinon.spy(logger, "info");
-      buildFunct( {cleanall: true} );
-      expect(loggerSpy.calledWith("Removed .mimosa directory.")).to.be.true;
-      logger.info.restore();
-    });
-  });
-
   describe("will first clean files", function() {
     var cwd
       , projectData
@@ -179,6 +120,8 @@ describe("Mimosa's build command", function() {
       expect(fs.existsSync(extraFile)).to.be.true;
     });
   });
+
+  utils.test.command.flags.removesDotMimosa( "build", buildCommand );
 
   utils.test.command.flags.debugSetup( "build", buildCommand );
 
