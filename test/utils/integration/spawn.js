@@ -124,16 +124,16 @@ var spawnCleanTest = function( testOpts ) {
 // for now, don't run spawn based tests on travis
 if (__dirname.indexOf("/travis/") > 0) {
   module.exports = {
-    spawnBuildTest: function(){},
-    spawnBuildCleanTest: function(){},
-    spawnWatchTest: function(){},
-    spawnCleanTest: function(){},
+    buildTest: function(){},
+    buildCleanTest: function(){},
+    watchTest: function(){},
+    cleanTest: function(){},
   };
 } else {
   module.exports = {
-    spawnBuildTest: spawnBuildTest,
-    spawnBuildCleanTest: spawnBuildCleanTest,
-    spawnWatchTest: spawnWatchTest,
-    spawnCleanTest: spawnCleanTest
+    buildTest: spawnBuildTest,
+    buildCleanTest: spawnBuildCleanTest,
+    watchTest: spawnWatchTest,
+    cleanTest: spawnCleanTest
   };
 }

@@ -1,5 +1,6 @@
 var intSpawn = require( "./integration/spawn" )
   , intProcess = require( "./integration/in-process" )
+  , commandUtil = require( "./integration/command-util" )
   , utils = require( "./utils" )
   ;
 
@@ -28,13 +29,16 @@ module.exports = {
       build: intProcess.buildTest,
       clean: intProcess.cleanTest,
       flags: {
-        help: intProcess.commandHelpTest,
+        help: commandUtil.commandHelpTest,
+        invalid: commandUtil.testBadCommandFlags,
+        missingProfile: commandUtil.missingProfile,
+        handlesFlags: commandUtil.handlesFlags
       },
       spawn: {
-        build: intSpawn.spawnBuildTest,
-        buildClean: intSpawn.spawnBuildCleanTest,
-        watch: intSpawn.spawnWatchTest,
-        clean: intSpawn.spawnCleanTest
+        build: intSpawn.buildTest,
+        buildClean: intSpawn.buildCleanTest,
+        watch: intSpawn.watchTest,
+        clean: intSpawn.cleanTest
       }
     }
   }

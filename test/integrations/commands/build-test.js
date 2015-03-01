@@ -220,64 +220,18 @@ describe("Mimosa's build command", function() {
     });
   });
 
-  utils.test.command.spawn.build({
-    testSpec: "will error out if profile not provided",
-    configFile: "commands/build-error-no-profile",
-    project: "basic",
-    buildFlags:"-P",
-    asserts: function(output, projectData, done) {
-      expect(output.serr.indexOf("argument missing")).to.be.above(30)
+  utils.test.command.flags.missingProfile( "build" );
+
+  utils.test.command.flags.handlesFlags(
+    "build",
+    "--optimize --minify --package --install --errorout --cleanall --mdebug",
+    "-ompieCD",
+    function(output, projectData, done) {
+      expect(output.sout.indexOf("Finished build")).to.be.above(1000)
       done();
     }
-  });
+  );
 
-  describe("is configured to accept the appropriate flags (will not error out)", function() {
-    utils.test.command.spawn.build({
-      testSpec: "-ompieCD",
-      configFile: "commands/build-flags-short",
-      project: "basic",
-      buildFlags:"-ompieCD",
-      asserts: function(output, projectData, done) {
-        expect(output.sout.indexOf("Finished build")).to.be.above(1000)
-        done();
-      }
-    });
+  utils.test.command.flags.invalid("build");
 
-    utils.test.command.spawn.build({
-      testSpec: "--optimize --minify --package --install --errorout --cleanall --mdebug",
-      configFile: "commands/build-flags-long",
-      project: "basic",
-      buildFlags:"--optimize --minify --package --install --errorout --cleanall --mdebug",
-      asserts: function(output, projectData, done) {
-        expect(output.sout.indexOf("Finished build")).to.be.above(1000)
-        done();
-      }
-    });
-
-  });
-
-  describe("will error out if a bad flag is provided", function() {
-    utils.test.command.spawn.build({
-      testSpec: "-f",
-      configFile: "commands/build-bad-flags-short",
-      project: "basic",
-      buildFlags:"-f",
-      asserts: function(output, projectData, done) {
-        expect(output.serr.indexOf("unknown option")).to.be.above(5)
-        done();
-      }
-    });
-
-
-    utils.test.command.spawn.build({
-      testSpec: "--foo",
-      configFile: "commands/build-bad-flags-long",
-      project: "basic",
-      buildFlags:"--foo",
-      asserts: function(output, projectData, done) {
-        expect(output.serr.indexOf("unknown option")).to.be.above(5)
-        done();
-      }
-    });
-  });
 });
