@@ -27,6 +27,14 @@ var crypto = require( "crypto" )
       stylesheets: "stylesheets/vendor"
     }
   }
+  , standardConfig = {
+    modules: ['copy'],
+    logger: {
+      growl: {
+        enabled: false
+      }
+    }
+  }
   ;
 
 var randomString = function( num ) {
@@ -98,7 +106,12 @@ var setupProject = function( env, inProjectName ) {
 
   // copy correct mimosa-config in
   var configInPath = path.join( __dirname, "..", "harness", "configs", env.projectPath + ".js" );
-  var configText = fs.readFileSync( configInPath, "utf8" );
+  var configText;
+  if (fs.existsSync( configInPath )) {
+    configText = fs.readFileSync( configInPath, "utf8" );
+  } else {
+    configText = "exports.config = " + JSON.stringify(standardConfig, null, 2);
+  }
   fs.writeFileSync(env.mimosaConfig, configText);
 };
 
