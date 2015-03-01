@@ -33,7 +33,8 @@ module.exports = {
       spawn: {
         build: intSpawn.spawnBuildTest,
         buildClean: intSpawn.spawnBuildCleanTest,
-        watch: intSpawn.spawnWatchTest
+        watch: intSpawn.spawnWatchTest,
+        clean: intSpawn.spawnCleanTest
       }
     }
   }

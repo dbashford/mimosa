@@ -10,7 +10,7 @@ var path = require( "path" )
 
 describe("Mimosa's clean command", function() {
 
-  utils.test.command.spawn.buildClean({
+  utils.test.command.spawn.clean({
     testSpec: "will error out if profile not provided",
     configFile: "commands/clean-error-no-profile",
     project: "basic",
@@ -22,24 +22,24 @@ describe("Mimosa's clean command", function() {
   });
 
   describe("is configured to accept the appropriate flags (will not error out)", function() {
-    utils.test.command.spawn.buildClean({
+    utils.test.command.spawn.clean({
       testSpec: "-fCD",
       configFile: "commands/clean-flags-short",
       project: "basic",
       cleanFlags:"-fCD",
       asserts: function(output, projectData, done) {
-        expect(output.sout.substring(output.sout.length-17)).to.eql("has been removed\n")
+        expect(output.sout.substring(output.sout.length-17)).to.eql(" already deleted\n")
         done();
       }
     });
 
-    utils.test.command.spawn.buildClean({
+    utils.test.command.spawn.clean({
       testSpec: "--force --cleanall --mdebug",
       configFile: "commands/clean-flags-long",
       project: "basic",
       cleanFlags:"--force --cleanall --mdebug",
       asserts: function(output, projectData, done) {
-        expect(output.sout.substring(output.sout.length-17)).to.eql("has been removed\n")
+        expect(output.sout.substring(output.sout.length-17)).to.eql(" already deleted\n")
         done();
       }
     });
@@ -47,7 +47,7 @@ describe("Mimosa's clean command", function() {
   });
 
   describe("will error out if a bad flag is provided", function() {
-    utils.test.command.spawn.buildClean({
+    utils.test.command.spawn.clean({
       testSpec: "-g",
       configFile: "commands/clean-bad-flags-short",
       project: "basic",
@@ -59,7 +59,7 @@ describe("Mimosa's clean command", function() {
     });
 
 
-    utils.test.command.spawn.buildClean({
+    utils.test.command.spawn.clean({
       testSpec: "--foo",
       configFile: "commands/clean-bad-flags-long",
       project: "basic",

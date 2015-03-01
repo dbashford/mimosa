@@ -105,17 +105,35 @@ var spawnBuildCleanTest = function( testOpts ) {
   _mimosaCommandTestWrapper( testOpts, runCommand );
 };
 
+var spawnCleanTest = function( testOpts ) {
+  var runCommand = function( projectData, cb ) {
+    exec( "mimosa clean " + testOpts.cleanFlags || "", function ( err, sout, serr ) {
+      testOpts.asserts({
+          error:err,
+          sout:sout,
+          serr:serr
+        }
+        , projectData
+        , cb);
+    });
+  };
+  _mimosaCommandTestWrapper( testOpts, runCommand );
+};
+
+
 // for now, don't run spawn based tests on travis
 if (__dirname.indexOf("/travis/") > 0) {
   module.exports = {
     spawnBuildTest: function(){},
     spawnBuildCleanTest: function(){},
     spawnWatchTest: function(){},
+    spawnCleanTest: function(){},
   };
 } else {
   module.exports = {
     spawnBuildTest: spawnBuildTest,
     spawnBuildCleanTest: spawnBuildCleanTest,
     spawnWatchTest: spawnWatchTest,
+    spawnCleanTest: spawnCleanTest
   };
 }
