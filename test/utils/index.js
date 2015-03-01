@@ -4,6 +4,7 @@ var intSpawn = require( "./integration/spawn" )
   ;
 
 module.exports = {
+
   setup: {
     projectData: utils.setupProjectData,
     project: utils.setupProject,
@@ -26,6 +27,9 @@ module.exports = {
       watch: intProcess.watchTest,
       build: intProcess.buildTest,
       clean: intProcess.cleanTest,
+      flags: {
+        help: intProcess.commandHelpTest,
+      },
       spawn: {
         build: intSpawn.spawnBuildTest,
         buildClean: intSpawn.spawnBuildCleanTest,
@@ -33,4 +37,5 @@ module.exports = {
       }
     }
   }
+
 };

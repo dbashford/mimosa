@@ -1,6 +1,7 @@
 var path = require( "path" )
   , sinon  = require( "sinon" )
   , utils = require( "../utils" )
+  , logger = require( "logmimosa" )
   , configurerPath = path.join(process.cwd(), "lib", "util", "configurer")
   , watcherPath = path.join(process.cwd(), "lib", "util", "watcher")
   , cleanerPath = path.join(process.cwd(), "lib", "util", "cleaner")
@@ -141,8 +142,42 @@ var watchTest = function( testOpts ) {
   _buildWatchTest(testOpts);
 }
 
+var commandHelpTest = function( command ) {
+  describe("", function() {
+    var loggerGreenSpy
+      , loggerBlueSpy
+      ;
+
+    before(function() {
+      loggerGreenSpy = sinon.spy(logger, "green");
+      loggerBlueSpy = sinon.spy(logger, "blue");
+    })
+
+    after(function(){
+      logger.green.restore();
+      logger.blue.restore();
+    });
+
+    it("will print help", function( done ) {
+
+      var program = utils.fakeProgram();
+      program.on = function(flag, cb) {
+        expect(flag).to.eql("--help");
+        cb();
+        expect(loggerGreenSpy.callCount).to.be.above(5);
+        expect(loggerBlueSpy.callCount).to.be.above(5);
+        done()
+        return program;
+      };
+
+      command( program );
+    });
+  })
+}
+
 module.exports = {
   watchTest: watchTest,
   buildTest: buildTest,
-  cleanTest: cleanTest
+  cleanTest: cleanTest,
+  commandHelpTest: commandHelpTest
 }
