@@ -164,8 +164,8 @@ var commandHelpTest = function( command ) {
       program.on = function(flag, cb) {
         expect(flag).to.eql("--help");
         cb();
-        expect(loggerGreenSpy.callCount).to.be.above(5);
-        expect(loggerBlueSpy.callCount).to.be.above(5);
+        expect(loggerGreenSpy.callCount).to.be.above(0);
+        expect(loggerBlueSpy.callCount).to.be.above(0);
         done()
         return program;
       };
