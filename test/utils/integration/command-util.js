@@ -116,6 +116,51 @@ var handlesFlags = function( command, flagsFull, flagsShort, asserts ) {
     spawn[command + "Test"](opts1);
     spawn[command + "Test"](opts2);
   });
+};
+
+// ensures that when the debug flag is set for a command
+// that the proper debugging is set up
+var debugSetup = function( commandString, command ) {
+  describe("when debug flag is ticked", function() {
+    var cwd
+      , projectData
+      , loggerSpy
+      , testOpts = {
+        configFile: "commands/" + commandString + "-debug",
+        project: "basic"
+      };
+
+    before(function() {
+      projectData = utils.setupProjectData( testOpts.configFile );
+      utils.cleanProject( projectData );
+      utils.setupProject( projectData, testOpts.project );
+      cwd = process.cwd();
+      process.chdir( projectData.projectDir );
+
+      loggerSpy = sinon.spy(logger, "setDebug");
+
+      var fakeProgram = utils.fakeProgram();
+      fakeProgram.action = function( funct ) {
+        funct( {mdebug: true} );
+        return fakeProgram;
+      }
+      command( fakeProgram );
+    });
+
+    after(function() {
+      utils.cleanProject( projectData );
+      process.chdir(cwd);
+      logger.setDebug.restore();
+    });
+
+    it("will set logger to debug mode", function() {
+      expect(loggerSpy.calledOnce).to.be.true;
+    })
+    it("will set environment to debug mode", function() {
+      expect(process.env.DEBUG).to.eql('true');
+    })
+  });
+
 }
 
 
@@ -123,5 +168,6 @@ module.exports = {
   missingProfile: missingProfile,
   commandHelpTest: commandHelpTest,
   testBadCommandFlags: testBadCommandFlags,
-  handlesFlags: handlesFlags
+  handlesFlags: handlesFlags,
+  debugSetup: debugSetup
 };

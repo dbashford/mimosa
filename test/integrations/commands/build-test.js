@@ -10,46 +10,6 @@ var path = require( "path" )
 
 describe("Mimosa's build command", function() {
 
-  describe("when debug flag is ticked", function() {
-    var cwd
-      , projectData
-      , loggerSpy
-      , testOpts = {
-        configFile: "commands/build-debug",
-        project: "basic"
-      };
-
-    before(function() {
-      projectData = utils.setup.projectData( testOpts.configFile );
-      utils.setup.cleanProject( projectData );
-      utils.setup.project( projectData, testOpts.project );
-      cwd = process.cwd();
-      process.chdir( projectData.projectDir );
-
-      loggerSpy = sinon.spy(logger, "setDebug");
-
-      var fakeProgram = utils.fake.program();
-      fakeProgram.action = function( funct ) {
-        funct( {mdebug: true} );
-        return fakeProgram;
-      }
-      buildCommand( fakeProgram );
-    });
-
-    after(function() {
-      utils.setup.cleanProject( projectData );
-      process.chdir(cwd);
-      logger.setDebug.restore();
-    });
-
-    it("will set logger to debug mode", function() {
-      expect(loggerSpy.calledOnce).to.be.true;
-    })
-    it("will set environment to debug mode", function() {
-      expect(process.env.DEBUG).to.eql('true');
-    })
-  });
-
   describe("will build files", function( ) {
     var cwd
       , projectData
@@ -219,6 +179,8 @@ describe("Mimosa's build command", function() {
       expect(fs.existsSync(extraFile)).to.be.true;
     });
   });
+
+  utils.test.command.flags.debugSetup( "build", buildCommand );
 
   utils.test.command.flags.missingProfile( "build" );
 

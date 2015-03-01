@@ -10,6 +10,8 @@ var path = require( "path" )
 
 describe("Mimosa's clean command", function() {
 
+  utils.test.command.flags.debugSetup( "clean", cleanCommand );
+
   utils.test.command.flags.missingProfile( "clean" )
 
   utils.test.command.flags.handlesFlags(

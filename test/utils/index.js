@@ -32,7 +32,8 @@ module.exports = {
         help: commandUtil.commandHelpTest,
         invalid: commandUtil.testBadCommandFlags,
         missingProfile: commandUtil.missingProfile,
-        handlesFlags: commandUtil.handlesFlags
+        handlesFlags: commandUtil.handlesFlags,
+        debugSetup: commandUtil.debugSetup
       },
       spawn: {
         build: intSpawn.buildTest,
