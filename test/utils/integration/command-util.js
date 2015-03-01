@@ -4,6 +4,10 @@ var sinon = require( "sinon" )
   , utils = require("../utils")
   ;
 
+
+// Tests a command to see if it properly
+// handles bad command line flags
+// i.e. flags it is not permitted to use
 var testBadCommandFlags = function( command ) {
   describe("will error out if a bad flag is provided", function() {
 
@@ -35,6 +39,7 @@ var testBadCommandFlags = function( command ) {
   });
 };
 
+// Ensures a command reacts to --help flag
 var commandHelpTest = function( command ) {
   describe("", function() {
     var loggerGreenSpy
@@ -68,6 +73,8 @@ var commandHelpTest = function( command ) {
   })
 };
 
+// ensures a command handles when the profile
+// flag is used but no profile is provided.
 var missingProfile = function( command ) {
   var opts = {
     testSpec: "will error out if profile not provided",
@@ -83,6 +90,9 @@ var missingProfile = function( command ) {
   spawn[command + "Test"](opts);
 }
 
+
+// Positive test to ensure a command can handle all the flags
+// it is supposed to handle
 var handlesFlags = function( command, flagsFull, flagsShort, asserts ) {
   describe("is configured to accept the appropriate flags (will not error out)", function() {
 
@@ -90,7 +100,6 @@ var handlesFlags = function( command, flagsFull, flagsShort, asserts ) {
       testSpec: flagsShort,
       configFile: "commands/" + command + "-flags-short",
       project: "basic",
-      buildFlags:"-ompieCD",
       asserts: asserts
     };
 
@@ -98,7 +107,6 @@ var handlesFlags = function( command, flagsFull, flagsShort, asserts ) {
       testSpec: flagsFull,
       configFile: "commands/" + command + "-flags-long",
       project: "basic",
-      buildFlags:"--optimize --minify --package --install --errorout --cleanall --mdebug",
       asserts: asserts
     };
 
