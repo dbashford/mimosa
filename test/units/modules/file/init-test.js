@@ -2,7 +2,7 @@ var path = require( "path" )
   , sinon = require( "sinon" )
   , utils = require( path.join(process.cwd(), "test", "utils") )
   , initModule = require( path.join(process.cwd(), "lib", "modules", "file", "init") )
-  , fakeMimosaConfig = utils.fakeMimosaConfig();
+  , fakeMimosaConfig = utils.fake.mimosaConfig();
   ;
 
 describe( "Mimosa init workflow module", function(){
@@ -11,7 +11,7 @@ describe( "Mimosa init workflow module", function(){
 
   before(function(done) {
     var i = 0;
-    utils.testRegistration( initModule, function( func ) {
+    utils.test.registration( initModule, function( func ) {
       if (i++) {
         singleAssetFunction = func;
         done();

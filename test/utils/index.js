@@ -1,25 +1,36 @@
-var intSpawn = require( "./integration-spawn" )
-  , intProcess = require( "./integration-in-process" )
+var intSpawn = require( "./integration/spawn" )
+  , intProcess = require( "./integration/in-process" )
   , utils = require( "./utils" )
   ;
 
 module.exports = {
-  fileFixture: utils.fileFixture,
-  fakeMimosaConfig: utils.fakeMimosaConfig,
-  testRegistration: utils.testRegistration,
-  setupProjectData: utils.setupProjectData,
-  setupProject: utils.setupProject,
-  cleanProject: utils.cleanProject,
-  filesAndDirsInFolder: utils.filesAndDirsInFolder,
-  fakeProgram: utils.fakeProgram,
+  setup: {
+    projectData: utils.setupProjectData,
+    project: utils.setupProject,
+    cleanProject: utils.cleanProject
+  },
 
-  watchTest: intProcess.watchTest,
-  buildTest: intProcess.buildTest,
-  cleanTest: intProcess.cleanTest,
+  util: {
+    filesAndDirsInFolder: utils.filesAndDirsInFolder
+  },
 
-  spawn :{
-    buildTest: intSpawn.spawnBuildTest,
-    buildCleanTest: intSpawn.spawnBuildCleanTest,
-    watchTest: intSpawn.spawnWatchTest
+  fake: {
+    mimosaConfig: utils.fakeMimosaConfig,
+    file: utils.fileFixture,
+    program: utils.fakeProgram
+  },
+
+  test: {
+    registration: utils.testRegistration,
+    command: {
+      watch: intProcess.watchTest,
+      build: intProcess.buildTest,
+      clean: intProcess.cleanTest,
+      spawn: {
+        build: intSpawn.spawnBuildTest,
+        buildClean: intSpawn.spawnBuildCleanTest,
+        watch: intSpawn.spawnWatchTest
+      }
+    }
   }
 };

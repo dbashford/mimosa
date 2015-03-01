@@ -20,15 +20,15 @@ describe("Mimosa's build command", function() {
       };
 
     before(function() {
-      projectData = utils.setupProjectData( testOpts.configFile );
-      utils.cleanProject( projectData );
-      utils.setupProject( projectData, testOpts.project );
+      projectData = utils.setup.projectData( testOpts.configFile );
+      utils.setup.cleanProject( projectData );
+      utils.setup.project( projectData, testOpts.project );
       cwd = process.cwd();
       process.chdir( projectData.projectDir );
 
       loggerSpy = sinon.spy(logger, "setDebug");
 
-      var fakeProgram = utils.fakeProgram();
+      var fakeProgram = utils.fake.program();
       fakeProgram.action = function( funct ) {
         funct( {mdebug: true} );
         return fakeProgram;
@@ -37,7 +37,7 @@ describe("Mimosa's build command", function() {
     });
 
     after(function() {
-      utils.cleanProject( projectData );
+      utils.setup.cleanProject( projectData );
       process.chdir(cwd);
       logger.setDebug.restore();
     });
@@ -61,13 +61,13 @@ describe("Mimosa's build command", function() {
       };
 
     before(function(done){
-      projectData = utils.setupProjectData( testOpts.configFile );
-      utils.cleanProject( projectData );
-      utils.setupProject( projectData, testOpts.project );
+      projectData = utils.setup.projectData( testOpts.configFile );
+      utils.setup.cleanProject( projectData );
+      utils.setup.project( projectData, testOpts.project );
       cwd = process.cwd();
       process.chdir( projectData.projectDir );
       var processExitStub = sinon.stub(process, "exit", function(){});
-      fakeProgram = utils.fakeProgram();
+      fakeProgram = utils.fake.program();
       fakeProgram.action = function( funct ) {
         funct( {} );
         return fakeProgram;
@@ -79,14 +79,14 @@ describe("Mimosa's build command", function() {
     });
 
     after(function() {
-      utils.cleanProject( projectData );
+      utils.setup.cleanProject( projectData );
       process.chdir(cwd);
       process.exit.restore();
       logger.success.restore();
     });
 
     it("to the output directory", function(done){
-      var filesAndFolders = utils.filesAndDirsInFolder(projectData.publicDir)
+      var filesAndFolders = utils.util.filesAndDirsInFolder(projectData.publicDir)
       expect( filesAndFolders ).to.eql(11);
       done();
     });
@@ -109,12 +109,12 @@ describe("Mimosa's build command", function() {
       };
 
     before(function(){
-      projectData = utils.setupProjectData( testOpts.configFile );
-      utils.cleanProject( projectData );
-      utils.setupProject( projectData, testOpts.project );
+      projectData = utils.setup.projectData( testOpts.configFile );
+      utils.setup.cleanProject( projectData );
+      utils.setup.project( projectData, testOpts.project );
       cwd = process.cwd();
       process.chdir( projectData.projectDir );
-      fakeProgram = utils.fakeProgram();
+      fakeProgram = utils.fake.program();
       fakeProgram.action = function( funct ) {
         buildFunct = funct;
         return fakeProgram;
@@ -131,7 +131,7 @@ describe("Mimosa's build command", function() {
     });
 
     after(function() {
-      utils.cleanProject( projectData );
+      utils.setup.cleanProject( projectData );
       process.chdir(cwd);
       process.exit.restore();
     });
@@ -167,12 +167,12 @@ describe("Mimosa's build command", function() {
       };
 
     before(function(done) {
-      projectData = utils.setupProjectData( testOpts.configFile );
-      utils.cleanProject( projectData );
-      utils.setupProject( projectData, testOpts.project );
+      projectData = utils.setup.projectData( testOpts.configFile );
+      utils.setup.cleanProject( projectData );
+      utils.setup.project( projectData, testOpts.project );
       cwd = process.cwd();
       process.chdir( projectData.projectDir );
-      fakeProgram = utils.fakeProgram();
+      fakeProgram = utils.fake.program();
       fakeProgram.action = function( funct ) {
         funct( {} );
         return fakeProgram;
@@ -188,7 +188,7 @@ describe("Mimosa's build command", function() {
     });
 
     after(function() {
-      utils.cleanProject( projectData );
+      utils.setup.cleanProject( projectData );
       process.chdir(cwd);
       process.exit.restore();
     });
@@ -220,7 +220,7 @@ describe("Mimosa's build command", function() {
     });
   });
 
-  utils.spawn.buildTest({
+  utils.test.command.spawn.build({
     testSpec: "will error out if profile not provided",
     configFile: "commands/build-error-no-profile",
     project: "basic",
@@ -232,7 +232,7 @@ describe("Mimosa's build command", function() {
   });
 
   describe("is configured to accept the appropriate flags (will not error out)", function() {
-    utils.spawn.buildTest({
+    utils.test.command.spawn.build({
       testSpec: "-ompieCD",
       configFile: "commands/build-flags-short",
       project: "basic",
@@ -243,7 +243,7 @@ describe("Mimosa's build command", function() {
       }
     });
 
-    utils.spawn.buildTest({
+    utils.test.command.spawn.build({
       testSpec: "--optimize --minify --package --install --errorout --cleanall --mdebug",
       configFile: "commands/build-flags-long",
       project: "basic",
@@ -257,7 +257,7 @@ describe("Mimosa's build command", function() {
   });
 
   describe("will error out if a bad flag is provided", function() {
-    utils.spawn.buildTest({
+    utils.test.command.spawn.build({
       testSpec: "-f",
       configFile: "commands/build-bad-flags-short",
       project: "basic",
@@ -269,7 +269,7 @@ describe("Mimosa's build command", function() {
     });
 
 
-    utils.spawn.buildTest({
+    utils.test.command.spawn.build({
       testSpec: "--foo",
       configFile: "commands/build-bad-flags-long",
       project: "basic",

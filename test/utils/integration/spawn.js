@@ -2,7 +2,7 @@
 
 var exec = require('child_process').exec
   , spawn = require( 'child_process' ).spawn
-  , utils = require( './utils' )
+  , utils = require( "../utils" )
   ;
 
 var _mimosaCommandTestWrapper = function( testOpts, runCommand ) {

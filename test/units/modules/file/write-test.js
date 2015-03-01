@@ -4,7 +4,7 @@ var fs = require( "fs" )
   , utils = require( path.join(process.cwd(), "test", "utils") )
   , writeModule = require( path.join(process.cwd(), "lib", "modules", "file", "write") )
   , fileUtils = require( path.join(process.cwd(), "lib", "util", "file" ) )
-  , fakeMimosaConfig = utils.fakeMimosaConfig();
+  , fakeMimosaConfig = utils.fake.mimosaConfig();
   ;
 
 describe( "Mimosa file writing workflow module", function(){
@@ -12,7 +12,7 @@ describe( "Mimosa file writing workflow module", function(){
   var writeFunction;
 
   before(function(done) {
-    utils.testRegistration( writeModule, function( func ) {
+    utils.test.registration( writeModule, function( func ) {
       writeFunction = func;
       done();
     });
@@ -63,7 +63,7 @@ describe( "Mimosa file writing workflow module", function(){
     it( "with blank output will warn the user, write the file and execute the lifecycle callback", function() {
       var warnStub = sinon.stub( fakeMimosaConfig.log, "warn" );
       var writeFileStub = sinon.stub( fileUtils, "writeFile" );
-      var options = { files: [utils.fileFixture()] };
+      var options = { files: [utils.fake.file()] };
       options.files[0].outputFileText = "";
       writeFunction( fakeMimosaConfig, options, callbackSpy );
       expect( warnStub.calledOnce ).to.be.true;
@@ -75,7 +75,7 @@ describe( "Mimosa file writing workflow module", function(){
 
     it( "lacking an output name will not write file and will call lifecycle callback", function() {
       var writeFileSpy = sinon.spy( fileUtils, "writeFile" );
-      var options = { files: [utils.fileFixture()] };
+      var options = { files: [utils.fake.file()] };
       options.files[0].outputFileName = null;
       writeFunction( fakeMimosaConfig, options, callbackSpy );
       expect( callbackSpy.calledOnce ).to.be.true;
@@ -85,7 +85,7 @@ describe( "Mimosa file writing workflow module", function(){
 
     it( "will attempt to write one file, log success, and lifecycle callback", function(){
       var successStub = sinon.stub( fakeMimosaConfig.log, "success" );
-      var options = { files: [utils.fileFixture()] };
+      var options = { files: [utils.fake.file()] };
       var writeFileStub = sinon.stub(
         fileUtils,
         "writeFile",
@@ -115,7 +115,7 @@ describe( "Mimosa file writing workflow module", function(){
     it( "and an error occurs during write, will log error and call lifecycle callback", function(){
       var errorText = "blah blah blah";
       var errorStub = sinon.stub( fakeMimosaConfig.log, "error" );
-      var options = { files: [utils.fileFixture()] };
+      var options = { files: [utils.fake.file()] };
       var writeFileStub = sinon.stub(
         fileUtils,
         "writeFile",
@@ -157,7 +157,7 @@ describe( "Mimosa file writing workflow module", function(){
 
     it( "will attempt to write one file, log success, and lifecycle callback", function(){
       var successStub = sinon.stub( fakeMimosaConfig.log, "success" );
-      var options = { files: [utils.fileFixture(), utils.fileFixture()] };
+      var options = { files: [utils.fake.file(), utils.fake.file()] };
       var i = 0;
       var writeFileStub = sinon.stub(
         fileUtils,
@@ -195,7 +195,7 @@ describe( "Mimosa file writing workflow module", function(){
     it( "and an error occurs during write, will log error and call lifecycle callback", function(){
       var errorText = "blah blah blah";
       var errorStub = sinon.stub( fakeMimosaConfig.log, "error" );
-      var options = { files: [utils.fileFixture(), utils.fileFixture()] };
+      var options = { files: [utils.fake.file(), utils.fake.file()] };
       var i = 0;
       var writeFileStub = sinon.stub(
         fileUtils,

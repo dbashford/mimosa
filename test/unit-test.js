@@ -6,3 +6,4 @@ require("./units/modules/file/clean-test");
 require("./units/modules/file/beforeRead-test");
 require("./units/util/file-test");
 require("./units/commands/build-test");
+require("./units/commands/clean-test");

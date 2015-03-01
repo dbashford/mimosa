@@ -5,7 +5,7 @@ var fs = require( "fs" )
 
 var basicBuild = function(filesOut) {
   return function(output, projectData, done) {
-    var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+    var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
     expect(assetCount).to.eql(filesOut);
     done();
   };
@@ -17,7 +17,7 @@ var excludeTests = function( files ) {
     configFile: files.add,
     project: "basic",
     postBuild: function(projectData, cb) {
-      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
       expect(assetCount).to.eql(8);
 
       // write one file that will get excluded and
@@ -29,7 +29,7 @@ var excludeTests = function( files ) {
       cb();
     },
     asserts: function(output, projectData, done) {
-      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
       expect(assetCount).to.eql(9);
 
       expect(output.log.indexOf("foo.js")).to.eql(-1);
@@ -37,14 +37,14 @@ var excludeTests = function( files ) {
       done();
     }
   }
-  utils.watchTest(testOpts1);
+  utils.test.command.watch(testOpts1);
 
   var testOpts2 = {
     testSpec: "when an excluded file is updated",
     configFile: files.update,
     project: "basic",
     postBuild: function(projectData, cb) {
-      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
       expect(assetCount).to.eql(8);
 
       // write one file that will get excluded and
@@ -54,21 +54,21 @@ var excludeTests = function( files ) {
       cb();
     },
     asserts: function(output, projectData, done) {
-      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
       expect(assetCount).to.eql(8);
       expect(output.log.indexOf("main.js")).to.eql(-1);
       done();
     }
   }
 
-  utils.watchTest(testOpts2);
+  utils.test.command.watch(testOpts2);
 
   var testOpts3 = {
     testSpec: "when an excluded file is deleted",
     configFile: files.remove,
     project: "basic",
     postBuild: function(projectData, cb) {
-      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
       expect(assetCount).to.eql(8);
 
       // write one file that will get excluded and
@@ -78,14 +78,14 @@ var excludeTests = function( files ) {
       cb();
     },
     asserts: function(output, projectData, done) {
-      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
       expect(assetCount).to.eql(8);
       expect(output.log.indexOf("main.js")).to.eql(-1);
       done();
     }
   }
 
-  utils.watchTest(testOpts3);
+  utils.test.command.watch(testOpts3);
 };
 
 var updateTest = function( conf ) {
@@ -94,7 +94,7 @@ var updateTest = function( conf ) {
     configFile: conf,
     project: "basic",
     postBuild: function(projectData, cb) {
-      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
       expect(assetCount).to.eql(11);
 
       // write one file that will get excluded and
@@ -104,7 +104,7 @@ var updateTest = function( conf ) {
       cb();
     },
     asserts: function(output, projectData, done) {
-      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
       expect(assetCount).to.eql(11);
 
       // get file from output directory
@@ -113,7 +113,7 @@ var updateTest = function( conf ) {
       done();
     }
   }
-  utils.watchTest(testOpts);
+  utils.test.command.watch(testOpts);
 };
 
 var addTest = function( conf ) {
@@ -122,7 +122,7 @@ var addTest = function( conf ) {
     configFile: conf,
     project: "basic",
     postBuild: function(projectData, cb) {
-      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
       expect(assetCount).to.eql(11);
 
       // write one file that will get excluded and
@@ -132,7 +132,7 @@ var addTest = function( conf ) {
       cb();
     },
     asserts: function(output, projectData, done) {
-      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
       expect(assetCount).to.eql(12);
       expect(output.log.indexOf("foo.js")).to.be.above(100);
 
@@ -143,7 +143,7 @@ var addTest = function( conf ) {
       done();
     }
   }
-  utils.watchTest(testOpts);
+  utils.test.command.watch(testOpts);
 }
 
 var moveTest = function( conf ) {
@@ -152,7 +152,7 @@ var moveTest = function( conf ) {
     configFile: conf,
     project: "basic",
     postBuild: function(projectData, cb) {
-      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
       expect(assetCount).to.eql(11);
 
       // write one file that will get excluded and
@@ -163,7 +163,7 @@ var moveTest = function( conf ) {
       cb();
     },
     asserts: function(output, projectData, done) {
-      var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+      var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
       expect(assetCount).to.eql(11);
 
       // write one file that will get excluded and
@@ -176,14 +176,14 @@ var moveTest = function( conf ) {
       done();
     }
   }
-  utils.watchTest(testOpts);
+  utils.test.command.watch(testOpts);
 };
 
 describe("Mimosa's watcher", function() {
 
   describe("on mimosa build", function() {
 
-    utils.buildTest({
+    utils.test.command.build({
       testSpec: "will run and exit successfully when there are no files in the asset directory",
       configFile: "watcher/build-empty",
       project: "empty",
@@ -194,28 +194,28 @@ describe("Mimosa's watcher", function() {
 
       var basicTest = basicBuild(11);
 
-      utils.buildTest({
+      utils.test.command.build({
         testSpec: "with the default config",
         configFile: "watcher/build",
         project: "basic",
         asserts: basicTest
       });
 
-      utils.buildTest({
+      utils.test.command.build({
         testSpec: "when throttle is set",
         configFile: "watcher/build-throttle",
         project: "basic",
         asserts: basicTest
       });
 
-      utils.buildTest({
+      utils.test.command.build({
         testSpec: "when delay is set",
         configFile: "watcher/build-delay",
         project: "basic",
         asserts: basicTest
       });
 
-      utils.buildTest({
+      utils.test.command.build({
         testSpec: "when interval is set",
         configFile: "watcher/build-interval",
         project: "basic",
@@ -223,7 +223,7 @@ describe("Mimosa's watcher", function() {
       });
 
       if (__dirname.indexOf("/travis/") < 0) {
-        utils.buildTest({
+        utils.test.command.build({
           testSpec: "when polling is set to false",
           configFile: "watcher/build-polling",
           project: "basic",
@@ -233,21 +233,21 @@ describe("Mimosa's watcher", function() {
     });
 
     describe("will exclude files from being processed into the public directory", function() {
-      utils.buildTest({
+      utils.test.command.build({
         testSpec: "via string match",
         configFile: "watcher/build-exclude-string",
         project: "basic",
         asserts: basicBuild(8)
       });
 
-      utils.buildTest({
+      utils.test.command.build({
         testSpec: "via regex match",
         configFile: "watcher/build-exclude-regex",
         project: "basic",
         asserts: basicBuild(8)
       });
 
-      utils.buildTest({
+      utils.test.command.build({
         testSpec: "via both string and regex match",
         configFile: "watcher/build-exclude-both",
         project: "basic",
@@ -263,7 +263,7 @@ describe("Mimosa's watcher", function() {
       configFile: "watcher/watch-stop",
       project: "basic",
       postBuild: function(projectData, cb) {
-        var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+        var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
         expect(assetCount).to.eql(11);
 
         var hadListeners = process.emit("STOPMIMOSA");
@@ -274,14 +274,14 @@ describe("Mimosa's watcher", function() {
         });
       },
       asserts: function(output, projectData, done) {
-        var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+        var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
         expect(assetCount).to.eql(11);
         var notWrittenPath = path.join( projectData.javascriptOutDir, "foo.js")
         expect(fs.existsSync(notWrittenPath)).to.be.false;
         done();
       }
     }
-    utils.watchTest(testOpts12343);
+    utils.test.command.watch(testOpts12343);
 
     describe("will exclude files from being processed into the public directory", function() {
 
@@ -325,7 +325,7 @@ describe("Mimosa's watcher", function() {
         configFile: "watcher/watch-delete",
         project: "basic",
         postBuild: function(projectData, cb) {
-          var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+          var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
           expect(assetCount).to.eql(11);
 
           // ensure file we intend to delete exists
@@ -337,7 +337,7 @@ describe("Mimosa's watcher", function() {
           cb();
         },
         asserts: function(output, projectData, done) {
-          var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+          var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
           expect(assetCount).to.eql(10);
 
           // get file from output directory
@@ -346,7 +346,7 @@ describe("Mimosa's watcher", function() {
           done();
         }
       }
-      utils.watchTest(testOpts2);
+      utils.test.command.watch(testOpts2);
 
       updateTest("watcher/watch-update");
       moveTest("watcher/watch-move");
@@ -368,7 +368,7 @@ describe("Mimosa's watcher", function() {
       configFile: "watcher/watch-empty",
       project: "empty",
       postBuild: function(projectData, cb) {
-        var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+        var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
         // doesn't create empty folders
         expect(assetCount).to.eql(0);
 
@@ -379,7 +379,7 @@ describe("Mimosa's watcher", function() {
         cb();
       },
       asserts: function(output, projectData, done) {
-        var assetCount = utils.filesAndDirsInFolder(projectData.publicDir);
+        var assetCount = utils.util.filesAndDirsInFolder(projectData.publicDir);
 
         // folder and file in it.
         expect(assetCount).to.eql(2);
@@ -392,7 +392,7 @@ describe("Mimosa's watcher", function() {
         done();
       }
     };
-    utils.watchTest(testOpts314);
+    utils.test.command.watch(testOpts314);
 
   });
 });

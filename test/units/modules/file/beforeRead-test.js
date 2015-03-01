@@ -3,7 +3,7 @@ var path = require( "path" )
   , utils = require( path.join(process.cwd(), "test", "utils") )
   , beforeReadModule = require( path.join(process.cwd(), "lib", "modules", "file", "beforeRead") )
   , fileUtils = require( path.join(process.cwd(), "lib", "util", "file" ) )
-  , fakeMimosaConfig = utils.fakeMimosaConfig();
+  , fakeMimosaConfig = utils.fake.mimosaConfig();
   ;
 
 describe( "Mimosa beforeRead workflow module", function(){
@@ -14,7 +14,7 @@ describe( "Mimosa beforeRead workflow module", function(){
 
   before(function(done) {
     var i = 0;
-    utils.testRegistration( beforeReadModule, function( func ) {
+    utils.test.registration( beforeReadModule, function( func ) {
       if (i++) {
         postStartupFunction = func;
         done();

@@ -2,12 +2,11 @@ var path = require( "path" )
   , logger = require( "logmimosa")
   , sinon = require( "sinon" )
   , utils = require( "../../utils" )
-  , buildCommandPath = path.join( process.cwd(), "lib", "command", "build" )
-  , buildCommand = require( buildCommandPath )
+  , cleanCommandPath = path.join( process.cwd(), "lib", "command", "clean" )
+  , cleanCommand = require( cleanCommandPath )
   ;
 
-describe("Mimosa's build command", function() {
-
+describe("Mimosa's clean command", function() {
   var loggerGreenSpy
     , loggerBlueSpy
     ;
@@ -23,16 +22,18 @@ describe("Mimosa's build command", function() {
   });
 
   it("will print help", function( done ) {
+
     var program = utils.fake.program();
     program.on = function(flag, cb) {
       expect(flag).to.eql("--help");
       cb();
-      expect(loggerGreenSpy.callCount).to.be.above(10);
-      expect(loggerBlueSpy.callCount).to.be.above(10);
+      expect(loggerGreenSpy.callCount).to.be.above(5);
+      expect(loggerBlueSpy.callCount).to.be.above(5);
       done()
       return program;
     };
-    buildCommand( program );
+
+    cleanCommand( program );
   });
 
 });

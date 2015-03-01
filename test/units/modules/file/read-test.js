@@ -3,14 +3,14 @@ var fs = require( "fs" )
   , sinon = require( "sinon" )
   , utils = require( path.join(process.cwd(), "test", "utils") )
   , readModule = require( path.join(process.cwd(), "lib", "modules", "file", "read") )
-  , fakeMimosaConfig = utils.fakeMimosaConfig();
+  , fakeMimosaConfig = utils.fake.mimosaConfig();
   ;
 
 describe( "Mimosa file reading workflow module", function(){
   var readFunction;
 
   before(function(done) {
-    utils.testRegistration( readModule, function( func ) {
+    utils.test.registration( readModule, function( func ) {
       readFunction = func;
       done();
     });
@@ -51,7 +51,7 @@ describe( "Mimosa file reading workflow module", function(){
 
     it( "will not attempt to read any files", function() {
       var readFileSpy = sinon.spy( fs, "readFile" );
-      var options = {files:[utils.fileFixture()]};
+      var options = {files:[utils.fake.file()]};
       options.files[0].inputFileName = null;
       readFunction( fakeMimosaConfig, options, function(){} );
       expect( readFileSpy.called ).to.be.false;
@@ -69,7 +69,7 @@ describe( "Mimosa file reading workflow module", function(){
         var logSpy = sinon.spy( fakeMimosaConfig.log, "error" );
 
         var options = {
-          files: [utils.fileFixture()]
+          files: [utils.fake.file()]
         };
 
         var readFileStub = sinon.stub( fs, "readFile", function(name, cb){
@@ -105,7 +105,7 @@ describe( "Mimosa file reading workflow module", function(){
         var logSpy = sinon.spy( fakeMimosaConfig.log, "error" );
 
         var options = {
-          files: [utils.fileFixture()]
+          files: [utils.fake.file()]
         };
 
         var readFileStub = sinon.stub( fs, "readFile", function(name, cb){
@@ -135,7 +135,7 @@ describe( "Mimosa file reading workflow module", function(){
       it("will return a buffer for non javascript/template/css files", function(done) {
         var lifecycleSpy = sinon.spy();
         var options = {
-          files: [utils.fileFixture()]
+          files: [utils.fake.file()]
         };
 
         if ( !withBuffer ) {

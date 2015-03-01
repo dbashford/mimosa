@@ -1,5 +1,9 @@
-var sinon  = require( "sinon" )
-  , utils = require( "./utils" )
+var path = require( "path" )
+  , sinon  = require( "sinon" )
+  , utils = require( "../utils" )
+  , configurerPath = path.join(process.cwd(), "lib", "util", "configurer")
+  , watcherPath = path.join(process.cwd(), "lib", "util", "watcher")
+  , cleanerPath = path.join(process.cwd(), "lib", "util", "cleaner")
   ;
 
 var _spyOutput = function( spy ) {
@@ -44,8 +48,8 @@ var _buildWatchTest = function( testOpts ) {
     });
 
     it(testOpts.testSpec, function(done){
-      var configurer = require( '../../lib/util/configurer' );
-      var Watcher = require( '../../lib/util/watcher' );
+      var configurer = require( configurerPath );
+      var Watcher = require( watcherPath );
 
       configurer({build:!testOpts.isWatch}, function( config, modules ) {
         config.isClean = false;
@@ -109,9 +113,9 @@ var cleanTest = function( testOpts ) {
     });
 
     it(testOpts.testSpec, function(done){
-      var configurer = require( '../../lib/util/configurer' );
-      var Cleaner = require( '../../lib/util/cleaner' );
-      var Watcher = require( '../../lib/util/watcher' );
+      var configurer = require( configurerPath );
+      var Cleaner = require( cleanerPath );
+      var Watcher = require( watcherPath );
 
       configurer({clean:true}, function( config, modules ) {
         config.isClean = true;

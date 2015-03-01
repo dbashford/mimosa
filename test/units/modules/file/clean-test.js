@@ -4,7 +4,7 @@ var fs = require( "fs" )
   , wrench = require( "wrench" )
   , utils = require( path.join(process.cwd(), "test", "utils") )
   , cleanModule = require( path.join(process.cwd(), "lib", "modules", "file", "clean") )
-  , fakeMimosaConfig = utils.fakeMimosaConfig();
+  , fakeMimosaConfig = utils.fake.mimosaConfig();
   ;
 
 describe( "Mimosa file cleaning workflow module", function(){
@@ -21,7 +21,7 @@ describe( "Mimosa file cleaning workflow module", function(){
 
   before(function(done) {
     spy = sinon.spy();
-    utils.testRegistration( cleanModule, function( func ) {
+    utils.test.registration( cleanModule, function( func ) {
       cleanFunction = func;
       done();
     }, true);
