@@ -9,6 +9,7 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-server](https://github.com/dbashford/mimosa-server) has had its `packageJSONDir` property removed and the requirement of a `package.json` eliminated. A new property, `transpiler`, has been added. If you are using, for instance, CoffeeScript on the server, then you will want to set the `transpiler` property to the `require`d transpiler library. Ex: `transpiler: require('coffee-script')`
 
 ### Major Changes
+* __New Module__ [mimosa-replace](https://github.com/dpeukert/mimosa-replace) does simple text replacement either before or after your files have been compiled.
 * __New Module__ [mimosa-phantomcss](https://github.com/dbazile/mimosa-phantomcss) will run visual testing using [PhantomCSS](https://github.com/Huddle/PhantomCSS) and Casper.
 * __New Module__ [mimosa-babel](https://github.com/YoloDev/mimosa-babel) is a new JavaScript compiler that wraps the [babel](https://babeljs.io/) (formerly 6to5) transpiler. babel turns your ES6 JavaScript to ES5 JavaScript.
 * __New Module__ [mimosa-npm-web-dependencies](https://github.com/dbashford/mimosa-npm-web-dependencies) will let you install NPM dependencies into your web app, and if that dependency has a big dependency tree, it will use browserify to bundle the dependency before injecting it.
