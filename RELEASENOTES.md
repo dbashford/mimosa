@@ -50,6 +50,7 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-coffeescript](https://github.com/dbashford/mimosa-coffeescript/), [mimosa-iced-coffeescript](https://github.com/dbashford/mimosa-iced-coffeescript/), and [mimosa-livescript](https://github.com/dbashford/mimosa-livescript/) have been updated to the latest compiler versions.
 * [mimosa-less](https://github.com/dbashford/mimosa-less/) has been updated to the latest less.
 * [mimosa-less](https://github.com/dbashford/mimosa-less/) had issues with inline source maps addressed.
+* [mimosa-less #5](https://github.com/dbashford/mimosa-less/pull/5) added plugin support for the less compiler.
 * [mimosa-react #1](https://github.com/dbashford/mimosa-react/pull/1) addressed a bug involving empty output.
 * [mimosa-react #2](https://github.com/dbashford/mimosa-react/pull/2) removed the JSX pragma from compiled JSX files.
 * [mimosa-ember-module-import #3](https://github.com/dbashford/mimosa-ember-module-import/issues/3) normalizes paths written to the file system in the cache to unix style. This prevents cache diffs when teams working on a project are using both Windows and nix.
