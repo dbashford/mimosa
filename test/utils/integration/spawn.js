@@ -33,24 +33,46 @@ var _mimosaCommandTestWrapper = function( testOpts, runCommand ) {
 var spawnWatchTest = function( testOpts ) {
   var runCommand = function( projectData, cb ) {
     var data = ""
+      , errData = ""
       , finished = false
-      , mimosaProc = spawn(
-        'mimosa',
-        [['watch', testOpts.watchFlags || ""].join( " " )]
-      );
+      , killed = false
+      , flags = testOpts.watchFlags
+
+    var flags = ['watch'];
+    if (testOpts.watchFlags) {
+      flags = [].concat.apply(flags, testOpts.watchFlags.split(" "))
+    }
+
+    var mimosaProc = spawn( 'mimosa', flags );
 
     var killAndTest = function() {
+      killed = true;
       setTimeout( function() {
         mimosaProc.kill("SIGINT");
-        testOpts.asserts( data, projectData, cb );
+        // not going to bother collecting all the outputs
+        var _data = {
+          error:null,
+          sout:data,
+          serr:errData
+        };
+        testOpts.asserts( _data, projectData, cb );
       }, 100);
     };
 
+    mimosaProc.on('exit', function() {
+      if (!killed) {
+        killAndTest();
+      }
+    });
+
+    mimosaProc.stderr.on( 'data', function ( _data ) {
+      errData += _data;
+    });
+
     mimosaProc.stdout.on( 'data', function ( _data ) {
-      //console.log(_data)
       data += _data;
       var len = 0;
-      var successes = data.match( /Success/g );
+      var successes = data.match( /Wrote file/g );
       if (successes) {
         len = successes.length;
       }
@@ -62,7 +84,7 @@ var spawnWatchTest = function( testOpts ) {
           // to allow build to transition to watch fully
           setTimeout( function() {
             testOpts.postWatch(projectData, killAndTest);
-          }, 800);
+          }, 600);
         } else {
           killAndTest();
         }

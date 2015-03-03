@@ -1,7 +1,6 @@
 var path = require( "path" )
   , fs = require( "fs" )
   , sinon = require( "sinon" )
-  , wrench = require( "wrench" )
   , logger = require( "logmimosa" )
   , cleanCommandPath = path.join( process.cwd(), "lib", "command", "clean" )
   , cleanCommand = require( cleanCommandPath )
@@ -70,6 +69,74 @@ describe("Mimosa's clean command", function() {
 
     it("but not any files it does not know about", function() {
       expect(fs.existsSync(extraFile)).to.be.true;
+    });
+  });
+
+  describe("will force clean files", function() {
+    var cwd
+      , projectData
+      , fakeProgram
+      , extraFile
+      , loggerSpy
+      , testOpts = {
+        configFile: "commands/clean-no-output",
+        project: "basic-built"
+      };
+
+    before(function() {
+      projectData = utils.setup.projectData( testOpts.configFile );
+      utils.setup.cleanProject( projectData );
+      utils.setup.project( projectData, testOpts.project );
+      cwd = process.cwd();
+      process.chdir( projectData.projectDir );
+      fakeProgram = utils.fake.program();
+      fakeProgram.action = function( funct ) {
+        funct( {force:true} );
+        return fakeProgram;
+      }
+      var processExitStub = sinon.stub(process, "exit", function(){});
+      loggerSpy = sinon.spy(logger, "success")
+    });
+
+    afterEach(function() {
+      loggerSpy.reset();
+    });
+
+    after(function() {
+      utils.setup.cleanProject( projectData );
+      process.chdir(cwd);
+      process.exit.restore();
+      logger.success.restore()
+    });
+
+    it("when there is an output directory", function(done) {
+      cleanCommand( fakeProgram );
+      setTimeout(function() {
+        var calledWithAll = loggerSpy.args.map(function(args){
+          return args[0];
+        });
+        var deleted = calledWithAll.filter(function(calledWith){
+          return /has been removed/.test(calledWith);
+        });
+
+        expect(deleted.length).to.eql(1);
+        done();
+      }, 150)
+    });
+
+    describe("", function() {
+      it("but not break when there isn't an output directory", function(done){
+        cleanCommand( fakeProgram );
+        setTimeout(function() {
+          var calledSuccess = loggerSpy.args.map(function(args){
+            return args[0];
+          });
+
+          expect(calledSuccess.length).to.eql(1);
+          expect(calledSuccess[0].indexOf("Compiled directory already deleted")).to.eql(0);
+          done();
+        }, 150)
+      });
     });
   });
 

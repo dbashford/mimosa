@@ -96,14 +96,14 @@ var missingProfile = function( command ) {
 
 // Positive test to ensure a command can handle all the flags
 // it is supposed to handle
-var handlesFlags = function( command, flagsFull, flagsShort, asserts ) {
+var handlesFlags = function( command, flagsFull, flagsShort, asserts, fileSuccessCount ) {
   describe("is configured to accept the appropriate flags (will not error out)", function() {
 
     var opts1 = {
       testSpec: flagsShort,
       configFile: "commands/" + command + "-flags-short",
       project: "basic",
-      asserts: asserts
+      asserts: asserts,
     };
 
     var opts2 = {
@@ -112,6 +112,11 @@ var handlesFlags = function( command, flagsFull, flagsShort, asserts ) {
       project: "basic",
       asserts: asserts
     };
+
+    if (fileSuccessCount) {
+      opts1.fileSuccessCount = fileSuccessCount;
+      opts2.fileSuccessCount = fileSuccessCount;
+    }
 
     opts1[command + "Flags"] = flagsShort;
     opts2[command + "Flags"] = flagsFull;
@@ -188,7 +193,7 @@ var removesDotMimosa = function( commandString, command ) {
         commandFunct = funct;
         return fakeProgram;
       };
-      var processExitStub = sinon.stub(process, "exit", function(){});
+      sinon.stub(process, "exit", function(){});
 
       // create folder
       mimosaFolder = path.join( projectData.projectDir, ".mimosa", "bower" );

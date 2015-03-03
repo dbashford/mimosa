@@ -14,13 +14,14 @@ describe("Mimosa's build command", function() {
     var cwd
       , projectData
       , fakeProgram
-      , loggerSpy = sinon.spy(logger, "success")
+      , loggerSpy
       , testOpts = {
         configFile: "commands/build-command",
         project: "basic"
       };
 
     before(function(done){
+      loggerSpy = sinon.spy(logger, "success")
       projectData = utils.setup.projectData( testOpts.configFile );
       utils.setup.cleanProject( projectData );
       utils.setup.project( projectData, testOpts.project );
