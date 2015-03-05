@@ -27,8 +27,10 @@ watch = (opts) ->
         wrench =  require 'wrench'
         wrench.rmdirSyncRecursive config.watch.compiledDir
         logger.success "[[ #{config.watch.compiledDir} ]] has been removed"
-        instWatcher()
+
+      instWatcher()
     else if opts.clean or config.needsClean
+
       config.isClean = true
       Cleaner = require '../util/cleaner'
       new Cleaner(config, modules, instWatcher)

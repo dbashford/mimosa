@@ -47,8 +47,6 @@ deleteMod = (name, opts) ->
         logger.error serr
       logger.success "Uninstall of [[ #{name} ]] successful"
 
-    # logger.debug "NPM UNINSTALL standard out\n#{sout}"
-    # logger.debug "NPM UNINSTALL standard err\n#{serr}"
     process.chdir currentDir
     process.exit 0
 

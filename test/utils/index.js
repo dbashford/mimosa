@@ -13,7 +13,9 @@ module.exports = {
   },
 
   util: {
-    filesAndDirsInFolder: utils.filesAndDirsInFolder
+    filesAndDirsInFolder: utils.filesAndDirsInFolder,
+    stubChokidar: utils.stubChokidar,
+    restoreChokidar: utils.restoreChokidar
   },
 
   fake: {

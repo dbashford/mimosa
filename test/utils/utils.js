@@ -2,6 +2,7 @@ var crypto = require( "crypto" )
   , path = require( "path" )
   , fs = require( "fs" )
   , wrench = require( "wrench" )
+  , sinon = require( "sinon" )
   , _ = require( "lodash" )
   , rimraf = require( "rimraf" )
   , fakeMimosaConfigObj = {
@@ -54,6 +55,25 @@ var fileFixture = function() {
 
 var fakeMimosaConfig = function() {
   return _.cloneDeep(fakeMimosaConfigObj);
+};
+
+var stubChokidar = function() {
+  var chokidar = require( "chokidar" );
+  var stub = sinon.stub(chokidar, "watch", function() {
+    var noop = function(){};
+    return {
+      on: noop,
+      close: noop
+    };
+  })
+  return stub;
+};
+
+var restoreChokidar = function() {
+  var chokidar = require( "chokidar" );
+  if (chokidar.watch.restore) {
+    chokidar.watch.restore();
+  }
 };
 
 var testRegistration = function( mod, cb, noExtensions ) {
@@ -146,5 +166,7 @@ module.exports = {
   setupProject: setupProject,
   cleanProject: cleanProject,
   filesAndDirsInFolder: filesAndDirsInFolder,
-  fakeProgram: fakeProgram
+  fakeProgram: fakeProgram,
+  stubChokidar: stubChokidar,
+  restoreChokidar: restoreChokidar
 };
