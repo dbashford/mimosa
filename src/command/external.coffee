@@ -1,3 +1,7 @@
+# can be called with...
+# (buildFirst, isDebug, callback), deprecated
+# (buildFirst, callback), deprecated
+# (opts, callback)
 
 registerCommand = (buildFirst, isDebug, callback) ->
   logger = require 'logmimosa'
@@ -6,7 +10,6 @@ registerCommand = (buildFirst, isDebug, callback) ->
   opts = {}
 
   if callback
-    # full (buildFirst, isDebug, callback)
     opts.mdebug = isDebug
     opts.buildFirst = buildFirst
   else
@@ -45,7 +48,7 @@ registerCommand = (buildFirst, isDebug, callback) ->
 module.exports = (program) ->
   modules = require '../modules'
   for mod in modules.modulesWithCommands()
-    # older API just took two commands, newer API,
+    # older API just took two parameters, newer API,
     # as of 2.1.10 allows passing of logger
     if mod.registerCommand.length is 2
       mod.registerCommand program, registerCommand
