@@ -195,5 +195,6 @@ describe("Mimosa's watch command", function() {
     },
     5
   );
+  utils.test.command.flags.help( watchCommand );
 
 });

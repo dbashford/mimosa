@@ -123,11 +123,8 @@ describe("Mimosa's build command", function() {
   });
 
   utils.test.command.flags.removesDotMimosa( "build", buildCommand );
-
   utils.test.command.flags.debugSetup( "build", buildCommand );
-
   utils.test.command.flags.missingProfile( "build" );
-
   utils.test.command.flags.handlesFlags(
     "build",
     "--optimize --minify --package --install --errorout --cleanall --mdebug",
@@ -137,7 +134,7 @@ describe("Mimosa's build command", function() {
       done();
     }
   );
-
   utils.test.command.flags.invalid("build");
+  utils.test.command.flags.help( buildCommand );
 
 });

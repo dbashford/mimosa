@@ -141,11 +141,8 @@ describe("Mimosa's clean command", function() {
   });
 
   utils.test.command.flags.removesDotMimosa( "clean", cleanCommand );
-
   utils.test.command.flags.debugSetup( "clean", cleanCommand );
-
   utils.test.command.flags.missingProfile( "clean" )
-
   utils.test.command.flags.handlesFlags(
     "clean",
     "--force --cleanall --mdebug",
@@ -155,6 +152,7 @@ describe("Mimosa's clean command", function() {
       done();
     }
   );
-
   utils.test.command.flags.invalid("clean");
+  utils.test.command.flags.help( cleanCommand );
+
 });
