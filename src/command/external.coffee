@@ -1,29 +1,5 @@
-# can be called with...
-# (buildFirst, isDebug, callback), deprecated
-# (buildFirst, callback), deprecated
-# (opts, callback)
-
-registerCommand = (buildFirst, isDebug, callback) ->
+retrieveConfig = (opts, callback) ->
   logger = require 'logmimosa'
-
-  # manage multiple formats
-  opts = {}
-
-  if callback
-    opts.mdebug = isDebug
-    opts.buildFirst = buildFirst
-  else
-    # is 2 parameters, can be (opts, callback) or
-    # older (buildFirst, callback)
-
-    callback = isDebug
-    if typeof buildFirst is "boolean"
-      # is (buildFirst, callback)
-      opts.mdebug = false
-      opts.buildFirst = buildFirst
-    else
-      # is (opts, callback)
-      opts = buildFirst
 
   if opts.mdebug
     logger.setDebug()
@@ -48,10 +24,5 @@ registerCommand = (buildFirst, isDebug, callback) ->
 module.exports = (program) ->
   modules = require '../modules'
   for mod in modules.modulesWithCommands()
-    # older API just took two parameters, newer API,
-    # as of 2.1.10 allows passing of logger
-    if mod.registerCommand.length is 2
-      mod.registerCommand program, registerCommand
-    else
-      logger = require 'logmimosa'
-      mod.registerCommand program, logger, registerCommand
+    logger = require 'logmimosa'
+    mod.registerCommand program, logger, retrieveConfig
