@@ -99,45 +99,47 @@ describe("Mimosa's external command registration", function() {
 
   });
 
-  describe("will clean and build the application, then pass config", function() {
-    var cwd
-      , projectData
-      , testOpts = {
-        configFile: "external/build-first",
-        project: "basic-with-command-module"
-      }
-      ;
+  // no spawn tests on travis
+  if (__dirname.indexOf("/travis/") === -1) {
+    describe("will clean and build the application, then pass config", function() {
+      var cwd
+        , projectData
+        , testOpts = {
+          configFile: "external/build-first",
+          project: "basic-with-command-module"
+        }
+        ;
 
-    before(function() {
-      projectData = utils.setup.projectData( testOpts.configFile );
-      utils.setup.cleanProject( projectData );
-      utils.setup.project( projectData, testOpts.project );
-      cwd = process.cwd();
-      process.chdir( projectData.projectDir );
+      before(function() {
+        projectData = utils.setup.projectData( testOpts.configFile );
+        utils.setup.cleanProject( projectData );
+        utils.setup.project( projectData, testOpts.project );
+        cwd = process.cwd();
+        process.chdir( projectData.projectDir );
 
-    });
-
-    after(function() {
-      utils.setup.cleanProject( projectData );
-      process.chdir(cwd);
-    });
-
-    it("when buildFirst is true", function(done) {
-      var mimosaProc = spawn( 'mimosa', ['custom'] )
-        , data = "";
-      mimosaProc.stdout.on( 'data', function ( _data ) {
-        data += _data.toString();
       });
-      mimosaProc.on('exit', function() {
-        expect(data.match(/Wrote file/g).length).to.eql(5);
-        var lines = data.split("\n");
-        var lastLine = lines[lines.length -2]
-        expect(/THIS IS AFTER THE BUILD$/.test(lastLine)).to.be.true;
-        done();
+
+      after(function() {
+        utils.setup.cleanProject( projectData );
+        process.chdir(cwd);
+      });
+
+      it("when buildFirst is true", function(done) {
+        var mimosaProc = spawn( 'mimosa', ['custom'] )
+          , data = "";
+        mimosaProc.stdout.on( 'data', function ( _data ) {
+          data += _data.toString();
+        });
+        mimosaProc.on('exit', function() {
+          expect(data.match(/Wrote file/g).length).to.eql(5);
+          var lines = data.split("\n");
+          var lastLine = lines[lines.length -2]
+          expect(/THIS IS AFTER THE BUILD$/.test(lastLine)).to.be.true;
+          done();
+        });
       });
     });
-
-  });
+  }
 
 
 });
