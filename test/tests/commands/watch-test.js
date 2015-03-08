@@ -14,7 +14,6 @@ var willBuildFiles = function( testOpts ) {
   describe(spec, function( ) {
     var cwd
       , projectData
-      , fakeProgram
       , loggerSpy
       ;
 
@@ -25,7 +24,7 @@ var willBuildFiles = function( testOpts ) {
       utils.setup.project( projectData, testOpts.project );
       cwd = process.cwd();
       process.chdir( projectData.projectDir );
-      fakeProgram = utils.fake.program();
+      var fakeProgram = utils.fake.program();
       fakeProgram.action = function( funct ) {
         var flags = testOpts.flags || {};
         funct( flags );
