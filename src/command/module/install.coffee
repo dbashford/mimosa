@@ -8,37 +8,6 @@ logger = require 'logmimosa'
 mimosaPath = path.join __dirname, '..', '..', '..'
 currentDir = process.cwd()
 
-install = (name, opts) ->
-  if opts.mdebug
-    opts.debug = true
-    logger.setDebug()
-    process.env.DEBUG = true
-
-  if name?
-    unless name? and name.indexOf('mimosa-') is 0
-      return logger.error "Can only install 'mimosa-' prefixed modules with mod:install (ex: mimosa-server)."
-
-    dirName = if name.indexOf('@') > 7
-      name.substring(0, name.indexOf('@'))
-    else
-      name
-
-    _doNPMInstall name, dirName
-  else
-
-    try
-      pack = require path.join currentDir, 'package.json'
-    catch err
-      return logger.error "Unable to find package.json, or badly formatted: #{err}"
-
-    unless pack.name? and pack.version?
-      return logger.error "package.json missing either name or version"
-
-    unless pack.name.indexOf('mimosa-') is 0
-      return logger.error "package.json name is [[ #{pack.name} ]]. Can only install 'mimosa-' prefixed modules with mod:install (ex: mimosa-server). "
-
-    _doLocalInstall()
-
 _installModule = (name, done) ->
   logger.info "Installing module [[ #{name} ]] into Mimosa."
   installString = "npm install \"#{name}\" --save"
@@ -55,10 +24,6 @@ _installModule = (name, done) ->
     logger.debug "NPM INSTALL standard err\n#{serr}"
 
     done(err)
-
-###
-NPM Install
-###
 
 _doNPMInstall = (name, dirName) ->
   process.chdir mimosaPath
@@ -111,10 +76,6 @@ _revertInstall = (oldVersion, name) ->
     if fs.existsSync modPath
       wrench.rmdirSyncRecursive modPath
 
-###
-Local Dev Install
-###
-
 _doLocalInstall = ->
   _testLocalInstall ->
     dirName = currentDir.replace(path.dirname(currentDir) + path.sep, '')
@@ -140,16 +101,43 @@ _testLocalInstall = (callback) ->
       logger.error "Attempted to use installed module and module failed\n#{err}"
       console.log err
 
-###
-Command
-###
+install = (name, opts) ->
+  if opts.mdebug
+    opts.debug = true
+    logger.setDebug()
+    process.env.DEBUG = true
 
-register = (program, callback) ->
+  if name
+    if name.indexOf('mimosa-') isnt 0
+      return logger.error "Can only install 'mimosa-' prefixed modules with mod:install (ex: mimosa-server)."
+
+    dirName = if name.indexOf('@') > 7
+      name.substring(0, name.indexOf('@'))
+    else
+      name
+
+    _doNPMInstall name, dirName
+  else
+
+    try
+      pack = require path.join currentDir, 'package.json'
+    catch err
+      return logger.error "Unable to find package.json, or badly formatted: #{err}"
+
+    unless pack.name? and pack.version?
+      return logger.error "package.json missing either name or version"
+
+    unless pack.name.indexOf('mimosa-') is 0
+      return logger.error "package.json name is [[ #{pack.name} ]]. Can only install 'mimosa-' prefixed modules with mod:install (ex: mimosa-server). "
+
+    _doLocalInstall()
+
+register = (program) ->
   program
     .command('mod:install [name]')
     .option("-D, --mdebug", "run in debug mode")
     .description("install a Mimosa module into your Mimosa")
-    .action(callback)
+    .action( install )
     .on '--help', =>
       logger.green('  The \'mod:install\' command will install a Mimosa module into Mimosa. It does not install')
       logger.green('  the module into your project, it just makes it available to be used by Mimosa\'s commands.')
@@ -164,5 +152,4 @@ register = (program, callback) ->
       logger.green('  package.json, without providing a name.')
       logger.blue( '\n    $ mimosa mod:install\n')
 
-module.exports = (program) ->
-  register program, install
+module.exports = register

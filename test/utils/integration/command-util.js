@@ -128,7 +128,7 @@ var handlesFlags = function( command, flagsFull, flagsShort, asserts, fileSucces
 
 // ensures that when the debug flag is set for a command
 // that the proper debugging is set up
-var debugSetup = function( commandString, command ) {
+var debugSetup = function( commandString, command, val ) {
   describe("when debug flag is ticked", function() {
     var cwd
       , projectData
@@ -149,7 +149,11 @@ var debugSetup = function( commandString, command ) {
 
       var fakeProgram = utils.fakeProgram();
       fakeProgram.action = function( funct ) {
-        funct( {mdebug: true} );
+        if ( val ) {
+          funct( val, {mdebug: true} );
+        } else {
+          funct( {mdebug: true} );
+        }
         return fakeProgram;
       }
       command( fakeProgram );
