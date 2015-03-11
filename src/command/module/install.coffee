@@ -1,107 +1,108 @@
-path =   require 'path'
-fs =     require 'fs'
-{exec} = require 'child_process'
+install = (name, opts) ->
 
-wrench = require 'wrench'
-logger = require 'logmimosa'
+  path =   require 'path'
+  fs =     require 'fs'
+  {exec} = require 'child_process'
 
-mimosaPath = path.join __dirname, '..', '..', '..'
-currentDir = process.cwd()
+  wrench = require 'wrench'
+  logger = require 'logmimosa'
 
-_installModule = (name, done) ->
-  logger.info "Installing module [[ #{name} ]] into Mimosa."
-  installString = "npm install \"#{name}\" --save"
-  exec installString, (err, sout, serr) =>
-    if err
-      logger.error "Error installing module"
-      logger.error err
-    else
-      console.log sout
-      console.log serr
-      logger.success "Install of [[ #{name} ]] successful"
+  mimosaPath = path.join __dirname, '..', '..', '..'
+  currentDir = process.cwd()
 
-    logger.debug "NPM INSTALL standard out\n#{sout}"
-    logger.debug "NPM INSTALL standard err\n#{serr}"
+  _installModule = (name, done) ->
+    logger.info "Installing module [[ #{name} ]] into Mimosa."
+    installString = "npm install \"#{name}\" --save"
+    exec installString, (err, sout, serr) =>
+      if err
+        logger.error "Error installing module"
+        logger.error err
+      else
+        console.log sout
+        console.log serr
+        logger.success "Install of [[ #{name} ]] successful"
 
-    done(err)
+      logger.debug "NPM INSTALL standard out\n#{sout}"
+      logger.debug "NPM INSTALL standard err\n#{serr}"
 
-_doNPMInstall = (name, dirName) ->
-  process.chdir mimosaPath
-  oldVersion = _prepareForNPMInstall dirName
-  _installModule name, _doneNPMInstall(dirName, oldVersion)
+      done(err)
 
-_doneNPMInstall = (name, oldVersion) ->
-  (err) ->
-    if err
-      _revertInstall oldVersion, name
-
-    backupPath = path.join mimosaPath, "node_modules", name + "_____backup"
-    if fs.existsSync backupPath
-      wrench.rmdirSyncRecursive backupPath
-
-    process.chdir currentDir
-    process.exit 0
-
-_prepareForNPMInstall = (name) ->
-  beginPath = path.join mimosaPath, "node_modules", name
-  oldVersion = null
-  if fs.existsSync beginPath
-    endPath = path.join mimosaPath, "node_modules", name + "_____backup"
-    wrench.copyDirSyncRecursive beginPath, endPath
-
-    mimosaPackagePath = path.join mimosaPath, 'package.json'
-    mimosaPackage = require mimosaPackagePath
-    oldVersion = mimosaPackage.dependencies[name]
-    delete mimosaPackage.dependencies[name]
-    logger.debug "New mimosa dependencies:\n #{JSON.stringify(mimosaPackage, null, 2)}"
-    fs.writeFileSync mimosaPackagePath, JSON.stringify(mimosaPackage, null, 2), 'ascii'
-
-  oldVersion
-
-_revertInstall = (oldVersion, name) ->
-  backupPath = path.join mimosaPath, "node_modules", name + "_____backup"
-
-  # if backup path exists, put that code back, otherwise get rid of module
-  if fs.existsSync backupPath
-    endPath = path.join mimosaPath, "node_modules", name
-    wrench.copyDirSyncRecursive backupPath, endPath
-
-    mimosaPackagePath = path.join mimosaPath, 'package.json'
-    mimosaPackage = require mimosaPackagePath
-    mimosaPackage.dependencies[name] = oldVersion
-    logger.debug "New mimosa dependencies:\n #{JSON.stringify(mimosaPackage, null, 2)}"
-    fs.writeFileSync mimosaPackagePath, JSON.stringify(mimosaPackage, null, 2), 'ascii'
-  else
-    modPath = path.join mimosaPath, "node_modules", name
-    if fs.existsSync modPath
-      wrench.rmdirSyncRecursive modPath
-
-_doLocalInstall = ->
-  _testLocalInstall ->
-    dirName = currentDir.replace(path.dirname(currentDir) + path.sep, '')
+  _doNPMInstall = (name, dirName) ->
     process.chdir mimosaPath
-    _installModule currentDir, ->
+    oldVersion = _prepareForNPMInstall dirName
+    _installModule name, _doneNPMInstall(dirName, oldVersion)
+
+  _doneNPMInstall = (name, oldVersion) ->
+    (err) ->
+      if err
+        _revertInstall oldVersion, name
+
+      backupPath = path.join mimosaPath, "node_modules", name + "_____backup"
+      if fs.existsSync backupPath
+        wrench.rmdirSyncRecursive backupPath
+
       process.chdir currentDir
       process.exit 0
 
-_testLocalInstall = (callback) ->
-  logger.info "Testing local install in place."
-  exec "npm install", (err, sout, serr) =>
-    if err
-      return logger.error "Could not install module locally: \n #{err}"
+  _prepareForNPMInstall = (name) ->
+    beginPath = path.join mimosaPath, "node_modules", name
+    oldVersion = null
+    if fs.existsSync beginPath
+      endPath = path.join mimosaPath, "node_modules", name + "_____backup"
+      wrench.copyDirSyncRecursive beginPath, endPath
 
-    logger.debug "NPM INSTALL standard out\n#{sout}"
-    logger.debug "NPM INSTALL standard err\n#{serr}"
+      mimosaPackagePath = path.join mimosaPath, 'package.json'
+      mimosaPackage = require mimosaPackagePath
+      oldVersion = mimosaPackage.dependencies[name]
+      delete mimosaPackage.dependencies[name]
+      logger.debug "New mimosa dependencies:\n #{JSON.stringify(mimosaPackage, null, 2)}"
+      fs.writeFileSync mimosaPackagePath, JSON.stringify(mimosaPackage, null, 2), 'ascii'
 
-    try
-      require currentDir
-      logger.info "Local install successful."
-      callback()
-    catch err
-      logger.error "Attempted to use installed module and module failed\n#{err}"
-      console.log err
+    oldVersion
 
-install = (name, opts) ->
+  _revertInstall = (oldVersion, name) ->
+    backupPath = path.join mimosaPath, "node_modules", name + "_____backup"
+
+    # if backup path exists, put that code back, otherwise get rid of module
+    if fs.existsSync backupPath
+      endPath = path.join mimosaPath, "node_modules", name
+      wrench.copyDirSyncRecursive backupPath, endPath
+
+      mimosaPackagePath = path.join mimosaPath, 'package.json'
+      mimosaPackage = require mimosaPackagePath
+      mimosaPackage.dependencies[name] = oldVersion
+      logger.debug "New mimosa dependencies:\n #{JSON.stringify(mimosaPackage, null, 2)}"
+      fs.writeFileSync mimosaPackagePath, JSON.stringify(mimosaPackage, null, 2), 'ascii'
+    else
+      modPath = path.join mimosaPath, "node_modules", name
+      if fs.existsSync modPath
+        wrench.rmdirSyncRecursive modPath
+
+  _doLocalInstall = ->
+    _testLocalInstall ->
+      dirName = currentDir.replace(path.dirname(currentDir) + path.sep, '')
+      process.chdir mimosaPath
+      _installModule currentDir, ->
+        process.chdir currentDir
+        process.exit 0
+
+  _testLocalInstall = (callback) ->
+    logger.info "Testing local install in place."
+    exec "npm install", (err, sout, serr) =>
+      if err
+        return logger.error "Could not install module locally: \n #{err}"
+
+      logger.debug "NPM INSTALL standard out\n#{sout}"
+      logger.debug "NPM INSTALL standard err\n#{serr}"
+
+      try
+        require currentDir
+        logger.info "Local install successful."
+        callback()
+      catch err
+        logger.error "Attempted to use installed module and module failed\n#{err}"
+        console.log err
+
   if opts.mdebug
     opts.debug = true
     logger.setDebug()
@@ -139,6 +140,7 @@ register = (program) ->
     .description("install a Mimosa module into your Mimosa")
     .action( install )
     .on '--help', =>
+      logger = require("logmimosa")
       logger.green('  The \'mod:install\' command will install a Mimosa module into Mimosa. It does not install')
       logger.green('  the module into your project, it just makes it available to be used by Mimosa\'s commands.')
       logger.green('  You can discover new modules using the \'mod:search\' command.  Once you know the module you')
