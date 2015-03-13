@@ -52,7 +52,8 @@ install = (name, opts) ->
       wrench.copyDirSyncRecursive beginPath, endPath
 
       mimosaPackagePath = path.join mimosaPath, 'package.json'
-      mimosaPackage = require mimosaPackagePath
+      # don't use require as it caches
+      mimosaPackage = JSON.parse(fs.readFileSync(mimosaPackagePath, "utf8"))
       oldVersion = mimosaPackage.dependencies[name]
       delete mimosaPackage.dependencies[name]
       logger.debug "New mimosa dependencies:\n #{JSON.stringify(mimosaPackage, null, 2)}"
