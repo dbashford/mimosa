@@ -22,7 +22,7 @@ deleteMod = (name, opts) ->
     catch err
       return logger.error "Unable to find package.json, or badly formatted: #{err}"
 
-    unless pack.name?
+    unless pack.name and pack.version
       return logger.error "package.json missing either name or version"
 
     name = pack.name
@@ -40,7 +40,6 @@ deleteMod = (name, opts) ->
     return logger.error "Module named [[ #{name} ]] is not currently installed so it cannot be uninstalled."
 
   process.chdir mimosaPath
-
   uninstallString = "npm uninstall #{name} --save"
   exec uninstallString, (err, sout, serr) =>
     if err
