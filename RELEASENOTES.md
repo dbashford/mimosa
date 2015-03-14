@@ -59,6 +59,12 @@ As updates to external modules are listed here, know that you can use them right
  installed file so that they do not cause diffs between OSs.
 * [mimosa-require #45](https://github.com/dbashford/mimosa-require/issues/45) added a `removeCombined` flag that will allow you to turn off the removal of combined/concatenated assets during build.  Will default to `true`.
 
+## 2.3.32 - March 14 2014
+
+### Minor Changes
+* [mimosa #441](https://github.com/dbashford/mimosa/issues/441) Allowing dot files through workflows.
+* [mimosa-copy #6](https://github.com/dbashford/mimosa-copy/pull/6) Added `php` to list of valid copy extensions.
+
 ## 2.3.31 - February 11 2014
 
 ### Minor Changes
