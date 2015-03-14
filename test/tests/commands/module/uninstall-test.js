@@ -48,7 +48,7 @@ describe("Mimosa's mod:uninstall command", function() {
         });
         executeCommand();
         expect(loggerErrorStub.calledOnce).to.be.true;
-        expect(loggerErrorStub.args[0][0].indexOf("Unable to find package.json, or badly formatted:") === 0).to.be.true;
+        expect(loggerErrorStub.args[0][0].indexOf("Unable to find package.json, or badly formatted") === 0).to.be.true;
         fs.readFileSync.restore();
       });
 
