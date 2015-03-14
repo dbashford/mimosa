@@ -414,7 +414,6 @@ describe("Mimosa's module install command", function() {
         logErrorSpy.reset();
         execStub = sinon.stub( cp, "exec", function(_name, cb) {
           called++;
-          console.log("CALLED", called)
           if (called === 2) {
             cb("ERROR", null, null);
             setTimeout(done, 100);
