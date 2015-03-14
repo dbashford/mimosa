@@ -19,13 +19,67 @@ var executeCommand = function( val ) {
 }
 
 describe("Mimosa's mod:uninstall command", function() {
+  var loggerErrorStub;
+
+  before(function() {
+    loggerErrorStub = sinon.stub( logger, "error", function(){})
+  });
+
+  after(function() {
+    logger.error.restore();
+  });
+
 
   describe("when run on local module", function() {
     describe("will error out", function() {
-      it("when no local package.json")
-      it("when package.json has no name")
-      it("when name isn't prefixed with mimosa-")
-      it("if module not currently installed in mimosa")
+
+      beforeEach(function() {
+        loggerErrorStub.reset();
+      })
+
+      it("when no local package.json", function() {
+        sinon.stub(fs, "readFileSync", function() {
+          throw new Error("error")
+        });
+        executeCommand();
+        expect(loggerErrorStub.calledOnce).to.be.true;
+        expect(loggerErrorStub.args[0][0].indexOf("Unable to find package.json, or badly formatted:") === 0).to.be.true;
+        fs.readFileSync.restore();
+      });
+
+      it("when package.json has no name", function() {
+        sinon.stub(fs, "readFileSync", function() {
+          return "{\"version\":\"1.1.1\"}";
+        });
+        executeCommand();
+        expect(loggerErrorStub.calledOnce).to.be.true;
+        expect(loggerErrorStub.args[0][0]).to.eql("package.json missing either name or version");
+        fs.readFileSync.restore();
+      });
+
+      it("when package.json has no version", function() {
+        sinon.stub(fs, "readFileSync", function() {
+          return "{\"name\":\"foo\"}";
+        });
+        executeCommand();
+        expect(loggerErrorStub.calledOnce).to.be.true;
+        expect(loggerErrorStub.args[0][0]).to.eql("package.json missing either name or version");
+        fs.readFileSync.restore();
+      });
+
+      it("when name isn't prefixed with mimosa-", function() {
+        sinon.stub(fs, "readFileSync", function() {
+          return "{\"name\":\"foo\", \"version\":\"1.1.1\"}";
+        });
+        executeCommand();
+        expect(loggerErrorStub.calledOnce).to.be.true;
+        expect(loggerErrorStub.args[0][0]).to.eql("Can only delete 'mimosa-' prefixed modules with mod:uninstall (ex: mimosa-server).");
+        fs.readFileSync.restore();
+      });
+
+      it("if module not currently installed in mimosa", function() {
+
+      });
     });
 
     describe("will attempt install", function() {
