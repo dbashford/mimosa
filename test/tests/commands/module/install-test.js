@@ -7,6 +7,7 @@ var cp = require( 'child_process' )
   , commandPath = path.join( process.cwd(), "lib", "command", "module", "install")
   , command = require( commandPath )
   , utils = require( path.join(process.cwd(), "test", "utils"))
+  , origDir = process.cwd()
   ;
 
 var executeCommand = function( val ) {
@@ -19,6 +20,10 @@ var executeCommand = function( val ) {
 }
 
 describe("Mimosa's module install command", function() {
+
+  after(function() {
+    process.chdir(origDir)
+  })
 
   // install from NPM
   describe("if name is provided", function() {

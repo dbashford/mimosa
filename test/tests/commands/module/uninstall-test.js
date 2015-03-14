@@ -30,10 +30,6 @@ describe("Mimosa's mod:uninstall command", function() {
     chdirStub = sinon.stub(process, "chdir", function(){});
   });
 
-  beforeEach(function() {
-    loggerErrorStub.reset();
-  });
-
   after(function() {
     logger.error.restore();
     process.chdir.restore();
@@ -41,6 +37,11 @@ describe("Mimosa's mod:uninstall command", function() {
 
   describe("when run on local module", function() {
     describe("will error out", function() {
+
+      beforeEach(function() {
+        loggerErrorStub.reset();
+      })
+
       it("when no local package.json", function() {
         sinon.stub(fs, "readFileSync", function() {
           throw new Error("error")
@@ -90,26 +91,101 @@ describe("Mimosa's mod:uninstall command", function() {
         expect(loggerErrorStub.calledOnce).to.be.true;
         expect(loggerErrorStub.args[0][0]).to.eql("Module named [[ mimosa-require ]] is not currently installed so it cannot be uninstalled.");
         require(modulePath).installedMetadata = moduleMetadata;
+        fs.readFileSync.restore();
+
       });
 
     });
 
     describe("will attempt install", function() {
-      it("from the mimosa directory")
-      it("with proper install string")
-      describe("when successful", function() {
-        it("will return to the original directory")
-        it("will log success")
+      var execStub,
+        loggerSuccessStub
+        ;
+
+      before(function( done ) {
+        loggerSuccessStub = sinon.stub( logger, "success", function(){});
+        require(modulePath).installedMetadata = [{name:"mimosa-require"}];
+        sinon.stub(fs, "readFileSync", function() {
+          return "{\"name\":\"mimosa-require\", \"version\":\"1.1.1\"}";
+        });
+        execStub = sinon.stub(cp, "exec", function( installPath, cb) {
+          cb( null, null, null )
+        });
+        sinon.stub(process, "exit", function() {
+          done();
+        })
+        executeCommand();
       });
-      describe("when failure", function() {
-        it("will return to the original directory")
-        it("will log error")
+
+      after(function() {
+        require(modulePath).installedMetadata = moduleMetadata;
+        fs.readFileSync.restore();
+        cp.exec.restore();
+        process.exit.restore();
+        logger.success.restore();
+      });
+
+      it("from the mimosa directory", function() {
+        expect(chdirStub.args[0][0]).to.eql(process.cwd())
+      });
+
+      it("with proper install string", function() {
+        expect(execStub.args[0][0]).to.eql("npm uninstall \"mimosa-require\" --save")
+      });
+
+      describe("when successful", function() {
+        it("will return to the original directory", function() {
+          expect(chdirStub.args[1][0]).to.eql(process.cwd())
+        });
+        it("will log success", function() {
+          expect(loggerSuccessStub.calledOnce).to.be.true;
+          expect(loggerSuccessStub.args[0][0]).to.eql("Uninstall of [[ mimosa-require ]] successful")
+        });
+      });
+    });
+
+    describe("when install fails", function() {
+      var execStub;
+
+      before(function( done ) {
+        loggerErrorStub.reset();
+        require(modulePath).installedMetadata = [{name:"mimosa-require"}];
+        sinon.stub(fs, "readFileSync", function() {
+          return "{\"name\":\"mimosa-require\", \"version\":\"1.1.1\"}";
+        });
+        execStub = sinon.stub(cp, "exec", function( installPath, cb) {
+          cb( "ERROR", null, null )
+        });
+        sinon.stub(process, "exit", function() {
+          done();
+        })
+        executeCommand();
+      });
+
+      after(function() {
+        require(modulePath).installedMetadata = moduleMetadata;
+        fs.readFileSync.restore();
+        cp.exec.restore();
+        process.exit.restore();
+      })
+
+      it("will return to the original directory", function() {
+        expect(chdirStub.args[1][0]).to.eql(process.cwd())
+      });
+
+      it("will log error", function() {
+        expect(loggerErrorStub.calledOnce).to.be.true;
+        expect(loggerErrorStub.args[0][0]).to.eql("ERROR")
       });
     });
   })
 
   describe("when run on named module", function() {
     describe("will error out", function() {
+      beforeEach(function() {
+        loggerErrorStub.reset();
+      })
+
       it("when name isn't prefixed with mimosa-", function() {
         it("when name isn't prefixed with mimosa-", function() {
           executeCommand("foo");
@@ -127,15 +203,79 @@ describe("Mimosa's mod:uninstall command", function() {
     });
 
     describe("will attempt install", function() {
-      it("from the mimosa directory")
-      it("with proper install string")
-      describe("when successful", function() {
-        it("will return to the original directory")
-        it("will log success")
+
+      var execStub,
+        loggerSuccessStub
+        ;
+
+      before(function( done ) {
+        chdirStub.reset();
+        loggerSuccessStub = sinon.stub( logger, "success", function(){});
+        require(modulePath).installedMetadata = [{name:"mimosa-foo"}];
+        execStub = sinon.stub(cp, "exec", function( installPath, cb) {
+          cb( null, null, null )
+        });
+        sinon.stub(process, "exit", function() {
+          done();
+        })
+        executeCommand( "mimosa-foo" );
       });
-      describe("when failure", function() {
-        it("will return to the original directory")
-        it("will log error")
+
+      after(function() {
+        require(modulePath).installedMetadata = moduleMetadata;
+        cp.exec.restore();
+        process.exit.restore();
+        logger.success.restore();
+      });
+
+      it("from the mimosa directory", function() {
+        expect(chdirStub.args[0][0]).to.eql(process.cwd());
+      });
+
+      it("with proper install string", function() {
+        expect(execStub.args[0][0]).to.eql("npm uninstall \"mimosa-foo\" --save")
+      });
+
+      describe("when successful", function() {
+        it("will return to the original directory", function() {
+          expect(chdirStub.args[1][0]).to.eql(process.cwd());
+        });
+
+        it("will log success", function() {
+          expect(loggerSuccessStub.calledOnce).to.be.true;
+          expect(loggerSuccessStub.args[0][0]).to.eql("Uninstall of [[ mimosa-foo ]] successful")
+        });
+      });
+    });
+
+    describe("when install fails failure", function() {
+      var execStub;
+
+      before(function( done ) {
+        loggerErrorStub.reset();
+        require(modulePath).installedMetadata = [{name:"mimosa-foo"}];
+        execStub = sinon.stub(cp, "exec", function( installPath, cb) {
+          cb( "ERROR", null, null )
+        });
+        sinon.stub(process, "exit", function() {
+          done();
+        })
+        executeCommand( "mimosa-foo" );
+      });
+
+      after(function() {
+        require(modulePath).installedMetadata = moduleMetadata;
+        cp.exec.restore();
+        process.exit.restore();
+      });
+
+      it("will return to the original directory", function() {
+        expect(chdirStub.args[1][0]).to.eql(process.cwd());
+      });
+
+      it("will log error", function() {
+        expect(loggerErrorStub.calledOnce).to.be.true;
+        expect(loggerErrorStub.args[0][0]).to.eql("ERROR")
       });
     });
   });
