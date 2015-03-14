@@ -1,3 +1,9 @@
+## 2.3.32 - March 14 2014
+
+### Minor Changes
+* [mimosa #441](https://github.com/dbashford/mimosa/issues/441) Allowing dot files through workflows.
+* [mimosa-copy #6](https://github.com/dbashford/mimosa-copy/pull/6) Added `php` to list of valid copy extensions.
+
 ## 2.3.31 - February 11 2014
 
 ### Minor Changes
