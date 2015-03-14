@@ -1,19 +1,24 @@
-path =   require 'path'
-fs =     require 'fs'
-{exec} = require 'child_process'
-
-logger = require 'logmimosa'
-moduleMetadata = require('../../modules').installedMetadata
-
 deleteMod = (name, opts) ->
+  path =   require "path"
+  fs =     require "fs"
+  {exec} = require "child_process"
+
+  logger = require "logmimosa"
+  moduleMetadata = require("../../modules").installedMetadata
+
+  currentDir = process.cwd()
+  mimosaPath = path.join __dirname, "..", ".."
+
   if opts.mdebug
     opts.debug = true
     logger.setDebug()
     process.env.DEBUG = true
 
   unless name?
+    packageJSONPath = path.join( process.cwd(), "package.json" )
+
     try
-      pack = require path.join process.cwd(), 'package.json'
+      pack = JSON.parse( fs.readFileSync( packageJSONPath, "utf8" ) )
     catch err
       return logger.error "Unable to find package.json, or badly formatted: #{err}"
 
@@ -22,7 +27,7 @@ deleteMod = (name, opts) ->
 
     name = pack.name
 
-  unless name.indexOf('mimosa-') is 0
+  unless name.indexOf("mimosa-") is 0
     return logger.error "Can only delete 'mimosa-' prefixed modules with mod:uninstall (ex: mimosa-server)."
 
   found = false
@@ -34,8 +39,6 @@ deleteMod = (name, opts) ->
   unless found
     return logger.error "Module named [[ #{name} ]] is not currently installed so it cannot be uninstalled."
 
-  currentDir = process.cwd()
-  mimosaPath = path.join __dirname, '..', '..'
   process.chdir mimosaPath
 
   uninstallString = "npm uninstall #{name} --save"
@@ -50,18 +53,18 @@ deleteMod = (name, opts) ->
     process.chdir currentDir
     process.exit 0
 
-register = (program, callback) ->
+register = (program) ->
   program
-    .command('mod:uninstall [name]')
+    .command("mod:uninstall [name]")
     .option("-D, --mdebug", "run in debug mode")
     .description("uninstall a Mimosa module from your installed Mimosa")
-    .action(callback)
-    .on '--help', =>
-      logger.green('  The \'mod:uninstall\' command will delete a Mimosa module from your Mimosa install. This does')
-      logger.green('  not delete anything from any of your projects, but it removes the ability for all projects')
-      logger.green('  using Mimosa to utilize the removed module. You can retrieve the list of installed modules ')
-      logger.green('  using \'mod:list\'.')
-      logger.blue( '\n    $ mimosa mod:uninstall mimosa-server\n')
+    .action( deleteMod )
+    .on "--help", =>
+      logger = require( "logmimosa" )
+      logger.green("  The \'mod:uninstall\' command will delete a Mimosa module from your Mimosa install. This does")
+      logger.green("  not delete anything from any of your projects, but it removes the ability for all projects")
+      logger.green("  using Mimosa to utilize the removed module. You can retrieve the list of installed modules ")
+      logger.green("  using \'mod:list\'.")
+      logger.blue( "\n    $ mimosa mod:uninstall mimosa-server\n")
 
-module.exports = (program) ->
-  register program, deleteMod
+module.exports = register

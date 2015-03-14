@@ -16,3 +16,4 @@ require("./tests/commands/clean-test");
 require("./tests/commands/watch-test");
 require("./tests/commands/external-test");
 require("./tests/commands/module/install-test");
+require("./tests/commands/module/uninstall-test");
