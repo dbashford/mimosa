@@ -120,9 +120,9 @@ install = (name, opts) ->
 
     _doNPMInstall name, dirName
   else
-
+    packPath = path.join(currentDir, 'package.json')
     try
-      pack = require path.join currentDir, 'package.json'
+      pack = JSON.parse( fs.readFileSync(packPath, "utf8" ) );
     catch err
       return logger.error "Unable to find package.json, or badly formatted: #{err}"
 
