@@ -7,7 +7,7 @@ deleteMod = (name, opts) ->
   moduleMetadata = require("../../modules").installedMetadata
 
   currentDir = process.cwd()
-  mimosaPath = path.join __dirname, "..", ".."
+  mimosaPath = path.join __dirname, "..", "..", ".."
 
   if opts.mdebug
     opts.debug = true
@@ -40,7 +40,7 @@ deleteMod = (name, opts) ->
     return logger.error "Module named [[ #{name} ]] is not currently installed so it cannot be uninstalled."
 
   process.chdir mimosaPath
-  uninstallString = "npm uninstall #{name} --save"
+  uninstallString = "npm uninstall \"#{name}\" --save"
   exec uninstallString, (err, sout, serr) =>
     if err
       logger.error err
