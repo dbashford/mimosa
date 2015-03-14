@@ -154,7 +154,17 @@ module.exports = class WorkflowManager
 
   _buildAssetOptions: (fileName) ->
     ext = path.extname(fileName).toLowerCase()
-    ext = if ext.length > 1 then ext.substring(1) else ''
+    ext = if ext.length > 1
+      ext.substring(1)
+    else
+      # is dot file?
+      baseName = path.basename( fileName )
+      if baseName.indexOf(".") is 0 and baseName.length > 1
+        baseName.substring(1)
+      else
+        # no extension found
+        ''
+
     {inputFile:fileName, extension:ext}
 
   _executeWorkflowStep: (options, type, done = @_finishedWithFile) ->
