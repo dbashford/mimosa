@@ -1,6 +1,5 @@
 var cp = require( 'child_process' )
   , path = require( "path" )
-  , wrench = require( "wrench" )
   , fs = require( "fs" )
   , sinon = require( "sinon" )
   , logger = require( "logmimosa" )
