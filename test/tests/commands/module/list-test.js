@@ -1,4 +1,5 @@
 var cp = require( 'child_process' )
+  , color = require( "ansi-color" ).set
   , path = require( "path" )
   , fs = require( "fs" )
   , sinon = require( "sinon" )
@@ -92,20 +93,24 @@ describe("Mimosa's list command", function() {
   utils.test.command.flags.help( command );
   utils.test.command.flags.debugSetup( "modlist", command );
 
-  describe("will print results", function() {
+  describe("will", function() {
     var execStub
       , requestGetStub
       , oldMods
+      , loggerGreenStub
       ;
 
     before(function(done) {
+      loggerGreenSpy = sinon.stub(logger, "green")
+      sinon.stub(process, "exit", function(){
+        done()
+      });
       requestGetStub = sinon.stub( request, "get", function( uri, opts, cb) {
         cb( null, null, JSON.stringify(moduleData) );
-        done()
       })
       execStub = sinon.stub(cp, "exec", function( str, cb ){
         // no proxy
-        cb( null, "", null)
+        cb( null, "proxyproxyproxy", null)
       });
       oldMods = require(modulePath).installedMetadata
       require(modulePath).installedMetadata = [{name:"mimosa-babel", version:"0.4.0"}];
@@ -115,9 +120,44 @@ describe("Mimosa's list command", function() {
     after(function(){
       require(modulePath).installedMetadata = oldMods;
       cp.exec.restore();
+      process.exit.restore();
+      request.get.restore();
+      logger.green.restore();
     });
 
-    it("to the screen", function() {
+    it("will ask for proxy", function() {
+      expect(execStub.calledOnce).to.be.true;
+      expect(execStub.args[0][0]).to.eql("npm config get proxy")
     });
-  })
+
+    it("will make request to proper heroku url", function() {
+      expect(requestGetStub.calledOnce).to.be.true;
+      expect(requestGetStub.args[0][0]).to.eql("http://mimosa-data.herokuapp.com/modules")
+    });
+
+    it("will include any given proxy as part of the request", function() {
+      expect(requestGetStub.args[0][1].proxy).to.eql("proxyproxyproxy")
+    })
+
+    describe("print to the console", function() {
+      var log;
+      before(function() {
+        log = loggerGreenSpy.args.map( function(arg) {
+          return arg[0]
+        }).join("\n")
+        console.log(log)
+      })
+
+      it("the right modules", function() {
+        expect(/mimosa-babel/.test(log)).to.be.true
+        expect(/mimosa-autoprefixer/.test(log)).to.be.true
+        expect(/mimosa-asset-cache-bust/.test(log)).to.be.true
+      });
+
+      it("the old module version in red", function() {
+        var colorString = color("0.4.0", "red")
+        expect(log.indexOf(colorString) > 0).to.be.true
+      });
+    });
+  });
 });

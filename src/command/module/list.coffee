@@ -45,6 +45,7 @@ printResults = (mods, opts) ->
     ["installed",13],
     ["site",65],
   ]
+
   for mod in mods
     headline = "  "
     for field in fields
