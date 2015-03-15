@@ -49,6 +49,7 @@ exports.setupCompilers = (config) ->
   # as they are not to override other compilers,
   # for instance if two compilers both register
   # for same extension
+  # TODO, remove resortCompilers
   if config.resortCompilers
     backloadCompilers = ["copy", "misc"]
     copyMisc = _.remove compilers, (comp) ->

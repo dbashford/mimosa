@@ -179,7 +179,7 @@ module.exports = class WorkflowManager
         if options.extension?.length is 0
           return logger.debug "No extension detected [[ #{options.inputFile} ]]."
         else
-          return logger.warn "No module has registered for extension: [[ #{options.extension} ]], file: [[ #{options.inputFile} ]]"
+          return logger.warn "No compiler has registered for extension: [[ #{options.extension} ]], file: [[ #{options.inputFile} ]]"
 
       if @config.timer && @config.timer.enabled
         options.timer = {
