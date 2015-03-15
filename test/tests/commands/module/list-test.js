@@ -145,18 +145,17 @@ describe("Mimosa's list command", function() {
         log = loggerGreenSpy.args.map( function(arg) {
           return arg[0]
         }).join("\n")
-        console.log(log)
-      })
+      });
 
       it("the right modules", function() {
-        expect(/mimosa-babel/.test(log)).to.be.true
-        expect(/mimosa-autoprefixer/.test(log)).to.be.true
-        expect(/mimosa-asset-cache-bust/.test(log)).to.be.true
+        expect(/mimosa-babel/.test(log)).to.be.true;
+        expect(/mimosa-autoprefixer/.test(log)).to.be.true;
+        expect(/mimosa-asset-cache-bust/.test(log)).to.be.true;
       });
 
       it("the old module version in red", function() {
-        var colorString = color("0.4.0", "red")
-        expect(log.indexOf(colorString) > 0).to.be.true
+        var colorString = color("0.4.0", "red");
+        expect(log.indexOf(colorString) > 0).to.be.true;
       });
     });
   });
