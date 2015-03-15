@@ -23,7 +23,7 @@ module.exports = class MiscCompiler
 
   _determineOutputFile: (config, options, next) =>
     # if destinationFile is already there,
-    # ignore all this, don't want these compilers
+    # ignore all this, don't want misc compilers
     # overwriting compiler with same extension
     if options.files and options.files.length and !options.destinationFile
 
@@ -35,7 +35,7 @@ module.exports = class MiscCompiler
           file.outputFileName = options.destinationFile( file.inputFileName )
       else
         if @compiler.determineOutputFile
-          @compiler.determineOutputFile( config, options )          
+          @compiler.determineOutputFile( config, options )
         else
           if logger.isDebug()
             logger.debug "compiler [[ " + @compiler.name + " ]] does not have determineOutputFile function."
