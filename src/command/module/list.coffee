@@ -77,7 +77,7 @@ printResults = (mods, opts) ->
   process.exit 0
 
 list = (opts) ->
-  childProcess = require "child_process"
+  exec = require( "child_process" ).exec
 
   if opts.mdebug
     opts.debug = true
@@ -86,15 +86,13 @@ list = (opts) ->
 
   logger.green "\n  Searching Mimosa modules...\n"
 
-  childProcess.exec "npm config get proxy", (error, stdout, stderr) ->
-    options = {
-      "uri": "http://mimosa-data.herokuapp.com/modules"
-    }
+  exec "npm config get proxy", (error, stdout, stderr) ->
+    options = {}
     proxy = stdout.replace /(\r\n|\n|\r)/gm, ""
     if !error && proxy != "null"
       options.proxy = proxy
     request = require "request"
-    request options, (error, client, response) ->
+    request.get "http://mimosa-data.herokuapp.com/modules", options, (error, client, response) ->
       if error != null
         console.log(error)
         return
