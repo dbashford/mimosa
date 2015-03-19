@@ -9,6 +9,7 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-server](https://github.com/dbashford/mimosa-server) has had its `packageJSONDir` property removed and the requirement of a `package.json` eliminated. A new property, `transpiler`, has been added. If you are using, for instance, CoffeeScript on the server, then you will want to set the `transpiler` property to the `require`d transpiler library. Ex: `transpiler: require('coffee-script')`
 
 ### Major Changes
+* __New Module__ [mimosa-coffeescript-preprocess](https://github.com/0xorial/mimosa-coffeescript-preprocess) will substitute template-like values in your CoffeeScript prior to compiling it.
 * __New Module__ [mimosa-replace](https://github.com/dpeukert/mimosa-replace) does simple text replacement either before or after your files have been compiled.
 * __New Module__ [mimosa-phantomcss](https://github.com/dbazile/mimosa-phantomcss) will run visual testing using [PhantomCSS](https://github.com/Huddle/PhantomCSS) and Casper.
 * __New Module__ [mimosa-babel](https://github.com/YoloDev/mimosa-babel) is a new JavaScript compiler that wraps the [babel](https://babeljs.io/) (formerly 6to5) transpiler. babel turns your ES6 JavaScript to ES5 JavaScript.
@@ -46,6 +47,7 @@ As updates to external modules are listed here, know that you can use them right
 * [mimosa-csslint #4](https://github.com/dbashford/mimosa-csslint/issues/4). Now properly recognizes vendor files on startup.
 * [mimosa-csslint](https://github.com/dbashford/mimosa-csslint/). Updated to latest csslint.
 * [mimosa-jshint](https://github.com/dbashford/mimosa-jshint/). Updated to latest jshint.
+* [mimosa-jshint #5](https://github.com/dbashford/mimosa-jshint/issues/5). Allow JSHint to be run on either pre or post compiled JavaScript.  Post-compiled makes good sense for CoffeeScript, but for ES6 it makes better sense to run before something compiles the code.
 * [mimosa-typescript](https://github.com/dbashford/mimosa-typescript/). Pinned typescript versions to fix compilation issues.
 * [mimosa-coffeescript](https://github.com/dbashford/mimosa-coffeescript/), [mimosa-iced-coffeescript](https://github.com/dbashford/mimosa-iced-coffeescript/), and [mimosa-livescript](https://github.com/dbashford/mimosa-livescript/) have been updated to the latest compiler versions.
 * [mimosa-less](https://github.com/dbashford/mimosa-less/) has been updated to the latest less.
