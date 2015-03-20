@@ -75,24 +75,24 @@ describe( "Mimosa beforeRead workflow module", function(){
 
     it("with many files with invalid extension will let file through untouched", function() {
       var options = {
-        files:["foo.css", "bar.bar"]
+        files:[{inputFileName:"foo.css"}, {inputFileName:"bar.bar"}]
       };
       postStartupFunction( fakeMimosaConfig, options, spy );
       expect( spy.calledOnce ).to.be.true;
-      expect(options.files[0]).to.eql("foo.css");
-      expect(options.files[1]).to.eql("bar.bar");
+      expect(options.files[0].inputFileName).to.eql("foo.css");
+      expect(options.files[1].inputFileName).to.eql("bar.bar");
     });
 
     it("with many javascript files and recompile forced, will let files through untouched", function() {
       var options = {
-        files:["foo.js", "bar.js"],
+        files:[{inputFileName: "foo.js"}, {inputFileName:"bar.js"}],
         isJavascript: true
       };
       fakeMimosaConfig.__forceJavaScriptRecompile = true;
       postStartupFunction( fakeMimosaConfig, options, spy );
       expect( spy.calledOnce ).to.be.true;
-      expect(options.files[0]).to.eql("foo.js");
-      expect(options.files[1]).to.eql("bar.js");
+      expect(options.files[0].inputFileName).to.eql("foo.js");
+      expect(options.files[1].inputFileName).to.eql("bar.js");
       delete fakeMimosaConfig.__forceJavaScriptRecompile;
     });
 
