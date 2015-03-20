@@ -18,6 +18,7 @@ As updates to external modules are listed here, know that you can use them right
 * __New Module__ [mimosa-rename](https://github.com/dbashford/mimosa-rename) allows you to rename files before they are written.
 * __New Module__ [mimosa-twig](https://github.com/dbashford/mimosa-twig) supports twig as a client side templating library.
 * [mimosa #428](https://github.com/dbashford/mimosa/issues/428) removed the `mimosa config` command, which also removes the `mimosa-config-documented.coffee` file that `mimosa config` and `mimosa new` (via `mimosa config`) would write. Thus continues the simplification of the tool. If its not bolted down...
+* [mimosa-stylus #3](https://github.com/dbashford/mimosa-stylus/issues/3) added source map support to Stylus.
 * [mimosa-bower #44](https://github.com/dbashford/mimosa-bower/issues/44). You can now use a regex to match packages to a `strategy`:
   ```javascript
     strategy: {
