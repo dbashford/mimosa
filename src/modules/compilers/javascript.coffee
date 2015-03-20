@@ -28,7 +28,7 @@ __sourceMap = (file, output, sourceMap) ->
 
   sourceMap.sources[0] = file.inputFileName
   sourceMap.sourcesContent = [file.inputFileText];
-  #sourceMap.file = file.outputFileName;
+  sourceMap.file = file.outputFileName;
 
   base64SourceMap = new Buffer(JSON.stringify(sourceMap)).toString('base64')
   datauri = 'data:application/json;base64,' + base64SourceMap

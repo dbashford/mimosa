@@ -158,6 +158,15 @@ var fakeProgram = function() {
   return program;
 };
 
+var fakeJavascriptCompiler = function() {
+
+  var jsCompiler = {
+    compile: function() {}
+  };
+  
+  return jsCompiler;
+}
+
 module.exports = {
   fileFixture: fileFixture,
   fakeMimosaConfig: fakeMimosaConfig,
