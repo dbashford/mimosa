@@ -107,28 +107,81 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
           expect(options.files[0].outputFileText).to.eql("console.log('fooooooo')")
           done();
         });
-      })
+      });
     });
   });
 
   describe("compiling", function() {
-    it("will not attempt to compile anything if no files to compile");
+
+    // will time out if fail
+    it("will not attempt to compile anything if no files to compile", function( done ) {
+      var compiler  = genCompiler( compileSuccessNoMap );
+      var options = {files:[]};
+      getCallbacks( compiler, function( cbs ) {
+        cbs.compile( fakeMimosaConfig, options, function() {
+          // calling the callback is a successful test
+          expect(true).to.be.true;
+          done();
+        });
+      });
+    });
+
     describe("for each file to compile", function() {
-      it("will flag file as vendor if indicated to be vendor");
-      it("will call the compilers compile function with appropriate arguments");
+      var compiler;
+
+      before( function() {
+        compiler = genCompiler( compileSuccessNoMap );
+      })
+
+      var testVendor = function(isVendor, done) {
+        var options = {files:[{inputFileName:"fooooo.bar", inputFileText:"console.log('foo')"}], isVendor:isVendor};
+        var compiler  = genCompiler( compileSuccessNoMap );
+        var compilerSpy = sinon.spy(compiler, "_compile");
+        getCallbacks( compiler, function( cbs ) {
+          cbs.compile( fakeMimosaConfig, options, function() {
+            expect(compilerSpy.args[0][1].isVendor).to.eql(isVendor);
+            compiler._compile.restore();
+            done();
+          });
+        });
+      };
+
+      it("will not flag file as vendor if indicated to be vendor", function(done) {
+        testVendor(false, done)
+      });
+
+      it("will flag file as vendor if indicated to be vendor", function(done) {
+        testVendor(true, done)
+      });
+
+      it("will call the compilers compile function with appropriate arguments", function() {
+        var options = {files:[{inputFileName:"fooooo.bar", inputFileText:"console.log('foo')"}], isVendor:false};
+        var compiler  = genCompiler( compileSuccessNoMap );
+        var compilerSpy = sinon.spy(compiler.compiler, "compile");
+
+        getCallbacks( compiler, function( cbs ) {
+          cbs.compile( fakeMimosaConfig, options, function() {
+            expect(compilerSpy.args[0][0]).to.eql(fakeMimosaConfig);
+            var file = options.files[0];
+            file.isVendor = false;
+            expect(compilerSpy.args[0][1]).to.eql(file);
+          });
+        });
+      });
+
       describe("if compile error occurs", function() {
         it("will log error");
         it("will break build if it needs breaking");
         it("will continue workflow by calling next");
         it("will not create file's output text");
       });
+    });
 
-      describe("if compile successful", function() {
-        it("will create source maps if source map is included");
-        it("will not create source maps if source maps are not included");
-        it("will create file's output text");
-        it("will continue workflow by calling next");
-      });
+    describe("if compile successful", function() {
+      it("will create source maps if source map is included");
+      it("will not create source maps if source maps are not included");
+      it("will create file's output text");
+      it("will continue workflow by calling next");
     });
   });
 
