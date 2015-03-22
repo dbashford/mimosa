@@ -1,5 +1,6 @@
 var path = require( "path" )
   , sinon = require( "sinon" )
+  , logger = require( "logmimosa" )
   , utils = require( path.join(process.cwd(), "test", "utils") )
   , JavaScriptCompiler = require( path.join(process.cwd(), "lib", "modules", "compilers", "javascript") )
   , fileUtils = require( path.join(process.cwd(), "lib", "util", "file" ) )
@@ -31,8 +32,11 @@ var compileSuccessMapString = function( config, file, cb ) {
 var compileSuccessMapObject = function( config, file, cb ) {
   cb( null, "console.log('foooooooooooo')", sampleMapData)
 };
+
 var compileSuccessMapEmbedded = function( config, file, cb ) {
-  cb( null, "console.log('foooooooooooooo')", sampleMapData)
+  var output = "console.log('foooooooooooooo')\n" +
+    "//# sourceMappingURL=data:application/json;base64,TESTTESTTESTeyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJmb29vb28uYmFyIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLE9BQUEsQ0FDRTtBQUFBLEVBQUEsT0FBQSxFQUFVLElBQUEsR0FBRyxDQUFDLENBQUssSUFBQSxJQUFBLENBQUEsQ0FBTCxDQUFZLENBQUMsT0FBYixDQUFBLENBQUQsQ0FBYjtBQUFBLEVBQ0EsS0FBQSxFQUNFO0FBQUEsSUFBQSxNQUFBLEVBQVMsc0JBQVQ7R0FGRjtDQURGLEVBSUksQ0FBRSxrQkFBRixDQUpKLEVBS0ksU0FBQyxXQUFELEdBQUE7QUFDQSxNQUFBLElBQUE7QUFBQSxFQUFBLEdBQUcsQ0FBQyxHQUFKLEdBQVUsR0FBVixDQUFBO0FBQUEsRUFDQSxJQUFBLEdBQVcsSUFBQSxXQUFBLENBQUEsQ0FEWCxDQUFBO1NBRUEsSUFBSSxDQUFDLE1BQUwsQ0FBYSxNQUFiLEVBSEE7QUFBQSxDQUxKLENBQUEsQ0FBQSIsInNvdXJjZXNDb250ZW50IjpbImNvbnNvbGUubG9nKCdmb28nKSJdfQ=="
+  cb( null, output, sampleMapData)
 };
 var compileSuccessDeprecated = function( config, file, cb ) {
   cb( null, "console.log('fooooooooooooooooo')", null, sampleMapData)
@@ -75,10 +79,20 @@ var getCallbacks = function( compiler, cb ) {
 describe("Mimosa's JavaScript compiler wrapper", function() {
 
   describe("will register", function() {
-    var compiler;
+    var compiler
+      , determineOutputFile
+      , compile
+      , options = {files:[{inputFileName:"fooooo.bar", inputFileText:"console.log('foo')"}]};
 
-    before( function() {
+      ;
+
+    before( function(done) {
       compiler = genCompiler( compileSuccessNoMap );
+      getCallbacks( compiler, function( cbs ) {
+        determineOutputFile = cbs.determineOutputFile;
+        compile = cbs.compile;
+        done();
+      });
     })
 
     it("with valid parameters in register function", function( done ) {
@@ -91,22 +105,16 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
     });
 
     it("to determine the output file for javascript files", function( done ) {
-      var options = {files:[{inputFileName:"fooooo.bar"}]};
-      getCallbacks( compiler, function( cbs ) {
-        cbs.determineOutputFile( fakeMimosaConfig, options, function() {
-          expect(options.files[0].outputFileName).to.eql("fooooo.js")
-          done();
-        });
+      determineOutputFile( fakeMimosaConfig, options, function() {
+        expect(options.files[0].outputFileName).to.eql("fooooo.js")
+        done();
       });
     });
 
     it("to compile file extensions provided by compiler", function( done ) {
-      var options = {files:[{inputFileName:"fooooo.bar", inputFileText:"console.log('foo')"}]};
-      getCallbacks( compiler, function( cbs ) {
-        cbs.compile( fakeMimosaConfig, options, function() {
-          expect(options.files[0].outputFileText).to.eql("console.log('fooooooo')")
-          done();
-        });
+      compile( fakeMimosaConfig, options, function() {
+        expect(options.files[0].outputFileText).to.eql("console.log('fooooooo')")
+        done();
       });
     });
   });
@@ -164,32 +172,137 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
             expect(compilerSpy.args[0][0]).to.eql(fakeMimosaConfig);
             var file = options.files[0];
             file.isVendor = false;
-            expect(compilerSpy.args[0][1]).to.eql(file);
+            expect(compilerSpy.args[0][1]).to.eql(file)
+            expect(typeof compilerSpy.args[0][2]).to.eql("function");
           });
         });
       });
 
       describe("if compile error occurs", function() {
-        it("will log error");
-        it("will break build if it needs breaking");
-        it("will continue workflow by calling next");
-        it("will not create file's output text");
+        var compiler
+          , options = {files:[{inputFileName:"fooooo.bar", inputFileText:"console.log('foo')"}], isVendor:false}
+          , compile
+          ;
+
+        before( function(done) {
+          compiler = genCompiler( compileError );
+          getCallbacks( compiler, function( cbs ) {
+            compile = cbs.compile;
+            done()
+          });
+        });
+
+        it("will log error and break build if necessary", function(done){
+          var errorSpy = sinon.spy(logger, "error")
+          compile( fakeMimosaConfig, options, function() {
+            expect(errorSpy.calledOnce).to.be.true;
+            expect(errorSpy.args[0][0]).to.eql("File [[ fooooo.bar ]] failed compile. Reason: ERRORERRORERROR");
+            expect(errorSpy.args[0][1]).to.eql({exitIfBuild:true})
+            done();
+          });
+        });
+
+        it("will continue workflow by calling next", function(done) {
+          compile( fakeMimosaConfig, options, function() {
+            expect(true).to.be.true;
+            // failure will be timeout
+            done();
+          });
+        });
+
+        it("will not create file's output text", function(done){
+          compile( fakeMimosaConfig, options, function() {
+            expect(options.files[0].outputFileText).to.be.undefined;
+            done();
+          });
+        });
       });
     });
 
     describe("if compile successful", function() {
-      it("will create source maps if source map is included");
-      it("will not create source maps if source maps are not included");
-      it("will create file's output text");
-      it("will continue workflow by calling next");
+      var compiler
+        , options = {files:[{inputFileName:"fooooo.bar", inputFileText:"console.log('foo')"}], isVendor:false}
+        , compile
+        ;
+
+      before( function(done) {
+        compiler = genCompiler( compileSuccessNoMap );
+        getCallbacks( compiler, function( cbs ) {
+          compile = cbs.compile;
+          done()
+        });
+      });
+
+      it("will create source maps if source map is included", function(done) {
+        var compiler2 = genCompiler( compileSuccessMapObject );
+        getCallbacks( compiler2, function( cbs ) {
+          cbs.compile( fakeMimosaConfig, options, function() {
+            expect(options.files[0].outputFileText.split("\n")[1].substring(0,20)).to.eql("//# sourceMappingURL");
+            done();
+          });
+        });
+      });
+
+      it("will create file's output text without source maps", function(done) {
+        compile( fakeMimosaConfig, options, function() {
+          expect(options.files[0].outputFileText).to.eql("console.log(\'fooooooo\')");
+          done();
+        });
+      });
+
+      it("will continue workflow by calling next", function(done) {
+        compile( fakeMimosaConfig, options, function() {
+          // failing test would be timeout
+          expect(true).to.be.true;
+          done();
+        });
+      });
     });
   });
 
   describe("source map creation", function() {
-    it("will make no changes if source map already present");
-    it("can handle an object source map");
-    it("can handle a string source map");
-    it("will create the correct source map");
+
+    it("will make no changes if source map already present", function(done) {
+      var options = {files:[{inputFileName:"fooooo.bar", inputFileText:"console.log('foo')"}], isVendor:false};
+      var compiler  = genCompiler( compileSuccessMapEmbedded );
+      getCallbacks( compiler, function( cbs ) {
+        cbs.compile( fakeMimosaConfig, options, function() {
+          var text = options.files[0].outputFileText;
+          expect(text.indexOf("TESTTESTTEST")).to.eql(81)
+          expect(text.match(/sourceMappingURL/).length).to.eql(1)
+          done()
+        });
+      });
+    });
+
+    var goodSourceMap = function(type, comp) {
+      it("can handle a " + type + " source map", function(done) {
+        var options = {files:[{inputFileName:"fooooo.bar", inputFileText:"console.log('foo')"}], isVendor:false};
+        var compiler  = genCompiler( comp );
+        getCallbacks( compiler, function( cbs ) {
+          cbs.compile( fakeMimosaConfig, options, function() {
+            var text = options.files[0].outputFileText;
+            expect(text.match(/sourceMappingURL/).length).to.eql(1)
+            done();
+          });
+        });
+      });
+    };
+
+    goodSourceMap("object", compileSuccessMapObject);
+    goodSourceMap("string", compileSuccessMapString);
+
+    it("will create the correct source map", function(done) {
+      var options = {files:[{inputFileName:"fooooo.bar", inputFileText:"console.log('foo')"}], isVendor:false};
+      var compiler  = genCompiler( compileSuccessMapObject );
+      getCallbacks( compiler, function( cbs ) {
+        cbs.compile( fakeMimosaConfig, options, function() {
+          var text = options.files[0].outputFileText.split("\n")[1];
+          expect(text).to.eql("//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJmb29vb28uYmFyIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLE9BQUEsQ0FDRTtBQUFBLEVBQUEsT0FBQSxFQUFVLElBQUEsR0FBRyxDQUFDLENBQUssSUFBQSxJQUFBLENBQUEsQ0FBTCxDQUFZLENBQUMsT0FBYixDQUFBLENBQUQsQ0FBYjtBQUFBLEVBQ0EsS0FBQSxFQUNFO0FBQUEsSUFBQSxNQUFBLEVBQVMsc0JBQVQ7R0FGRjtDQURGLEVBSUksQ0FBRSxrQkFBRixDQUpKLEVBS0ksU0FBQyxXQUFELEdBQUE7QUFDQSxNQUFBLElBQUE7QUFBQSxFQUFBLEdBQUcsQ0FBQyxHQUFKLEdBQVUsR0FBVixDQUFBO0FBQUEsRUFDQSxJQUFBLEdBQVcsSUFBQSxXQUFBLENBQUEsQ0FEWCxDQUFBO1NBRUEsSUFBSSxDQUFDLE1BQUwsQ0FBYSxNQUFiLEVBSEE7QUFBQSxDQUxKLENBQUEsQ0FBQSIsInNvdXJjZXNDb250ZW50IjpbImNvbnNvbGUubG9nKCdmb28nKSJdfQ==")
+          done()
+        });
+      });
+    });
   });
 
   describe("output file determination", function() {
@@ -197,5 +310,4 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
     it("will set the destinationFile function");
     it("will create output file names for all input files");
   });
-
 });
