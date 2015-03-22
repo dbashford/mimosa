@@ -197,7 +197,8 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
           compile( fakeMimosaConfig, options, function() {
             expect(errorSpy.calledOnce).to.be.true;
             expect(errorSpy.args[0][0]).to.eql("File [[ fooooo.bar ]] failed compile. Reason: ERRORERRORERROR");
-            expect(errorSpy.args[0][1]).to.eql({exitIfBuild:true})
+            expect(errorSpy.args[0][1]).to.eql({exitIfBuild:true});
+            logger.error.restore();
             done();
           });
         });
@@ -299,15 +300,50 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
         cbs.compile( fakeMimosaConfig, options, function() {
           var text = options.files[0].outputFileText.split("\n")[1];
           expect(text).to.eql("//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJmb29vb28uYmFyIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLE9BQUEsQ0FDRTtBQUFBLEVBQUEsT0FBQSxFQUFVLElBQUEsR0FBRyxDQUFDLENBQUssSUFBQSxJQUFBLENBQUEsQ0FBTCxDQUFZLENBQUMsT0FBYixDQUFBLENBQUQsQ0FBYjtBQUFBLEVBQ0EsS0FBQSxFQUNFO0FBQUEsSUFBQSxNQUFBLEVBQVMsc0JBQVQ7R0FGRjtDQURGLEVBSUksQ0FBRSxrQkFBRixDQUpKLEVBS0ksU0FBQyxXQUFELEdBQUE7QUFDQSxNQUFBLElBQUE7QUFBQSxFQUFBLEdBQUcsQ0FBQyxHQUFKLEdBQVUsR0FBVixDQUFBO0FBQUEsRUFDQSxJQUFBLEdBQVcsSUFBQSxXQUFBLENBQUEsQ0FEWCxDQUFBO1NBRUEsSUFBSSxDQUFDLE1BQUwsQ0FBYSxNQUFiLEVBSEE7QUFBQSxDQUxKLENBQUEsQ0FBQSIsInNvdXJjZXNDb250ZW50IjpbImNvbnNvbGUubG9nKCdmb28nKSJdfQ==")
-          done()
+          done();
         });
       });
     });
   });
 
   describe("output file determination", function() {
-    it("will do nothing if no output files");
-    it("will set the destinationFile function");
-    it("will create output file names for all input files");
+    var determineOutputFile;
+
+    before( function(done) {
+      compiler = genCompiler( compileSuccessNoMap );
+      getCallbacks( compiler, function( cbs ) {
+        determineOutputFile = cbs.determineOutputFile;
+        compile = cbs.compile;
+        done();
+      });
+    });
+
+    it("will do nothing if no output files", function(done) {
+      var options = {files:[]};
+      determineOutputFile(fakeMimosaConfig, options, function() {
+        expect(options.destinationFile).to.be.undefined;
+        done();
+      });
+    });
+
+    it("will set the destinationFile function", function(done) {
+      var options = {files:[{inputFileName:"fooooo.bar", inputFileText:"console.log('foo')"}]};
+      determineOutputFile(fakeMimosaConfig, options, function() {
+        expect(options.destinationFile).to.be.defined;
+        done();
+      });
+    });
+
+    it("will create output file names for all input files", function(done) {
+      var options = {files:[
+        {inputFileName:"fooooo.bar", inputFileText:"console.log('foo')"},
+        {inputFileName:"whhaaat.bar", inputFileText:"console.log('foo')"}
+      ]};
+      determineOutputFile(fakeMimosaConfig, options, function() {
+        expect(options.files[0].outputFileName).to.eql("fooooo.js");
+        expect(options.files[1].outputFileName).to.eql("whhaaat.js");
+        done();
+      });
+    });
   });
 });
