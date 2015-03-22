@@ -87,51 +87,6 @@ exports.defaults = ->
     nameTransform:"fileName"
     outputFileName: "javascripts/templates"
 
-exports.placeholder = ->
-  """
-  \t
-
-    template:                         # overall template object can be set to null if no
-                                      # templates being used
-      writeLibrary: true              # Whether or not to write a client library for
-                                      # any template compilers
-      nameTransform: "fileName"       # means by which Mimosa creates the name for each
-                                      # template, options: default "fileName" is name of file,
-                                      # "filePath" is path of file after watch.sourceDir
-                                      # with the extension dropped, a supplied regex can be
-                                      # used to remove any unwanted portions of the filePath,
-                                      # and a provided function will be called with the
-                                      # filePath as input
-      wrapType: "amd"                 # The type of module wrapping for the output templates
-                                      # file. Possible values: "amd", "common", "none".
-      commonLibPath: null             # Valid when wrapType is 'common'. The path to the
-                                      # client library. Some libraries do not have clients
-                                      # therefore this is not strictly required when choosing
-                                      # the common wrapType.
-      outputFileName: "javascripts/templates"  # the file all templates are compiled into,
-                                               # is relative to watch.sourceDir.
-
-      # outputFileName:                 # outputFileName Alternate Config 1
-        # hogan:"hogans"                # Optionally outputFileName can be provided an object of
-        # jade:"jades"                  # compiler name to file name in the event you are using
-                                        # multiple templating libraries.
-
-      # output: [{                      # output Alternate Config 2
-      #   folders:[""]                  # Use output instead of outputFileName if you want
-      #   outputFileName: ""            # to break up your templates into multiple files, for
-      # }]                              # instance, if you have a two page app and want the
-                                        # templates for each page to be built separately.
-                                        # For each entry, provide an array of folders that
-                                        # contain the templates to combine.  folders entries are
-                                        # relative to watch.sourceDir and must exist.
-                                        # outputFileName works identically to outputFileName
-                                        # above, including the alternate config, however, no
-                                        # default file name is assumed. An output name must be
-                                        # provided for each output entry, and the names
-                                        # must be unique.
-
-  """
-
 exports.validate = (config, validators) ->
   errors = []
 
