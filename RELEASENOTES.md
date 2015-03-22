@@ -7,6 +7,7 @@ As updates to external modules are listed here, know that you can use them right
 ### Possible Breaking Changes
 * [mimosa #425](https://github.com/dbashford/mimosa/issues/425). Support for non-inline source maps has been removed from mimosa-core. Mimosa's JavaScript compilers will no longer create `.map` and `.src` files.  All JavaScript source maps will be inlined as support for inline source maps is wide. Additionally conditional source map comments, `//#`, are no longer allowed.
 * [mimosa-server](https://github.com/dbashford/mimosa-server) has had its `packageJSONDir` property removed and the requirement of a `package.json` eliminated. A new property, `transpiler`, has been added. If you are using, for instance, CoffeeScript on the server, then you will want to set the `transpiler` property to the `require`d transpiler library. Ex: `transpiler: require('coffee-script')`
+* Removed long deprecated `amdWrap` setting on `template` property.
 
 ### Major Changes
 * __New Module__ [mimosa-coffeescript-preprocess](https://github.com/0xorial/mimosa-coffeescript-preprocess) will substitute template-like values in your CoffeeScript prior to compiling it.

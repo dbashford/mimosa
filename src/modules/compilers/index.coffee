@@ -11,9 +11,9 @@ CSSCompiler = require( "./css" )
 TemplateCompiler = require( "./template" )
 MiscCompiler = require( "./misc" )
 
-compilers = []
-
 templateLibrariesBeingUsed = 0
+
+exports.compilers = []
 
 _testDifferentTemplateLibraries = (config, options, next) ->
   hasFiles = options.files?.length > 0
@@ -27,21 +27,32 @@ _testDifferentTemplateLibraries = (config, options, next) ->
 
   next()
 
+
+# Process compilers
+# will build master list of extensions for procject run
+# will resort compilers so they are in the right processing order
 exports.setupCompilers = (config) ->
 
-  if compilers.length
-    compilers = []
+  # TODO: make compiler management a class
+  # this is reset in the event it is called
+  # multiple times within the same process
+  if exports.compilers.length
+    exports.compilers = []
 
+  # iterate over list of installed modules and
+  # assemble list of compilers
   for modName, mod of config.installedModules
+    # is compiler
     if mod.compilerType
       if logger.isDebug()
         logger.debug( "Found compiler [[ #{mod.name} ]], adding to array of compilers");
-      compilers.push mod
+      exports.compilers.push mod
 
-  for compiler in compilers
+  for compiler in exports.compilers
     exts = compiler.extensions(config)
     config.extensions[compiler.compilerType].push(exts...)
 
+  # make extension lists unique
   for type, extensions of config.extensions
     config.extensions[type] = _.uniq(extensions)
 
@@ -49,15 +60,15 @@ exports.setupCompilers = (config) ->
   # as they are not to override other compilers,
   # for instance if two compilers both register
   # for same extension
-  # TODO, remove resortCompilers
+  # TODO, consider remove resortCompilers
   if config.resortCompilers
     backloadCompilers = ["copy", "misc"]
-    copyMisc = _.remove compilers, (comp) ->
+    copyMisc = _.remove exports.compilers, (comp) ->
       backloadCompilers.indexOf( comp.compilerType ) > -1
-    compilers = compilers.concat copyMisc
+    exports.compilers = exports.compilers.concat copyMisc
 
 exports.registration = (config, register) ->
-  for compiler in compilers
+  for compiler in exports.compilers
     if logger.isDebug()
       logger.debug "Creating compiler " + compiler.name
 
@@ -80,6 +91,7 @@ exports.registration = (config, register) ->
     register ['buildExtension'], 'complete', _testDifferentTemplateLibraries, config.extensions.template
 
 exports.defaults = ->
+  resortCompilers: true
   template:
     writeLibrary: true
     wrapType: "amd"
@@ -90,18 +102,13 @@ exports.defaults = ->
 exports.validate = (config, validators) ->
   errors = []
 
+  validators.ifExistsIsBoolean(errors, "resortCompilers", config.resortCompilers)
+
   if validators.ifExistsIsObject(errors, "template config", config.template)
     validators.ifExistsIsBoolean( errors, "template.writeLibrary", config.template.writeLibrary )
 
     if config.template.output and config.template.outputFileName
       delete config.template.outputFileName
-
-    if validators.ifExistsIsBoolean(errors, "template.amdWrap", config.template.amdWrap)
-      logger.warn "template.amdWrap has been deprecated and support will be removed with a future release. Use template.wrapType."
-      if config.template.amdWrap
-        config.template.wrapType = "amd"
-      else
-        config.template.wrapType = "none"
 
     if validators.ifExistsIsString(errors, "template.wrapType", config.template.wrapType)
       if ["common", "amd", "none"].indexOf(config.template.wrapType) is -1
@@ -116,7 +123,7 @@ exports.validate = (config, validators) ->
       else
         errors.push "config.template.nameTransform property must be a string, regex or function"
 
-    if config.template.outputFileName?
+    if config.template.outputFileName
       config.template.output = [{
         folders:[""]
         outputFileName:config.template.outputFileName
@@ -125,20 +132,20 @@ exports.validate = (config, validators) ->
     if validators.ifExistsIsArrayOfObjects(errors, "template.output", config.template.output)
       fileNames = []
       for outputConfig in config.template.output
-        if validators.isArrayOfStringsMustExist errors, "template.templateFiles.folders", outputConfig.folders
+        if validators.isArrayOfStringsMustExist errors, "template.output.folders", outputConfig.folders
 
           if outputConfig.folders.length is 0
-            errors.push "template.templateFiles.folders must have at least one entry"
+            errors.push "template.output.folders must have at least one entry"
           else
             newFolders = []
             for folder in outputConfig.folders
               folder = path.join config.watch.sourceDir, folder
               unless fs.existsSync folder
-                errors.push "template.templateFiles.folders must exist, folder resolved to [[ #{folder} ]]"
+                errors.push "template.output.folders must exist, folder resolved to [[ #{folder} ]]"
               newFolders.push folder
             outputConfig.folders = newFolders
 
-        if outputConfig.outputFileName?
+        if outputConfig.outputFileName
           fName = outputConfig.outputFileName
           if typeof fName is "string"
             fileNames.push fName
