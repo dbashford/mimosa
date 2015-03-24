@@ -6,6 +6,7 @@ var crypto = require( "crypto" )
   , _ = require( "lodash" )
   , rimraf = require( "rimraf" )
   , fakeMimosaConfigObj = {
+    resortCompilers: true,
     watch: {
       compiledDir:"foo",
       sourceDir:"bar"
@@ -163,7 +164,7 @@ var fakeJavascriptCompiler = function() {
   var jsCompiler = {
     compile: function() {}
   };
-  
+
   return jsCompiler;
 }
 

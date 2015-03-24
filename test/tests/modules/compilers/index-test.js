@@ -6,6 +6,55 @@ var path = require( "path" )
   , compilerManager = require( path.join(process.cwd(), "lib", "modules", "compilers", "index") )
   ;
 
+var compiler1 = function() {
+  return {
+    compilerType: "misc",
+    extensions: function() {
+      return ["foo", "bar"];
+    },
+    name: "compiler1"
+  };
+};
+
+var compiler2 = function() {
+  return {
+    compilerType: "css",
+    extensions: function() {
+      return ["css", "sass"];
+    },
+    name: "compiler2"
+  };
+};
+
+var compiler3 = function() {
+  return {
+    compilerType: "javascript",
+    extensions: function() {
+      return ["js", "coffee"];
+    },
+    name: "compiler3"
+  };
+};
+
+var compiler4 = function() {
+  return {
+    compilerType: "javascript",
+    extensions: function() {
+      return ["js"];
+    },
+    name: "compiler4"
+  };
+};
+
+var nonCompiler = function() {
+  return {
+    extensions: function() {
+      return ["js"];
+    },
+    name: "compiler5"
+  };
+};
+
 describe("Mimosa's compiler manager", function() {
 
   describe("when checking multiple template library use", function() {
@@ -17,13 +66,88 @@ describe("Mimosa's compiler manager", function() {
   });
 
   describe("when setting up compilers", function() {
+
     describe("will build list of extensions", function() {
-      it("when single compiler");
-      it("when multiple compilers");
-      it("and not inspect modules that are not compilers");
-      it("and will keep extensions per type unique");
-      it("and will resort compilers")
-    })
+
+      it("when single compiler", function() {
+        var extensions = {
+          javascript: ['js'],
+          css: ['css'],
+          template: [],
+          copy: [],
+          misc:["foo", "bar"]
+        };
+
+        var config = utils.fake.mimosaConfig();
+        config.installedModules = [compiler1()];
+        config.extensions = {
+          javascript: ['js'],
+          css: ['css'],
+          template: [],
+          copy: [],
+          misc:[]
+        };
+        compilerManager.setupCompilers(config);
+        expect(config.extensions).to.eql(extensions);
+      });
+
+      it("when multiple compilers and keep extensions unique", function(){
+        var extensions = {
+          javascript: ['js', 'coffee'],
+          css: ['css', 'sass'],
+          template: [],
+          copy: [],
+          misc:["foo", "bar"]
+        };
+
+        var config = utils.fake.mimosaConfig();
+        config.installedModules = [compiler1(), compiler2(), compiler3(), compiler4()];
+        config.extensions = {
+          javascript: ['js'],
+          css: ['css'],
+          template: [],
+          copy: [],
+          misc:[]
+        };
+        compilerManager.setupCompilers(config);
+        expect(config.extensions).to.eql(extensions);
+      });
+    });
+
+    describe("will assemble list of compilers", function() {
+
+      it("and only a list of compilers", function() {
+        var config = utils.fake.mimosaConfig();
+        config.installedModules = [compiler1(), compiler2(), compiler3(), compiler4(), nonCompiler()];
+        compilerManager.setupCompilers(config);
+        expect(compilerManager.compilers.length).to.eql(4);
+        var comps = compilerManager.compilers.filter(function(comp) {
+          return comp.name === "compiler5";
+        });
+        expect(comps.length).to.eql(0)
+      });
+
+      it("and will resort compilers", function() {
+        var config = utils.fake.mimosaConfig();
+        config.installedModules = [compiler1(), compiler2(), compiler3(), compiler4(), nonCompiler()];
+        compilerManager.setupCompilers(config);
+        expect(compilerManager.compilers[0].compilerType).to.eql("css");
+        expect(compilerManager.compilers[1].compilerType).to.eql("javascript");
+        expect(compilerManager.compilers[2].compilerType).to.eql("javascript");
+        expect(compilerManager.compilers[3].compilerType).to.eql("misc");
+      });
+
+      it("and will not resort compilers if configured not to", function() {
+        var config = utils.fake.mimosaConfig();
+        config.installedModules = [compiler1(), compiler2(), compiler3(), compiler4(), nonCompiler()];
+        config.resortCompilers = false;
+        compilerManager.setupCompilers(config);
+        expect(compilerManager.compilers[0].compilerType).to.eql("misc");
+        expect(compilerManager.compilers[1].compilerType).to.eql("css");
+        expect(compilerManager.compilers[2].compilerType).to.eql("javascript");
+        expect(compilerManager.compilers[3].compilerType).to.eql("javascript");
+      });
+    });
   });
 
   describe("when registering", function() {
@@ -35,7 +159,10 @@ describe("Mimosa's compiler manager", function() {
     it("will not register the dupe template checker if templates are not configured")
   });
 
-  it("returns the proper defaults");
+  it("returns the proper defaults", function() {
+    var defaults = compilerManager.defaults();
+    expect(defaults).to.be.object;
+  });
 
   describe("validation", function() {
     it("will fail if resortCompilers isnt a boolean", function() {
@@ -191,9 +318,7 @@ describe("Mimosa's compiler manager", function() {
         };
         var errors = compilerManager.validate(fakeMimosaConfig, validators);
         expect(fakeMimosaConfig.template.output).to.eql(expected);
-
       });
-
 
       it("will fail if a folder doesn't exist on the file system", function() {
         fs.existsSync.restore();
