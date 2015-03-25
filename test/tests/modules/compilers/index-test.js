@@ -1,5 +1,6 @@
 var path = require( "path" )
   , fs = require( "fs" )
+  , logger = require( "logmimosa" )
   , sinon = require( "sinon" )
   , validators = require( "validatemimosa" )
   , utils = require( path.join(process.cwd(), "test", "utils") )
@@ -58,15 +59,59 @@ var nonCompiler = function() {
 describe("Mimosa's compiler manager", function() {
 
   describe("when checking multiple template library use", function() {
-    it("will catch when multiple template libraries used");
+    var checkTemplates
+      , config
+      , loggerSpy;
+
+    before(function(done) {
+      loggerSpy = sinon.spy(logger, "error")
+      config = utils.fake.mimosaConfig();
+      config.template = {
+        outputFileName: "foo.js"
+      };
+      config.extensions.template = ["hbs"]
+      compilerManager.registration( config, function(a, b, cb, d){
+        checkTemplates = cb;
+        done();
+      });
+    });
+
+    after(function() {
+      logger.error.restore();
+    })
+
+    it("will catch when multiple template libraries used", function(done) {
+      var options = { files: [""]}
+      checkTemplates( config, options, function() {
+        expect(loggerSpy.calledOnce).to.be.false;
+        checkTemplates( config, options, function() {
+          expect(loggerSpy.calledOnce).to.be.true;
+          done();
+        });
+      });
+    });
     describe("will continue the workflow", function() {
-      it("if no template files");
-      it("if template object configured");
+      it("if no template files", function(done) {
+        var options = { files: []}
+        checkTemplates( config, options, function() {
+          // callback being called = win
+          expect(true).to.be.true;
+          done();
+        });
+      });
+      it("if template object configured", function(done) {
+        var options = { files: [""] };
+        config.template.outputFileName = {foo:true}
+        checkTemplates( config, options, function() {
+          // callback being called = win
+          expect(true).to.be.true;
+          done();
+        });
+      });
     })
   });
 
   describe("when setting up compilers", function() {
-
     describe("will build list of extensions", function() {
 
       it("when single compiler", function() {
