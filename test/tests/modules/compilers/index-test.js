@@ -5,6 +5,9 @@ var path = require( "path" )
   , validators = require( "validatemimosa" )
   , utils = require( path.join(process.cwd(), "test", "utils") )
   , compilerManager = require( path.join(process.cwd(), "lib", "modules", "compilers", "index") )
+  , JSCompiler = require( path.join(process.cwd(), "lib", "modules", "compilers", "javascript") )
+  , CSSCompiler = require( path.join(process.cwd(), "lib", "modules", "compilers", "css") )
+  , MiscCompiler = require( path.join(process.cwd(), "lib", "modules", "compilers", "misc") )
   ;
 
 var compiler1 = function() {
@@ -196,12 +199,95 @@ describe("Mimosa's compiler manager", function() {
   });
 
   describe("when registering", function() {
-    it("will instantiate all the master compilers and pass in the child compilers");
-    it("will set the compiler name on the instance");
-    it("will register the compiler instances");
-    it("will call child registration functions if they exist");
-    it("will register the dupe template checker")
-    it("will not register the dupe template checker if templates are not configured")
+
+    describe("compilers", function() {
+
+      var jsRegistrationSpy
+        , cssRegistrationSpy
+        , miscRegistrationSpy
+        , config
+        ;
+
+      before(function() {
+        config = utils.fake.mimosaConfig();
+        config.installedModules = [compiler1(), compiler2(), compiler3(), compiler4(), nonCompiler()];
+        compilerManager.setupCompilers(config);
+
+        jsRegistrationSpy = sinon.spy(JSCompiler.prototype, "registration");
+        cssRegistrationSpy = sinon.spy(CSSCompiler.prototype, "registration");
+        miscRegistrationSpy = sinon.spy(MiscCompiler.prototype, "registration");
+
+        compilerManager.registration( config, function(){})
+      });
+
+      after(function() {
+        JSCompiler.prototype.registration.restore();
+        CSSCompiler.prototype.registration.restore();
+        MiscCompiler.prototype.registration.restore();
+      })
+
+      it("will instantiate all the master compilers and pass in the child compilers", function() {
+        expect(jsRegistrationSpy.firstCall.thisValue.compiler.name).to.eql("compiler3")
+        expect(jsRegistrationSpy.secondCall.thisValue.compiler.name).to.eql("compiler4")
+        expect(cssRegistrationSpy.firstCall.thisValue.compiler.name).to.eql("compiler2")
+        expect(miscRegistrationSpy.firstCall.thisValue.compiler.name).to.eql("compiler1")
+      });
+
+      it("will set the compiler name on the instance", function() {
+        expect(jsRegistrationSpy.firstCall.thisValue.name).to.eql("compiler3")
+        expect(jsRegistrationSpy.secondCall.thisValue.name).to.eql("compiler4")
+        expect(cssRegistrationSpy.firstCall.thisValue.name).to.eql("compiler2")
+        expect(miscRegistrationSpy.firstCall.thisValue.name).to.eql("compiler1")
+      });
+
+      it("will register the compiler instances", function() {
+        expect(jsRegistrationSpy.calledTwice).to.be.true;
+        expect(cssRegistrationSpy.calledOnce).to.be.true;
+        expect(miscRegistrationSpy.calledOnce).to.be.true;
+      });
+
+      it("will call child registration functions if they exist");
+
+    });
+
+    describe("will register", function() {
+      var config;
+
+      before(function() {
+        config = utils.fake.mimosaConfig();
+        config.installedModules = [];
+        config.extensions = {
+          javascript: ['js'],
+          css: ['css'],
+          template: [],
+          copy: [],
+          misc:[]
+        };
+        compilerManager.setupCompilers(config);
+      });
+
+      it("will register the dupe template checker", function(done) {
+        config.template = {
+          outputFileName: "foo.js"
+        };
+        config.extensions.template = ["hbs"]
+        compilerManager.registration( config, function(a, b, cb, d){
+          expect(d).to.eql(["hbs"])
+          done();
+        });
+      });
+
+      it("will not register the dupe template checker if templates are not configured", function(done) {
+        config.template = null;
+        var spy = sinon.spy();
+        compilerManager.registration( config, spy );
+        setTimeout(function() {
+          expect(spy.callCount).to.eql(0);
+          done();
+        }, 50);
+      });
+    });
+
   });
 
   it("returns the proper defaults", function() {
@@ -380,6 +466,7 @@ describe("Mimosa's compiler manager", function() {
         };
         var errors = compilerManager.validate(fakeMimosaConfig, validators);
         expect(errors[0]).to.eql("template.output.folders must exist, folder resolved to [[ bar/afolder ]]");
+        //fs.existsSync.restore();
       });
     });
   });
