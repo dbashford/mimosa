@@ -8,7 +8,7 @@ require("./tests/modules/file/clean-test");
 require("./tests/modules/file/beforeRead-test");
 
 require("./tests/modules/compilers/index-test");
-//require("./tests/modules/compilers/javascript-test");
+require("./tests/modules/compilers/javascript-test");
 
 require("./tests/util/file-test");
 require("./tests/util/cleaner-test");
