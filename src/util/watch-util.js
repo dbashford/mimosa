@@ -2,6 +2,10 @@ var logger = require( "logmimosa" );
 
 var _ignoreFunct = function( config ) {
   return function ( name ) {
+
+    // comes in as [name, stats]
+    name = name[0];
+
     if ( config.watch.excludeRegex ) {
       if ( name.match( config.watch.excludeRegex) ) {
         logger.debug( "Ignoring file [[ " + name + " ]], matches exclude regex" );
