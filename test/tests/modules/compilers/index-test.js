@@ -16,7 +16,8 @@ var compiler1 = function() {
     extensions: function() {
       return ["foo", "bar"];
     },
-    name: "compiler1"
+    name: "compiler1",
+    registration: function(){}
   };
 };
 
@@ -36,7 +37,8 @@ var compiler3 = function() {
     extensions: function() {
       return ["js", "coffee"];
     },
-    name: "compiler3"
+    name: "compiler3",
+    registration: function(){}
   };
 };
 
@@ -206,11 +208,18 @@ describe("Mimosa's compiler manager", function() {
         , cssRegistrationSpy
         , miscRegistrationSpy
         , config
+        , compiler1RegSpy
+        , compiler3RegSpy
         ;
 
       before(function() {
         config = utils.fake.mimosaConfig();
-        config.installedModules = [compiler1(), compiler2(), compiler3(), compiler4(), nonCompiler()];
+        var comp1 = compiler1();
+        var comp3 = compiler3();
+        compiler1RegSpy = sinon.spy(comp1, "registration");
+        compiler3RegSpy = sinon.spy(comp3, "registration");
+
+        config.installedModules = [comp1, compiler2(), comp3, compiler4(), nonCompiler()];
         compilerManager.setupCompilers(config);
 
         jsRegistrationSpy = sinon.spy(JSCompiler.prototype, "registration");
@@ -246,8 +255,10 @@ describe("Mimosa's compiler manager", function() {
         expect(miscRegistrationSpy.calledOnce).to.be.true;
       });
 
-      it("will call child registration functions if they exist");
-
+      it("will call child registration functions if they exist", function() {
+        expect(compiler1RegSpy.calledOnce).to.be.true;
+        expect(compiler3RegSpy.calledOnce).to.be.true;
+      });
     });
 
     describe("will register", function() {
