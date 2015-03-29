@@ -143,7 +143,7 @@ exports.validate = function( config, validators ) {
       }
     }
 
-    if ( config.template.nameTransform != null ) {
+    if ( config.template.nameTransform !== null && config.template.nameTransform !== undefined ) {
       if ( typeof config.template.nameTransform == "string" ) {
         if ( ["fileName","filePath"].indexOf( config.template.nameTransform ) == -1 ) {
           errors.push( "config.template.nameTransform valid string values are filePath or fileName" );
