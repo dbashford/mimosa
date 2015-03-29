@@ -3,7 +3,7 @@ var path = require( "path" )
   , logger = require( "logmimosa" )
   , utils = require( path.join(process.cwd(), "test", "utils") )
   , JavaScriptCompiler = require( path.join(process.cwd(), "lib", "modules", "compilers", "javascript") )
-  , fileUtils = require( path.join(process.cwd(), "lib", "util", "file" ) )
+  , compilerUtils = require( "./utils" )
   , fakeMimosaConfig = utils.fake.mimosaConfig();
   ;
 
@@ -58,24 +58,6 @@ var genCompiler = function(compileFunct) {
   return compiler;
 }
 
-var getCallbacks = function( compiler, cb ) {
-  var i = 0
-    , determineOutputFile
-    , compile
-    ;
-
-  compiler.registration( fakeMimosaConfig, function(a, b, lifecycle, d) {
-    if (i++) {
-      cb({
-        determineOutputFile: determineOutputFile,
-        compile: lifecycle
-      });
-    } else {
-      determineOutputFile = lifecycle;
-    }
-  })
-};
-
 describe("Mimosa's JavaScript compiler wrapper", function() {
 
   describe("will register", function() {
@@ -88,7 +70,7 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
 
     before( function(done) {
       compiler = genCompiler( compileSuccessNoMap );
-      getCallbacks( compiler, function( cbs ) {
+      compilerUtils.getCallbacks( compiler, fakeMimosaConfig, function( cbs ) {
         determineOutputFile = cbs.determineOutputFile;
         compile = cbs.compile;
         done();
@@ -125,7 +107,7 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
     it("will not attempt to compile anything if no files to compile", function( done ) {
       var compiler  = genCompiler( compileSuccessNoMap );
       var options = {files:[]};
-      getCallbacks( compiler, function( cbs ) {
+      compilerUtils.getCallbacks( compiler, fakeMimosaConfig, function( cbs ) {
         cbs.compile( fakeMimosaConfig, options, function() {
           // calling the callback is a successful test
           expect(true).to.be.true;
@@ -145,7 +127,7 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
         var options = {files:[{inputFileName:"fooooo.bar", inputFileText:"console.log('foo')"}], isVendor:isVendor};
         var compiler  = genCompiler( compileSuccessNoMap );
         var compilerSpy = sinon.spy(compiler, "_compile");
-        getCallbacks( compiler, function( cbs ) {
+        compilerUtils.getCallbacks( compiler, fakeMimosaConfig, function( cbs ) {
           cbs.compile( fakeMimosaConfig, options, function() {
             expect(compilerSpy.args[0][1].isVendor).to.eql(isVendor);
             compiler._compile.restore();
@@ -167,7 +149,7 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
         var compiler  = genCompiler( compileSuccessNoMap );
         var compilerSpy = sinon.spy(compiler.compiler, "compile");
 
-        getCallbacks( compiler, function( cbs ) {
+        compilerUtils.getCallbacks( compiler, fakeMimosaConfig, function( cbs ) {
           cbs.compile( fakeMimosaConfig, options, function() {
             expect(compilerSpy.args[0][0]).to.eql(fakeMimosaConfig);
             var file = options.files[0];
@@ -186,7 +168,7 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
 
         before( function(done) {
           compiler = genCompiler( compileError );
-          getCallbacks( compiler, function( cbs ) {
+          compilerUtils.getCallbacks( compiler, fakeMimosaConfig, function( cbs ) {
             compile = cbs.compile;
             done()
           });
@@ -228,7 +210,7 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
 
       before( function(done) {
         compiler = genCompiler( compileSuccessNoMap );
-        getCallbacks( compiler, function( cbs ) {
+        compilerUtils.getCallbacks( compiler, fakeMimosaConfig, function( cbs ) {
           compile = cbs.compile;
           done()
         });
@@ -236,7 +218,7 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
 
       it("will create source maps if source map is included", function(done) {
         var compiler2 = genCompiler( compileSuccessMapObject );
-        getCallbacks( compiler2, function( cbs ) {
+        compilerUtils.getCallbacks( compiler2, fakeMimosaConfig, function( cbs ) {
           cbs.compile( fakeMimosaConfig, options, function() {
             expect(options.files[0].outputFileText.split("\n")[1].substring(0,20)).to.eql("//# sourceMappingURL");
             done();
@@ -266,7 +248,7 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
     it("will make no changes if source map already present", function(done) {
       var options = {files:[{inputFileName:"fooooo.bar", inputFileText:"console.log('foo')"}], isVendor:false};
       var compiler  = genCompiler( compileSuccessMapEmbedded );
-      getCallbacks( compiler, function( cbs ) {
+      compilerUtils.getCallbacks( compiler, fakeMimosaConfig, function( cbs ) {
         cbs.compile( fakeMimosaConfig, options, function() {
           var text = options.files[0].outputFileText;
           expect(text.indexOf("TESTTESTTEST")).to.eql(81)
@@ -280,7 +262,7 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
       it("can handle a " + type + " source map", function(done) {
         var options = {files:[{inputFileName:"fooooo.bar", inputFileText:"console.log('foo')"}], isVendor:false};
         var compiler  = genCompiler( comp );
-        getCallbacks( compiler, function( cbs ) {
+        compilerUtils.getCallbacks( compiler, fakeMimosaConfig, function( cbs ) {
           cbs.compile( fakeMimosaConfig, options, function() {
             var text = options.files[0].outputFileText;
             expect(text.match(/sourceMappingURL/).length).to.eql(1)
@@ -296,7 +278,7 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
     it("will create the correct source map", function(done) {
       var options = {files:[{inputFileName:"fooooo.bar", inputFileText:"console.log('foo')"}], isVendor:false};
       var compiler  = genCompiler( compileSuccessMapObject );
-      getCallbacks( compiler, function( cbs ) {
+      compilerUtils.getCallbacks( compiler, fakeMimosaConfig, function( cbs ) {
         cbs.compile( fakeMimosaConfig, options, function() {
           var text = options.files[0].outputFileText.split("\n")[1];
           expect(text).to.eql("//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJmb29vb28uYmFyIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLE9BQUEsQ0FDRTtBQUFBLEVBQUEsT0FBQSxFQUFVLElBQUEsR0FBRyxDQUFDLENBQUssSUFBQSxJQUFBLENBQUEsQ0FBTCxDQUFZLENBQUMsT0FBYixDQUFBLENBQUQsQ0FBYjtBQUFBLEVBQ0EsS0FBQSxFQUNFO0FBQUEsSUFBQSxNQUFBLEVBQVMsc0JBQVQ7R0FGRjtDQURGLEVBSUksQ0FBRSxrQkFBRixDQUpKLEVBS0ksU0FBQyxXQUFELEdBQUE7QUFDQSxNQUFBLElBQUE7QUFBQSxFQUFBLEdBQUcsQ0FBQyxHQUFKLEdBQVUsR0FBVixDQUFBO0FBQUEsRUFDQSxJQUFBLEdBQVcsSUFBQSxXQUFBLENBQUEsQ0FEWCxDQUFBO1NBRUEsSUFBSSxDQUFDLE1BQUwsQ0FBYSxNQUFiLEVBSEE7QUFBQSxDQUxKLENBQUEsQ0FBQSIsInNvdXJjZXNDb250ZW50IjpbImNvbnNvbGUubG9nKCdmb28nKSJdfQ==")
@@ -311,7 +293,7 @@ describe("Mimosa's JavaScript compiler wrapper", function() {
 
     before( function(done) {
       compiler = genCompiler( compileSuccessNoMap );
-      getCallbacks( compiler, function( cbs ) {
+      compilerUtils.getCallbacks( compiler, fakeMimosaConfig, function( cbs ) {
         determineOutputFile = cbs.determineOutputFile;
         compile = cbs.compile;
         done();
