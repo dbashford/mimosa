@@ -17,7 +17,8 @@ var compiler1 = function() {
       return ["foo", "bar"];
     },
     name: "compiler1",
-    registration: function(){}
+    registration: function(){},
+    compile: function(){}
   };
 };
 
