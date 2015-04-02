@@ -40,7 +40,8 @@ __removeClientLibrary = (clientPath, cb) ->
         if logger.isDebug()
           logger.debug "Removing client library [[ #{clientPath} ]]"
         fs.unlink clientPath, (err) ->
-          logger.success "Deleted file [[ #{clientPath} ]]" unless err
+          unless err
+            logger.success "Deleted file [[ #{clientPath} ]]"
           cb()
       else
         cb()
@@ -135,15 +136,18 @@ module.exports = class TemplateCompiler
 
     options.files = []
 
-    # consider simplifying if init takes care of whether or not
-    # compiler should be invoked
+    # for each configured output config
     for outputFileConfig in config.template.output
-      if options.inputFile?
+      if options.inputFile
+        # if a file is involved (add, update, remove workflows),
+        # need to make sure template file being processed
         for folder in outputFileConfig.folders
+          # if file name begins with folder in loop, the gather files
           if options.inputFile.indexOf(path.join(folder, path.sep)) is 0
             @__gatherFolderFilesForOutputFileConfig(config, options, outputFileConfig.folders)
             break
       else
+        # if no file is involved (build workflow), no need to look for it, just gather files
         @__gatherFolderFilesForOutputFileConfig(config, options, outputFileConfig.folders)
 
     next(options.files.length > 0)
@@ -151,6 +155,9 @@ module.exports = class TemplateCompiler
   __gatherFolderFilesForOutputFileConfig: (config, options, folders) =>
     for folder in folders
       for folderFile in @__gatherFilesForFolder(config, options, folder)
+        # do not add the same file twice
+        # TODO, rather than check each file add here, add them all
+        # and run single _.uniq after done
         if _.pluck(options.files, 'inputFileName').indexOf(folderFile.inputFileName) is -1
           options.files.push folderFile
 
@@ -223,7 +230,8 @@ module.exports = class TemplateCompiler
             mergedText += file.outputFileText
             break
 
-      __testForSameTemplateName(mergedFiles) if mergedFiles.length > 1
+      if mergedFiles.length > 1
+        __testForSameTemplateName(mergedFiles)
 
       continue if mergedText is ""
 
@@ -265,9 +273,6 @@ module.exports = class TemplateCompiler
     if !@clientPath? or fs.existsSync @clientPath
       logger.debug "Not going to write template client library"
       return next()
-
-    if logger.isDebug()
-      logger.debug "Adding template client library [[ #{@compiler.clientLibrary} ]] to list of files to write"
 
     fs.readFile @compiler.clientLibrary, "utf8", (err, data) =>
       if err
