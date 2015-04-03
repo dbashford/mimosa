@@ -10,6 +10,8 @@ As updates to external modules are listed here, know that you can use them right
 * Removed long deprecated `amdWrap` setting on `template` property.
 
 ### Major Changes
+* __New Module__ [mimosa-build-task](https://github.com/dbashford/mimosa-build-task) will run a script during your build.  Intially developed to run a server during a CI build, can run just about anything.
+* __New Module__ [mimosa-htmlclean](https://github.com/dbashford/mimosa-htmlclean) cleans/sanitizes HTML files, but can also be pointed at template files like HTMLBars/Handlebars.
 * __New Module__ [mimosa-coffeescript-preprocess](https://github.com/0xorial/mimosa-coffeescript-preprocess) will substitute template-like values in your CoffeeScript prior to compiling it.
 * __New Module__ [mimosa-replace](https://github.com/dpeukert/mimosa-replace) does simple text replacement either before or after your files have been compiled.
 * __New Module__ [mimosa-phantomcss](https://github.com/dbazile/mimosa-phantomcss) will run visual testing using [PhantomCSS](https://github.com/Huddle/PhantomCSS) and Casper.
