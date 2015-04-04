@@ -1,4 +1,5 @@
 var path = require( "path" )
+  , fs = require( "fs" )
   , sinon = require( "sinon" )
   , logger = require( "logmimosa" )
   , utils = require( path.join(process.cwd(), "test", "utils") )
@@ -112,11 +113,65 @@ describe("Mimosa's template compiler", function() {
   });
 
   describe("will remove client library and execute callback", function() {
-    describe("but will not remove library", function() {
-      it("if no client path");
-      it("if client path does not exist");
+    var unlinkSpy
+      , mimosaConfig = utils.fake.mimosaConfig()
+      , compiler
+      ;
+
+    before(function() {
+      unlinkStub = sinon.stub(fs, "unlink", function(a, done){
+        done();
+      });
+      mimosaConfig.template.output = [];
+      compilerImpl = fakeTemplateCompilerImpl();
+      compiler = genCompiler(mimosaConfig, compilerImpl);
     });
-    it("if client path exists")
+
+    afterEach(function() {
+      unlinkStub.reset();
+    });
+
+    after(function() {
+      fs.unlink.restore();
+    });
+
+    describe("but will not remove library", function() {
+      it("if no client path", function(done) {
+        var existsSpy = sinon.spy(fs, "exists");
+        var clientPath = compiler.clientPath;
+        compiler.clientPath = null;
+        compiler._removeFiles( mimosaConfig, {}, function() {
+          expect(unlinkStub.callCount).to.eql(0);
+          expect(existsSpy.callCount).to.eql(0);
+          fs.exists.restore();
+          compiler.clientPath = clientPath;
+          done();
+        });
+      });
+
+      it("if client path does not exist", function(done) {
+        var existsSpy = sinon.stub(fs, "exists", function(a, cb) {
+          cb(false);
+        });
+        compiler._removeFiles( mimosaConfig, {}, function() {
+          expect(unlinkStub.callCount).to.eql(0);
+          fs.exists.restore();
+          done()
+        });
+      });
+    });
+
+    it("if client path exists", function(done) {
+      var existsSpy = sinon.stub(fs, "exists", function(a, cb) {
+        cb(true);
+      })
+
+      compiler._removeFiles( mimosaConfig, {}, function() {
+        expect(unlinkStub.callCount).to.eql(1);
+        fs.exists.restore();
+        done()
+      });
+    })
   });
 
   it("will notify the user if templates have the same name");
