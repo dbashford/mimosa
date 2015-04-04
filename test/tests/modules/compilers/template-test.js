@@ -64,19 +64,26 @@ describe("Mimosa's template compiler", function() {
   });
 
   describe("when instantiated", function() {
+    var compiler
+      , mimosaConfig
+      , compilerImpl
+      ;
+
+    before(function() {
+      compilerImpl = fakeTemplateCompilerImpl();
+      mimosaConfig = utils.fake.mimosaConfig();
+      mimosaConfig.vendor.javascripts = path.join(__dirname, mimosaConfig.vendor.javascripts);
+      mimosaConfig.watch.sourceDir = path.join(__dirname);
+      mimosaConfig.watch.compiledDir = path.join("public");
+    })
+
+    afterEach(function() {
+      mimosaConfig.template.wrapType = "amd";
+      mimosaConfig.template.writeLibrary = true;
+      compilerImpl.clientLibrary = "foo.js";
+    })
 
     describe("will set up paths", function() {
-      var compiler
-        , mimosaConfig
-        ;
-
-      before(function() {
-        var compilerImpl = fakeTemplateCompilerImpl();
-        mimosaConfig = utils.fake.mimosaConfig();
-        mimosaConfig.vendor.javascripts = path.join(__dirname, mimosaConfig.vendor.javascripts);
-        mimosaConfig.watch.sourceDir = path.join(__dirname);
-        mimosaConfig.watch.compiledDir = path.join("public");
-      })
 
       it("with default config", function() {
         compiler = genCompiler(mimosaConfig, compilerImpl);
@@ -89,7 +96,6 @@ describe("Mimosa's template compiler", function() {
         compiler = genCompiler(mimosaConfig, compilerImpl);
         expect(compiler.libPath).to.eql("vendor/foo");
         expect(compiler.clientPath).to.eql("public/javascripts/vendor/foo.js");
-        mimosaConfig.template.wrapType = "amd"; // set back
       });
 
       it("with writeLibrary turned off", function() {
@@ -97,29 +103,16 @@ describe("Mimosa's template compiler", function() {
         compiler = genCompiler(mimosaConfig, compilerImpl);
         expect(compiler.libPath).to.eql("vendor/foo");
         expect(compiler.clientPath).to.eql("public/javascripts/vendor/foo.js");
-        mimosaConfig.template.writeLibrary = true; // set back
       });
     });
 
     describe("will not set up paths", function() {
-      var compiler
-        , mimosaConfig
-        ;
-
-      before(function() {
-        var compilerImpl = fakeTemplateCompilerImpl();
-        mimosaConfig = utils.fake.mimosaConfig();
-        mimosaConfig.vendor.javascripts = path.join(__dirname, mimosaConfig.vendor.javascripts);
-        mimosaConfig.watch.sourceDir = path.join(__dirname);
-        mimosaConfig.watch.compiledDir = path.join("public");
-      });
 
       it("if no client lirbary", function() {
         compilerImpl.clientLibrary = false;
         compiler = genCompiler(mimosaConfig, compilerImpl);
         expect(compiler.libPath).to.be.undefined;
         expect(compiler.clientPath).to.be.undefined;
-        compilerImpl.clientLibrary = true; // set back
       });
 
       it("if wrap type is not AMD and writeLibrary is turned off", function() {
