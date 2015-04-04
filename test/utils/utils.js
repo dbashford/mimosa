@@ -9,7 +9,8 @@ var crypto = require( "crypto" )
     resortCompilers: true,
     watch: {
       compiledDir:"foo",
-      sourceDir:"bar"
+      sourceDir:"bar",
+      javascriptDir:"javascripts"
     },
     extensions: {
       javascript:["js", "coffee"],
@@ -27,7 +28,15 @@ var crypto = require( "crypto" )
     vendor: {
       javascripts: "javascripts/vendor",
       stylesheets: "stylesheets/vendor"
-    }
+    },
+    template: {
+      writeLibrary: true,
+      wrapType: "amd",
+      commonLibPath: null,
+      nameTransform:"fileName",
+      outputFileName: "javascripts/templates"
+    },
+    installedModules: []
   }
   , standardConfig = {
     modules: ['copy'],
@@ -77,23 +86,17 @@ var restoreChokidar = function() {
   }
 };
 
-var testRegistration = function( mod, cb, noExtensions ) {
-  var workflows, step, writeFunction, extensions;
+var testRegistration = function( mod, cb, noExtensions, config ) {
 
-  mod.registration( fakeMimosaConfig(), function( _workflows, _step , _writeFunction, _extensions ) {
-    workflows = _workflows;
-    step = _step;
-    writeFunction = _writeFunction;
-    extensions = _extensions;
-
-    expect( workflows ).to.be.instanceof( Array );
-    expect( step ).to.be.a( "string" );
-    expect( writeFunction ).to.be.instanceof( Function )
+  mod.registration( config || fakeMimosaConfig(), function( _workflows, _step , _function, _extensions ) {
+    expect( _workflows ).to.be.instanceof( Array );
+    expect( _step ).to.be.a( "string" );
+    expect( _function ).to.be.instanceof( Function )
     if ( !noExtensions ) {
-      expect( extensions ).to.be.instanceof( Array );
+      expect( _extensions ).to.be.instanceof( Array );
     }
 
-    cb( writeFunction );
+    cb( _function );
   });
 };
 
@@ -150,7 +153,6 @@ var filesAndDirsInFolder = function( dir ) {
 var fakeProgram = function() {
   var program = {
     on: function() { return program },
-    command: function(){ return program },
     description: function(){ return program },
     command: function(){return program },
     option: function(){return program },

@@ -103,11 +103,21 @@ module.exports = class TemplateCompiler
     @extensions = @compiler.extensions(config)
 
     if @compiler.clientLibrary and (config.template.wrapType is 'amd' or config.template.writeLibrary)
+      # client path is where the client library gets written
+      # 1 get name of file
       @clientPath = path.basename(@compiler.clientLibrary)
+      # 2 get pull path to output
       @clientPath = path.join config.vendor.javascripts, @clientPath
+      # 3 move to compiled directory
       @clientPath = @clientPath.replace config.watch.sourceDir, config.watch.compiledDir
+
+      # TODO when removing javascriptDir, use provided AMD path in template
+      # build relative path to library for AMD path creation
+      # 1 get javascript directory
       compiledJs = path.join config.watch.compiledDir, config.watch.javascriptDir
+      # 2 create AMD path, remove javascript directory root, remove leading slash, then rejoin with AMD slashes
       @libPath = @clientPath.replace(compiledJs, '').substring(1).split(path.sep).join('/')
+      # 3 remove extension
       @libPath = @libPath.replace(path.extname(@libPath), '')
 
   registration: (config, register) ->

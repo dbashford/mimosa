@@ -1,3 +1,35 @@
+var path = require( "path" )
+  , sinon = require( "sinon" )
+  , logger = require( "logmimosa" )
+  , utils = require( path.join(process.cwd(), "test", "utils") )
+  , TemplateCompiler = require( path.join(process.cwd(), "lib", "modules", "compilers", "template") )
+  , fakeMimosaConfig = utils.fake.mimosaConfig();
+  ;
+
+var fakeTemplateCompilerImpl = function() {
+  return {
+    clientLibrary:"foo.js",
+    name: "testTemplateCompiler",
+    handlesNamespacing: false,
+    extensions: function(config) {
+      return ["hbs", "handlebars"];
+    },
+    compile: function( config, file, cb) {
+      cb(err, "this is a result");
+    },
+    prefix: function( config, libPath ) {
+      return "PREFIX " + libPath;
+    },
+    suffix: function( config ) {
+      return "SUFFIX"
+    }
+  }
+};
+
+var genCompiler = function(mc, comp) {
+  return new TemplateCompiler( mc, comp );
+};
+
 describe("Mimosa's template compiler", function() {
 
   describe("template name generation", function() {
@@ -31,19 +63,78 @@ describe("Mimosa's template compiler", function() {
     it("will claim extension if being processed");
   });
 
-  describe("will set up paths", function() {
-    it("lib path");
-    it("client path");
+  describe("when instantiated", function() {
+
+    describe("will set up paths", function() {
+      var compiler;
+
+      before(function() {
+        var compilerImpl = fakeTemplateCompilerImpl();
+        var mimosaConfig = utils.fake.mimosaConfig();
+        mimosaConfig.vendor.javascripts = path.join(__dirname, mimosaConfig.vendor.javascripts);
+        mimosaConfig.watch.sourceDir = path.join(__dirname);
+        mimosaConfig.watch.compiledDir = path.join("public");
+        console.log(mimosaConfig.watch.compiledDir)
+        compiler = genCompiler(mimosaConfig, compilerImpl);
+      })
+
+      it("lib path", function() {
+        expect(compiler.libPath).to.eql("vendor/foo");
+      });
+      it("client path", function() {
+        expect(compiler.clientPath).to.eql("public/javascripts/vendor/foo.js");
+      });
+    });
+
+    describe("will not set up paths", function() {
+      it("if no client lirbary");
+      it("if wrap type is not AMD and writeLibrary is turned off");
+    })
   });
 
-  describe("will register", function() {
-    it("with valid parameters in register function");
-    it("for all the various workflow functions")
+  it("will register with valid parameters in register function", function(done) {
+    var compilerImpl = fakeTemplateCompilerImpl()
+    var compiler = genCompiler(fakeMimosaConfig, compilerImpl);
+    var i = 0;
+    utils.test.registration( compiler, function() {
+      if (++i === 11) {
+        done();
+      }
+
+      // should not get here
+      if (i > 11) {
+        expect(false).to.be.true;
+      }
+    });
   });
 
-  it("will not register for client library functions");
+  it("will not register for client library functions", function(done) {
+    var mimosaConfig = utils.fake.mimosaConfig();
+    mimosaConfig.template.writeLibrary = false;
+    var compilerImpl = fakeTemplateCompilerImpl()
+    var compiler = genCompiler(mimosaConfig, compilerImpl);
+    var i = 0;
+    utils.test.registration( compiler, function() {
+      if (++i === 8) {
+        done();
+      }
 
-  it("will keep a handle on mimosa-require module if it is available");
+      if (i > 8) {
+        // should not get here
+        expect(false).to.be.true;
+      }
+    }, null, mimosaConfig);
+
+  });
+
+  it("will keep a handle on mimosa-require module if it is available", function() {
+    compilerImpl = fakeTemplateCompilerImpl();
+    mimosaConfig = utils.fake.mimosaConfig();
+    mimosaConfig.installedModules['mimosa-require'] = "foo"
+    compiler = genCompiler(mimosaConfig, compilerImpl);
+    compiler.registration(mimosaConfig, function(){});
+    expect(compiler.requireRegister).to.eql("foo");
+  });
 
   describe("when gathering files", function() {
     it("will move to next workflow step if not a template file");
