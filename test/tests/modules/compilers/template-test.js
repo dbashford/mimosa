@@ -66,29 +66,69 @@ describe("Mimosa's template compiler", function() {
   describe("when instantiated", function() {
 
     describe("will set up paths", function() {
-      var compiler;
+      var compiler
+        , mimosaConfig
+        ;
 
       before(function() {
         var compilerImpl = fakeTemplateCompilerImpl();
-        var mimosaConfig = utils.fake.mimosaConfig();
+        mimosaConfig = utils.fake.mimosaConfig();
         mimosaConfig.vendor.javascripts = path.join(__dirname, mimosaConfig.vendor.javascripts);
         mimosaConfig.watch.sourceDir = path.join(__dirname);
         mimosaConfig.watch.compiledDir = path.join("public");
-        console.log(mimosaConfig.watch.compiledDir)
-        compiler = genCompiler(mimosaConfig, compilerImpl);
       })
 
-      it("lib path", function() {
+      it("with default config", function() {
+        compiler = genCompiler(mimosaConfig, compilerImpl);
         expect(compiler.libPath).to.eql("vendor/foo");
-      });
-      it("client path", function() {
         expect(compiler.clientPath).to.eql("public/javascripts/vendor/foo.js");
+      });
+
+      it("with wrapType set to something else", function() {
+        mimosaConfig.template.wrapType = "foo";
+        compiler = genCompiler(mimosaConfig, compilerImpl);
+        expect(compiler.libPath).to.eql("vendor/foo");
+        expect(compiler.clientPath).to.eql("public/javascripts/vendor/foo.js");
+        mimosaConfig.template.wrapType = "amd"; // set back
+      });
+
+      it("with writeLibrary turned off", function() {
+        mimosaConfig.template.writeLibrary = false; //set back
+        compiler = genCompiler(mimosaConfig, compilerImpl);
+        expect(compiler.libPath).to.eql("vendor/foo");
+        expect(compiler.clientPath).to.eql("public/javascripts/vendor/foo.js");
+        mimosaConfig.template.writeLibrary = true; // set back
       });
     });
 
     describe("will not set up paths", function() {
-      it("if no client lirbary");
-      it("if wrap type is not AMD and writeLibrary is turned off");
+      var compiler
+        , mimosaConfig
+        ;
+
+      before(function() {
+        var compilerImpl = fakeTemplateCompilerImpl();
+        mimosaConfig = utils.fake.mimosaConfig();
+        mimosaConfig.vendor.javascripts = path.join(__dirname, mimosaConfig.vendor.javascripts);
+        mimosaConfig.watch.sourceDir = path.join(__dirname);
+        mimosaConfig.watch.compiledDir = path.join("public");
+      });
+
+      it("if no client lirbary", function() {
+        compilerImpl.clientLibrary = false;
+        compiler = genCompiler(mimosaConfig, compilerImpl);
+        expect(compiler.libPath).to.be.undefined;
+        expect(compiler.clientPath).to.be.undefined;
+        compilerImpl.clientLibrary = true; // set back
+      });
+
+      it("if wrap type is not AMD and writeLibrary is turned off", function() {
+        mimosaConfig.template.wrapType = "foo";
+        mimosaConfig.template.writeLibrary = false;
+        compiler = genCompiler(mimosaConfig, compilerImpl);
+        expect(compiler.libPath).to.be.undefined;
+        expect(compiler.clientPath).to.be.undefined;
+      });
     })
   });
 

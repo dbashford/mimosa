@@ -111,7 +111,7 @@ module.exports = class TemplateCompiler
       # 3 move to compiled directory
       @clientPath = @clientPath.replace config.watch.sourceDir, config.watch.compiledDir
 
-      # TODO when removing javascriptDir, use provided AMD path in template
+      # TODO when removing javascriptDir, use provided AMD path in template config
       # build relative path to library for AMD path creation
       # 1 get javascript directory
       compiledJs = path.join config.watch.compiledDir, config.watch.javascriptDir
