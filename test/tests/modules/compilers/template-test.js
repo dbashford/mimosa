@@ -238,21 +238,19 @@ describe("Mimosa's template compiler", function() {
 
   describe("will generate destination file names", function(){
     var mimosaConfig
-      , compilerImpl
-      , compiler
       , init
       , options = {}
       ;
 
     before(function(done) {
-      compilerImpl = fakeTemplateCompilerImpl();
+      var compilerImpl = fakeTemplateCompilerImpl();
       mimosaConfig = utils.fake.mimosaConfig();
-      compiler = genCompiler(mimosaConfig, compilerImpl);
+      var compiler = genCompiler(mimosaConfig, compilerImpl);
       getInit(compiler, mimosaConfig, function(_init) {
         init = _init
         done();
-      })
-    })
+      });
+    });
 
     it("for matching folders", function(done) {
       mimosaConfig.template.output = [{
@@ -268,16 +266,67 @@ describe("Mimosa's template compiler", function() {
         var destFile = options.destinationFile("nothing", mimosaConfig.template.output[0].folders);
         expect(destFile).to.eql("foo/boss.js")
         done();
-      })
+      });
     });
 
-    it("for a specific compiler name");
-    it("when no specific compiler name provided");
+    it("for a specific compiler name", function(done) {
+      mimosaConfig.template.output = [{
+        folders:["/foo"],
+        outputFileName:{
+          jade: "bossss"
+        }
+      }, {
+        folders:["/bar"],
+        outputFileName:"princess"
+      }];
+
+      init(mimosaConfig, options, function() {
+        expect(options.destinationFile).to.be.function;
+        var destFile = options.destinationFile("jade", mimosaConfig.template.output[0].folders);
+        expect(destFile).to.eql("foo/bossss.js")
+        done();
+      });
+    });
   });
 
   describe("during initialization", function() {
-    it("will claim a file if it is inside one of the folders from the config");
-    it("will claim extension if being processed");
+    var mimosaConfig
+      , init
+      , options = {}
+      ;
+
+    before(function(done) {
+      var compilerImpl = fakeTemplateCompilerImpl();
+      mimosaConfig = utils.fake.mimosaConfig();
+      var compiler = genCompiler(mimosaConfig, compilerImpl);
+      getInit(compiler, mimosaConfig, function(_init) {
+        init = _init
+        done();
+      });
+    });
+
+    it("will claim a file if it is inside one of the folders from the config", function(done) {
+      mimosaConfig.template.output = [{
+        folders:["/bar"],
+        outputFileName:"princess"
+      }];
+
+      options.inputFile = "/bar/inputfile.js"
+      init(mimosaConfig, options, function() {
+        expect(options.isTemplateFile).to.be.true;
+        expect(options.destinationFile).to.be.function;
+        options.inputFile = null;
+        done();
+      });
+    });
+
+    it("will claim extension if being processed", function(done) {
+      init(mimosaConfig, options, function() {
+        expect(options.isTemplateFile).to.be.true;
+        expect(options.destinationFile).to.be.function;
+        done();
+      });
+    });
   });
 
   describe("when instantiated", function() {
