@@ -233,7 +233,7 @@ module.exports = class TemplateCompiler
       mergedFiles = []
       options.files.forEach (file) =>
         for folder in outputFileConfig.folders
-          if file.inputFileName?.indexOf(path.join(folder, path.sep)) is 0
+          if file.inputFileName.indexOf(path.join(folder, path.sep)) is 0
             mergedFiles.push {tName: file.templateName, fName: file.inputFileName}
             unless config.isOptimize
               mergedText += __templatePreamble file

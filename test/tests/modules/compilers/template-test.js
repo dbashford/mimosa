@@ -174,9 +174,56 @@ describe("Mimosa's template compiler", function() {
     })
   });
 
-  it("will notify the user if templates have the same name");
+  it("will notify the user if templates have the same name", function(done) {
+    var loggerSpy = sinon.spy(logger, "error");
+    mimosaConfig = utils.fake.mimosaConfig();
+    mimosaConfig.template.output = [{
+      folders:["/foo"]
+    }]
+    compilerImpl = fakeTemplateCompilerImpl();
+    compiler = genCompiler(mimosaConfig, compilerImpl);
+    var options = {
+      isTemplateFile: true,
+      files:[{
+        inputFileName:"/foo/templates/templ.tpl",
+        outputFileText:"output1"
+      },{
+        inputFileName:"/foo/templates/more/templ.tpl",
+        outputFileText:"output2"
+      }],
+      destinationFile: function() {
+        return "destinationFile";
+      }
+    };
+    compiler._merge(mimosaConfig, options, function() {
+      expect(loggerSpy.callCount).to.eql(1);
+      expect(loggerSpy.args[0][0].match(/templ.tpl/g).length).to.eql(2)
+      logger.error.restore();
+      done();
+    })
+  });
 
-  it("will incorporate a template preamble with useful template information");
+  it("will incorporate a template preamble with useful template information", function(done) {
+    mimosaConfig = utils.fake.mimosaConfig();
+    mimosaConfig.template.output = [{
+      folders:["/foo"]
+    }]
+    var options = {
+      isTemplateFile: true,
+      files:[{
+        inputFileName:"/foo/templates/templ.tpl",
+        outputFileText:"output1"
+      }],
+      destinationFile: function() {
+        return "destinationFile";
+      }
+    };
+    compiler._merge(mimosaConfig, options, function() {
+      expect(/Source file/.test(options.files[1].outputFileText)).to.eql(true);
+      expect(/Template name/.test(options.files[1].outputFileText)).to.eql(true);
+      done();
+    })
+  });
 
   describe("will generate destination file names", function(){
     it("for each template output block");
