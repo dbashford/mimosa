@@ -31,6 +31,17 @@ var genCompiler = function(mc, comp) {
   return new TemplateCompiler( mc, comp );
 };
 
+var getInit = function(comp, config, cb) {
+  var haveInit = false;
+  compiler.registration( config, function(a, b, lifecycle, d) {
+    // is first callback
+    if (!haveInit) {
+      cb(lifecycle);
+      haveInit = true;
+    }
+  });
+};
+
 describe("Mimosa's template compiler", function() {
 
   describe("template name generation", function() {
@@ -226,7 +237,40 @@ describe("Mimosa's template compiler", function() {
   });
 
   describe("will generate destination file names", function(){
-    it("for each template output block");
+    var mimosaConfig
+      , compilerImpl
+      , compiler
+      , init
+      , options = {}
+      ;
+
+    before(function(done) {
+      compilerImpl = fakeTemplateCompilerImpl();
+      mimosaConfig = utils.fake.mimosaConfig();
+      compiler = genCompiler(mimosaConfig, compilerImpl);
+      getInit(compiler, mimosaConfig, function(_init) {
+        init = _init
+        done();
+      })
+    })
+
+    it("for matching folders", function(done) {
+      mimosaConfig.template.output = [{
+        folders:["/foo"],
+        outputFileName:"boss"
+      }, {
+        folders:["/bar"],
+        outputFileName:"princess"
+      }];
+
+      init(mimosaConfig, options, function() {
+        expect(options.destinationFile).to.be.function;
+        var destFile = options.destinationFile("nothing", mimosaConfig.template.output[0].folders);
+        expect(destFile).to.eql("foo/boss.js")
+        done();
+      })
+    });
+
     it("for a specific compiler name");
     it("when no specific compiler name provided");
   });
@@ -237,8 +281,7 @@ describe("Mimosa's template compiler", function() {
   });
 
   describe("when instantiated", function() {
-    var compiler
-      , mimosaConfig
+    var mimosaConfig
       , compilerImpl
       ;
 
@@ -259,21 +302,21 @@ describe("Mimosa's template compiler", function() {
     describe("will set up paths", function() {
 
       it("with default config", function() {
-        compiler = genCompiler(mimosaConfig, compilerImpl);
+        var compiler = genCompiler(mimosaConfig, compilerImpl);
         expect(compiler.libPath).to.eql("vendor/foo");
         expect(compiler.clientPath).to.eql("public/javascripts/vendor/foo.js");
       });
 
       it("with wrapType set to something else", function() {
         mimosaConfig.template.wrapType = "foo";
-        compiler = genCompiler(mimosaConfig, compilerImpl);
+        var compiler = genCompiler(mimosaConfig, compilerImpl);
         expect(compiler.libPath).to.eql("vendor/foo");
         expect(compiler.clientPath).to.eql("public/javascripts/vendor/foo.js");
       });
 
       it("with writeLibrary turned off", function() {
         mimosaConfig.template.writeLibrary = false; //set back
-        compiler = genCompiler(mimosaConfig, compilerImpl);
+        var compiler = genCompiler(mimosaConfig, compilerImpl);
         expect(compiler.libPath).to.eql("vendor/foo");
         expect(compiler.clientPath).to.eql("public/javascripts/vendor/foo.js");
       });
@@ -283,7 +326,7 @@ describe("Mimosa's template compiler", function() {
 
       it("if no client lirbary", function() {
         compilerImpl.clientLibrary = false;
-        compiler = genCompiler(mimosaConfig, compilerImpl);
+        var compiler = genCompiler(mimosaConfig, compilerImpl);
         expect(compiler.libPath).to.be.undefined;
         expect(compiler.clientPath).to.be.undefined;
       });
@@ -291,7 +334,7 @@ describe("Mimosa's template compiler", function() {
       it("if wrap type is not AMD and writeLibrary is turned off", function() {
         mimosaConfig.template.wrapType = "foo";
         mimosaConfig.template.writeLibrary = false;
-        compiler = genCompiler(mimosaConfig, compilerImpl);
+        var compiler = genCompiler(mimosaConfig, compilerImpl);
         expect(compiler.libPath).to.be.undefined;
         expect(compiler.clientPath).to.be.undefined;
       });
