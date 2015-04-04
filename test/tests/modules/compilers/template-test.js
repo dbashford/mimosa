@@ -33,11 +33,82 @@ var genCompiler = function(mc, comp) {
 describe("Mimosa's template compiler", function() {
 
   describe("template name generation", function() {
-    it("will create template names based on the name of the file");
-    it("will create template names based on full file path");
-    it("will create template names base on transform regex");
-    it("will create template names based on transform function");
-    it("will error out if name created isn't a string");
+    var compiler
+      , compilerImpl
+      , options = { isTemplateFile: true, files:[{inputFileName:"/foo/templates/templ.tpl"}]}
+      ;
+
+    before(function() {
+      compilerImpl = fakeTemplateCompilerImpl();
+      compilerImpl.compile = function(a, b, done) {
+        done();
+      };
+      compiler = genCompiler(mimosaConfig, compilerImpl);
+    });
+
+    it("will create template names based on the name of the file", function(done) {
+      var mimosaConfig = utils.fake.mimosaConfig();
+      compiler._compile(mimosaConfig, options, function() {
+        expect(options.files[0].templateName).to.eql("templ");
+        done();
+      });
+    });
+
+    it("will create template names based on full file path", function(done) {
+      var mimosaConfig = utils.fake.mimosaConfig();
+      mimosaConfig.template.nameTransform = "filePath"
+      compiler._compile(mimosaConfig, options, function() {
+        expect(options.files[0].templateName).to.eql("foo/templates/templ");
+        done();
+      });
+    });
+
+    it("will create template names based on full file path and will switch slashes around", function(done) {
+      var mimosaConfig = utils.fake.mimosaConfig();
+      mimosaConfig.template.nameTransform = "filePath";
+      path.sep = "\\";
+      var options = { isTemplateFile: true, files:[{inputFileName:"\\foo\\templates\\templ.tpl"}]}
+      compiler._compile(mimosaConfig, options, function() {
+        expect(options.files[0].templateName).to.eql("foo/templates/templ");
+        path.sep = "/";
+        done();
+      });
+    });
+
+    it("will create template names base on transform regex", function(done) {
+      var mimosaConfig = utils.fake.mimosaConfig();
+      mimosaConfig.template.nameTransform = /.*\/templates\//
+      compiler._compile(mimosaConfig, options, function() {
+        expect(options.files[0].templateName).to.eql("templ");
+        done();
+      });
+    });
+
+    it("will create template names based on transform function", function(done) {
+      var mimosaConfig = utils.fake.mimosaConfig();
+      mimosaConfig.template.nameTransform = function(tpl) {
+        return tpl + ".transformed";
+      };
+      compiler._compile(mimosaConfig, options, function() {
+        expect(options.files[0].templateName).to.eql("foo/templates/templ.transformed");
+        done();
+      });
+    });
+
+    it("will error out if name created isn't a string", function(done) {
+      var spy = sinon.spy(logger, "error");
+      var mimosaConfig = utils.fake.mimosaConfig();
+      mimosaConfig.template.nameTransform = function(tpl) {
+        return {template:"foo"};
+      };
+      compiler._compile(mimosaConfig, options, function() {
+        expect(options.files[0].templateName).to.eql("nameTransformFailed");
+        expect(spy.calledOnce).to.be.true;
+        logger.error.restore();
+        done();
+      });
+    });
+
   });
 
   describe("will remove client library and execute callback", function() {
