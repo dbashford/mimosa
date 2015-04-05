@@ -3,6 +3,7 @@ var path = require( "path" )
   , sinon = require( "sinon" )
   , logger = require( "logmimosa" )
   , utils = require( path.join(process.cwd(), "test", "utils") )
+  , fileUtils = require( path.join(process.cwd(), "lib", "util", "file") )
   , TemplateCompiler = require( path.join(process.cwd(), "lib", "modules", "compilers", "template") )
   , fakeMimosaConfig = utils.fake.mimosaConfig();
   ;
@@ -435,16 +436,149 @@ describe("Mimosa's template compiler", function() {
   });
 
   describe("when gathering files", function() {
-    it("will move to next workflow step if not a template file");
-    it("will exit workflow entirely if no files are gathered");
-    it("will gather files if file being processed matches folder");
-    it("will not gather files if file being processed matches no folder");
-    it("will gather files if not processing file");
-    it("will gather files from multiple output configs");
-    it("will not include the same file twice");
-    it("will not gather file types that do not match compiler extensions");
-    it("will generate list of files with inputFileNames for apppriate files");
+    var mimosaConfig
+      , compiler
+      , gatherFileStub
+      ;
+
+    before(function() {
+      var compilerImpl = fakeTemplateCompilerImpl();
+      mimosaConfig = utils.fake.mimosaConfig();
+      compiler = genCompiler(mimosaConfig, compilerImpl);
+      gatherFileStub = sinon.stub(compiler, "__gatherFolderFilesForOutputFileConfig", function(){});
+    });
+
+    after(function() {
+      compiler.__gatherFolderFilesForOutputFileConfig.restore()
+    });
+
+    afterEach(function() {
+      gatherFileStub.reset();
+    })
+
+    it("will move to next workflow step if not a template file", function(done) {
+      var options = { isTemplateFile: false };
+      compiler._gatherFiles( mimosaConfig, options, function() {
+        // is called with boolean, 1 param, when exiting normally
+        expect(arguments.length).to.eql(0);
+        done();
+      })
+    });
+
+    it("will exit workflow entirely if no files are gathered", function(done) {
+      var options = { isTemplateFile: true };
+      mimosaConfig.template.output = [];
+      compiler._gatherFiles( mimosaConfig, options, function() {
+        // is called with boolean, 1 param, when exiting normally
+        expect(arguments.length).to.eql(1);
+        expect(gatherFileStub.callCount).to.eql(0);
+        done();
+      });
+    });
+
+    it("will gather files if file being processed matches folder", function(done) {
+      var options = { isTemplateFile: true };
+      mimosaConfig.template.output = [{
+        folders:["/foo"]
+      }];
+      options.inputFile = "/foo/file-inside-foo.js"
+      compiler._gatherFiles( mimosaConfig, options, function() {
+        // is called with boolean, 1 param, when exiting normally
+        expect(gatherFileStub.callCount).to.eql(1);
+        done();
+      });
+    });
+
+    it("will not gather files if file being processed matches no folder", function(done){
+      var options = { isTemplateFile: true };
+      mimosaConfig.template.output = [{
+        folders:["/foo"]
+      }];
+      options.inputFile = "/bar/file-inside-foo.js"
+      compiler._gatherFiles( mimosaConfig, options, function() {
+        // is called with boolean, 1 param, when exiting normally
+        expect(gatherFileStub.callCount).to.eql(0);
+        done();
+      });
+    });
+
+    it("will gather files if not processing file", function(done) {
+      var options = { isTemplateFile: true };
+      mimosaConfig.template.output = [{
+        folders:["/foo"]
+      }];
+      compiler._gatherFiles( mimosaConfig, options, function() {
+        // is called with boolean, 1 param, when exiting normally
+        expect(gatherFileStub.callCount).to.eql(1);
+        done();
+      });
+    });
+
+    it("will gather files from multiple output configs", function(done) {
+      var options = { isTemplateFile: true };
+      mimosaConfig.template.output = [{
+        folders:["/foo"]
+      }, {
+        folders:["/foo"]
+      }];
+      options.inputFile = "/foo/file-inside-foo.js"
+      compiler._gatherFiles( mimosaConfig, options, function() {
+        // is called with boolean, 1 param, when exiting normally
+        expect(gatherFileStub.callCount).to.eql(2);
+        done();
+      });
+    });
   });
+
+  describe("when files are gathered", function() {
+    var mimosaConfig
+      , compiler
+      ;
+
+    before(function() {
+      var compilerImpl = fakeTemplateCompilerImpl();
+      mimosaConfig = utils.fake.mimosaConfig();
+      compiler = genCompiler(mimosaConfig, compilerImpl);
+    });
+
+    var test = function(spec, files, count, extraTest) {
+      it(spec, function(done) {
+        sinon.stub(fileUtils, "readdirSyncRecursive", function() {
+          return files;
+        });
+        var options = { isTemplateFile: true };
+        mimosaConfig.template.output = [{
+          folders:["/foo"]
+        }];
+        options.inputFile = "/foo/file-inside-foo.js"
+        compiler._gatherFiles( mimosaConfig, options, function() {
+          // is called with boolean, 1 param, when exiting normally
+          expect(options.files.length).to.eql(count);
+          fileUtils.readdirSyncRecursive.restore();
+          if (extraTest) {
+            extraTest(options.files);
+          }
+          done();
+        });
+      });
+    }
+
+    test("will not include the same file twice",
+      ["/foo/file1.hbs", "/foo/file2.hbs", "/foo/file2.hbs"],
+      2);
+    test("will not gather file types that do not match compiler extensions",
+      ["/foo/file1.js", "/foo/file2.js", "/foo/file2.js"],
+      0);
+    test("will generate list of files with inputFileNames for apporiate files",
+      ["/foo/file1.hbs", "/foo/file2.hbs", "/foo/file2.hbs"],
+      2,
+      function(files) {
+        expect(files[0].inputFileName).to.eql("/foo/file1.hbs");
+        expect(files[1].inputFileName).to.eql("/foo/file2.hbs");
+      });
+
+  });
+
 
   describe("when compiling", function() {
     it("will execute callback immediately if is not template file");
