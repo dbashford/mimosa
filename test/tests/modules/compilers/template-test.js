@@ -17,7 +17,11 @@ var fakeTemplateCompilerImpl = function() {
       return ["hbs", "handlebars"];
     },
     compile: function( config, file, cb) {
-      cb(err, "this is a result");
+      var output = "this is a result";
+      if (file.inputFileText) {
+        output = file.inputFileText + output;
+      }
+      cb(null, output);
     },
     prefix: function( config, libPath ) {
       return "PREFIX " + libPath;
@@ -576,22 +580,182 @@ describe("Mimosa's template compiler", function() {
         expect(files[0].inputFileName).to.eql("/foo/file1.hbs");
         expect(files[1].inputFileName).to.eql("/foo/file2.hbs");
       });
-
   });
 
-
   describe("when compiling", function() {
-    it("will execute callback immediately if is not template file");
-    it("will execute callback immediately if there are no files");
-    it("will generate a template name for each file");
-    it("will call compiler compile function for each file");
-    it("will generate error message for templates that fail compile");
-    it("will add template namespacing when configured");
-    it("will not add template namespacing when configured");
-    it("will set output text to compiled result");
-    it("will not let failed template continue processing");
-    it("will allow successful templates to continue processing");
-    it("will execute callback after all files compiled");
+    var mimosaConfig
+      , compiler
+      , compilerImpl
+      ;
+
+    before(function() {
+      compilerImpl = fakeTemplateCompilerImpl();
+      mimosaConfig = utils.fake.mimosaConfig();
+      compiler = genCompiler(mimosaConfig, compilerImpl);
+    });
+
+    it("will execute callback immediately if is not template file", function(done) {
+      var options = { isTemplateFile: false, options: { files: [{inputFileName:"foo", inputFileText:"bar"}]} }
+      var compileSpy = sinon.spy( compilerImpl, "compile");
+      compiler._compile(mimosaConfig, options, function() {
+        expect(compileSpy.callCount).to.eql(0);
+        compilerImpl.compile.restore();
+        done();
+      });
+    });
+
+    it("will execute callback immediately if there are no files", function(done) {
+      var options = { isTemplateFile: true, files: [] };
+      var compileSpy = sinon.spy( compilerImpl, "compile");
+      compiler._compile(mimosaConfig, options, function() {
+        expect(compileSpy.callCount).to.eql(0);
+        compilerImpl.compile.restore();
+        done();
+      });
+    });
+
+    it("will generate a template name for each file", function(done) {
+      var options = {
+        isTemplateFile: true,
+        files: [
+          {inputFileName: "/foo/bar.hbs"},
+          {inputFileName: "/foo/foo.hbs"}
+        ]
+      };
+      var i = 0;
+      sinon.stub( compilerImpl, "compile", function() {
+        if (++i === 2) {
+          expect(options.files[0].templateName).to.eql("bar");
+          expect(options.files[1].templateName).to.eql("foo");
+          compilerImpl.compile.restore();
+          done();
+        }
+      });
+      compiler._compile(mimosaConfig, options, function() {});
+    });
+
+    it("will call compiler compile function for each file", function(done) {
+      var options = {
+        isTemplateFile: true,
+        files: [
+          {inputFileName: "/foo/bar.hbs"},
+          {inputFileName: "/foo/foo.hbs"}
+        ]
+      };
+      var compileSpy = sinon.spy( compilerImpl, "compile" );
+      compiler._compile(mimosaConfig, options, function() {
+        expect( compileSpy.callCount ).to.eql(2);
+        compilerImpl.compile.restore();
+        done();
+      });
+    });
+
+    it("will generate error message for templates that fail compile and will exit build", function(done) {
+      var options = {
+        isTemplateFile: true,
+        files: [
+          {inputFileName: "/foo/bar.hbs"},
+          {inputFileName: "/foo/foo.hbs"}
+        ]
+      };
+
+      var oldCompile = compilerImpl.compile;
+      compilerImpl.compile = function( config, file, cb) {
+        cb("ERRORERRORERROR", "this is a result");
+      };
+
+      var loggerSpy = sinon.spy(logger, "error");
+      compiler._compile(mimosaConfig, options, function() {
+        expect(loggerSpy.callCount).to.eql(2);
+        expect(loggerSpy.args[0][0]).to.eql("Template [[ /foo/bar.hbs ]] failed to compile. Reason: ERRORERRORERROR");
+        expect(loggerSpy.args[1][0]).to.eql("Template [[ /foo/foo.hbs ]] failed to compile. Reason: ERRORERRORERROR");
+        expect(loggerSpy.args[0][1]).to.eql( {exitIfBuild: true } );
+        expect(loggerSpy.args[1][1]).to.eql( {exitIfBuild: true } );
+        compilerImpl.compile = oldCompile;
+        logger.error.restore();
+        done();
+      });
+    });
+
+    it("will add template namespacing when configured", function(done) {
+      var options = {
+        isTemplateFile: true,
+        files: [
+          {inputFileName: "/foo/bar.hbs",
+           inputFileText: "foo"},
+          {inputFileName: "/foo/foo.hbs",
+           inputFileText: "bar"}
+        ]
+      };
+      compiler._compile(mimosaConfig, options, function() {
+        expect(options.files[0].outputFileText.indexOf("templates[")).to.eql(0);
+        expect(options.files[1].outputFileText.indexOf("templates[")).to.eql(0)
+        done();
+      });
+    });
+
+    it("will not add template namespacing when configured", function(done) {
+      var options = {
+        isTemplateFile: true,
+        files: [
+          {inputFileName: "/foo/bar.hbs",
+           inputFileText: "foo"},
+          {inputFileName: "/foo/foo.hbs",
+           inputFileText: "bar"}
+        ]
+      };
+      compilerImpl.handlesNamespacing = true;
+      compiler._compile(mimosaConfig, options, function() {
+        expect(options.files[0].outputFileText.indexOf("templates[")).to.eql(-1);
+        expect(options.files[1].outputFileText.indexOf("templates[")).to.eql(-1)
+        compilerImpl.handlesNamespacing = false;
+        done();
+      });
+    });
+
+    it("will set output text to compiled result", function(done) {
+      var options = {
+        isTemplateFile: true,
+        files: [
+          {inputFileName: "/foo/bar.hbs",
+           inputFileText: "foo"},
+          {inputFileName: "/foo/foo.hbs",
+           inputFileText: "bar"}
+        ]
+      };
+      compiler._compile(mimosaConfig, options, function() {
+        expect(options.files[0].outputFileText).to.eql("templates['bar'] = foothis is a result\n");
+        expect(options.files[1].outputFileText).to.eql("templates['foo'] = barthis is a result\n")
+        done();
+      });
+    });
+
+    it("will not let failed template continue processing", function(done) {
+      var options = {
+        isTemplateFile: true,
+        files: [
+          {inputFileName: "/foo/bar.hbs",
+           inputFileText: "foo"},
+          {inputFileName: "/foo/foo.hbs",
+           inputFileText: "bar"}
+        ]
+      };
+
+      var oldCompile = compilerImpl.compile;
+      var i = 0
+      compilerImpl.compile = function( config, file, cb) {
+        if (i++ === 0) {
+          cb("ERRORERRORERROR", null);
+        } else {
+          cb(null, "this is a result");
+        }
+      };
+      compiler._compile(mimosaConfig, options, function() {
+        expect(options.files.length).to.eql(1);
+        compilerImpl.compile = oldCompile;
+        done();
+      });
+    });    
   });
 
   describe("when merging templates", function() {
