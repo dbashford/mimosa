@@ -770,6 +770,11 @@ describe("Mimosa's template compiler", function() {
       compiler = genCompiler(mimosaConfig, compilerImpl);
     });
 
+    afterEach(function() {
+      mimosaConfig.template.output = undefined;
+      mimosaConfig.isOptimize = false;
+    })
+
     it("will execute callback immediately if is not template file", function(done) {
       var options = { isTemplateFile: false, options: { files: [{inputFileName:"foo", inputFileText:"bar"}]} }
       var libPathSpy = sinon.spy( compiler, "__libraryPath");
@@ -801,7 +806,11 @@ describe("Mimosa's template compiler", function() {
           {inputFileName: "/foo/foo.hbs",
            templateName:"foo",
            inputFileText: "foo",
-           outputFileText: "bar output text\n"}
+           outputFileText: "bar output text\n"},
+          {inputFileName: "/baz/baz.hbs",
+           templateName:"baz",
+           inputFileText: "baz",
+           outputFileText: "should not be included\n"}
         ],
         destinationFile: function() {
           return "destinationFile";
@@ -827,28 +836,133 @@ describe("Mimosa's template compiler", function() {
       });
 
       it("will wrap merged file in prefix and suffix", function() {
-        var output = options.files[2].outputFileText;
+        var output = options.files[3].outputFileText;
         expect(output.indexOf("PREFIX")).to.eql(0);
         expect(output.indexOf("SUFFIX")).to.eql(output.length - 6);
       });
 
       it("will create an output file", function() {
-        var outputFile = options.files[2];
+        var outputFile = options.files[3];
         expect(outputFile).to.be.object;
         expect(outputFile.outputFileName).to.eql("destinationFile");
         expect(outputFile.outputFileText).to.be.string;
       });
 
-      it("will include the template preamble in the merged template");
-      it("will merge files from included folders");
+      it("will include the template preamble in the merged template", function() {
+        var outputFile = options.files[3];
+        expect(outputFile.outputFileText.match(/Source file/g).length).to.eql(2);
+      });
+
+      it("will merge files from included folders only", function() {
+        var outputFile = options.files[3];
+        // included is text from omitted folder
+        expect(outputFile.outputFileText.match(/included/g)).to.be.null;
+      });
 
     });
 
-    it("will not perform any merging if file not in a folder in config");
-    it("will not include preamble if its optimized build");
-    it("will not merge files from folders not a part of the config");
-    it("will test for templates having the same name");
-    it("will not create output file if no text");
+    it("will not perform any merging if file not in a folder in config", function(done) {
+      mimosaConfig.template.output = [{
+        folders:["/bar"],
+        outputFileName:"boss"
+      }];
+      var options = {
+        inputFile: "/foo/file.hbs",
+        isTemplateFile: true,
+        files: [
+          {inputFileName: "/bar/bar.hbs",
+           inputFileText: "foo",
+           templateName:"bar",
+           outputFileText: "foo output text\n"},
+        ],
+        destinationFile: function() {
+          return "destinationFile";
+        }
+      };
+      compiler._merge(mimosaConfig, options, function() {
+        expect(options.files.length).to.eql(1); // would be 2 if file was included
+        done();
+      });
+    });
+
+    it("will test for templates having the same name", function(done) {
+      mimosaConfig.template.output = [{
+        folders:["/bar"],
+        outputFileName:"boss"
+      }];
+      var options = {
+        isTemplateFile: true,
+        files: [
+          {inputFileName: "/bar/foo/bar.hbs",
+           inputFileText: "foo",
+           templateName:"bar",
+           outputFileText: "foo output text\n"},
+          {inputFileName: "/bar/bar.hbs",
+           inputFileText: "foo",
+           templateName:"bar",
+           outputFileText: "foo output text\n"}
+        ],
+        destinationFile: function() {
+          return "destinationFile";
+        }
+      };
+      var loggerSpy = sinon.spy(logger, "error");
+      compiler._merge(mimosaConfig, options, function() {
+        expect(loggerSpy.calledOnce).to.be.true;
+        expect(loggerSpy.args[0][0].match(/bar.hbs/g).length).to.eql(2)
+        logger.error.restore();
+        done();
+      });
+    });
+
+    it("will not include preamble if its optimized build", function(done) {
+      var options = {
+        isTemplateFile: true,
+        files: [
+          {inputFileName: "/bar/bar.hbs",
+           inputFileText: "foo",
+           templateName:"bar",
+           outputFileText: "foo output text\n"}
+        ],
+        destinationFile: function() {
+          return "destinationFile";
+        }
+      };
+      mimosaConfig.template.output = [{
+        folders:["/bar"],
+        outputFileName:"boss"
+      }];
+      mimosaConfig.isOptimize = true;
+      compiler._merge(mimosaConfig, options, function() {
+        expect(options.files[1].outputFileText.match(/Source file/g)).to.be.null;
+        done();
+      });
+
+    });
+
+    it("will not create output file if no text", function(done) {
+      var options = {
+        isTemplateFile: true,
+        files: [
+          {inputFileName: "/foo/bar.hbs",
+           inputFileText: "foo",
+           templateName:"bar",
+           outputFileText: ""}
+        ],
+        destinationFile: function() {
+          return "destinationFile";
+        }
+      };
+      mimosaConfig.template.output = [{
+        folders:["/bar"],
+        outputFileName:"boss"
+      }];
+      compiler._merge(mimosaConfig, options, function() {
+        // no merged file added to files array
+        expect(options.files[1]).to.be.undefined;
+        done();
+      });
+    });
 
   });
 
