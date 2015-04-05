@@ -969,7 +969,6 @@ describe("Mimosa's template compiler", function() {
   describe("when removing files", function() {
     var mimosaConfig
       , compiler
-      , gatherFileStub
       , existsStub
       ;
 
@@ -1028,9 +1027,52 @@ describe("Mimosa's template compiler", function() {
   });
 
   describe("when testing to remove files", function() {
-    it("will execute callback immediately if is not template file");
-    it("will not call remove files if there are files");
-    it("will call remove files if is template file and has files left")
+    var mimosaConfig
+      , compiler
+      , removeFilesStub
+      ;
+
+    before(function() {
+      var compilerImpl = fakeTemplateCompilerImpl();
+      mimosaConfig = utils.fake.mimosaConfig();
+      compiler = genCompiler(mimosaConfig, compilerImpl);
+      removeFilesStub = sinon.stub(compiler, "_removeFiles", function(c, o, n) {
+        n();
+      });
+
+    });
+
+    after(function() {
+      compiler._removeFiles.restore();
+    })
+
+    afterEach(function() {
+      removeFilesStub.reset();
+    });
+
+    it("will execute callback immediately if is not template file", function(done) {
+      var options = { isTemplateFile: false, files: [] };
+      compiler._testForRemoveClientLibrary( mimosaConfig, options, function() {
+        expect(removeFilesStub.callCount).to.eql(0);
+        done();
+      });
+    });
+
+    it("will not call remove files if there are files", function(done) {
+      var options = { isTemplateFile: true, files: [{}] };
+      compiler._testForRemoveClientLibrary( mimosaConfig, options, function() {
+        expect(removeFilesStub.callCount).to.eql(0);
+        done();
+      });
+    });
+
+    it("will call remove files if is template file and has files left", function(done) {
+      var options = { isTemplateFile: true, files: [] };
+      compiler._testForRemoveClientLibrary( mimosaConfig, options, function() {
+        expect(removeFilesStub.callCount).to.eql(1);
+        done();
+      });
+    })
   });
 
   describe("when reading client library", function() {
