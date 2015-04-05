@@ -967,10 +967,64 @@ describe("Mimosa's template compiler", function() {
   });
 
   describe("when removing files", function() {
-    it("will remove client libraries");
-    it("will remove merged libraries");
-    it("will call lifecycle callback once when no template library");
-    it("will call lifecycle callback once when a template library");
+    var mimosaConfig
+      , compiler
+      , gatherFileStub
+      , existsStub
+      ;
+
+    before(function() {
+      // don't want to actually remove anything
+      existsStub = sinon.stub(fs, "exists", function(p, cb) {
+        cb(false);
+      });
+
+      var compilerImpl = fakeTemplateCompilerImpl();
+      mimosaConfig = utils.fake.mimosaConfig();
+      compiler = genCompiler(mimosaConfig, compilerImpl);
+    });
+
+    after(function() {
+      fs.exists.restore();
+    });
+
+    afterEach(function() {
+      fs.exists.reset();
+    })
+
+    it("will remove merged libraries", function(done) {
+      var options = {
+        destinationFile: function() {
+          return "destinationFile";
+        }
+      };
+      mimosaConfig.template.output = [{
+        folders:["/bar"],
+        outputFileName:"boss"
+      }];
+      compiler._removeFiles(mimosaConfig, options, function() {
+        // no merged file added to files array
+        expect(existsStub.calledTwice).to.be.true;
+        expect(existsStub.args[0][0]).to.eql("javascripts/vendor/foo.js");
+        expect(existsStub.args[1][0]).to.eql("foo/boss.js");
+        done();
+      });
+    });
+
+    it("will remove only client library if no output", function(done) {
+      var options = {
+        destinationFile: function() {
+          return "destinationFile";
+        }
+      };
+      mimosaConfig.template.output = [];
+      compiler._removeFiles(mimosaConfig, options, function() {
+        // no merged file added to files array
+        expect(existsStub.calledOnce).to.be.true;
+        expect(existsStub.args[0][0]).to.eql("javascripts/vendor/foo.js");
+        done();
+      });
+    });
   });
 
   describe("when testing to remove files", function() {
