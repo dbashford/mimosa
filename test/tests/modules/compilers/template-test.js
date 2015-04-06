@@ -1078,7 +1078,6 @@ describe("Mimosa's template compiler", function() {
   describe("when reading client library", function() {
     var mimosaConfig
       , compiler
-      , existsStub
       , readStub
       ;
 
@@ -1157,11 +1156,56 @@ describe("Mimosa's template compiler", function() {
   });
 
   describe("when determining a library path", function() {
-    it("if no mimosa-require module will use lib path");
+    var mimosaConfig
+      , compiler
+      ;
+
+    before(function() {
+      var compilerImpl = fakeTemplateCompilerImpl();
+      mimosaConfig = utils.fake.mimosaConfig();
+      compiler = genCompiler(mimosaConfig, compilerImpl);
+      compiler.libPath = "foo";
+    });
+
+    it("if no mimosa-require module will use lib path", function() {
+      compiler.requireRegister = undefined;
+      var libPath = compiler.__libraryPath();
+      expect(libPath).to.eql("foo")
+    });
+
     describe("if mimosa-require is available", function() {
-      it("will use alias for path if available");
-      it("will use alias for path if prefixed with dot slash");
-      it("will use lib path no alias found")
+
+      it("will use alias for path if available", function() {
+        compiler.requireRegister = {
+          aliasForPath: function() {
+            return "foo-alias";
+          }
+        };
+        var libPath = compiler.__libraryPath();
+        expect(libPath).to.eql("foo-alias");
+      });
+
+      it("will use alias for path if prefixed with dot slash", function() {
+        compiler.requireRegister = {
+          aliasForPath: function(p) {
+            if (p === "./foo") {
+              return "foo-alias-slash";
+            }
+          }
+        };
+        var libPath = compiler.__libraryPath();
+        expect(libPath).to.eql("foo-alias-slash");
+      });
+
+      it("will use lib path no alias found", function() {
+        compiler.requireRegister = {
+          aliasForPath: function(p) {
+            return undefined;
+          }
+        };
+        var libPath = compiler.__libraryPath();
+        expect(libPath).to.eql("foo");
+      })
     });
   })
 });
