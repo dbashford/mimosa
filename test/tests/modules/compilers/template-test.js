@@ -1076,9 +1076,84 @@ describe("Mimosa's template compiler", function() {
   });
 
   describe("when reading client library", function() {
-    it("will execute callback immediately if is not template file");
-    it("will not readFile in if no clientPath or clientPath does not exist");
-    it("will read in and add client library to output files")
+    var mimosaConfig
+      , compiler
+      , existsStub
+      , readStub
+      ;
+
+    before(function() {
+      var compilerImpl = fakeTemplateCompilerImpl();
+      mimosaConfig = utils.fake.mimosaConfig();
+      compiler = genCompiler(mimosaConfig, compilerImpl);
+      readStub = sinon.stub(fs, "readFile", function(p, e, cb) {
+        cb(null, "foo");
+      });
+
+    });
+
+    after(function() {
+      fs.readFile.restore();
+    })
+
+    afterEach(function() {
+      readStub.reset();
+      compiler.clientPath = undefined;
+    });
+
+    it("will execute callback immediately if is not template file", function(done) {
+      var existsStub = sinon.stub(fs, "existsSync", function(n) {
+        return true;
+      });
+
+      compiler.clientPath = "foo";
+      var options = { isTemplateFile: false, files: [] }
+      compiler._readInClientLibrary(mimosaConfig, options, function() {
+        expect(existsStub.callCount).to.eql(0);
+        fs.existsSync.restore();
+        done();
+      });
+    });
+
+    it("will not readFile in if no clientPath", function(done) {
+      compiler.clientPath = undefined;
+      var options = { isTemplateFile: true, files: [] }
+      compiler._readInClientLibrary(mimosaConfig, options, function() {
+        expect(readStub.callCount).to.eql(0);
+        done();
+      });
+    });
+
+    it("will not read file if clientPath already exists", function(done) {
+      var existsStub = sinon.stub(fs, "existsSync", function(n) {
+        return true;
+      });
+      compiler.clientPath = "foo";
+      var options = { isTemplateFile: true, files: [] }
+      compiler._readInClientLibrary(mimosaConfig, options, function() {
+        expect(readStub.callCount).to.eql(0);
+        fs.existsSync.restore();
+        done();
+      });
+    });
+
+    it("will read in and add client library to output files", function(done) {
+      var existsStub = sinon.stub(fs, "existsSync", function(n) {
+        return false;
+      });
+
+      compiler.clientPath = "foo";
+      var options = { isTemplateFile: true, files: [] }
+      compiler._readInClientLibrary(mimosaConfig, options, function() {
+        expect(readStub.callCount).to.eql(1);
+        expect(options.files.length).to.eql(1);
+        expect(options.files[0].outputFileName).to.eql("foo");
+        expect(options.files[0].outputFileText).to.eql("foo");
+        fs.existsSync.restore();
+        done();
+      });
+    });
+
   });
 
   describe("when determining a library path", function() {

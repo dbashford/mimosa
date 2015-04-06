@@ -280,7 +280,7 @@ module.exports = class TemplateCompiler
   _readInClientLibrary: (config, options, next) =>
     return next() unless options.isTemplateFile
 
-    if !@clientPath? or fs.existsSync @clientPath
+    if !@clientPath or fs.existsSync @clientPath
       logger.debug "Not going to write template client library"
       return next()
 
