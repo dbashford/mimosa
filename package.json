@@ -59,7 +59,7 @@
   ],
   "dependencies": {
     "ansi-color": "0.2.1",
-    "chokidar": "1.0.0-rc4",
+    "chokidar": "1.0.1",
     "coffee-script": "1.7.1",
     "commander": "1.3.2",
     "lodash": "2.4.1",
