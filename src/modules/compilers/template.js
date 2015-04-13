@@ -10,7 +10,7 @@ var path = require( "path" )
 var __generateTemplateName = function( fileName, config ) {
   var nameTransform = config.template.nameTransform;
   if ( nameTransform === "fileName" ) {
-    path.basename( fileName, path.extname( fileName ) );
+    return path.basename( fileName, path.extname( fileName ) );
   } else {
     // only sourceDir forward
     var filePath = fileName.replace( config.watch.sourceDir, "" );
@@ -18,7 +18,7 @@ var __generateTemplateName = function( fileName, config ) {
     filePath = filePath.split( path.sep ).join( "/" ).substring( 1 );
     // remove ext
     filePath = filePath.replace( path.extname( filePath ), "" );
-    if ( nameTransform is "filePath" ) {
+    if ( nameTransform === "filePath" ) {
       return filePath;
     } else {
       var returnFilepath;
@@ -77,8 +77,7 @@ var __testForSameTemplateName = function( files ) {
 };
 
 var __templatePreamble = function( file ) {
-  return
-    "\n//\n" +
+  return "\n//\n" +
     "// Source file: [" + file.inputFileName + "]\n" +
     "// Template name: [" + file.templateName + "]\n" +
     "//\n";
@@ -97,21 +96,21 @@ var __destFile = function( config ) {
         }
       }
     }
-  }
+  };
 };
 
 var _init = function( config, options, next ) {
   // if processing a file, check and see if that file
   // is inside a folder to be wrapped up in template file
   // before laying claim to that file for the template compiler
-  if ( options.inputFile )
+  if ( options.inputFile ) {
     for (var i = 0, len = config.template.output.length; i < len; i++ ) {
       var outputFileConfig = config.template.output[i];
       for (var k = 0, klen = outputFileConfig.folders.length; k < klen; k++ ) {
         var folder = outputFileConfig.folders[k];
         if ( options.inputFile.indexOf( path.join( folder, path.sep ) ) === 0 ) {
-          options.isTemplateFile = true
-          options.destinationFile = __destFile(config);
+          options.isTemplateFile = true;
+          options.destinationFile = __destFile( config );
           return next();
         }
       }
@@ -121,7 +120,7 @@ var _init = function( config, options, next ) {
     // in which case lay claim to the extension as it
     // was specifically registered
     options.isTemplateFile = true;
-    options.destinationFile = __destFile(config);
+    options.destinationFile = __destFile( config );
   }
 
   next();
@@ -160,21 +159,21 @@ TemplateCompiler.prototype.registration = function( config, register ) {
     _init,
     this.extensions );
 
-  register( ["buildExtension"], "init", this._gatherFiles, [this.extensions[0]] );
-  register( ["add", "update", "remove"], "init", this._gatherFiles, this.extensions );
-  register( ["buildExtension"], "compile", this._compile, [this.extensions[0]] );
-  register( ["add", "update", "remove"], "compile", this._compile, this.extensions );
+  register( ["buildExtension"], "init", this._gatherFiles.bind( this ), [this.extensions[0]] );
+  register( ["add", "update", "remove"], "init", this._gatherFiles.bind( this ), this.extensions );
+  register( ["buildExtension"], "compile", this._compile.bind( this ), [this.extensions[0]] );
+  register( ["add", "update", "remove"], "compile", this._compile.bind( this ), this.extensions );
 
-  register( ["cleanFile"], "init", this._removeFiles, this.extensions );
+  register( ["cleanFile"], "init", this._removeFiles.bind( this ), this.extensions );
 
-  register( ["buildExtension"], "afterCompile", this._merge, [this.extensions[0]] );
-  register( ["add", "update", "remove"], "afterCompile", this._merge, this.extensions );
+  register( ["buildExtension"], "afterCompile", this._merge.bind( this ), [this.extensions[0]] );
+  register( ["add", "update", "remove"], "afterCompile", this._merge.bind( this ), this.extensions );
 
   if ( config.template.writeLibrary ) {
-    register( ["remove"], "init", this._testForRemoveClientLibrary, this.extensions );
+    register( ["remove"], "init", this._testForRemoveClientLibrary.bind( this ), this.extensions );
 
-    register( ["add", "update"], "afterCompile", this._readInClientLibrary, this.extensions );
-    register( ["buildExtension"], "afterCompile", this._readInClientLibrary, [this.extensions[0]] );
+    register( ["add", "update"], "afterCompile", this._readInClientLibrary.bind( this ), this.extensions );
+    register( ["buildExtension"], "afterCompile", this._readInClientLibrary.bind( this ), [this.extensions[0]] );
   }
 };
 
@@ -186,7 +185,7 @@ TemplateCompiler.prototype._gatherFiles = function( config, options, next ) {
   options.files = [];
 
   // for each configured output config
-  for ( var i = 0, len = config.template.output.length; i < len; i++ )
+  for ( var i = 0, len = config.template.output.length; i < len; i++ ) {
     var outputFileConfig = config.template.output[i];
     if ( options.inputFile ) {
       // if a file is involved (add, update, remove workflows),
@@ -233,14 +232,14 @@ TemplateCompiler.prototype.__gatherFilesForFolder = function( config, options, f
     var file = allFiles[i];
     var extension = path.extname( file ).substring( 1 );
     var extMatch = _.any(this.extensions, function( ex ) {
-      return e === extension;
+      return ex === extension;
     });
     if ( extMatch ) {
       fileNames.push( file );
     }
   }
 
-  if ( fileNames.length is 0 ) {
+  if ( fileNames.length === 0 ) {
     return [];
   } else {
     return fileNames.map( function( file ) {
@@ -266,6 +265,7 @@ TemplateCompiler.prototype._compile = function( config, options, next ) {
   for ( var i = 0, len = options.files.length; i < len; i++ ) {
     var file = options.files[i];
     file.templateName = __generateTemplateName( file.inputFileName, config );
+    console.log(file)
     this.compiler.compile( config, file, function( err, result ) {
       if ( err ) {
         logger.error(
@@ -273,7 +273,7 @@ TemplateCompiler.prototype._compile = function( config, options, next ) {
           { exitIfBuild: true } );
       } else {
         if ( !this.compiler.handlesNamespacing ) {
-          result = "templates[" + file.templateName + "] = " + result + "\n";
+          result = "templates['" + file.templateName + "'] = " + result + "\n";
         }
         file.outputFileText = result;
         newFiles.push( file );
@@ -283,7 +283,7 @@ TemplateCompiler.prototype._compile = function( config, options, next ) {
         options.files = newFiles;
         next();
       }
-    });
+    }.bind( this ));
   }
 };
 
@@ -300,18 +300,20 @@ TemplateCompiler.prototype._merge = function( config, options, next ) {
   var prefix = this.compiler.prefix( config, libPath );
   var suffix = this.compiler.suffix( config );
 
-  for ( var i = 0, len = config.template.output.length; i < len; i++ )
+  for ( var i = 0, len = config.template.output.length; i < len; i++ ) {
     var outputFileConfig = config.template.output[i];
 
     // if post-build, need to check to see if the outputFileConfig is valid for this compile
     if ( options.inputFile ) {
       var found = false;
       for ( var k = 0, klen = outputFileConfig.folders; k < klen; k++ ) {
-        folder in
-        if ( options.inputFile.indexOf( folder ) === 0 ) {
+        var folderr = outputFileConfig.folders[k];
+        if ( options.inputFile.indexOf( folderr ) === 0 ) {
           found = true;
           break;
         }
+      }
+
       if ( !found ) {
         continue;
       }
@@ -321,12 +323,12 @@ TemplateCompiler.prototype._merge = function( config, options, next ) {
       , mergedFiles = []
       ;
 
-    for ( var k = 0, klen = options.files.length; k < klen; k++ ) {
-      var file = options.files[k];
+    for ( var j = 0, jlen = options.files.length; j < jlen; j++ ) {
+      var file = options.files[j];
       for ( var p = 0, plen = outputFileConfig.folders.length; p < plen; p++) {
         var folder = outputFileConfig.folders[p];
         if ( file.inputFileName && file.inputFileName.indexOf( path.join( folder, path.sep ) ) === 0 ) {
-          mergedFiles.push {tName: file.templateName, fName: file.inputFileName}
+          mergedFiles.push( { tName: file.templateName, fName: file.inputFileName } );
           if ( !config.isOptimize ) {
             mergedText += __templatePreamble( file );
           }
@@ -398,7 +400,7 @@ TemplateCompiler.prototype._readInClientLibrary = function ( config, options, ne
   // do not read in client path if there isnt one, or if
   // it already exists
   if ( !this.clientPath || fs.existsSync( this.clientPath ) ) {
-    return next()
+    return next();
   }
 
   fs.readFile( this.compiler.clientLibrary, "utf8", function( err, data ) {
@@ -413,14 +415,14 @@ TemplateCompiler.prototype._readInClientLibrary = function ( config, options, ne
     });
 
     next();
-  });
+  }.bind( this ));
 };
 
 TemplateCompiler.prototype.__libraryPath = function() {
   if ( this.requireRegister ) {
-    return this.requireRegister.aliasForPath(this.libPath)
-      || this.requireRegister.aliasForPath("./" + this.libPath)
-      || this.libPath;
+    return this.requireRegister.aliasForPath( this.libPath ) ||
+      this.requireRegister.aliasForPath( "./" + this.libPath ) ||
+      this.libPath;
   } else {
     return this.libPath;
   }
