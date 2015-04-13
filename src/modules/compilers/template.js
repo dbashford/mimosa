@@ -10,7 +10,7 @@ var path = require( "path" )
 var __generateTemplateName = function( fileName, config ) {
   var nameTransform = config.template.nameTransform;
   if ( nameTransform === "fileName" ) {
-    path.basename fileName, path.extname(fileName)
+    path.basename( fileName, path.extname( fileName ) );
   } else {
     // only sourceDir forward
     var filePath = fileName.replace( config.watch.sourceDir, "" );
@@ -100,7 +100,7 @@ var __destFile = function( config ) {
   }
 };
 
-var _init = ( config, options, next ) {
+var _init = function( config, options, next ) {
   // if processing a file, check and see if that file
   // is inside a folder to be wrapped up in template file
   // before laying claim to that file for the template compiler
